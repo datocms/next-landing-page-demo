@@ -1,8 +1,7 @@
-import SectionTitle from "../Common/SectionTitle";
-import SingleFeature from "./SingleFeature";
-import featuresData from "./featuresData";
+import SectionTitle from '../Common/SectionTitle';
+import SingleFeature from './SingleFeature';
 
-const Features = () => {
+const Features = ({ features, featuresHeader, featuresSubheader }) => {
   return (
     <>
       <section
@@ -11,13 +10,13 @@ const Features = () => {
       >
         <div className="container">
           <SectionTitle
-            title="Main Features"
-            paragraph="There are many variations of passages of Lorem Ipsum available but the majority have suffered alteration in some form."
+            title={featuresHeader}
+            paragraph={featuresSubheader}
             center
           />
 
           <div className="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
-            {featuresData.map((feature) => (
+            {features.map((feature) => (
               <SingleFeature key={feature.id} feature={feature} />
             ))}
           </div>

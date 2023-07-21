@@ -1,20 +1,26 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useState } from "react";
-import SectionTitle from "../Common/SectionTitle";
+import Image from 'next/image';
+import { useState } from 'react';
+import SectionTitle from '../Common/SectionTitle';
 
-import ModalVideo from "react-modal-video";
+import ModalVideo from 'react-modal-video';
 
-const Video = () => {
+const Video = ({
+  videoHeader,
+  videoSubheader,
+  videoUid,
+  videoThumbnail,
+  videoProvider,
+}) => {
   const [isOpen, setOpen] = useState(false);
 
   return (
     <section className="relative z-10 py-16 md:py-20 lg:py-28">
       <div className="container">
         <SectionTitle
-          title="We are ready to help"
-          paragraph="There are many variations of passages of Lorem Ipsum available but the majority have suffered alteration in some form."
+          title={videoHeader}
+          paragraph={videoSubheader}
           center
           mb="80px"
         />
@@ -49,11 +55,11 @@ const Video = () => {
       </div>
 
       <ModalVideo
-        channel="youtube"
+        channel={videoProvider}
         autoplay={true}
         start={true}
         isOpen={isOpen}
-        videoId="L61p2uyiMSo"
+        videoId={videoUid}
         onClose={() => setOpen(false)}
       />
 

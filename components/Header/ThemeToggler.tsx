@@ -1,10 +1,11 @@
-import { useTheme } from "next-themes";
+import { useTheme } from 'next-themes';
 
 const ThemeToggler = () => {
+  //removing this to enforce light theme, if the starter user enjoys the dark theme, this can easily be re-added
   const { theme, setTheme } = useTheme();
   return (
     <button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
       className="bg-gray-2 dark:bg-dark-bg flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-black dark:text-white md:h-14 md:w-14"
     >
       <svg
