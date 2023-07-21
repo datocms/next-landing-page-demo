@@ -38,12 +38,14 @@ export default async function Home() {
       }
     }
     about {
-      brandShowcase {
-        id
-        brandName
-        brandUrl
-        brandLogo {
-          url
+      sections {
+        brand {
+          id
+          brandUrl
+          brandName
+          brandLogo {
+            url
+          }
         }
       }
     }
@@ -65,7 +67,13 @@ export default async function Home() {
         videoThumbnail={home.video.thumbnailUrl}
         videoProvider={home.video.provider}
       />
-      <Brands brandShowcase={about.brandShowcase} />
+      <Brands
+        brandShowcase={
+          about.sections.filter((section) =>
+            Object.keys(section).includes('brand')
+          )[0].brand
+        }
+      />
       <AboutSectionOne />
       <AboutSectionTwo />
       <Testimonials />
