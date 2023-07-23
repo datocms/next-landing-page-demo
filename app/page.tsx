@@ -14,72 +14,167 @@ import { Inter } from '@next/font/google';
 
 const inter = Inter({ subsets: ['latin'] });
 
+function getSection(blockKey: string, sections) {
+  return sections.find((block) => block._modelApiKey === blockKey);
+}
+
 export default async function Home() {
-  const { home, about } = await queryDatoCMS(`query MyQuery {
+  const { home } = await queryDatoCMS(`{
     home {
-      heroSubtitle
-      heroTitle
-      featuresHeader
-      featuresSubheader
-      features {
-        id
-        featureTitle
-        featureDescription
-        featureIcon {
-          url
-        }
-      }
-      videoHeader
-      videoSubheader
-      video {
-        providerUid
-        thumbnailUrl
-        provider
-      }
-    }
-    about {
       sections {
-        brand {
+        ... on FeatureListSectionRecord {
+          _modelApiKey
+          featuresHeader
+          featuresSubheader
+          feature {
+            _modelApiKey
+            id
+            featureTitle
+            featureDescription
+            featureIcon {
+              url
+            }
+          }
+        }
+        ... on HeroSectionRecord {
+          _modelApiKey
+          heroSubtitle
+          heroTitle
+        }
+        ... on VideoSectionRecord {
+          _modelApiKey
+          videoHeader
+          videoSubheader
+          video {
+            providerUid
+            provider
+            thumbnailUrl
+          }
+        }
+        ... on DetailSectionRightRecord {
+          _modelApiKey
           id
-          brandUrl
-          brandName
-          brandLogo {
+          detailsToBeDisplayed
+          detailsSectionHeader
+          detailSelectionSubheader
+          rightImage {
             url
           }
+        }
+        ... on DetailSectionLeftRecord {
+          _modelApiKey
+          detail {
+            _modelApiKey
+            detailHeader
+            detailDescription
+            id
+          }
+          leftImage {
+            url
+          }
+        }
+        ... on ReviewSectionRecord {
+          _modelApiKey
+          reviewSectionHeader
+          reviewSectionSubheader
+          review {
+            id
+            _modelApiKey
+            rating
+            review
+            reviewerName
+            reviewerTitle
+            reviewerPicture {
+              url
+            }
+          }
+        }
+        ... on PricingSectionRecord {
+          pricingSectionSubheader
+          _modelApiKey
+          plans {
+            id
+            _modelApiKey
+            monthlyPrice
+            tierDescription
+            tierName
+            yearlyPrice
+            planCharacteristic {
+              lifetimeAccess
+              useWithUnlimitedProjects
+              freeLifetimeUpdates
+              emailSupport
+              commercialUse
+              allUiComponents
+              _modelApiKey
+            }
+          }
+          pricingSectionHeader
+        }
+        ... on BrandSectionRecord {
+          id
+          brand {
+            _modelApiKey
+            brandName
+            brandUrl
+            id
+            brandLogo {
+              url
+            }
+          }
+          _modelApiKey
         }
       }
     }
   }`);
 
+  const hero = getSection('hero_section', home.sections);
+  const featureList = getSection('feature_list_section', home.sections);
+  const videoSection = getSection('video_section', home.sections);
+  const brandsSection = getSection('brand_section', home.sections);
+  const detailSectionRight = getSection('detail_section_right', home.sections);
+  const detailSectionLeft = getSection('detail_section_left', home.sections);
+  const testimonialSection = getSection('review_section', home.sections);
+  const pricingSection = getSection('pricing_section', home.sections);
+
   return (
     <>
       <ScrollUp />
-      <Hero heroTitle={home.heroTitle} heroSubtitle={home.heroSubtitle} />
+      <Hero heroTitle={hero.heroTitle} heroSubtitle={hero.heroSubtitle} />
       <Features
-        features={home.features}
-        featuresHeader={home.featuresHeader}
-        featuresSubheader={home.featuresSubheader}
+        features={featureList.feature}
+        featuresHeader={featureList.featuresHeader}
+        featuresSubheader={featureList.featuresSubheader}
       />
       <Video
-        videoHeader={home.videoHeader}
-        videoSubheader={home.videoSubheader}
-        videoUid={home.video.providerUid}
-        videoThumbnail={home.video.thumbnailUrl}
-        videoProvider={home.video.provider}
+        videoHeader={videoSection.videoHeader}
+        videoSubheader={videoSection.videoSubheader}
+        videoUid={videoSection.video.providerUid}
+        videoThumbnail={videoSection.video.thumbnailUrl}
+        videoProvider={videoSection.video.provider}
       />
-      <Brands
-        brandShowcase={
-          about.sections.filter((section) =>
-            Object.keys(section).includes('brand')
-          )[0].brand
-        }
+      <Brands brandShowcase={brandsSection.brand} />
+      <AboutSectionOne
+        header={detailSectionRight.detailsSectionHeader}
+        subheader={detailSectionRight.detailSelectionSubheader}
+        imageURL={detailSectionRight.rightImage.url}
+        featureList={detailSectionRight.detailsToBeDisplayed}
       />
-      <AboutSectionOne />
-      <AboutSectionTwo />
-      <Testimonials />
-      <Pricing />
+      <AboutSectionTwo
+        imageURL={detailSectionLeft.leftImage.url}
+        details={detailSectionLeft.detail}
+      />
+      <Testimonials
+        header={testimonialSection.reviewSectionHeader}
+        subheader={testimonialSection.reviewSectionSubheader}
+        reviews={testimonialSection.review}
+      />
+      <Pricing
+        header={pricingSection.pricingSectionHeader}
+        subheader={pricingSection.pricingSectionSubheader}
+        plans={pricingSection.plans}
+      />
       <Blog />
-      <Contact />
     </>
   );
 }
