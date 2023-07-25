@@ -1,6 +1,6 @@
-import SharePost from "@/components/Blog/SharePost";
-import TagButton from "@/components/Blog/TagButton";
-import Image from "next/image";
+import SharePost from '@/components/Blog/SharePost';
+import TagButton from '@/components/Blog/TagButton';
+import Image from 'next/image';
 
 const BlogDetailsPage = () => {
   return (
@@ -230,7 +230,7 @@ const BlogDetailsPage = () => {
                         />
                         <mask
                           id="mask0_111:596"
-                          style={{ maskType: "alpha" }}
+                          style={{ maskType: 'alpha' }}
                           maskUnits="userSpaceOnUse"
                           x="0"
                           y="0"
