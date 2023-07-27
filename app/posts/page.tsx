@@ -1,8 +1,61 @@
 import SingleBlog from '@/components/Blog/SingleBlog';
 import blogData from '@/components/Blog/blogData';
 import Breadcrumb from '@/components/Common/Breadcrumb';
+import queryDatoCMS from '@/utils/queryDatoCMS';
 
-const Blog = () => {
+const Blog = async () => {
+  const { allPosts } = await queryDatoCMS(`query MyQuery {
+    allPosts(orderBy: _createdAt_DESC, first: "9") {
+      slug
+      id
+      title
+      tags {
+        tag
+      }
+      seoTags {
+        description
+        image {
+          responsiveImage(
+            imgixParams: { fit: crop, w: 300, h: 300, auto: format }
+          ) {
+            srcSet
+            webpSrcSet
+            sizes
+            src
+            width
+            height
+            aspectRatio
+            alt
+            title
+            bgColor
+            base64
+          }
+        }
+      }
+      author {
+        name
+        bio
+        picture {
+          responsiveImage {
+            srcSet
+            webpSrcSet
+            sizes
+            src
+            width
+            height
+            aspectRatio
+            alt
+            title
+            bgColor
+            base64
+          }
+        }
+      }
+    }
+  }`);
+
+  console.log(allPosts);
+
   return (
     <>
       <Breadcrumb
@@ -13,12 +66,12 @@ const Blog = () => {
       <section className="pt-[120px] pb-[120px]">
         <div className="container">
           <div className="-mx-4 flex flex-wrap justify-center">
-            {blogData.map((blog) => (
+            {allPosts.map((post) => (
               <div
-                key={blog.id}
+                key={post.id}
                 className="w-full px-4 md:w-2/3 lg:w-1/2 xl:w-1/3"
               >
-                <SingleBlog blog={blog} />
+                <SingleBlog blog={post} />
               </div>
             ))}
           </div>
