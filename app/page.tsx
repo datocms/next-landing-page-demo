@@ -124,6 +124,57 @@ export default async function Home() {
           }
           _modelApiKey
         }
+        ... on FeaturedPostsSectionRecord {
+          _modelApiKey
+          featuredPostsHeader
+          featuredPostsSubheader
+          featuredPosts {
+            _publishedAt
+            slug
+            id
+            title
+            tags {
+              tag
+            }
+            seoTags {
+              description
+              image {
+                responsiveImage {
+                  srcSet
+                  webpSrcSet
+                  sizes
+                  src
+                  width
+                  height
+                  aspectRatio
+                  alt
+                  title
+                  bgColor
+                  base64
+                }
+              }
+            }
+            author {
+              name
+              bio
+              picture {
+                responsiveImage(imgixParams: {w: "64", h: "64", fit: crop}) {
+                  srcSet
+                  webpSrcSet
+                  sizes
+                  src
+                  width
+                  height
+                  aspectRatio
+                  alt
+                  title
+                  bgColor
+                  base64
+                }
+              }
+            }
+          }
+        }
       }
     }
   }`);
@@ -136,6 +187,10 @@ export default async function Home() {
   const detailSectionLeft = getSection('detail_section_left', home.sections);
   const testimonialSection = getSection('review_section', home.sections);
   const pricingSection = getSection('pricing_section', home.sections);
+  const featuredPostsSection = getSection(
+    'featured_posts_section',
+    home.sections
+  );
 
   return (
     <>
@@ -174,7 +229,11 @@ export default async function Home() {
         subheader={pricingSection.pricingSectionSubheader}
         plans={pricingSection.plans}
       />
-      <Blog />
+      <Blog
+        blogData={featuredPostsSection.featuredPosts}
+        blogHeader={featuredPostsSection.featuredPostsHeader}
+        blogSubheader={featuredPostsSection.featuredPostsSubheader}
+      />
     </>
   );
 }

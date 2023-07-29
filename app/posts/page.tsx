@@ -1,11 +1,11 @@
 import SingleBlog from '@/components/Blog/SingleBlog';
-import blogData from '@/components/Blog/blogData';
 import Breadcrumb from '@/components/Common/Breadcrumb';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 
 const Blog = async () => {
   const { allPosts } = await queryDatoCMS(`query MyQuery {
     allPosts(orderBy: _createdAt_DESC, first: "9") {
+      _publishedAt
       slug
       id
       title
@@ -15,9 +15,7 @@ const Blog = async () => {
       seoTags {
         description
         image {
-          responsiveImage(
-            imgixParams: { fit: crop, w: 300, h: 300, auto: format }
-          ) {
+          responsiveImage {
             srcSet
             webpSrcSet
             sizes
@@ -36,7 +34,7 @@ const Blog = async () => {
         name
         bio
         picture {
-          responsiveImage {
+          responsiveImage(imgixParams: {w: "64", h: "64", fit: crop}) {
             srcSet
             webpSrcSet
             sizes
@@ -54,8 +52,6 @@ const Blog = async () => {
     }
   }`);
 
-  console.log(allPosts);
-
   return (
     <>
       <Breadcrumb
@@ -69,7 +65,7 @@ const Blog = async () => {
             {allPosts.map((post) => (
               <div
                 key={post.id}
-                className="w-full px-4 md:w-2/3 lg:w-1/2 xl:w-1/3"
+                className="w-full mb-10 px-4 md:w-2/3 lg:w-1/2 xl:w-1/3"
               >
                 <SingleBlog blog={post} />
               </div>
