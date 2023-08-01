@@ -1,11 +1,11 @@
 import Link from 'next/link';
 
-const Hero = ({ heroTitle, heroSubtitle }) => {
+const Hero = ({ heroTitle, heroSubtitle, buttons }) => {
   return (
     <>
       <section
         id="home"
-        className="relative z-10 overflow-hidden pt-[120px] pb-16 md:pt-[150px] md:pb-[120px] xl:pt-[180px] xl:pb-[160px] 2xl:pt-[210px] 2xl:pb-[200px]"
+        className="relative z-10 overflow-hidden pb-16 pt-[120px] md:pb-[120px] md:pt-[150px] xl:pb-[160px] xl:pt-[180px] 2xl:pb-[200px] 2xl:pt-[210px]"
       >
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
@@ -21,24 +21,30 @@ const Hero = ({ heroTitle, heroSubtitle }) => {
                   {heroSubtitle}
                 </p>
                 <div className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
-                  <Link
-                    href="#"
-                    className="rounded-md bg-primary py-4 px-8 text-base font-semibold text-white duration-300 ease-in-out hover:bg-primary/80"
-                  >
-                    View it on DatoCMS
-                  </Link>
-                  <Link
-                    href="#"
-                    className="rounded-md bg-black/20 py-4 px-8 text-base font-semibold text-black duration-300 ease-in-out hover:bg-black/30 dark:bg-white/20 dark:text-white dark:hover:bg-white/30"
-                  >
-                    View it on GitHub
-                  </Link>
+                  {buttons.map((button) => {
+                    const primary = 'bg-primary text-white hover:bg-primary/80';
+                    const secondary =
+                      'bg-black/20 hover:bg-black/30 text-black';
+                    return (
+                      <Link
+                        key={button.id}
+                        href={button.url || '#'}
+                        className={
+                          'rounded-md px-8 py-4 text-base font-semibold duration-300 ease-in-out ' +
+                          (button.primary ? primary : secondary)
+                        }
+                        id={button.id}
+                      >
+                        {button.label}
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="absolute top-0 right-0 z-[-1] opacity-30 lg:opacity-100">
+        <div className="absolute right-0 top-0 z-[-1] opacity-30 lg:opacity-100">
           <svg
             width="450"
             height="556"

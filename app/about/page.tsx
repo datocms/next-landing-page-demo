@@ -1,6 +1,3 @@
-import AboutSectionOne from '@/components/About/AboutSectionOne';
-import AboutSectionTwo from '@/components/About/AboutSectionTwo';
-import Team from '@/components/About/Team';
 import Breadcrumb from '@/components/Common/Breadcrumb';
 
 const AboutPage = () => {

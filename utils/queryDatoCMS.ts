@@ -1,4 +1,4 @@
-export default async function queryDatoCMS(query: string) {
+export default async function queryDatoCMS(query: string, variables = {}) {
   try {
     const { data } = await (
       await fetch('https://graphql.datocms.com/', {
@@ -11,6 +11,7 @@ export default async function queryDatoCMS(query: string) {
         },
         body: JSON.stringify({
           query,
+          variables,
         }),
       })
     ).json();
