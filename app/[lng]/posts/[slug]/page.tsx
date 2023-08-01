@@ -1,9 +1,10 @@
+import { fallbackLng } from '@/app/i18n/settings';
 import SharePost from '@/components/Blog/SharePost';
 import TagButton from '@/components/Blog/TagButton';
+import { postQuery } from '@/queries/post';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import transformDate from '@/utils/transformDate';
 import { isHeading, isParagraph } from 'datocms-structured-text-utils';
-import Image from 'next/image';
 import {
   Image as DatoImage,
   StructuredText,
@@ -26,61 +27,12 @@ const dateIcon = (
   </span>
 );
 
-const BlogDetailsPage = async ({ params: { slug } }) => {
-  const { post } = await queryDatoCMS(
-    `query MyQuery($slug: String) {
-      post(filter: {slug: {eq: $slug}}) {
-        _publishedAt
-        title
-        author {
-          name
-          bio
-          picture {
-            responsiveImage(imgixParams: {w: "64", h: "64", fit: crop}) {
-              srcSet
-              webpSrcSet
-              sizes
-              src
-              width
-              height
-              aspectRatio
-              alt
-              title
-              bgColor
-              base64
-            }
-          }
-        }
-        tags {
-          id
-          tag
-        }
-        content {
-          value
-          blocks {
-            id
-            __typename
-            image {
-              id
-              responsiveImage {
-                srcSet
-                webpSrcSet
-                sizes
-                src
-                width
-                height
-                aspectRatio
-                alt
-                title
-                base64
-              }
-            }
-          }
-        }
-      }
-    }`,
-    { slug }
-  );
+const BlogDetailsPage = async ({ params: { slug, lng } }) => {
+  const { post } = await queryDatoCMS(postQuery, {
+    slug,
+    locale: lng,
+    fallbackLocale: [fallbackLng],
+  });
 
   return (
     <>

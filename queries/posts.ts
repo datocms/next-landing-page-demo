@@ -1,5 +1,5 @@
-export const postsQuery = `query MyQuery {
-  allPosts(orderBy: _createdAt_DESC, first: "9") {
+export const postsQuery = `query MyQuery($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
+  allPosts(orderBy: _createdAt_DESC, first: "9", locale: $locale, fallbackLocales: $fallbackLocale) {
     _publishedAt
     slug
     id

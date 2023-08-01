@@ -2,15 +2,19 @@ import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import ScrollToTop from '@/components/ScrollToTop';
 import 'node_modules/react-modal-video/css/modal-video.css';
-import '../styles/index.css';
+import '../../styles/index.css';
+import { Providers } from './providers';
+import { languages } from '../i18n/settings';
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export async function generateStaticParams() {
+  return languages.map((language) => {
+    language;
+  });
+}
+
+export default function RootLayout({ children, params: { lng } }) {
   return (
-    <html suppressHydrationWarning lang="en">
+    <html suppressHydrationWarning lang={lng}>
       {/*
         <head /> will contain the components returned by the nearest parent
         head.js. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
@@ -19,7 +23,7 @@ export default function RootLayout({
 
       <body>
         <Providers>
-          <Header />
+          <Header lng={lng} />
           {children}
           <Footer />
           <ScrollToTop />
@@ -28,5 +32,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-import { Providers } from './providers';

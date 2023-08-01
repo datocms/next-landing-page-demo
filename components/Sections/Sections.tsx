@@ -7,7 +7,13 @@ import Testimonials from '../Testimonials';
 import Video from '../Video';
 import DetailSection from '../Detail/DetailSection';
 
-export default function Section({ sections }: { sections: Array<any> }) {
+export default function Section({
+  sections,
+  locale,
+}: {
+  sections: Array<any>;
+  locale: string;
+}) {
   return (
     <>
       {sections.map((section) => {
@@ -67,6 +73,7 @@ export default function Section({ sections }: { sections: Array<any> }) {
           case 'featured_posts_section':
             return (
               <Blog
+                locale={locale}
                 blogData={section.featuredPosts}
                 blogHeader={section.featuredPostsHeader}
                 blogSubheader={section.featuredPostsSubheader}

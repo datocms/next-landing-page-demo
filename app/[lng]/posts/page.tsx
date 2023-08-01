@@ -1,17 +1,18 @@
+import { fallbackLng } from '@/app/i18n/settings';
 import SingleBlog from '@/components/Blog/SingleBlog';
 import Breadcrumb from '@/components/Common/Breadcrumb';
 import { postsQuery } from '@/queries/posts';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 
-const Blog = async () => {
-  const { allPosts } = await queryDatoCMS(postsQuery);
+const Blog = async ({ params: { lng } }) => {
+  const { allPosts } = await queryDatoCMS(postsQuery, {
+    locale: lng,
+    fallbackLocale: fallbackLng,
+  });
 
   return (
     <>
-      <Breadcrumb
-        pageName="Blog Posts"
-        description=""
-      />
+      <Breadcrumb pageName="Blog Posts" description="" />
 
       <section className="pb-[120px] pt-[120px]">
         <div className="container">
@@ -21,7 +22,7 @@ const Blog = async () => {
                 key={post.id}
                 className="mb-10 w-full px-4 md:w-2/3 lg:w-1/2 xl:w-1/3"
               >
-                <SingleBlog blog={post} />
+                <SingleBlog blog={post} locale={lng} />
               </div>
             ))}
           </div>

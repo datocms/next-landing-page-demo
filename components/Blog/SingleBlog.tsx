@@ -2,7 +2,7 @@ import transformDate from '@/utils/transformDate';
 import Link from 'next/link';
 import { Image as DatoImage } from 'react-datocms';
 
-const SingleBlog = ({ blog }) => {
+const SingleBlog = ({ blog, locale }) => {
   const { title, seoTags, description, author, tags, _publishedAt, slug } =
     blog;
 
@@ -13,7 +13,7 @@ const SingleBlog = ({ blog }) => {
         data-wow-delay=".9s"
       >
         <Link
-          href={'/posts/' + slug}
+          href={'/' + locale + '/posts/' + slug}
           className="sM:h-[300px] relative block h-[230px] w-full overflow-hidden"
         >
           <span className="absolute right-6 top-6 z-20 inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold capitalize text-white">
@@ -27,7 +27,7 @@ const SingleBlog = ({ blog }) => {
         <div className="p-6 sm:p-8 md:px-6 md:py-8 lg:p-8 xl:px-5 xl:py-8 2xl:p-8">
           <h3>
             <Link
-              href={'/posts/' + slug}
+              href={'/' + locale + '/posts/' + slug}
               className="mb-4 block h-16 text-xl text-black hover:text-primary dark:text-white dark:hover:text-primary"
             >
               {title}
