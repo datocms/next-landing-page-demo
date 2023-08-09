@@ -1,7 +1,7 @@
 import { Image as DatoImage } from 'react-datocms';
 
 const CTABlock = ({ title, subtitle, buttonLabel, buttonHex, image }) => {
-  console.log(buttonHex);
+  console.log(`bg-[${buttonHex}]`);
   return (
     <div className="bg-white py-6 sm:py-8 lg:py-12">
       <div className="mx-auto max-w-screen-2xl">
@@ -18,7 +18,7 @@ const CTABlock = ({ title, subtitle, buttonLabel, buttonHex, image }) => {
 
             <div className="mt-auto">
               <div
-                className={`rounded-lg bg-[${buttonHex}] px-8 py-3 text-center text-sm font-semibold text-white md:text-base`}
+                className={`rounded-lg bg-[${buttonHex.toString()}] px-8 py-3 text-center text-sm font-semibold text-white md:text-base`}
               >
                 {buttonLabel}
               </div>
