@@ -112,7 +112,7 @@ export const postQuery = `query MyQuery($slug: String, $locale: SiteLocale, $fal
           subtitle
           image {
             id
-            responsiveImage(imgixParams: {fit: crop, h: "320", w: "320"}) {
+            responsiveImage {
               srcSet
               webpSrcSet
               sizes
