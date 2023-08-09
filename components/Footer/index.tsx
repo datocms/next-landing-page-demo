@@ -2,10 +2,15 @@ import queryDatoCMS from '@/utils/queryDatoCMS';
 import Image from 'next/image';
 import Link from 'next/link';
 import SvgRenderer from '../Common/SvgRenderer';
+import { fallbackLng } from '@/app/i18n/settings';
+import { draftMode } from 'next/headers';
 
-const Footer = async () => {
-  const { footer } = await queryDatoCMS(`query MyQuery {
-    footer {
+const Footer = async ({ lng }) => {
+  const { isEnabled } = draftMode();
+
+  const { footer } = await queryDatoCMS(
+    `query MyQuery($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
+    footer(locale: $locale, fallbackLocales: $fallbackLocale) {
       subtitle
       socialMediaLinks {
         url
@@ -17,8 +22,16 @@ const Footer = async () => {
           width
         }
       }
+      links {
+        slug
+        title
+        id
+      }
     }
-  }`);
+  }`,
+    { locale: lng, fallbackLocale: fallbackLng },
+    isEnabled
+  );
 
   return (
     <>
@@ -30,7 +43,7 @@ const Footer = async () => {
           <div className="-mx-4 flex flex-wrap justify-between">
             <div className="w-full px-4 md:w-1/2 lg:w-4/12 xl:w-5/12">
               <div className="mb-12 max-w-[360px] lg:mb-16">
-                <Link href="/" className="mb-8 inline-block">
+                <Link href={'/' + lng} className="mb-8 inline-block">
                   <Image
                     src="images/logo/logo-2.svg"
                     alt="logo"
@@ -70,72 +83,22 @@ const Footer = async () => {
               <div className="w-full">
                 <div className="mb-12 lg:mb-16">
                   <h2 className="mb-10 text-xl font-bold text-black dark:text-white">
-                    Useful Links
+                    Legal
                   </h2>
                   <ul>
-                    <li>
-                      <a
-                        href="/"
-                        className="mb-4 inline-block text-base font-medium text-body-color hover:text-primary"
-                      >
-                        {' '}
-                        Blog{' '}
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="/"
-                        className="mb-4 inline-block text-base font-medium text-body-color hover:text-primary"
-                      >
-                        {' '}
-                        Pricing{' '}
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="/"
-                        className="mb-4 inline-block text-base font-medium text-body-color hover:text-primary"
-                      >
-                        {' '}
-                        About{' '}
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="w-full">
-                <div className="mb-12 lg:mb-16">
-                  <h2 className="mb-10 text-xl font-bold text-black dark:text-white">
-                    Terms
-                  </h2>
-                  <ul>
-                    <li>
-                      <a
-                        href="/"
-                        className="mb-4 inline-block text-base font-medium text-body-color hover:text-primary"
-                      >
-                        {' '}
-                        TOS{' '}
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="/"
-                        className="mb-4 inline-block text-base font-medium text-body-color hover:text-primary"
-                      >
-                        {' '}
-                        Privacy Policy{' '}
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="/"
-                        className="mb-4 inline-block text-base font-medium text-body-color hover:text-primary"
-                      >
-                        {' '}
-                        Refund Policy{' '}
-                      </a>
-                    </li>
+                    {footer.links.map((link) => {
+                      return (
+                        <li key={link.id}>
+                          <a
+                            href={'/' + lng + '/legal/' + link.slug}
+                            className="mb-4 inline-block text-base font-medium text-body-color hover:text-primary"
+                          >
+                            {' '}
+                            {link.title}{' '}
+                          </a>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               </div>

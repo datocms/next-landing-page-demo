@@ -6,6 +6,10 @@ import Pricing from '../Pricing';
 import Testimonials from '../Testimonials';
 import Video from '../Video';
 import DetailSection from '../Detail/DetailSection';
+import Team from '../About/CompactTeam';
+import CompactTeam from '../About/CompactTeam';
+import ExpandedTeam from '../About/ExpandedTeam';
+import FAQAccordion from '../About/FAQAccordion';
 
 export default function Section({
   sections,
@@ -77,6 +81,30 @@ export default function Section({
                 blogData={section.featuredPosts}
                 blogHeader={section.featuredPostsHeader}
                 blogSubheader={section.featuredPostsSubheader}
+              />
+            );
+          case 'team_section':
+            if (section.displayOptions === 'compact')
+              return (
+                <CompactTeam
+                  header={section.title}
+                  subheader={section.subtitle}
+                  members={section.showcasedMembers}
+                />
+              );
+            return (
+              <ExpandedTeam
+                header={section.title}
+                subheader={section.subtitle}
+                members={section.showcasedMembers}
+              />
+            );
+          case 'faq_section':
+            return (
+              <FAQAccordion
+                title={section.title}
+                subtitle={section.subtitle}
+                questions={section.questions}
               />
             );
           default:

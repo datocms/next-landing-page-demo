@@ -3,27 +3,30 @@ import PageIndicatorList from '@/components/Blog/PageIndicatorList';
 import SingleBlog from '@/components/Blog/SingleBlog';
 import Breadcrumb from '@/components/Common/Breadcrumb';
 import { postsQuery } from '@/queries/posts';
+import { tagQuery } from '@/queries/tag';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
 import { useQuerySubscription } from 'react-datocms/use-query-subscription';
 
-const Blog = async ({ params: { lng } }) => {
+const TagPage = async ({ params }) => {
+  const { lng } = params;
   const { isEnabled } = draftMode();
 
   const initialData = await queryDatoCMS(
-    postsQuery,
+    tagQuery,
     {
       locale: lng,
       fallbackLocale: fallbackLng,
+      slug: params.slug,
     },
     isEnabled
   );
 
-  const { allPosts } = initialData;
+  const { _allReferencingPosts: allPosts } = initialData.tag;
 
   return (
     <>
-      <Breadcrumb pageName="Blog Posts" description="" />
+      <Breadcrumb pageName={initialData.tag.tag} description="" />
 
       <section className="pb-[120px] pt-[120px]">
         <div className="container">
@@ -41,30 +44,11 @@ const Blog = async ({ params: { lng } }) => {
           <div
             className="wow fadeInUp -mx-4 flex flex-wrap"
             data-wow-delay=".15s"
-          >
-            <div className="w-full px-4">
-              <ul className="flex items-center justify-center pt-8">
-                <PageIndicatorList
-                  lng={lng}
-                  postCount={initialData['_allPostsMeta'].count}
-                />
-                {9 < initialData['_allPostsMeta'].count && (
-                  <li className="mx-1">
-                    <a
-                      href={`/${lng}/posts/page/2`}
-                      className="flex h-9 min-w-[36px] items-center justify-center rounded-md bg-body-color bg-opacity-[15%] px-4 text-sm text-body-color transition hover:bg-primary hover:bg-opacity-100 hover:text-white"
-                    >
-                      Next
-                    </a>
-                  </li>
-                )}
-              </ul>
-            </div>
-          </div>
+          ></div>
         </div>
       </section>
     </>
   );
 };
 
-export default Blog;
+export default TagPage;

@@ -1,5 +1,5 @@
 export const homeQuery = `query MyQuery($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
-  home(locale: $locale, fallbackLocales: $fallbackLocale) {
+  page(filter: {label: {eq: "Home"}}, locale: $locale, fallbackLocales: $fallbackLocale) {
     sections {
       ... on HeroSectionRecord {
         buttons {

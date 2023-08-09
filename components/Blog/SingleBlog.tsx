@@ -48,16 +48,16 @@ const SingleBlog = ({ blog, locale }) => {
                 <h4 className="mb-1 text-sm font-medium text-dark dark:text-white">
                   {author.name}
                 </h4>
-                <p className="text-xs text-body-color">{author.bio}</p>
+                <div className="text-xs text-body-color">{author.bio}</div>
               </div>
             </div>
             <div className="inline-block">
               {/* <h4 className="mb-1 text-sm font-medium text-dark dark:text-white">
                 Date
               </h4> */}
-              <p className="text-xs text-body-color">
+              <div className="text-xs text-body-color">
                 {transformDate(_publishedAt)}
-              </p>
+              </div>
             </div>
           </div>
         </div>

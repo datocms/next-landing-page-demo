@@ -5,6 +5,7 @@ import 'node_modules/react-modal-video/css/modal-video.css';
 import '../../styles/index.css';
 import { Providers } from './providers';
 import { languages } from '../i18n/settings';
+import { draftMode } from 'next/headers';
 
 export async function generateStaticParams() {
   return languages.map((language) => {
@@ -13,6 +14,8 @@ export async function generateStaticParams() {
 }
 
 export default function RootLayout({ children, params: { lng } }) {
+  const { isEnabled, enable, disable } = draftMode();
+
   return (
     <html suppressHydrationWarning lang={lng}>
       {/*
@@ -23,9 +26,9 @@ export default function RootLayout({ children, params: { lng } }) {
 
       <body>
         <Providers>
-          <Header lng={lng} />
+          <Header lng={lng} isDraft={isEnabled} />
           {children}
-          <Footer />
+          <Footer lng={lng} />
           <ScrollToTop />
         </Providers>
       </body>

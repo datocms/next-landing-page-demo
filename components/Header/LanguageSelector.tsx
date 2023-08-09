@@ -1,5 +1,5 @@
 'use client';
-import { languages } from '@/app/i18n/settings';
+import { langageDictionary, languages } from '@/app/i18n/settings';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
@@ -9,17 +9,8 @@ const LanguageSelector = ({ lng }) => {
   const pathname = usePathname();
   const pathArray = pathname.split('/');
   const currentLocale = pathArray[1];
+
   const pathString = pathArray.splice(2, pathArray.length).join('/');
-  const langageDictionary = {
-    en: 'English',
-    it: 'Italian',
-    ru: 'Russian',
-    de: 'German',
-    pt: 'Portuguese',
-    fr: 'French',
-    sv: 'Swedish',
-    es: 'Spanish',
-  };
 
   return (
     <div className="relative">
@@ -68,3 +59,8 @@ const LanguageSelector = ({ lng }) => {
 };
 
 export default LanguageSelector;
+
+//if the current dir is /posts/ or /legal/
+//if the current page has a slug
+//try to fetch the slug in the new locale, if it doesn't return any, redirect the user to a 404
+//if it does return one, redirect the user to it

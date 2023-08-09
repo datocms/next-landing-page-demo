@@ -2,15 +2,30 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import ThemeToggler from './ThemeToggler';
 import menuData from './menuData';
 import LanguageSelector from './LanguageSelector';
+import { useRouter } from 'next/navigation';
+import AuthenticationModal from './AuthenticationModal';
+import SuccessPopUp from './SuccessPopUp';
+import { AnimatePresence, motion } from 'framer-motion';
 
-const Header = ({ lng }) => {
+const Header = ({ lng, isDraft }) => {
+  const router = useRouter();
+
   // Navbar toggle
   const [navbarOpen, setNavbarOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [successToast, setSuccessToast] = useState(false);
+
   const navbarToggleHandler = () => {
     setNavbarOpen(!navbarOpen);
+  };
+
+  const triggerSuccessToast = () => {
+    setSuccessToast(true);
+    setTimeout(() => {
+      setSuccessToast(false);
+    }, 5000);
   };
 
   // Sticky Navbar
@@ -36,6 +51,13 @@ const Header = ({ lng }) => {
     }
   };
 
+  async function toggleDraft() {
+    if (isDraft) {
+      await fetch('/api/draft/disable');
+      router.refresh();
+    } else setModalOpen(true);
+  }
+
   return (
     <>
       <header
@@ -45,6 +67,36 @@ const Header = ({ lng }) => {
             : 'absolute'
         }`}
       >
+        <AnimatePresence>
+          {successToast && (
+            <motion.div
+              className="absolute top-6 z-50"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: 0.1 }}
+            >
+              <SuccessPopUp setSuccessToast={setSuccessToast} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <AnimatePresence>
+          {modalOpen && (
+            <motion.div
+              className="absolute right-0 top-0 z-50"
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              transition={{ duration: 0.15 }}
+            >
+              <AuthenticationModal
+                setModalOpen={setModalOpen}
+                refresh={router.refresh}
+                triggerSuccessToast={triggerSuccessToast}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
         <div className="container">
           <div className="relative -mx-4 flex items-center justify-between">
             <div className="w-60 max-w-full px-4 xl:mr-12">
@@ -151,18 +203,12 @@ const Header = ({ lng }) => {
                 </nav>
               </div>
               <div className="flex items-center justify-end pr-16 lg:pr-0">
-                <Link
-                  href="/signin"
-                  className="hidden px-7 py-3 text-base font-bold text-dark hover:opacity-70 dark:text-white md:block"
+                <div
+                  onClick={toggleDraft}
+                  className="ease-in-up hidden rounded-md bg-primary px-8 py-3 text-base font-bold text-white transition duration-300 hover:cursor-pointer hover:bg-opacity-90 hover:shadow-signUp md:block md:px-9 lg:px-6 xl:px-9"
                 >
-                  Sign In
-                </Link>
-                <Link
-                  href="/signup"
-                  className="ease-in-up hidden rounded-md bg-primary px-8 py-3 text-base font-bold text-white transition duration-300 hover:bg-opacity-90 hover:shadow-signUp md:block md:px-9 lg:px-6 xl:px-9"
-                >
-                  Sign Up
-                </Link>
+                  {isDraft ? 'Draft' : 'Published'}
+                </div>
                 <LanguageSelector lng={lng} />
               </div>
             </div>

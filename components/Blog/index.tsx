@@ -1,4 +1,3 @@
-import queryDatoCMS from '@/utils/queryDatoCMS';
 import SectionTitle from '../Common/SectionTitle';
 import SingleBlog from './SingleBlog';
 

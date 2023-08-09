@@ -9,3 +9,13 @@ export const languages = [
   'sv',
   'ru',
 ];
+export const langageDictionary = {
+  en: 'English',
+  it: 'Italian',
+  ru: 'Russian',
+  de: 'German',
+  pt: 'Portuguese',
+  fr: 'French',
+  sv: 'Swedish',
+  es: 'Spanish',
+};

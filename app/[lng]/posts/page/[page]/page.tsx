@@ -5,9 +5,10 @@ import Breadcrumb from '@/components/Common/Breadcrumb';
 import { postsQuery } from '@/queries/posts';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
-import { useQuerySubscription } from 'react-datocms/use-query-subscription';
+import { notFound } from 'next/navigation';
 
-const Blog = async ({ params: { lng } }) => {
+const Blog = async ({ params }) => {
+  const { lng } = params;
   const { isEnabled } = draftMode();
 
   const initialData = await queryDatoCMS(
@@ -15,11 +16,16 @@ const Blog = async ({ params: { lng } }) => {
     {
       locale: lng,
       fallbackLocale: fallbackLng,
+      skip: (params.page - 1) * 9,
     },
     isEnabled
   );
 
   const { allPosts } = initialData;
+
+  if (!allPosts.length) {
+    notFound();
+  }
 
   return (
     <>
@@ -44,14 +50,26 @@ const Blog = async ({ params: { lng } }) => {
           >
             <div className="w-full px-4">
               <ul className="flex items-center justify-center pt-8">
+                <li className="mx-1">
+                  <a
+                    href={
+                      params.page - 1 === 1
+                        ? `/${lng}/posts`
+                        : `/${lng}/posts/page/${params.page - 1}`
+                    }
+                    className="flex h-9 min-w-[36px] items-center justify-center rounded-md bg-body-color bg-opacity-[15%] px-4 text-sm text-body-color transition hover:bg-primary hover:bg-opacity-100 hover:text-white"
+                  >
+                    Prev
+                  </a>
+                </li>
                 <PageIndicatorList
                   lng={lng}
                   postCount={initialData['_allPostsMeta'].count}
                 />
-                {9 < initialData['_allPostsMeta'].count && (
+                {params.page * 9 <= initialData['_allPostsMeta'].count && (
                   <li className="mx-1">
                     <a
-                      href={`/${lng}/posts/page/2`}
+                      href={`/${lng}/posts/page/${parseInt(params.page) + 1}`}
                       className="flex h-9 min-w-[36px] items-center justify-center rounded-md bg-body-color bg-opacity-[15%] px-4 text-sm text-body-color transition hover:bg-primary hover:bg-opacity-100 hover:text-white"
                     >
                       Next

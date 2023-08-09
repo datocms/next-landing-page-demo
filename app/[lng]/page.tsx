@@ -3,17 +3,24 @@ import Sections from '@/components/Sections/Sections';
 import { homeQuery } from '@/queries/home';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { fallbackLng } from '../i18n/settings';
+import { draftMode } from 'next/headers';
 
 export default async function Home({ params: { lng } }) {
-  const { home } = await queryDatoCMS(homeQuery, {
-    locale: lng,
-    fallbackLocale: [fallbackLng],
-  });
+  const { isEnabled } = draftMode();
+
+  const { page } = await queryDatoCMS(
+    homeQuery,
+    {
+      locale: lng,
+      fallbackLocale: [fallbackLng],
+    },
+    isEnabled
+  );
 
   return (
     <>
       <ScrollUp />
-      <Sections locale={lng} sections={home.sections} />
+      <Sections locale={lng} sections={page.sections} />
     </>
   );
 }

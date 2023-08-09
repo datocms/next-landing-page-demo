@@ -7,7 +7,7 @@
     },
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": false,
+    "strict": false, //we really should change this...
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "incremental": true,
