@@ -4,11 +4,12 @@ import { homeQuery } from '@/queries/home';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { fallbackLng } from '../i18n/settings';
 import { draftMode } from 'next/headers';
+import RealTimeSections from '@/components/Sections/RealTimeSections';
 
 export default async function Home({ params: { lng } }) {
   const { isEnabled } = draftMode();
 
-  const { page } = await queryDatoCMS(
+  const data = await queryDatoCMS(
     homeQuery,
     {
       locale: lng,
@@ -20,7 +21,15 @@ export default async function Home({ params: { lng } }) {
   return (
     <>
       <ScrollUp />
-      <Sections locale={lng} sections={page.sections} />
+      {!isEnabled && <Sections locale={lng} sections={data.page.sections} />}
+      {isEnabled && (
+        <RealTimeSections
+          initialData={data}
+          locale={lng}
+          token={process.env.DATOCMS_READONLY_API_TOKEN}
+          query={homeQuery}
+        />
+      )}
     </>
   );
 }

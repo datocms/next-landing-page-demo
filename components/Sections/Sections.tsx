@@ -12,6 +12,7 @@ import ExpandedTeam from '../About/ExpandedTeam';
 import FAQAccordion from '../About/FAQAccordion';
 import FAQGrid from '../About/FAQGrid';
 import StatsSection from '../About/StatsSection';
+import { draftMode } from 'next/headers';
 
 export default function Section({
   sections,

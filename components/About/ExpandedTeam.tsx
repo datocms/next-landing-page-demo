@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { Image as DatoImage } from 'react-datocms';
 
 const ExpandedTeam = ({ header, subheader, members }) => {
   return (
@@ -15,13 +15,19 @@ const ExpandedTeam = ({ header, subheader, members }) => {
         <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 xl:mt-16 xl:grid-cols-2">
           {members.map((member) => {
             return (
-              <div className="group transform rounded-xl border px-12 py-8 transition-colors duration-300 hover:border-transparent hover:bg-blue-600 dark:border-gray-700 dark:hover:border-transparent">
+              <div
+                key={member.id}
+                className="group transform rounded-xl border px-12 py-8 transition-colors duration-300 hover:border-transparent hover:bg-blue-600 dark:border-gray-700 dark:hover:border-transparent"
+              >
                 <div className="flex flex-col sm:-mx-4 sm:flex-row">
-                  <Image
-                    className="h-24 w-24 flex-shrink-0 rounded-full object-cover ring-4 ring-gray-300 sm:mx-4"
-                    src={member.picture.responsiveImage}
-                    alt=""
-                  />
+                  <div className="relative z-50 h-24 w-24 flex-shrink-0 overflow-hidden rounded-full object-cover ring-4 ring-gray-300 sm:mx-4">
+                    <DatoImage
+                      layout="fill"
+                      objectFit="cover"
+                      objectPosition="50% 50%"
+                      data={member.picture.responsiveImage}
+                    />
+                  </div>
 
                   <div className="mt-4 sm:mx-4 sm:mt-0">
                     <h1 className="text-xl font-semibold capitalize text-gray-700 group-hover:text-white dark:text-white md:text-2xl">

@@ -26,7 +26,10 @@ const StatsSection = ({ title, subtitle, statistic }) => {
         <div className="-m-4 flex flex-wrap text-center">
           {statistic.map((stat) => {
             return (
-              <div className="w-full p-4 text-primary sm:w-1/2 md:w-1/4">
+              <div
+                key={stat.id}
+                className="w-full p-4 text-primary sm:w-1/2 md:w-1/4"
+              >
                 <div className="flex flex-col items-center justify-center rounded-lg border-2 border-gray-200 px-4 py-6 text-center text-primary">
                   <div className="mb-4 h-24 w-24 text-primary">
                     <SvgRenderer url={stat.icon.url} />

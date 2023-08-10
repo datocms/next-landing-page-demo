@@ -4,11 +4,12 @@ import { aboutQuery } from '@/queries/about';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
 import Sections from '@/components/Sections/Sections';
+import RealTimeSections from '@/components/Sections/RealTimeSections';
 
 const AboutPage = async ({ params: { lng } }) => {
   const { isEnabled } = draftMode();
 
-  const { page } = await queryDatoCMS(
+  const data = await queryDatoCMS(
     aboutQuery,
     {
       locale: lng,
@@ -19,8 +20,15 @@ const AboutPage = async ({ params: { lng } }) => {
 
   return (
     <>
-      <Breadcrumb pageName="About Us" description="" />
-      <Sections locale={lng} sections={page.sections} />
+      {!isEnabled && <Sections locale={lng} sections={data.page.sections} />}
+      {isEnabled && (
+        <RealTimeSections
+          initialData={data}
+          locale={lng}
+          token={process.env.DATOCMS_READONLY_API_TOKEN}
+          query={aboutQuery}
+        />
+      )}
     </>
   );
 };

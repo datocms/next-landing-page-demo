@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { Image as DatoImage } from 'react-datocms';
 
 const CompactTeam = ({ header, subheader, members }) => {
   return (
@@ -15,12 +15,18 @@ const CompactTeam = ({ header, subheader, members }) => {
         <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 xl:mt-16 xl:grid-cols-3">
           {members.map((member) => {
             return (
-              <div className="group flex transform flex-col items-center rounded-xl p-8 transition-colors duration-300 hover:bg-blue-600">
-                <Image
-                  className="h-32 w-32 rounded-full object-cover ring-4 ring-gray-300"
-                  src={member.picture.responsiveImage}
-                  alt=""
-                />
+              <div
+                key={member.id}
+                className="group flex transform flex-col items-center rounded-xl p-8 transition-colors duration-300 hover:bg-blue-600"
+              >
+                <div className="relative h-32 w-32 overflow-hidden rounded-full object-cover ring-4 ring-gray-300">
+                  <DatoImage
+                    layout="fill"
+                    objectFit="cover"
+                    objectPosition="50% 50%"
+                    data={member.picture.responsiveImage}
+                  />
+                </div>
 
                 <h1 className="mt-4 text-2xl font-semibold capitalize text-gray-700 group-hover:text-white dark:text-white">
                   {member.name}

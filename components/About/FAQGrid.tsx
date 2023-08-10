@@ -12,8 +12,8 @@ const FAQGrid = ({ title, subtitle, questions }) => {
         <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:mt-16 xl:grid-cols-2">
           {questions.map((question) => {
             return (
-              <div className='flex gap-4'>
-                <div className="inline-block rounded-lg bg-blue-600 p-3 text-white h-12">
+              <div key={question.id} className="flex gap-4">
+                <div className="inline-block h-12 rounded-lg bg-blue-600 p-3 text-white">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6"

@@ -1,6 +1,8 @@
 import { fallbackLng } from '@/app/i18n/settings';
 import PageIndicatorList from '@/components/Blog/PageIndicatorList';
+import RealTimeTagPosts from '@/components/Blog/RealTimeTagPosts';
 import SingleBlog from '@/components/Blog/SingleBlog';
+import TagPosts from '@/components/Blog/TagPosts';
 import Breadcrumb from '@/components/Common/Breadcrumb';
 import { postsQuery } from '@/queries/posts';
 import { tagQuery } from '@/queries/tag';
@@ -12,7 +14,7 @@ const TagPage = async ({ params }) => {
   const { lng } = params;
   const { isEnabled } = draftMode();
 
-  const initialData = await queryDatoCMS(
+  const data = await queryDatoCMS(
     tagQuery,
     {
       locale: lng,
@@ -22,31 +24,18 @@ const TagPage = async ({ params }) => {
     isEnabled
   );
 
-  const { _allReferencingPosts: allPosts } = initialData.tag;
-
   return (
     <>
-      <Breadcrumb pageName={initialData.tag.tag} description="" />
-
-      <section className="pb-[120px] pt-[120px]">
-        <div className="container">
-          <div className="-mx-4 flex flex-wrap justify-center">
-            {allPosts.map((post) => (
-              <div
-                key={post.id}
-                className="mb-10 w-full px-4 md:w-2/3 lg:w-1/2 xl:w-1/3"
-              >
-                <SingleBlog blog={post} locale={lng} />
-              </div>
-            ))}
-          </div>
-
-          <div
-            className="wow fadeInUp -mx-4 flex flex-wrap"
-            data-wow-delay=".15s"
-          ></div>
-        </div>
-      </section>
+      {!isEnabled && <TagPosts data={data} lng={lng} />}
+      {isEnabled && (
+        <RealTimeTagPosts
+          initialData={data}
+          locale={lng}
+          token={process.env.DATOCMS_READONLY_API_TOKEN}
+          query={tagQuery}
+          slug={params.slug}
+        />
+      )}
     </>
   );
 };

@@ -46,6 +46,7 @@ export const aboutQuery = `query MyQuery($locale: SiteLocale, $fallbackLocale: [
       ... on FaqSectionRecord {
         _modelApiKey
         displayOptions
+        id
         title
         subtitle
         questions {
