@@ -10,6 +10,8 @@ import Team from '../About/CompactTeam';
 import CompactTeam from '../About/CompactTeam';
 import ExpandedTeam from '../About/ExpandedTeam';
 import FAQAccordion from '../About/FAQAccordion';
+import FAQGrid from '../About/FAQGrid';
+import StatsSection from '../About/StatsSection';
 
 export default function Section({
   sections,
@@ -84,6 +86,7 @@ export default function Section({
               />
             );
           case 'team_section':
+            console.log(section.displayOptions);
             if (section.displayOptions === 'compact')
               return (
                 <CompactTeam
@@ -100,11 +103,27 @@ export default function Section({
               />
             );
           case 'faq_section':
+            if (section.displayOptions === 'accordion')
+              return (
+                <FAQAccordion
+                  title={section.title}
+                  subtitle={section.subtitle}
+                  questions={section.questions}
+                />
+              );
             return (
-              <FAQAccordion
+              <FAQGrid
                 title={section.title}
                 subtitle={section.subtitle}
                 questions={section.questions}
+              />
+            );
+          case 'stats_section':
+            return (
+              <StatsSection
+                title={section.title}
+                subtitle={section.subtitle}
+                statistic={section.statistic}
               />
             );
           default:

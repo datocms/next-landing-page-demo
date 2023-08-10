@@ -58,19 +58,19 @@ const FAQAccordion = ({ title, subtitle, questions }) => {
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6 py-12">
-        <h1 className="mb-4 text-center text-2xl font-semibold text-gray-800 dark:text-white lg:text-3xl">
+        <h1 className="mb-4 text-center text-2xl font-semibold text-gray-800 dark:text-white lg:text-4xl">
           {title}
         </h1>
         <h2 className=" text-center text-gray-500">{subtitle}</h2>
 
-        <div className="mx-8 mt-8 grid gap-4 lg:mx-32">
+        <div className="mx-8 mt-8 grid gap-4 lg:mx-40">
           {questions.map((question) => {
             const isOpen = openQuestions.includes(question.id);
             return (
               <motion.div
                 layout="position"
                 key={question.id}
-                className={'rounded-lg bg-gray-100 p-8 dark:bg-gray-800'}
+                className={'hover:cursor-pointer rounded-lg bg-gray-100 p-8 dark:bg-gray-800'}
                 onClick={() => {
                   toggleQuestion(question.id);
                 }}

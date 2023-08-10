@@ -1,6 +1,20 @@
 export const aboutQuery = `query MyQuery($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
   page(filter: {label: {eq: "About"}}, locale: $locale, fallbackLocales: $fallbackLocale) {
     sections {
+      ... on StatsSectionRecord {
+        _modelApiKey
+        id
+        title
+        subtitle
+        statistic {
+          id
+          label
+          quantity
+          icon {
+            url
+          }
+        }
+      }
       ... on TeamSectionRecord {
         _modelApiKey
         id
@@ -31,6 +45,7 @@ export const aboutQuery = `query MyQuery($locale: SiteLocale, $fallbackLocale: [
       }
       ... on FaqSectionRecord {
         _modelApiKey
+        displayOptions
         title
         subtitle
         questions {
