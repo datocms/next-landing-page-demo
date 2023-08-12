@@ -5,6 +5,7 @@ export const postQuery = `query MyQuery($slug: String, $locale: SiteLocale, $fal
     author {
       name
       bio
+      slug
       picture {
         responsiveImage(imgixParams: {w: "64", h: "64", fit: crop}) {
           srcSet

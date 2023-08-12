@@ -122,6 +122,7 @@ export const homeQuery = `query MyQuery($locale: SiteLocale, $fallbackLocale: [S
           author {
             name
             bio
+            slug
             picture {
               responsiveImage(imgixParams: {w: "64", h: "64", fit: crop}) {
                 srcSet

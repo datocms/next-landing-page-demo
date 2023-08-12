@@ -1,6 +1,32 @@
 export const aboutQuery = `query MyQuery($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
   page(filter: {label: {eq: "About"}}, locale: $locale, fallbackLocales: $fallbackLocale) {
     sections {
+      ... on AboutIntroRecord {
+        id
+        _modelApiKey
+        preHeader
+        header
+        subheader
+        introductionText {
+          value
+        }
+        images {
+          id
+          responsiveImage {
+            srcSet
+            webpSrcSet
+            sizes
+            src
+            width
+            height
+            aspectRatio
+            alt
+            title
+            bgColor
+            base64
+          }
+        }
+      }
       ... on StatsSectionRecord {
         _modelApiKey
         id
@@ -24,10 +50,11 @@ export const aboutQuery = `query MyQuery($locale: SiteLocale, $fallbackLocale: [
         showcasedMembers {
           name
           id
+          slug
           bio
           description
           picture {
-            responsiveImage(imgixParams: {w: "400", h: "256", fit: crop}) {
+            responsiveImage {
               srcSet
               webpSrcSet
               sizes

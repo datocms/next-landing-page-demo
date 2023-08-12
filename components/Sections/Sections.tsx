@@ -13,6 +13,7 @@ import FAQAccordion from '../About/FAQAccordion';
 import FAQGrid from '../About/FAQGrid';
 import StatsSection from '../About/StatsSection';
 import { draftMode } from 'next/headers';
+import AboutIntro from '../About/AboutIntro';
 
 export default function Section({
   sections,
@@ -87,13 +88,13 @@ export default function Section({
               />
             );
           case 'team_section':
-            console.log(section.displayOptions);
             if (section.displayOptions === 'compact')
               return (
                 <CompactTeam
                   header={section.title}
                   subheader={section.subtitle}
                   members={section.showcasedMembers}
+                  lng={locale}
                 />
               );
             return (
@@ -101,6 +102,7 @@ export default function Section({
                 header={section.title}
                 subheader={section.subtitle}
                 members={section.showcasedMembers}
+                lng={locale}
               />
             );
           case 'faq_section':
@@ -125,6 +127,16 @@ export default function Section({
                 title={section.title}
                 subtitle={section.subtitle}
                 statistic={section.statistic}
+              />
+            );
+          case 'about_intro':
+            return (
+              <AboutIntro
+                header={section.header}
+                subheader={section.subheader}
+                introduction={section.introductionText}
+                images={section.images}
+                preHeader={section.preHeader}
               />
             );
           default:

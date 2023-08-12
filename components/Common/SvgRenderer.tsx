@@ -20,7 +20,7 @@ const SvgRenderer = ({ url }) => {
 
   return (
     <div
-      className="h-full w-full fill-current [&>*]:text-primary"
+      className="[&>*]:text-primary fill-current"
       dangerouslySetInnerHTML={{ __html: svgContent }}
     />
   );

@@ -40,7 +40,10 @@ const SingleBlog = ({ blog, locale }) => {
           </h3>
           <div className="mb-6 border-b border-body-color border-opacity-10 pb-6 text-base font-medium text-body-color dark:border-white dark:border-opacity-10" />
           <div className="flex h-full items-center justify-between">
-            <div className="mr-5 flex items-center border-r border-body-color border-opacity-10 pr-5 dark:border-white dark:border-opacity-10 xl:mr-3 xl:pr-3 2xl:mr-5 2xl:pr-5">
+            <Link
+              href={`/${locale}/posts/author/${author.slug}`}
+              className="mr-5 flex items-center border-r border-body-color border-opacity-10 pr-5 dark:border-white dark:border-opacity-10 xl:mr-3 xl:pr-3 2xl:mr-5 2xl:pr-5"
+            >
               <div className="mr-4">
                 <div className="relative h-12 w-12 overflow-hidden rounded-full object-contain">
                   <DatoImage
@@ -58,11 +61,8 @@ const SingleBlog = ({ blog, locale }) => {
                 </h4>
                 <div className="text-xs text-body-color">{author.bio}</div>
               </div>
-            </div>
+            </Link>
             <div className="inline-block">
-              {/* <h4 className="mb-1 text-sm font-medium text-dark dark:text-white">
-                Date
-              </h4> */}
               <div className="text-xs text-body-color">
                 {transformDate(_publishedAt)}
               </div>

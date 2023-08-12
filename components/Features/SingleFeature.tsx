@@ -1,4 +1,3 @@
-import { Feature } from '@/types/feature';
 import SvgRenderer from '../Common/SvgRenderer';
 
 const SingleFeature = ({ feature }) => {

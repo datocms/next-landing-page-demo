@@ -20,6 +20,7 @@ import NewsletterCTABlock from '@/components/Blog/NewsletterCTABlock';
 import CTABlock from '@/components/Blog/CTABlock';
 import DateIcon from '@/components/Blog/svgs/DateIcon';
 import SingleBlog from '@/components/Blog/SingleBlog';
+import Link from 'next/link';
 
 const Post = ({ data, lng }) => {
   return (
@@ -33,7 +34,10 @@ const Post = ({ data, lng }) => {
               </h2>
               <div className="mb-10 flex flex-wrap items-center justify-between border-b border-body-color border-opacity-10 pb-4 dark:border-white dark:border-opacity-10">
                 <div className="flex flex-wrap items-center">
-                  <div className="mb-5 mr-10 flex items-center">
+                  <Link
+                    href={`/${lng}/posts/author/${data.post.author.slug}`}
+                    className="mb-5 mr-10 flex items-center"
+                  >
                     <div className="mr-4">
                       <div className="relative h-10 w-10 overflow-hidden rounded-full">
                         <DatoImage
@@ -50,7 +54,7 @@ const Post = ({ data, lng }) => {
                         {data.post.author.bio}
                       </p>
                     </div>
-                  </div>
+                  </Link>
                   <div className="mb-5 flex items-center">
                     <p className="mr-5 flex items-center text-base font-medium text-body-color">
                       {DateIcon}

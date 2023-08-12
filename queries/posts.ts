@@ -27,6 +27,7 @@ export const postsQuery = `query MyQuery($locale: SiteLocale, $fallbackLocale: [
     }
     author {
       name
+      slug
       bio
       picture {
         responsiveImage(imgixParams: {w: "64", h: "64", fit: crop}) {

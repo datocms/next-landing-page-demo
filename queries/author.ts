@@ -1,6 +1,23 @@
-export const tagQuery = `query MyQuery($slug: String, $locale: SiteLocale, $fallbackLocale: [SiteLocale!], $skip: IntType = "0") {
-  tag(filter: {slug: {eq: $slug}}, locale: $locale) {
-    tag
+export const authorQuery = `query MyQuery($slug: String, $locale: SiteLocale, $fallbackLocale: [SiteLocale!], $skip: IntType = "0") {
+  author(filter: {slug: {eq: $slug}}, locale: $locale) {
+    name
+    picture {
+      responsiveImage {
+        srcSet
+        webpSrcSet
+        sizes
+        src
+        width
+        height
+        aspectRatio
+        alt
+        title
+        bgColor
+        base64
+      }
+    }
+    bio
+    description
     _allReferencingPosts(
       filter: {title: {isBlank: "false"}}
       orderBy: _createdAt_DESC

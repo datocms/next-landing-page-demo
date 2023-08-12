@@ -16,7 +16,7 @@ export default async function queryDatoCMS(
   try {
     const { data } = await (
       await fetch('https://graphql.datocms.com/', {
-        // cache: 'no-store', //only use during development
+        cache: 'no-store', //only use during development
         method: 'POST',
         headers,
         body: JSON.stringify({
