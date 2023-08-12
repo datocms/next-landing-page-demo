@@ -5,13 +5,13 @@ import SvgRenderer from '../Common/SvgRenderer';
 const Footer = ({ data, lng }) => {
   return (
     <footer
-      className="wow fadeInUp relative z-10 bg-primary bg-opacity-5 pt-16 md:pt-20 lg:pt-24"
+      className="wow fadeInUp relative z-10 bg-primary bg-opacity-5 pt-16 text-center md:text-start lg:pt-24 flex flex-col items-center justify-center mx-auto w-full"
       data-wow-delay=".1s"
     >
-      <div className="container">
-        <div className="-mx-4 flex flex-wrap justify-between">
-          <div className="w-full px-4 md:w-1/2 lg:w-4/12 xl:w-5/12">
-            <div className="mb-12 max-w-[360px] lg:mb-16">
+      <div className="container w-full">
+        <div className="flex justify-between flex-col md:flex-row w-full md:px-16">
+          <div className="w-full">
+            <div className="mb-12 mx- lg:mb-16">
               <Link href={'/' + lng} className="mb-8 inline-block">
                 <Image
                   src="images/logo/logo-2.svg"
@@ -31,7 +31,7 @@ const Footer = ({ data, lng }) => {
               <p className="mb-9 text-base font-medium leading-relaxed text-body-color">
                 {data.footer.subtitle}
               </p>
-              <div className="flex items-center">
+              <div className="flex items-center justify-center md:justify-start">
                 {data.footer.socialMediaLinks.map((socialMedia) => {
                   return (
                     <a
@@ -48,7 +48,7 @@ const Footer = ({ data, lng }) => {
             </div>
           </div>
 
-          <div className="flex w-[400px]">
+          <div className="flex w-full md:text-end">
             <div className="w-full">
               <div className="mb-12 lg:mb-16">
                 <h2 className="mb-10 text-xl font-bold text-black dark:text-white">

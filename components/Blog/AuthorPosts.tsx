@@ -4,7 +4,7 @@ import { Image as DatoImage } from 'react-datocms';
 const AuthorPosts = ({ data, lng }) => {
   return (
     <section className="mt-16 flex flex-col items-center justify-center py-[32px]">
-      <section className="px-auto mx-auto mb-8 flex items-center justify-center bg-white dark:bg-gray-900">
+      <section className="px-auto mx-auto mb-8 flex items-center justify-center bg-white dark:bg-gray-900 px-16">
         <div className="py-10">
           <div className="flex flex-col items-center justify-center gap-8 p-4 text-center md:flex-row md:text-start">
             <div className="relative aspect-square w-56 overflow-hidden rounded-xl drop-shadow-xl">

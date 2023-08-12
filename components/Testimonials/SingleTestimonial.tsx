@@ -22,14 +22,14 @@ const SingleTestimonial = ({ testimonial }) => {
   return (
     <div className="h-96 w-full">
       <div
-        className="wow fadeInUp h-full rounded-md bg-white p-8 shadow-one dark:bg-[#1D2144] lg:px-5 xl:px-8"
+        className="wow fadeInUp h-full rounded-md bg-white p-8 shadow-one dark:bg-[#1D2144] lg:px-5 xl:px-8 flex flex-col justify-center items-center lg:items-start"
         data-wow-delay=".1s"
       >
         <div className="mb-5 flex items-center space-x-1">{ratingIcons}</div>
         <p className="h-36 mb-8 border-b border-body-color border-opacity-10 pb-8 text-base leading-relaxed text-body-color dark:border-white dark:border-opacity-10 dark:text-white">
           “{review}
         </p>
-        <div className="flex items-center">
+        <div className="flex items-center w-96 md:w-full px-16 md:px-4 lg:px-0">
           <div className="relative mr-4 h-[50px] w-full max-w-[50px] overflow-hidden rounded-full">
             <Image src={reviewerPicture.url} alt={reviewerName} fill />
           </div>

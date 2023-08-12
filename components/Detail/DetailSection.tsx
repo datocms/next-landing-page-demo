@@ -15,9 +15,9 @@ const checkIcon = (
 
 const DetailSection = ({ details, imageURL, imagePosition }) => {
   return (
-    <section className="py-16 md:py-20 lg:py-28">
+    <section className="py-16 text-center md:py-20 lg:py-28 lg:text-start">
       <div className="container">
-        <div className="-mx-4 flex flex-wrap items-center">
+        <div className="-mx-4 flex flex-col items-center justify-center lg:flex-row lg:flex-wrap ">
           {!imagePosition && (
             <div className="w-full px-4 lg:w-1/2">
               <div
@@ -30,8 +30,8 @@ const DetailSection = ({ details, imageURL, imagePosition }) => {
           )}
           <div className="w-full px-4 lg:w-1/2">
             <div
-              className="wow fadeInUp max-w-[470px] sm:ml-6"
-              data-wow-delay=".2s"
+              className="wow fadeInUp lg:px-0 md:px-24 sm:ml-6"
+              data-wow-delay=".9s"
             >
               <StructuredText
                 data={details}
@@ -84,7 +84,7 @@ const DetailSection = ({ details, imageURL, imagePosition }) => {
             </div>
           </div>
           {imagePosition && (
-            <div className="w-full px-4 lg:w-1/2">
+            <div className="w-full px-4 lg:w-1/2 pt-8">
               <div
                 className="wow fadeInUp relative mx-auto mb-12 aspect-[25/24] max-w-[500px] text-center lg:m-0"
                 data-wow-delay=".15s"

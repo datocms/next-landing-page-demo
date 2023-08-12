@@ -34,7 +34,7 @@ const testimonialData: Testimonial[] = [
 
 const Testimonials = ({ reviews, header, subheader }) => {
   return (
-    <section className="relative z-10 bg-primary/[.03] py-16 md:py-20 lg:py-28">
+    <section className="relative z-10 bg-primary/[.03] py-16 text-center md:py-20 lg:py-28 lg:text-start">
       <div className="container">
         <SectionTitle title={header} paragraph={subheader} center />
 
@@ -44,7 +44,7 @@ const Testimonials = ({ reviews, header, subheader }) => {
           ))}
         </div>
       </div>
-      <div className="absolute top-5 right-0 z-[-1]">
+      <div className="absolute right-0 top-5 z-[-1]">
         <svg
           width="238"
           height="531"
@@ -98,7 +98,7 @@ const Testimonials = ({ reviews, header, subheader }) => {
           </defs>
         </svg>
       </div>
-      <div className="absolute left-0 bottom-5 z-[-1]">
+      <div className="absolute bottom-5 left-0 z-[-1]">
         <svg
           width="279"
           height="106"
