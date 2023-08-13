@@ -51,9 +51,11 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  const baseUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : process.env.URL;
+  // const baseUrl = process.env.VERCEL_URL
+  //   ? `https://${process.env.VERCEL_URL}`
+  //   : process.env.URL;
+
+  const baseUrl = process.env.URL;
 
   const previewLinks = [
     {
