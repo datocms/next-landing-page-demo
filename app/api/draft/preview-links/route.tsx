@@ -38,6 +38,9 @@ export async function POST(request: NextRequest) {
 
   const token = searchParams.get('token');
 
+  if (token !== process.env.DRAFT_SECRET_TOKEN)
+    return new Response('Invalid token', { status: 401 });
+
   const parsedRequest = await request.json();
   const url = generatePreviewUrl(parsedRequest);
 

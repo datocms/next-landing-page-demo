@@ -10,7 +10,7 @@ const findSlugAndPermalink = async (item, itemTypeApiKey, locale) => {
     case 'page':
       if (item.slug === 'home') return [item.slug, `/${locale}/`]; //special case for default home page
       return [item.slug, `/${locale}/${item.slug}`];
-    case 'posts':
+    case 'post':
       return [item.slug, `/${locale}/posts/${item.slug}`];
     default:
       return [null, null];
@@ -38,6 +38,10 @@ export async function GET(req: NextRequest) {
   const itemTypeApiKey = searchParams.get('itemTypeApiKey');
   const locale = searchParams.get('locale');
   const sandboxEnvironmentId = searchParams.get('sandboxEnvironmentId');
+  const token = searchParams.get('token');
+
+  if (token !== process.env.SEO_SECRET_TOKEN)
+    return new Response('Invalid token', { status: 401 });
 
   if (
     !itemId ||
@@ -74,7 +78,6 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  //i'm using the published version here, change if necessary
   const { body } = await got(new URL(permalink, process.env.URL).toString());
 
   const { document } = new JSDOM(body).window;

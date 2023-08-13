@@ -6,6 +6,7 @@ import '../../styles/index.css';
 import { Providers } from './providers';
 import { languages } from '../i18n/settings';
 import { draftMode } from 'next/headers';
+import Head from './Head';
 
 export async function generateStaticParams() {
   return languages.map((language) => {
@@ -14,16 +15,11 @@ export async function generateStaticParams() {
 }
 
 export default function RootLayout({ children, params: { lng } }) {
-  const { isEnabled, enable, disable } = draftMode();
+  const { isEnabled } = draftMode();
 
   return (
     <html suppressHydrationWarning lang={lng}>
-      {/*
-        <head /> will contain the components returned by the nearest parent
-        head.js. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
-      */}
-      <head />
-
+      <Head />
       <body>
         <Providers>
           <Header lng={lng} isDraft={isEnabled} />
