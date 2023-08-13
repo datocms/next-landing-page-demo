@@ -78,7 +78,11 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const { body } = await got(new URL(permalink, process.env.URL).toString());
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : process.env.URL;
+
+  const { body } = await got(new URL(permalink, baseUrl).toString());
 
   const { document } = new JSDOM(body).window;
   const contentEl = document.querySelector('body');
