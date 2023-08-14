@@ -1,3 +1,5 @@
+import { Maybe } from "graphql/jsutils/Maybe";
+
 const SectionTitle = ({
   title,
   paragraph,
@@ -6,7 +8,7 @@ const SectionTitle = ({
   mb = "100px",
 }: {
   title: string;
-  paragraph: string;
+  paragraph: Maybe<string>;
   width?: string;
   center?: boolean;
   mb?: string;

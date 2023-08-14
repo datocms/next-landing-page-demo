@@ -1,21 +1,23 @@
 import { fallbackLng } from '@/app/i18n/settings';
-import PageIndicatorList from '@/components/Blog/PageIndicatorList';
-import RealTimeTagPosts from '@/components/Blog/RealTimeTagPosts';
-import SingleBlog from '@/components/Blog/SingleBlog';
+import RealTimeTagPosts from '@/components/Blog/RealTime/RealTimeTagPosts';
 import TagPosts from '@/components/Blog/TagPosts';
-import Breadcrumb from '@/components/Common/Breadcrumb';
-import { postsQuery } from '@/queries/posts';
-import { tagQuery } from '@/queries/tag';
+import { SiteLocale, TagDocument } from '@/graphql/generated';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
-import { useQuerySubscription } from 'react-datocms/use-query-subscription';
 
-const TagPage = async ({ params }) => {
+type Params = {
+  params: {
+    slug: string;
+    lng: SiteLocale;
+  };
+};
+
+const TagPage = async ({ params }: Params) => {
   const { lng } = params;
   const { isEnabled } = draftMode();
 
   const data = await queryDatoCMS(
-    tagQuery,
+    TagDocument,
     {
       locale: lng,
       fallbackLocale: fallbackLng,
@@ -31,9 +33,13 @@ const TagPage = async ({ params }) => {
         <RealTimeTagPosts
           initialData={data}
           locale={lng}
-          token={process.env.DATOCMS_READONLY_API_TOKEN}
-          query={tagQuery}
-          slug={params.slug}
+          token={process.env.DATOCMS_READONLY_API_TOKEN || ''}
+          query={TagDocument}
+          variables={{
+            locale: lng,
+            fallbackLocale: fallbackLng,
+            slug: params.slug,
+          }}
         />
       )}
     </>

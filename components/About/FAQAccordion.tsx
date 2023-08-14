@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { StructuredText } from 'react-datocms/structured-text';
 import { motion } from 'framer-motion';
+import { QuestionRecord } from '@/graphql/generated';
+import { Maybe } from 'graphql/jsutils/Maybe';
 
 const closeIcon = (
   <span className="rounded-full bg-gray-200 text-gray-400">
@@ -42,10 +44,16 @@ const openIcon = (
   </span>
 );
 
-const FAQAccordion = ({ title, subtitle, questions }) => {
-  const [openQuestions, setOpenQuestions] = useState([]);
+type Props = {
+  title: Maybe<string>;
+  subtitle: Maybe<string>;
+  questions: Array<QuestionRecord>;
+};
 
-  function toggleQuestion(id) {
+const FAQAccordion = ({ title, subtitle, questions }: Props) => {
+  const [openQuestions, setOpenQuestions] = useState<string[]>([]);
+
+  function toggleQuestion(id: string) {
     if (openQuestions.includes(id)) {
       setOpenQuestions((openQuestions) => {
         return [...openQuestions.filter((qID) => qID !== id)];
@@ -70,7 +78,9 @@ const FAQAccordion = ({ title, subtitle, questions }) => {
               <motion.div
                 layout="position"
                 key={question.id}
-                className={'hover:cursor-pointer rounded-lg bg-gray-100 p-8 dark:bg-gray-800'}
+                className={
+                  'rounded-lg bg-gray-100 p-8 hover:cursor-pointer dark:bg-gray-800'
+                }
                 onClick={() => {
                   toggleQuestion(question.id);
                 }}
@@ -94,7 +104,7 @@ const FAQAccordion = ({ title, subtitle, questions }) => {
                     (isOpen ? '' : ' hidden')
                   }
                 >
-                  <StructuredText data={question.answer} />
+                  <StructuredText data={question.answer.value} />
                 </motion.div>
               </motion.div>
             );

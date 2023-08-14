@@ -1,4 +1,10 @@
-const SuccessPopUp = ({ setSuccessToast }) => {
+import { Dispatch, SetStateAction } from 'react';
+
+type Props = {
+  setSuccessToast: Dispatch<SetStateAction<boolean>>;
+};
+
+const SuccessPopUp = ({ setSuccessToast }: Props) => {
   return (
     <div
       role="alert"

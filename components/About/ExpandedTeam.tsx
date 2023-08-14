@@ -1,7 +1,16 @@
+import { AuthorRecord, SiteLocale } from '@/graphql/generated';
+import { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { Image as DatoImage } from 'react-datocms';
 
-const ExpandedTeam = ({ header, subheader, members, lng }) => {
+type Props = {
+  header: Maybe<string>;
+  subheader: Maybe<string>;
+  members: Array<AuthorRecord>;
+  lng: SiteLocale;
+};
+
+const ExpandedTeam = ({ header, subheader, members, lng }: Props) => {
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6 py-10">
@@ -13,7 +22,7 @@ const ExpandedTeam = ({ header, subheader, members, lng }) => {
           {subheader}
         </p>
 
-        <div className="mt-8 grid grid-cols-1 gap-4 md:gap-8 md:grid-cols-2 xl:mt-16 xl:grid-cols-2 text-center md:text-start">
+        <div className="mt-8 grid grid-cols-1 gap-4 text-center md:grid-cols-2 md:gap-8 md:text-start xl:mt-16 xl:grid-cols-2">
           {members.map((member) => {
             return (
               <Link
@@ -21,7 +30,7 @@ const ExpandedTeam = ({ header, subheader, members, lng }) => {
                 key={member.id}
                 className=" group transform cursor-pointer rounded-xl border px-12 py-8 transition-colors duration-300 hover:border-transparent hover:bg-blue-600 dark:border-gray-700 dark:hover:border-transparent"
               >
-                <div className="flex flex-col sm:-mx-4 sm:flex-row items-center">
+                <div className="flex flex-col items-center sm:-mx-4 sm:flex-row">
                   <div className="relative z-50 h-24 w-24 flex-shrink-0 overflow-hidden rounded-full object-cover ring-4 ring-gray-300 sm:mx-4">
                     <DatoImage
                       layout="fill"

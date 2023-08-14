@@ -1,16 +1,24 @@
 import { fallbackLng } from '@/app/i18n/settings';
 import AuthorPosts from '@/components/Blog/AuthorPosts';
-import RealTimeAuthorPosts from '@/components/Blog/RealTimeAuthorPosts';
-import { authorQuery } from '@/queries/author';
+import RealTimeAuthorPosts from '@/components/Blog/RealTime/RealTimeAuthorPosts';
+import { AuthorDocument, SiteLocale } from '@/graphql/generated';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
+import { notFound } from 'next/navigation';
 
-const AuthorPage = async ({ params }) => {
+type Params = {
+  params: {
+    slug: string;
+    lng: SiteLocale;
+  };
+};
+
+const AuthorPage = async ({ params }: Params) => {
   const { lng } = params;
   const { isEnabled } = draftMode();
 
   const data = await queryDatoCMS(
-    authorQuery,
+    AuthorDocument,
     {
       locale: lng,
       fallbackLocale: fallbackLng,
@@ -19,6 +27,8 @@ const AuthorPage = async ({ params }) => {
     isEnabled
   );
 
+  if (!data.author) notFound();
+
   return (
     <>
       {!isEnabled && <AuthorPosts data={data} lng={lng} />}
@@ -26,9 +36,13 @@ const AuthorPage = async ({ params }) => {
         <RealTimeAuthorPosts
           initialData={data}
           locale={lng}
-          token={process.env.DATOCMS_READONLY_API_TOKEN}
-          query={authorQuery}
-          slug={params.slug}
+          token={process.env.DATOCMS_READONLY_API_TOKEN || ''}
+          query={AuthorDocument}
+          variables={{
+            locale: lng,
+            fallbackLocale: fallbackLng,
+            slug: params.slug,
+          }}
         />
       )}
     </>

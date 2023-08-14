@@ -1,15 +1,22 @@
 import { fallbackLng } from '@/app/i18n/settings';
-import Legal from '@/components/Legal/Legal';
-import RealTimeLegal from '@/components/Legal/RealTimeLegal';
-import { legalQuery } from '@/queries/legal';
+import Legal from '@/components/Footer/Legal/Legal';
+import RealTimeLegal from '@/components/Footer/Legal/RealTimeLegal';
+import { LegalDocument, SiteLocale } from '@/graphql/generated';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
 
-const BlogDetailsPage = async ({ params: { slug, lng } }) => {
+type Params = {
+  params: {
+    slug: string;
+    lng: SiteLocale;
+  };
+};
+
+const BlogDetailsPage = async ({ params: { slug, lng } }: Params) => {
   const { isEnabled } = draftMode();
 
   const data = await queryDatoCMS(
-    legalQuery,
+    LegalDocument,
     {
       slug,
       locale: lng,
@@ -25,9 +32,9 @@ const BlogDetailsPage = async ({ params: { slug, lng } }) => {
         <RealTimeLegal
           initialData={data}
           locale={lng}
-          token={process.env.DATOCMS_READONLY_API_TOKEN}
-          query={legalQuery}
-          slug={slug}
+          token={process.env.DATOCMS_READONLY_API_TOKEN || ''}
+          query={LegalDocument}
+          variables={{ slug, locale: lng, fallbackLocale: [fallbackLng] }}
         />
       )}
     </>

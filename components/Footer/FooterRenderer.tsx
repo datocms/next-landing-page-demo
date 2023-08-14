@@ -1,17 +1,25 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import SvgRenderer from '../Common/SvgRenderer';
+import { FooterQuery, SiteLocale } from '@/graphql/generated';
+import { notFound } from 'next/navigation';
 
-const Footer = ({ data, lng }) => {
+type Props = {
+  data: FooterQuery;
+  lng: SiteLocale;
+};
+
+const Footer = ({ data, lng }: Props) => {
+  if (!data.footer) notFound();
   return (
     <footer
-      className="wow fadeInUp relative z-10 bg-primary bg-opacity-5 pt-16 text-center md:text-start lg:pt-24 flex flex-col items-center justify-center mx-auto w-full"
+      className="wow fadeInUp relative z-10 mx-auto flex w-full flex-col items-center justify-center bg-primary bg-opacity-5 pt-16 text-center md:text-start lg:pt-24"
       data-wow-delay=".1s"
     >
       <div className="container w-full">
-        <div className="flex justify-between flex-col md:flex-row w-full md:px-16">
+        <div className="flex w-full flex-col justify-between md:flex-row md:px-16">
           <div className="w-full">
-            <div className="mb-12 mx- lg:mb-16">
+            <div className="mx- mb-12 lg:mb-16">
               <Link href={'/' + lng} className="mb-8 inline-block">
                 <Image
                   src="images/logo/logo-2.svg"

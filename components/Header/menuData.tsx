@@ -1,4 +1,10 @@
-import { Menu } from '@/types/menu';
+type Menu = {
+  id: number;
+  title: string;
+  path?: string;
+  newTab: boolean;
+  submenu?: Menu[];
+};
 
 const menuData: Menu[] = [
   {

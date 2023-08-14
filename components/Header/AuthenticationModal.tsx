@@ -1,10 +1,16 @@
-import { useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
+
+type Props = {
+  setModalOpen: Dispatch<SetStateAction<boolean>>;
+  refresh: () => void;
+  triggerSuccessToast: () => void;
+};
 
 const AuthenticationModal = ({
   setModalOpen,
   refresh,
   triggerSuccessToast,
-}) => {
+}: Props) => {
   const [inputValue, setInputValue] = useState('');
   const [hasError, setHasError] = useState(false);
 

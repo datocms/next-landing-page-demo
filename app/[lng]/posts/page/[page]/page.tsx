@@ -1,17 +1,24 @@
 import { fallbackLng } from '@/app/i18n/settings';
 import PostsPage from '@/components/Blog/PostsPage';
-import RealTimePostsPage from '@/components/Blog/RealTimePostsPage';
-import { postsQuery } from '@/queries/posts';
+import RealTimePostsPage from '@/components/Blog/RealTime/RealTimePostsPage';
+import { PostsDocument, SiteLocale } from '@/graphql/generated';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 
-const Blog = async ({ params }) => {
+type Params = {
+  params: {
+    page: number;
+    lng: SiteLocale;
+  };
+};
+
+const Blog = async ({ params }: Params) => {
   const { lng } = params;
   const { isEnabled } = draftMode();
 
   const data = await queryDatoCMS(
-    postsQuery,
+    PostsDocument,
     {
       locale: lng,
       fallbackLocale: fallbackLng,
@@ -31,9 +38,13 @@ const Blog = async ({ params }) => {
         <RealTimePostsPage
           initialData={data}
           locale={lng}
-          token={process.env.DATOCMS_READONLY_API_TOKEN}
-          query={postsQuery}
-          skip={(params.page - 1) * 9}
+          token={process.env.DATOCMS_READONLY_API_TOKEN || ''}
+          query={PostsDocument}
+          variables={{
+            locale: lng,
+            fallbackLocale: fallbackLng,
+            skip: (params.page - 1) * 9,
+          }}
           page={params.page}
         />
       )}

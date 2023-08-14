@@ -1,4 +1,6 @@
-export const fallbackLng = 'en';
+import { SiteLocale } from '@/graphql/generated';
+
+export const fallbackLng = 'en' as SiteLocale;
 export const languages = [
   fallbackLng,
   'it',
@@ -8,7 +10,8 @@ export const languages = [
   'pt',
   'sv',
   'ru',
-];
+] as SiteLocale[];
+
 export const langageDictionary = {
   en: 'English',
   it: 'Italian',

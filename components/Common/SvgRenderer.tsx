@@ -1,7 +1,13 @@
-'use client'; //try a different approach later for server side rendering
-import React, { useEffect, useState } from 'react';
+'use client';
 
-const SvgRenderer = ({ url }) => {
+import React, { useEffect, useState } from 'react';
+import { URL } from 'url';
+
+type Props = {
+  url: string | URL;
+};
+
+const SvgRenderer = ({ url }: Props) => {
   const [svgContent, setSvgContent] = useState('');
 
   useEffect(() => {
@@ -20,7 +26,7 @@ const SvgRenderer = ({ url }) => {
 
   return (
     <div
-      className="[&>*]:text-primary fill-current"
+      className="fill-current [&>*]:text-primary"
       dangerouslySetInnerHTML={{ __html: svgContent }}
     />
   );

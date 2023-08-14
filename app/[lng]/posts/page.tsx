@@ -1,19 +1,21 @@
 import { fallbackLng } from '@/app/i18n/settings';
-import PageIndicatorList from '@/components/Blog/PageIndicatorList';
 import PostGridRenderer from '@/components/Blog/PostGridRenderer';
-import RealTimePostGridRenderer from '@/components/Blog/RealTimePostGridRenderer';
-import SingleBlog from '@/components/Blog/SingleBlog';
-import Breadcrumb from '@/components/Common/Breadcrumb';
-import { postsQuery } from '@/queries/posts';
+import RealTimePostGridRenderer from '@/components/Blog/RealTime/RealTimePostGridRenderer';
+import { PostsDocument, SiteLocale } from '@/graphql/generated';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
-import { useQuerySubscription } from 'react-datocms/use-query-subscription';
 
-const Blog = async ({ params: { lng } }) => {
+type Params = {
+  params: {
+    lng: SiteLocale;
+  };
+};
+
+const Blog = async ({ params: { lng } }: Params) => {
   const { isEnabled } = draftMode();
 
   const data = await queryDatoCMS(
-    postsQuery,
+    PostsDocument,
     {
       locale: lng,
       fallbackLocale: fallbackLng,
@@ -28,8 +30,9 @@ const Blog = async ({ params: { lng } }) => {
         <RealTimePostGridRenderer
           initialData={data}
           locale={lng}
-          token={process.env.DATOCMS_READONLY_API_TOKEN}
-          query={postsQuery}
+          token={process.env.DATOCMS_READONLY_API_TOKEN || ''}
+          query={PostsDocument}
+          variables={{ locale: lng, fallbackLocale: fallbackLng }}
         />
       )}
     </>

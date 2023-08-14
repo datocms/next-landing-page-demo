@@ -3,13 +3,17 @@ import { fallbackLng } from '@/app/i18n/settings';
 import { draftMode } from 'next/headers';
 import FooterRenderer from './FooterRenderer';
 import RealTimeFooter from './RealTimeFooter';
-import { footerQuery } from '@/queries/footer';
+import { FooterDocument, SiteLocale } from '@/graphql/generated';
 
-const Footer = async ({ lng }) => {
+type Props = {
+  lng: SiteLocale;
+};
+
+const Footer = async ({ lng }: Props) => {
   const { isEnabled } = draftMode();
 
   const data = await queryDatoCMS(
-    footerQuery,
+    FooterDocument,
     { locale: lng, fallbackLocale: fallbackLng },
     isEnabled
   );
@@ -21,8 +25,9 @@ const Footer = async ({ lng }) => {
         <RealTimeFooter
           initialData={data}
           locale={lng}
-          token={process.env.DATOCMS_READONLY_API_TOKEN}
-          query={footerQuery}
+          token={process.env.DATOCMS_READONLY_API_TOKEN || ''}
+          query={FooterDocument}
+          variables={{ locale: lng, fallbackLocale: fallbackLng }}
         />
       )}
     </>

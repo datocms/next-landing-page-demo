@@ -1,14 +1,20 @@
 'use client';
+
 import { langageDictionary, languages } from '@/app/i18n/settings';
+import { SiteLocale } from '@/graphql/generated';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
 
-const LanguageSelector = ({ lng }) => {
+type Props = {
+  lng: SiteLocale;
+};
+
+const LanguageSelector = ({ lng }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const pathArray = pathname.split('/');
-  const currentLocale = pathArray[1];
+  const currentLocale = pathArray[1] as SiteLocale; //will be a SiteLocale because of the middleware redirect rules
 
   const pathString = pathArray.splice(2, pathArray.length).join('/');
 

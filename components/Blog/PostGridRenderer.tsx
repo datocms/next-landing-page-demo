@@ -1,7 +1,13 @@
+import { PostRecord, PostsQuery, SiteLocale } from '@/graphql/generated';
 import PageIndicatorList from './PageIndicatorList';
 import SingleBlog from './SingleBlog';
 
-const PostGridRenderer = ({ data, lng }) => {
+type Props = {
+  data: PostsQuery;
+  lng: SiteLocale;
+};
+
+const PostGridRenderer = ({ data, lng }: Props) => {
   return (
     <section className="mt-4 pb-[120px] pt-[120px]">
       <div className="container">
@@ -11,7 +17,7 @@ const PostGridRenderer = ({ data, lng }) => {
               key={post.id}
               className="mb-10 w-full px-4 md:w-2/3 lg:w-1/2 xl:w-1/3"
             >
-              <SingleBlog blog={post} locale={lng} />
+              <SingleBlog blog={post as PostRecord} locale={lng} />
             </div>
           ))}
         </div>

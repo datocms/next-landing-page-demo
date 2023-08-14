@@ -1,4 +1,11 @@
-const PageIndicatorList = ({ postCount, lng }) => {
+import { SiteLocale } from '@/graphql/generated';
+
+type Props = {
+  postCount: number;
+  lng: SiteLocale;
+};
+
+const PageIndicatorList = ({ postCount, lng }: Props) => {
   const listOfPages = [];
 
   for (let i = 0; i * 9 < postCount; i++) {

@@ -1,16 +1,25 @@
 import { fallbackLng } from '@/app/i18n/settings';
-import Breadcrumb from '@/components/Common/Breadcrumb';
-import { aboutQuery } from '@/queries/about';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
 import Sections from '@/components/Sections/Sections';
 import RealTimeSections from '@/components/Sections/RealTimeSections';
+import {
+  AboutDocument,
+  PageModelSectionsField,
+  SiteLocale,
+} from '@/graphql/generated';
 
-const AboutPage = async ({ params: { lng } }) => {
+type Params = {
+  params: {
+    lng: SiteLocale;
+  };
+};
+
+const AboutPage = async ({ params: { lng } }: Params) => {
   const { isEnabled } = draftMode();
 
   const data = await queryDatoCMS(
-    aboutQuery,
+    AboutDocument,
     {
       locale: lng,
       fallbackLocale: [fallbackLng],
@@ -20,13 +29,19 @@ const AboutPage = async ({ params: { lng } }) => {
 
   return (
     <>
-      {!isEnabled && <Sections locale={lng} sections={data.page.sections} />}
+      {!isEnabled && (
+        <Sections
+          locale={lng}
+          sections={data.page!.sections as Array<PageModelSectionsField>}
+        />
+      )}
       {isEnabled && (
         <RealTimeSections
           initialData={data}
           locale={lng}
-          token={process.env.DATOCMS_READONLY_API_TOKEN}
-          query={aboutQuery}
+          token={process.env.DATOCMS_READONLY_API_TOKEN || ''}
+          query={AboutDocument}
+          variables={{ locale: lng, fallbackLocale: [fallbackLng] }}
         />
       )}
     </>

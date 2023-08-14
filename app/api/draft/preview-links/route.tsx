@@ -1,7 +1,18 @@
 import { NextRequest } from 'next/server';
 import { headers as getHeaders } from 'next/headers';
+import { SiteLocale } from '@/graphql/generated';
 
-const generatePreviewUrl = ({ item, itemType, locale }) => {
+type generatePreviewUrlParams = {
+  item: any;
+  itemType: any;
+  locale: SiteLocale;
+};
+
+const generatePreviewUrl = ({
+  item,
+  itemType,
+  locale,
+}: generatePreviewUrlParams) => {
   switch (itemType.attributes.api_key) {
     case 'page':
       if (item.attributes.slug === 'home') return `/${locale}/`; //special case for default home page
@@ -14,6 +25,8 @@ const generatePreviewUrl = ({ item, itemType, locale }) => {
       return `/${locale}/posts/author/${item.attributes.slug}`;
     case 'legal_page':
       return `/${locale}/legal/${item.attributes.slug}`;
+    case 'type_name':
+      return `/${locale}/type_name/${item.attributes.slug}`;
     default:
       return '/en/404';
   }

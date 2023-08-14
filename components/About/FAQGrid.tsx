@@ -1,6 +1,14 @@
+import { QuestionRecord } from '@/graphql/generated';
+import { Maybe } from 'graphql/jsutils/Maybe';
 import { StructuredText } from 'react-datocms/structured-text';
 
-const FAQGrid = ({ title, subtitle, questions }) => {
+type Props = {
+  title: Maybe<string>;
+  subtitle: Maybe<string>;
+  questions: Array<QuestionRecord>;
+};
+
+const FAQGrid = ({ title, subtitle, questions }: Props) => {
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6 py-12">
@@ -36,7 +44,7 @@ const FAQGrid = ({ title, subtitle, questions }) => {
                   </h1>
 
                   <div className="mt-2 text-sm text-gray-500 dark:text-gray-300">
-                    <StructuredText data={question.answer} />
+                    <StructuredText data={question.answer.value} />
                   </div>
                 </div>
               </div>

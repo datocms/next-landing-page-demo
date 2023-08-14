@@ -1,7 +1,16 @@
+import { PostRecord, SiteLocale } from '@/graphql/generated';
 import SectionTitle from '../Common/SectionTitle';
 import SingleBlog from './SingleBlog';
+import { Maybe } from 'graphql/jsutils/Maybe';
 
-const Blog = ({ blogData, blogHeader, blogSubheader, locale }) => {
+type BlogProps = {
+  blogData: PostRecord[];
+  blogHeader: string;
+  blogSubheader: Maybe<string>;
+  locale: SiteLocale;
+};
+
+const Blog = ({ blogData, blogHeader, blogSubheader, locale }: BlogProps) => {
   return (
     <section id="blog" className="bg-primary/5 py-16 md:py-20 lg:py-28">
       <div className="container">

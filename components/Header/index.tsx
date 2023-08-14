@@ -8,8 +8,14 @@ import { useRouter } from 'next/navigation';
 import AuthenticationModal from './AuthenticationModal';
 import SuccessPopUp from './SuccessPopUp';
 import { AnimatePresence, motion } from 'framer-motion';
+import { SiteLocale } from '@/graphql/generated';
 
-const Header = ({ lng, isDraft }) => {
+type Props = {
+  lng: SiteLocale;
+  isDraft: boolean;
+};
+
+const Header = ({ lng, isDraft }: Props) => {
   const router = useRouter();
 
   // Navbar toggle
@@ -43,7 +49,7 @@ const Header = ({ lng, isDraft }) => {
 
   // submenu handler
   const [openIndex, setOpenIndex] = useState(-1);
-  const handleSubmenu = (index) => {
+  const handleSubmenu = (index: number) => {
     if (openIndex === index) {
       setOpenIndex(-1);
     } else {
@@ -185,7 +191,7 @@ const Header = ({ lng, isDraft }) => {
                                 openIndex === index ? 'block' : 'hidden'
                               }`}
                             >
-                              {menuItem.submenu.map((submenuItem) => (
+                              {menuItem.submenu?.map((submenuItem) => (
                                 <Link
                                   href={'/' + lng + submenuItem.path}
                                   key={submenuItem.id}

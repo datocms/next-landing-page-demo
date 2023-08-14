@@ -1,7 +1,16 @@
+import { AuthorRecord, ResponsiveImage, SiteLocale } from '@/graphql/generated';
+import { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { Image as DatoImage } from 'react-datocms';
 
-const CompactTeam = ({ header, subheader, members, lng }) => {
+type Props = {
+  header: Maybe<string>;
+  subheader: Maybe<string>;
+  members: Array<AuthorRecord>;
+  lng: SiteLocale;
+};
+
+const CompactTeam = ({ header, subheader, members, lng }: Props) => {
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6 py-10">

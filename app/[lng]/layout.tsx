@@ -7,6 +7,14 @@ import { Providers } from './providers';
 import { languages } from '../i18n/settings';
 import { draftMode } from 'next/headers';
 import Head from './Head';
+import { SiteLocale } from '@/graphql/generated';
+
+type Params = {
+  children: React.ReactNode;
+  params: {
+    lng: SiteLocale;
+  };
+};
 
 export async function generateStaticParams() {
   return languages.map((language) => {
@@ -14,7 +22,7 @@ export async function generateStaticParams() {
   });
 }
 
-export default function RootLayout({ children, params: { lng } }) {
+export default function RootLayout({ children, params: { lng } }: Params) {
   const { isEnabled } = draftMode();
 
   return (

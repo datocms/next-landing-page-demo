@@ -1,11 +1,13 @@
-// Put this code in the following path of your Next.js website:
-// /pages/api/get-frontend-metadata.js
 import { buildClient } from '@datocms/cma-client-node';
 import got from 'got';
 import { JSDOM } from 'jsdom';
 import { NextRequest } from 'next/server';
 
-const findSlugAndPermalink = async (item, itemTypeApiKey, locale) => {
+const findSlugAndPermalink = async (
+  item: any,
+  itemTypeApiKey: string,
+  locale: string
+) => {
   switch (itemTypeApiKey) {
     case 'page':
       if (item.slug === 'home') return [item.slug, `/${locale}/`]; //special case for default home page
@@ -57,7 +59,7 @@ export async function GET(req: NextRequest) {
   }
 
   const client = buildClient({
-    apiToken: process.env.DATOCMS_READONLY_API_TOKEN,
+    apiToken: process.env.DATOCMS_READONLY_API_TOKEN || '',
     environment: sandboxEnvironmentId,
   });
   const item = await client.items.find(itemId);
@@ -88,13 +90,15 @@ export async function GET(req: NextRequest) {
 
   const { document } = new JSDOM(body).window;
   const contentEl = document.querySelector('body');
+  if (!contentEl)
+    return new Response('No content found', { status: 422, headers });
   const pageContent = contentEl.innerHTML;
   const pageLocale =
-    document.querySelector('html').getAttribute('lang') || 'en';
-  const pageTitle = document.querySelector('title').textContent;
+    document.querySelector('html')?.getAttribute('lang') || 'en';
+  const pageTitle = document.querySelector('title')?.textContent;
   const pageDescription = document
     .querySelector('meta[name="description"]')
-    .getAttribute('content');
+    ?.getAttribute('content');
 
   return new Response(
     JSON.stringify({
