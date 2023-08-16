@@ -13,8 +13,7 @@ const Footer = ({ data, lng }: Props) => {
   if (!data.footer) notFound();
   return (
     <footer
-      className="wow fadeInUp relative z-10 mx-auto flex w-full flex-col items-center justify-center bg-primary bg-opacity-5 pt-16 text-center md:text-start lg:pt-24"
-      data-wow-delay=".1s"
+      className="relative z-10 mx-auto flex w-full flex-col items-center justify-center bg-primary bg-opacity-5 pt-16 text-center md:text-start lg:pt-24"
     >
       <div className="container w-full">
         <div className="flex w-full flex-col justify-between md:flex-row md:px-16">

@@ -29,10 +29,7 @@ const TagPosts = ({ data, lng }: Props) => {
           ))}
         </div>
 
-        <div
-          className="wow fadeInUp -mx-4 flex flex-wrap"
-          data-wow-delay=".15s"
-        ></div>
+        <div className="-mx-4 flex flex-wrap"></div>
       </div>
     </section>
   );

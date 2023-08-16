@@ -14,12 +14,11 @@ const SingleBlog = ({ blog, locale }: Props) => {
   return (
     <>
       <div
-        className="wow fadeInUp relative h-full overflow-hidden rounded-xl bg-white shadow-one dark:bg-dark"
-        data-wow-delay=".9s"
+        className="relative h-full overflow-hidden rounded-xl bg-white shadow-one dark:bg-dark"
       >
         <Link
           href={'/' + locale + '/posts/' + slug}
-          className="relative block h-[230px] w-full overflow-hidden sm:h-[300px]"
+          className="relative block w-full overflow-hidden h-[230px]"
         >
           <span className="absolute right-6 top-6 z-20 inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold capitalize text-white">
             {tags[0].tag}
@@ -30,7 +29,7 @@ const SingleBlog = ({ blog, locale }: Props) => {
               layout="fill"
               objectFit="cover"
               objectPosition="50% 50%"
-              data={seoTags!.image!.responsiveImage as ResponsiveImage} //it has a required image on Dato as a validation
+              data={seoTags!.image!.responsiveImage as ResponsiveImage} 
             />
           </div>
         </Link>

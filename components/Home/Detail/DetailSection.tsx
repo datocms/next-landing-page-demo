@@ -27,19 +27,13 @@ const DetailSection = ({ details, imageURL, imagePosition }: Props) => {
         <div className="-mx-4 flex flex-col items-center justify-center lg:flex-row lg:flex-wrap ">
           {!imagePosition && (
             <div className="w-full px-4 lg:w-1/2">
-              <div
-                className="wow fadeInUp relative mx-auto mb-12 aspect-[25/24] max-w-[500px] text-center lg:m-0"
-                data-wow-delay=".15s"
-              >
+              <div className=" relative mx-auto mb-12 aspect-[25/24] max-w-[500px] text-center lg:m-0">
                 <Image src={imageURL} alt="about image" fill />
               </div>
             </div>
           )}
           <div className="w-full px-4 lg:w-1/2">
-            <div
-              className="wow fadeInUp sm:ml-6 md:px-24 lg:px-0"
-              data-wow-delay=".9s"
-            >
+            <div className="sm:ml-6 md:px-24 lg:px-0">
               <StructuredText
                 data={details.value}
                 customNodeRules={[
@@ -92,10 +86,7 @@ const DetailSection = ({ details, imageURL, imagePosition }: Props) => {
           </div>
           {imagePosition && (
             <div className="w-full px-4 pt-8 lg:w-1/2">
-              <div
-                className="wow fadeInUp relative mx-auto mb-12 aspect-[25/24] max-w-[500px] text-center lg:m-0"
-                data-wow-delay=".15s"
-              >
+              <div className="relative mx-auto mb-12 aspect-[25/24] max-w-[500px] text-center lg:m-0">
                 <Image src={imageURL} alt="about image" fill />
               </div>
             </div>

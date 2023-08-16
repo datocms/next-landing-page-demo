@@ -9,10 +9,7 @@ const PricingBox = (props: {
 
   return (
     <div className="w-full">
-      <div
-        className="wow fadeInUp relative z-10 h-full rounded-md bg-white px-8 py-10 shadow-signUp dark:bg-[#1D2144]"
-        data-wow-delay=".1s"
-      >
+      <div className="relative z-10 h-full rounded-md bg-white px-8 py-10 shadow-signUp dark:bg-[#1D2144]">
         <div className="flex items-center justify-between">
           <h3 className="price mb-2 text-3xl font-bold text-black dark:text-white">
             $<span className="amount">{price}</span>
@@ -22,7 +19,7 @@ const PricingBox = (props: {
             {packageName}
           </h4>
         </div>
-        <p className="mb-7 text-base text-body-color h-20">{subtitle}</p>
+        <p className="mb-7 h-20 text-base text-body-color">{subtitle}</p>
         <div className="mb-8 border-b border-body-color border-opacity-10 pb-8 dark:border-white dark:border-opacity-10">
           <button className="flex w-full items-center justify-center rounded-md bg-primary p-3 text-base font-semibold text-white transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp">
             Start Free Trial

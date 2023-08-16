@@ -27,10 +27,7 @@ const Pricing = ({ header, subheader, plans }: Props) => {
         />
 
         <div className="w-full">
-          <div
-            className="wow fadeInUp mb-8 flex justify-center md:mb-12 lg:mb-16"
-            data-wow-delay=".1s"
-          >
+          <div className="mb-8 flex justify-center md:mb-12 lg:mb-16">
             <span
               onClick={() => setIsMonthly(true)}
               className={`${

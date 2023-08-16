@@ -23,10 +23,7 @@ const PostsPage = ({ data, lng, page }: Props) => {
           ))}
         </div>
 
-        <div
-          className="wow fadeInUp -mx-4 flex flex-wrap"
-          data-wow-delay=".15s"
-        >
+        <div className=" -mx-4 flex flex-wrap">
           <div className="w-full px-4">
             <ul className="flex items-center justify-center pt-8">
               <li className="mx-1">

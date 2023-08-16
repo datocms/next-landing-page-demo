@@ -28,6 +28,8 @@ import {
   TeamSectionRecord,
   VideoSectionRecord,
 } from '@/graphql/generated';
+import GradientHero from '../Home/Hero/GradientHero';
+import FeatureCards from '../Home/Features/FeatureCards';
 
 type Props = {
   sections: Array<PageModelSectionsField>;
@@ -41,8 +43,16 @@ export default function Section({ sections, locale }: Props) {
         switch (section._modelApiKey) {
           case 'hero_section':
             const heroSectionRecord = section as HeroSectionRecord;
+            if (heroSectionRecord.displayOptions === 'default')
+              return (
+                <Hero
+                  heroTitle={heroSectionRecord.heroTitle}
+                  heroSubtitle={heroSectionRecord.heroSubtitle}
+                  buttons={heroSectionRecord.buttons}
+                />
+              );
             return (
-              <Hero
+              <GradientHero
                 heroTitle={heroSectionRecord.heroTitle}
                 heroSubtitle={heroSectionRecord.heroSubtitle}
                 buttons={heroSectionRecord.buttons}
@@ -51,8 +61,16 @@ export default function Section({ sections, locale }: Props) {
           case 'feature_list_section':
             const featureListSectionRecord =
               section as FeatureListSectionRecord;
+            if (featureListSectionRecord.displayOption === 'grid')
+              return (
+                <Features
+                  features={featureListSectionRecord.feature}
+                  featuresHeader={featureListSectionRecord.featuresHeader}
+                  featuresSubheader={featureListSectionRecord.featuresSubheader}
+                />
+              );
             return (
-              <Features
+              <FeatureCards
                 features={featureListSectionRecord.feature}
                 featuresHeader={featureListSectionRecord.featuresHeader}
                 featuresSubheader={featureListSectionRecord.featuresSubheader}

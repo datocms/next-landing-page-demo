@@ -1,5 +1,9 @@
 query Home($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
-  page(filter: {label: {eq: "Home"}}, locale: $locale, fallbackLocales: $fallbackLocale) {
+  page(
+    filter: { label: { eq: "Home" } }
+    locale: $locale
+    fallbackLocales: $fallbackLocale
+  ) {
     sections {
       ... on HeroSectionRecord {
         buttons {
@@ -12,6 +16,7 @@ query Home($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
         id
         heroSubtitle
         heroTitle
+        displayOptions
       }
       ... on VideoSectionRecord {
         _modelApiKey
@@ -124,7 +129,7 @@ query Home($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
             bio
             slug
             picture {
-              responsiveImage(imgixParams: {w: "64", h: "64", fit: crop}) {
+              responsiveImage(imgixParams: { w: "64", h: "64", fit: crop }) {
                 srcSet
                 webpSrcSet
                 sizes
@@ -146,6 +151,7 @@ query Home($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
         id
         featuresHeader
         featuresSubheader
+        displayOption
         feature {
           _modelApiKey
           id

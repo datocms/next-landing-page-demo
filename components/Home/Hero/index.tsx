@@ -1,4 +1,7 @@
+'use client';
+
 import { ButtonRecord } from '@/graphql/generated';
+import { useScroll, useTransform, motion } from 'framer-motion';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 
@@ -9,6 +12,9 @@ type Props = {
 };
 
 const Hero = ({ heroTitle, heroSubtitle, buttons }: Props) => {
+  const { scrollYProgress } = useScroll();
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', '500%']);
+
   return (
     <>
       <section
@@ -18,17 +24,25 @@ const Hero = ({ heroTitle, heroSubtitle, buttons }: Props) => {
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4">
-              <div
-                className="wow fadeInUp mx-auto max-w-[800px] text-center"
-                data-wow-delay=".2s"
-              >
-                <h1 className="mb-5 text-3xl font-bold leading-tight text-black dark:text-white sm:text-4xl sm:leading-tight md:text-5xl md:leading-tight">
-                  {heroTitle}
-                </h1>
-                <p className="mb-12 text-base font-medium !leading-relaxed text-body-color dark:text-white dark:opacity-90 sm:text-lg md:text-xl">
-                  {heroSubtitle}
-                </p>
-                <div className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
+              <div className="mx-auto max-w-[800px] text-center">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                >
+                  <h1 className="mb-5 text-3xl font-bold leading-tight text-black dark:text-white sm:text-4xl sm:leading-tight md:text-5xl md:leading-tight">
+                    {heroTitle}
+                  </h1>
+                  <p className="mb-12 text-base font-medium !leading-relaxed text-body-color dark:text-white dark:opacity-90 sm:text-lg md:text-xl">
+                    {heroSubtitle}
+                  </p>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.6, delay: 0.8 }}
+                  className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0"
+                >
                   {buttons.map((button) => {
                     const primary = 'bg-primary text-white hover:bg-primary/80';
                     const secondary =
@@ -47,12 +61,18 @@ const Hero = ({ heroTitle, heroSubtitle, buttons }: Props) => {
                       </Link>
                     );
                   })}
-                </div>
+                </motion.div>
               </div>
             </div>
           </div>
         </div>
-        <div className="absolute right-0 top-0 z-[-1] opacity-30 lg:opacity-100">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          style={{ y }}
+          className="absolute right-0 top-0 z-[-1] opacity-30 lg:opacity-100"
+        >
           <svg
             width="450"
             height="556"
@@ -189,8 +209,14 @@ const Hero = ({ heroTitle, heroSubtitle, buttons }: Props) => {
               </linearGradient>
             </defs>
           </svg>
-        </div>
-        <div className="absolute bottom-0 left-0 z-[-1] opacity-30 lg:opacity-100">
+        </motion.div>
+        <motion.div
+          style={{ y }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="absolute bottom-0 left-0 z-[-1] opacity-30 lg:opacity-100"
+        >
           <svg
             width="364"
             height="201"
@@ -292,7 +318,7 @@ const Hero = ({ heroTitle, heroSubtitle, buttons }: Props) => {
               </radialGradient>
             </defs>
           </svg>
-        </div>
+        </motion.div>
       </section>
     </>
   );
