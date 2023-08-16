@@ -32,8 +32,14 @@ const menuData: Menu[] = [
     submenu: [
       {
         id: 41,
-        title: 'Chat Bot',
-        path: '/chatbot',
+        title: 'Landing Page Variation One',
+        path: '/HomeVariationOne',
+        newTab: false,
+      },
+      {
+        id: 42,
+        title: 'Landing Page Variation Two',
+        path: '/HomeVariationTwo',
         newTab: false,
       },
     ],
