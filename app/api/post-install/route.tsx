@@ -152,6 +152,10 @@ export async function POST(request: Request) {
       installSEOAnalysisPlugin(client),
     ]);
 
+    const buildTriggers = await client.buildTriggers.list();
+    const buildTriggerId = buildTriggers[0].id;
+    await client.buildTriggers.trigger(buildTriggerId);
+
     return NextResponse.json({ success: true }, cors);
   } catch (error) {
     if (error instanceof ApiError) {
