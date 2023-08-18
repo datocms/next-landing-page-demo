@@ -1,6 +1,11 @@
 query Footer($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
   footer(locale: $locale, fallbackLocales: $fallbackLocale) {
     subtitle
+    logo {
+      url
+      height
+      width
+    }
     socialMediaLinks {
       url
       name
@@ -12,9 +17,12 @@ query Footer($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
       }
     }
     links {
-      slug
-      title
-      id
+      ... on LegalPageRecord {
+        id
+        slug
+        title
+        id
+      }
     }
   }
 }

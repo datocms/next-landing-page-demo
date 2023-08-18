@@ -1,7 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import SvgRenderer from '../Common/SvgRenderer';
-import { FooterQuery, SiteLocale } from '@/graphql/generated';
+import {
+  ChangeLogRecord,
+  DocumentationRecord,
+  FooterQuery,
+  LegalPageRecord,
+  SiteLocale,
+} from '@/graphql/generated';
 import { notFound } from 'next/navigation';
 
 type Props = {
@@ -12,28 +18,21 @@ type Props = {
 const Footer = ({ data, lng }: Props) => {
   if (!data.footer) notFound();
   return (
-    <footer
-      className="relative z-10 mx-auto flex w-full flex-col items-center justify-center bg-primary bg-opacity-5 pt-16 text-center md:text-start lg:pt-24"
-    >
+    <footer className="relative z-10 mx-auto flex w-full flex-col items-center justify-center bg-primary bg-opacity-5 pt-16 text-center md:text-start lg:pt-24">
       <div className="container w-full">
         <div className="flex w-full flex-col justify-between md:flex-row md:px-16">
           <div className="w-full">
             <div className="mx- mb-12 lg:mb-16">
-              <Link href={'/' + lng} className="mb-8 inline-block">
-                <Image
-                  src="images/logo/logo-2.svg"
-                  alt="logo"
-                  className="w-full dark:hidden"
-                  width={140}
-                  height={30}
-                />
-                <Image
-                  src="images/logo/logo.svg"
-                  alt="logo"
-                  className="hidden w-full dark:block"
-                  width={140}
-                  height={30}
-                />
+              <Link href={'/' + lng + '/home'} className="mb-8 inline-block">
+                {data.footer.logo && (
+                  <Image
+                    src={data.footer.logo.url}
+                    alt="logo"
+                    className="w-full"
+                    width={data.footer.logo.width || 100}
+                    height={data.footer.logo.height || 100}
+                  />
+                )}
               </Link>
               <p className="mb-9 text-base font-medium leading-relaxed text-body-color">
                 {data.footer.subtitle}
@@ -63,14 +62,18 @@ const Footer = ({ data, lng }: Props) => {
                 </h2>
                 <ul>
                   {data.footer.links.map((link) => {
+                    const pageLink = link as
+                      | LegalPageRecord
+                      | DocumentationRecord
+                      | ChangeLogRecord; // The field has a "at least one" validation
                     return (
-                      <li key={link.id}>
+                      <li key={pageLink.id}>
                         <a
-                          href={'/' + lng + '/legal/' + link.slug}
+                          href={'/' + lng + '/legal/' + pageLink.slug}
                           className="mb-4 inline-block text-base font-medium text-body-color hover:text-primary"
                         >
                           {' '}
-                          {link.title}{' '}
+                          {pageLink.title}{' '}
                         </a>
                       </li>
                     );

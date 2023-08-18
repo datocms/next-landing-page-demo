@@ -18,9 +18,9 @@ const AuthenticationModal = ({
     try {
       const response = await fetch('/api/draft/enable?token=' + inputValue);
       if (response.status === 200) {
+        refresh();
         setModalOpen(false);
         triggerSuccessToast();
-        refresh();
         return;
       } else {
         throw new Error('Wrong token!');

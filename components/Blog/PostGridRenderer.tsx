@@ -1,18 +1,23 @@
-import { PostRecord, PostsQuery, SiteLocale } from '@/graphql/generated';
+import {
+  CollectionMetadata,
+  PostRecord,
+  SiteLocale,
+} from '@/graphql/generated';
 import PageIndicatorList from './PageIndicatorList';
 import SingleBlog from './SingleBlog';
 
 type Props = {
-  data: PostsQuery;
+  data: PostRecord[];
   lng: SiteLocale;
+  postMeta: CollectionMetadata;
 };
 
-const PostGridRenderer = ({ data, lng }: Props) => {
+const PostGridRenderer = ({ data, lng, postMeta }: Props) => {
   return (
     <section className="mt-4 pb-[120px] pt-[120px]">
       <div className="container">
         <div className="-mx-4 flex flex-wrap justify-center">
-          {data.allPosts.map((post) => (
+          {data.map((post) => (
             <div
               key={post.id}
               className="mb-10 w-full px-4 md:w-2/3 lg:w-1/2 xl:w-1/3"
@@ -25,11 +30,8 @@ const PostGridRenderer = ({ data, lng }: Props) => {
         <div className=" -mx-4 flex flex-wrap">
           <div className="w-full px-4">
             <ul className="flex items-center justify-center pt-8">
-              <PageIndicatorList
-                lng={lng}
-                postCount={data['_allPostsMeta'].count}
-              />
-              {9 < data['_allPostsMeta'].count && (
+              <PageIndicatorList lng={lng} postCount={postMeta.count} />
+              {9 < postMeta.count && (
                 <li className="mx-1">
                   <a
                     href={`/${lng}/posts/page/2`}

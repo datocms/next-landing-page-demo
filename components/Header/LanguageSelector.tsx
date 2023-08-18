@@ -1,16 +1,17 @@
 'use client';
 
-import { langageDictionary, languages } from '@/app/i18n/settings';
 import { SiteLocale } from '@/graphql/generated';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
+import { getLangNameFromCode } from 'language-name-map';
 
 type Props = {
   lng: SiteLocale;
+  languages: SiteLocale[];
 };
 
-const LanguageSelector = ({ lng }: Props) => {
+const LanguageSelector = ({ lng, languages }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const pathArray = pathname.split('/');
@@ -32,7 +33,7 @@ const LanguageSelector = ({ lng }: Props) => {
         className="ml-4 inline-flex w-28 items-center overflow-hidden rounded-md bg-white transition duration-100 hover:bg-gray-200 active:scale-95 active:bg-gray-300"
       >
         <button className="inline-flex cursor-pointer items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-gray-800">
-          {langageDictionary[currentLocale]}
+          {getLangNameFromCode(currentLocale)?.name || currentLocale}
         </button>
       </div>
 
@@ -54,7 +55,9 @@ const LanguageSelector = ({ lng }: Props) => {
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white"
                 role="menuitem"
               >
-                <div className="inline-flex">{langageDictionary[locale]}</div>
+                <div className="inline-flex">
+                  {getLangNameFromCode(locale)?.name || currentLocale}
+                </div>
               </Link>
             </div>
           );

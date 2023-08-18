@@ -14,13 +14,16 @@ import StatsSection from '../About/StatsSection';
 import AboutIntro from '../About/AboutIntro';
 import {
   AboutIntroRecord,
+  AllPostsSectionRecord,
   BrandSectionRecord,
+  CollectionMetadata,
   DetailSectionRecord,
   FaqSectionRecord,
   FeatureListSectionRecord,
   FeaturedPostsSectionRecord,
   HeroSectionRecord,
   PageModelSectionsField,
+  PostRecord,
   PricingSectionRecord,
   ReviewSectionRecord,
   SiteLocale,
@@ -30,13 +33,16 @@ import {
 } from '@/graphql/generated';
 import GradientHero from '../Home/Hero/GradientHero';
 import FeatureCards from '../Home/Features/FeatureCards';
+import PostGridRenderer from '../Blog/PostGridRenderer';
 
 type Props = {
   sections: Array<PageModelSectionsField>;
   locale: SiteLocale;
+  posts: PostRecord[];
+  postMeta: CollectionMetadata;
 };
 
-export default function Section({ sections, locale }: Props) {
+export default function Section({ sections, locale, posts, postMeta }: Props) {
   return (
     <>
       {sections.map((section) => {
@@ -94,7 +100,7 @@ export default function Section({ sections, locale }: Props) {
             const detailSectionRecord = section as DetailSectionRecord;
             return (
               <DetailSection
-                imagePosition={detailSectionRecord.imagePosition as boolean} //to ask: why is this boolean filed typed as any?
+                imagePosition={detailSectionRecord.imagePosition as boolean}
                 imageURL={detailSectionRecord.image.url}
                 details={detailSectionRecord.details}
               />
@@ -105,7 +111,7 @@ export default function Section({ sections, locale }: Props) {
               <Testimonials
                 header={reviewSectionRecord.reviewSectionHeader}
                 subheader={reviewSectionRecord.reviewSectionSubheader}
-                reviews={reviewSectionRecord.review}
+                reviews={reviewSectionRecord.reviews}
               />
             );
           case 'pricing_section':
@@ -185,6 +191,11 @@ export default function Section({ sections, locale }: Props) {
                 images={aboutIntroSectionRecord.images}
                 preHeader={aboutIntroSectionRecord.preHeader}
               />
+            );
+          case 'all_posts_section':
+            const AllPostsSectionRecord = section as AllPostsSectionRecord;
+            return (
+              <PostGridRenderer data={posts} lng={locale} postMeta={postMeta} />
             );
           default:
             return <></>;

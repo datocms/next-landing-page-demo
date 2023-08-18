@@ -2,36 +2,40 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import menuData from './menuData';
 import LanguageSelector from './LanguageSelector';
 import { useRouter } from 'next/navigation';
-import AuthenticationModal from './AuthenticationModal';
-import SuccessPopUp from './SuccessPopUp';
-import { AnimatePresence, motion } from 'framer-motion';
-import { SiteLocale } from '@/graphql/generated';
+import { ResponsiveImage, SiteLocale } from '@/graphql/generated';
+import GetMenuItems, { Menu, NotificationStripType } from './GetMenuData';
+import { Image as DatoImage } from 'react-datocms';
+import NotificationStrip from './NotificationStrip';
 
 type Props = {
   lng: SiteLocale;
   isDraft: boolean;
+  menuData: Menu[];
+  availableLocales: SiteLocale[];
+  logoImage: string;
+  notificationStripObject: NotificationStripType;
 };
 
-const Header = ({ lng, isDraft }: Props) => {
+const Header = ({
+  lng,
+  isDraft,
+  menuData,
+  availableLocales,
+  logoImage,
+  notificationStripObject,
+}: Props) => {
   const router = useRouter();
 
   // Navbar toggle
   const [navbarOpen, setNavbarOpen] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [successToast, setSuccessToast] = useState(false);
+  const [notificationStrip, setNotificationStrip] = useState(
+    notificationStripObject.displayNotification
+  );
 
   const navbarToggleHandler = () => {
     setNavbarOpen(!navbarOpen);
-  };
-
-  const triggerSuccessToast = () => {
-    setSuccessToast(true);
-    setTimeout(() => {
-      setSuccessToast(false);
-    }, 5000);
   };
 
   // Sticky Navbar
@@ -57,52 +61,22 @@ const Header = ({ lng, isDraft }: Props) => {
     }
   };
 
-  async function toggleDraft() {
-    if (isDraft) {
-      await fetch('/api/draft/disable');
-      router.refresh();
-    } else setModalOpen(true);
-  }
-
   return (
     <>
+      {notificationStrip && (
+        <NotificationStrip
+          notificationStripObject={notificationStripObject}
+          lng={lng}
+          setNotificationStrip={setNotificationStrip}
+        />
+      )}
       <header
-        className={`header left-0 top-0 z-40 flex w-full items-center bg-transparent ${
+        className={`header left-0 z-40 flex w-full items-center bg-transparent ${
           sticky
-            ? '!fixed !z-[9999] !bg-white !bg-opacity-80 shadow-sticky backdrop-blur-sm !transition dark:!bg-primary dark:!bg-opacity-20'
-            : 'absolute'
+            ? 'fixed top-0 z-50 bg-white bg-opacity-80 shadow-sticky backdrop-blur-sm transition'
+            : `absolute ${notificationStrip ? 'top-10' : 'top-0'}`
         }`}
       >
-        <AnimatePresence>
-          {successToast && (
-            <motion.div
-              className="absolute top-6 z-50"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              transition={{ duration: 0.1 }}
-            >
-              <SuccessPopUp setSuccessToast={setSuccessToast} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <AnimatePresence>
-          {modalOpen && (
-            <motion.div
-              className="absolute right-0 top-0 z-50"
-              initial={{ opacity: 0, y: -50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -50 }}
-              transition={{ duration: 0.15 }}
-            >
-              <AuthenticationModal
-                setModalOpen={setModalOpen}
-                refresh={router.refresh}
-                triggerSuccessToast={triggerSuccessToast}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
         <div className="container">
           <div className="relative -mx-4 flex items-center justify-between">
             <div className="w-60 max-w-full px-4 xl:mr-12">
@@ -113,18 +87,11 @@ const Header = ({ lng, isDraft }: Props) => {
                 } `}
               >
                 <Image
-                  src="/images/logo/logo-2.svg"
+                  src={logoImage}
                   alt="logo"
                   width={140}
                   height={30}
                   className="w-full dark:hidden"
-                />
-                <Image
-                  src="/images/logo/logo.svg"
-                  alt="logo"
-                  width={140}
-                  height={30}
-                  className="hidden w-full dark:block"
                 />
               </Link>
             </div>
@@ -209,13 +176,7 @@ const Header = ({ lng, isDraft }: Props) => {
                 </nav>
               </div>
               <div className="flex items-center justify-end pr-16 lg:pr-0">
-                <div
-                  onClick={toggleDraft}
-                  className="ease-in-up hidden rounded-md bg-primary px-8 py-3 text-base font-bold text-white transition duration-300 hover:cursor-pointer hover:bg-opacity-90 hover:shadow-signUp md:block md:px-9 lg:px-6 xl:px-9"
-                >
-                  {isDraft ? 'Draft' : 'Published'}
-                </div>
-                <LanguageSelector lng={lng} />
+                <LanguageSelector lng={lng} languages={availableLocales} />
               </div>
             </div>
           </div>

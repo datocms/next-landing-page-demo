@@ -24,7 +24,7 @@ const Legal = ({ data, lng }: Props) => {
                 <StructuredText
                   data={
                     (data.legalPage.content as LegalPageModelContentField).value
-                  } //to ask: why do i have to use "as" here?
+                  }
                   customNodeRules={[
                     renderNodeRule(isHeading, ({ children, key }) => {
                       return (

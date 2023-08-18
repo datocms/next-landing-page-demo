@@ -1,10 +1,10 @@
-import { ReviewRecord } from '@/graphql/generated';
+import { TestimonialRecord } from '@/graphql/generated';
 import SectionTitle from '../../Common/SectionTitle';
 import SingleTestimonial from './SingleTestimonial';
 import { Maybe } from 'graphql/jsutils/Maybe';
 
 type Props = {
-  reviews: ReviewRecord[];
+  reviews: TestimonialRecord[];
   header: string;
   subheader: Maybe<string>;
 };

@@ -84,7 +84,7 @@ query Post($slug: String, $locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
         ... on ImageBlockRecord {
           id
           __typename
-          imageRecordImage: image {
+          image {
             id
             responsiveImage {
               srcSet
@@ -112,7 +112,7 @@ query Post($slug: String, $locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
           __typename
           title
           subtitle
-          CTAImage: image {
+          image {
             id
             responsiveImage {
               srcSet

@@ -1,21 +1,38 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { SiteLocale } from '@/graphql/generated';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import AuthenticationModal from '../Header/AuthenticationModal';
+import SuccessPopUp from '../Header/SuccessPopUp';
 
-export default function ScrollToTop() {
+type Props = {
+  lng: SiteLocale;
+  isDraft: boolean;
+};
+
+export default function ScrollToTop({ lng, isDraft }: Props) {
+  const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [successToast, setSuccessToast] = useState(false);
 
-  // Top: 0 takes us all the way back to the top of the page
-  // Behavior: smooth keeps it smooth!
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+  async function toggleDraft() {
+    if (isDraft) {
+      await fetch('/api/draft/disable');
+      router.refresh();
+    } else setModalOpen(true);
+  }
+
+  const triggerSuccessToast = () => {
+    setSuccessToast(true);
+    setTimeout(() => {
+      setSuccessToast(false);
+    }, 5000);
   };
 
   useEffect(() => {
-    // Button is displayed after scrolling for 500 pixels
     const toggleVisibility = () => {
       if (window.pageYOffset > 300) {
         setIsVisible(true);
@@ -24,22 +41,61 @@ export default function ScrollToTop() {
       }
     };
 
-    window.addEventListener("scroll", toggleVisibility);
+    window.addEventListener('scroll', toggleVisibility);
 
-    return () => window.removeEventListener("scroll", toggleVisibility);
+    return () => window.removeEventListener('scroll', toggleVisibility);
   }, []);
 
   return (
-    <div className="fixed bottom-8 right-8 z-[99]">
-      {isVisible && (
-        <div
-          onClick={scrollToTop}
-          aria-label="scroll to top"
-          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md bg-primary text-white shadow-md transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
-        >
-          <span className="mt-[6px] h-3 w-3 rotate-45 border-t border-l border-white"></span>
-        </div>
-      )}
-    </div>
+    <>
+      <AnimatePresence>
+        {isVisible && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed bottom-8 right-8 z-[99]"
+          >
+            <AnimatePresence>
+              {successToast && (
+                <motion.div
+                  className="absolute bottom-0 right-0 z-50 w-[500px]"
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 50 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <SuccessPopUp setSuccessToast={setSuccessToast} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <AnimatePresence>
+              {modalOpen && (
+                <motion.div
+                  className="absolute bottom-0 right-0 z-50 w-[400px]"
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 50 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <AuthenticationModal
+                    setModalOpen={setModalOpen}
+                    refresh={router.refresh}
+                    triggerSuccessToast={triggerSuccessToast}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <div
+              onClick={toggleDraft}
+              className="flex cursor-pointer items-center justify-center rounded-md bg-primary p-4 font-bold text-white shadow-md transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
+            >
+              {isDraft ? 'Enter Published Mode' : 'Enter Draft Mode'}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-const ErrorPage = () => {
+const NotFound = () => {
   return (
     <>
-      <section className="relative z-10 pt-36 pb-16 md:pb-20 lg:pt-[180px] lg:pb-28">
+      <div className="relative z-10 pt-36 pb-16 md:pb-20 lg:pt-[180px] lg:pb-28">
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4">
@@ -522,9 +522,9 @@ const ErrorPage = () => {
             </defs>
           </svg>
         </div>
-      </section>
+      </div>
     </>
   );
 };
 
-export default ErrorPage;
+export default NotFound;

@@ -3,11 +3,11 @@
 import { useQuerySubscription } from 'react-datocms/use-query-subscription';
 import Section from './Sections';
 import {
-  AboutQuery,
-  AboutQueryVariables,
-  HomeQuery,
-  HomeQueryVariables,
+  CollectionMetadata,
   PageModelSectionsField,
+  PageQuery,
+  PageQueryVariables,
+  PostRecord,
   SiteLocale,
 } from '@/graphql/generated';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
@@ -19,9 +19,9 @@ export default function RealTimeSections({
   variables,
   locale,
 }: {
-  initialData: AboutQuery | HomeQuery;
-  variables: AboutQueryVariables | HomeQueryVariables;
-  query: TypedDocumentNode<AboutQuery | HomeQuery>;
+  initialData: PageQuery;
+  variables: PageQueryVariables;
+  query: TypedDocumentNode<PageQuery, PageQueryVariables>;
   locale: SiteLocale;
   token: string;
 }) {
@@ -39,6 +39,8 @@ export default function RealTimeSections({
     <Section
       locale={locale}
       sections={data.page.sections as Array<PageModelSectionsField>}
+      posts={data.allPosts as PostRecord[]}
+      postMeta={data._allPostsMeta as CollectionMetadata}
     />
   );
 }

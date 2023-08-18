@@ -1,0 +1,30 @@
+query Menu($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
+  header(locale: $locale, fallbackLocales: $fallbackLocale) {
+    logo {
+      url
+      responsiveImage {
+        ...DatoImage_responsiveImage
+      }
+    }
+    pages {
+      slug
+      id
+      label
+    }
+    displayNotification
+    displayOptions
+    urlLabel
+    url
+    text
+  }
+}
+
+fragment DatoImage_responsiveImage on ResponsiveImage {
+  src
+  srcSet
+  base64
+  width
+  height
+  alt
+  title
+}

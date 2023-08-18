@@ -1,4 +1,42 @@
-const HomeVariationOne = () => {
+import Sections from '@/components/Sections/Sections';
+import queryDatoCMS from '@/utils/queryDatoCMS';
+import { fallbackLng } from '../../i18n/settings';
+import { draftMode } from 'next/headers';
+import RealTimeSections from '@/components/Sections/RealTimeSections';
+import {
+  CollectionMetadata,
+  PageDocument,
+  PageModelSectionsField,
+  PageRecord,
+  PostRecord,
+  SiteLocale,
+} from '@/graphql/generated';
+import { notFound } from 'next/navigation';
+
+type Params = {
+  params: {
+    lng: SiteLocale;
+  };
+};
+
+const HomeVariationOne = async ({ params: { lng } }: Params) => {
+  const { isEnabled } = draftMode();
+  const slug = 'home';
+
+  const data = await queryDatoCMS(
+    PageDocument,
+    {
+      locale: lng,
+      fallbackLocale: [fallbackLng],
+      slug,
+    },
+    isEnabled
+  );
+
+  if (!data.page) notFound();
+
+  //todo: hydrate data
+
   return (
     <>
       <div className="mt-24 bg-white pb-6 sm:pb-8 lg:pb-12">
@@ -15,10 +53,10 @@ const HomeVariationOne = () => {
 
             <div className="relative flex flex-col items-center p-4 sm:max-w-xl">
               <h1 className="mb-4 text-center text-4xl font-bold text-white sm:text-5xl md:mb-8 md:text-6xl">
-                Revolutionary way to build the web
+                SaaS Frontend Solutions
               </h1>
               <p className="mb-4 text-center text-lg text-indigo-200 sm:text-xl md:mb-8">
-                Very proud to introduce
+                A better way to build
               </p>
 
               <div className="flex w-full flex-col gap-2.5 sm:flex-row sm:justify-center">

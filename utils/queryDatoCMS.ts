@@ -5,15 +5,16 @@ import {
 } from 'graphql-request';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/esm/types';
+import { ASTNode, print } from 'graphql';
 
 export default async function queryDatoCMS<
-  TDocument = any,
+  TResult = unknown,
   TVariables = Record<string, any>
 >(
-  document: RequestDocument | TypedDocumentNode<TDocument, TVariables>,
+  document: TypedDocumentNode<TResult, TVariables>,
   variables?: TVariables,
   isDraft?: boolean
-) {
+): Promise<TResult> {
   const headers: GraphQLClientRequestHeaders = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -25,10 +26,15 @@ export default async function queryDatoCMS<
     headers['X-Include-Drafts'] = 'true';
   }
 
-  return graphqlRequest<TDocument, Variables>(
-    'https://graphql.datocms.com/',
-    document,
-    variables as Variables,
-    headers
-  );
+  const { data } = await (
+    await fetch('https://graphql.datocms.com/', {
+      cache: 'force-cache',
+      next: { tags: ['datocms'] },
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ query: print(document), variables }),
+    })
+  ).json();
+
+  return data;
 }

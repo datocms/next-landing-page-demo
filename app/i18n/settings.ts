@@ -1,24 +1,10 @@
-import { SiteLocale } from '@/graphql/generated';
+import { LocalesDocument, SiteLocale } from '@/graphql/generated';
+import queryDatoCMS from '@/utils/queryDatoCMS';
 
 export const fallbackLng = 'en' as SiteLocale;
-export const languages = [
-  fallbackLng,
-  'it',
-  'de',
-  'fr',
-  'es',
-  'pt',
-  'sv',
-  'ru',
-] as SiteLocale[];
 
-export const langageDictionary = {
-  en: 'English',
-  it: 'Italian',
-  ru: 'Russian',
-  de: 'German',
-  pt: 'Portuguese',
-  fr: 'French',
-  sv: 'Swedish',
-  es: 'Spanish',
-};
+export default async function getAvailableLocales() {
+  const { _site } = await queryDatoCMS(LocalesDocument);
+
+  return _site.locales;
+}

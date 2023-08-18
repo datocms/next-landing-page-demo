@@ -4,13 +4,13 @@ import { useState } from 'react';
 import SectionTitle from '../../Common/SectionTitle';
 import OfferList from './OfferList';
 import PricingBox from './PricingBox';
-import { PlanRecord } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
+import { PricingRecord } from '@/graphql/generated';
 
 type Props = {
   header: string;
   subheader: Maybe<string>;
-  plans: PlanRecord[];
+  plans: PricingRecord[];
 };
 
 const Pricing = ({ header, subheader, plans }: Props) => {
@@ -68,7 +68,6 @@ const Pricing = ({ header, subheader, plans }: Props) => {
 
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
           {plans.map((plan) => {
-            const planCharacteristics = plan.planCharacteristic[0];
             return (
               <PricingBox
                 key={plan.id}
@@ -79,43 +78,27 @@ const Pricing = ({ header, subheader, plans }: Props) => {
               >
                 <OfferList
                   text="All UI Components"
-                  status={
-                    planCharacteristics.allUiComponents ? 'active' : 'inactive'
-                  }
+                  status={plan.allUiComponents ? 'active' : 'inactive'}
                 />
                 <OfferList
                   text="Use with Unlimited Projects"
-                  status={
-                    planCharacteristics.useWithUnlimitedProjects
-                      ? 'active'
-                      : 'inactive'
-                  }
+                  status={plan.useWithUnlimitedProjects ? 'active' : 'inactive'}
                 />
                 <OfferList
                   text="Commercial Use"
-                  status={
-                    planCharacteristics.commercialUse ? 'active' : 'inactive'
-                  }
+                  status={plan.commercialUse ? 'active' : 'inactive'}
                 />
                 <OfferList
                   text="Email Support"
-                  status={
-                    planCharacteristics.emailSupport ? 'active' : 'inactive'
-                  }
+                  status={plan.emailSupport ? 'active' : 'inactive'}
                 />
                 <OfferList
                   text="Lifetime Access"
-                  status={
-                    planCharacteristics.lifetimeAccess ? 'active' : 'inactive'
-                  }
+                  status={plan.lifetimeAccess ? 'active' : 'inactive'}
                 />
                 <OfferList
                   text="Free Lifetime Updates"
-                  status={
-                    planCharacteristics.freeLifetimeUpdates
-                      ? 'active'
-                      : 'inactive'
-                  }
+                  status={plan.freeLifetimeUpdates ? 'active' : 'inactive'}
                 />
               </PricingBox>
             );

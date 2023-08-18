@@ -1,0 +1,268 @@
+query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
+  page(
+    filter: { slug: { eq: $slug } }
+    locale: $locale
+    fallbackLocales: $fallbackLocale
+  ) {
+    sections {
+      ... on AboutIntroRecord {
+        id
+        _modelApiKey
+        preHeader
+        header
+        subheader
+        introductionText {
+          value
+        }
+        images {
+          id
+          responsiveImage {
+            ...DatoImage_responsiveImage
+          }
+        }
+      }
+      ... on StatsSectionRecord {
+        _modelApiKey
+        id
+        title
+        subtitle
+        statistic {
+          id
+          label
+          quantity
+          icon {
+            url
+          }
+        }
+      }
+      ... on TeamSectionRecord {
+        _modelApiKey
+        id
+        displayOptions
+        title
+        subtitle
+        showcasedMembers {
+          name
+          id
+          slug
+          bio
+          description
+          picture {
+            responsiveImage {
+              ...DatoImage_responsiveImage
+            }
+          }
+        }
+      }
+      ... on FaqSectionRecord {
+        _modelApiKey
+        displayOptions
+        id
+        title
+        subtitle
+        questions {
+          question
+          id
+          answer {
+            value
+          }
+        }
+      }
+      ... on HeroSectionRecord {
+        buttons {
+          id
+          label
+          primary
+          url
+        }
+        _modelApiKey
+        id
+        heroSubtitle
+        heroTitle
+        displayOptions
+      }
+      ... on VideoSectionRecord {
+        _modelApiKey
+        id
+        videoHeader
+        videoSubheader
+        video {
+          providerUid
+          provider
+          thumbnailUrl
+        }
+      }
+      ... on DetailSectionRecord {
+        _modelApiKey
+        id
+        details {
+          value
+        }
+        imagePosition
+        image {
+          url
+        }
+      }
+      ... on ReviewSectionRecord {
+        _modelApiKey
+        id
+        reviewSectionHeader
+        reviewSectionSubheader
+        reviews {
+          id
+          rating
+          review {
+            value
+            links
+            blocks
+          }
+          reviewerName
+          reviewerPicture {
+            responsiveImage {
+              ...DatoImage_responsiveImage
+            }
+          }
+          reviewerTitle
+        }
+      }
+      ... on PricingSectionRecord {
+        _modelApiKey
+        id
+        pricingSectionHeader
+        pricingSectionSubheader
+        plans {
+          id
+          yearlyPrice
+          useWithUnlimitedProjects
+          tierName
+          tierDescription {
+            value
+          }
+          slug
+          monthlyPrice
+          lifetimeAccess
+          freeLifetimeUpdates
+          emailSupport
+          commercialUse
+          allUiComponents
+        }
+      }
+      ... on BrandSectionRecord {
+        _modelApiKey
+        id
+        brand {
+          _modelApiKey
+          brandName
+          brandUrl
+          id
+          brandLogo {
+            url
+          }
+        }
+      }
+      ... on FeaturedPostsSectionRecord {
+        _modelApiKey
+        id
+        featuredPostsHeader
+        featuredPostsSubheader
+        featuredPosts {
+          _publishedAt
+          slug
+          id
+          title
+          tags {
+            tag
+          }
+          seoTags {
+            description
+            image {
+              responsiveImage {
+                ...DatoImage_responsiveImage
+              }
+            }
+          }
+          author {
+            name
+            bio
+            slug
+            picture {
+              responsiveImage(imgixParams: { w: "64", h: "64", fit: crop }) {
+                ...DatoImage_responsiveImage
+              }
+            }
+          }
+        }
+      }
+      ... on FeatureListSectionRecord {
+        _modelApiKey
+        id
+        featuresHeader
+        featuresSubheader
+        displayOption
+        feature {
+          _modelApiKey
+          id
+          featureTitle
+          featureDescription
+          featureIcon {
+            url
+          }
+        }
+      }
+      ... on AllPostsSectionRecord {
+        id
+        displayOptions
+        _modelApiKey
+      }
+    }
+    id
+    label
+    _modelApiKey
+  }
+  allPosts(
+    filter: { title: { isBlank: "false" } }
+    orderBy: _createdAt_DESC
+    first: "9"
+    locale: $locale
+    fallbackLocales: $fallbackLocale
+  ) {
+    _publishedAt
+    slug
+    id
+    title
+    tags {
+      tag
+    }
+    seoTags {
+      description
+      image {
+        responsiveImage {
+          ...DatoImage_responsiveImage
+        }
+      }
+    }
+    author {
+      name
+      slug
+      bio
+      picture {
+        responsiveImage(imgixParams: { w: "64", h: "64", fit: crop }) {
+          ...DatoImage_responsiveImage
+        }
+      }
+    }
+  }
+  _allPostsMeta(locale: $locale, filter: { title: { isBlank: "false" } }) {
+    count
+  }
+}
+
+fragment DatoImage_responsiveImage on ResponsiveImage {
+  src
+  srcSet
+  base64
+  width
+  height
+  alt
+  title
+}

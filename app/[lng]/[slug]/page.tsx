@@ -1,38 +1,47 @@
-import { fallbackLng } from '@/app/i18n/settings';
-import queryDatoCMS from '@/utils/queryDatoCMS';
-import { draftMode } from 'next/headers';
 import Sections from '@/components/Sections/Sections';
+import queryDatoCMS from '@/utils/queryDatoCMS';
+import { fallbackLng } from '../../i18n/settings';
+import { draftMode } from 'next/headers';
 import RealTimeSections from '@/components/Sections/RealTimeSections';
 import {
-  AboutDocument,
+  CollectionMetadata,
+  PageDocument,
   PageModelSectionsField,
+  PostRecord,
   SiteLocale,
 } from '@/graphql/generated';
+import { notFound } from 'next/navigation';
 
 type Params = {
   params: {
     lng: SiteLocale;
+    slug: string;
   };
 };
 
-const AboutPage = async ({ params: { lng } }: Params) => {
+export default async function Home({ params: { lng, slug } }: Params) {
   const { isEnabled } = draftMode();
 
   const data = await queryDatoCMS(
-    AboutDocument,
+    PageDocument,
     {
       locale: lng,
       fallbackLocale: [fallbackLng],
+      slug,
     },
     isEnabled
   );
+
+  if (!data.page) notFound();
 
   return (
     <>
       {!isEnabled && (
         <Sections
           locale={lng}
-          sections={data.page!.sections as Array<PageModelSectionsField>}
+          sections={data.page.sections as Array<PageModelSectionsField>}
+          posts={data.allPosts as PostRecord[]}
+          postMeta={data._allPostsMeta as CollectionMetadata}
         />
       )}
       {isEnabled && (
@@ -40,12 +49,10 @@ const AboutPage = async ({ params: { lng } }: Params) => {
           initialData={data}
           locale={lng}
           token={process.env.DATOCMS_READONLY_API_TOKEN || ''}
-          query={AboutDocument}
-          variables={{ locale: lng, fallbackLocale: [fallbackLng] }}
+          query={PageDocument}
+          variables={{ locale: lng, fallbackLocale: [fallbackLng], slug }}
         />
       )}
     </>
   );
-};
-
-export default AboutPage;
+}
