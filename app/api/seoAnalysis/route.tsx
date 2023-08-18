@@ -80,11 +80,9 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  // const baseUrl = process.env.VERCEL_URL
-  //   ? `https://${process.env.VERCEL_URL}`
-  //   : process.env.URL;
-
-  const baseUrl = process.env.URL;
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : process.env.URL;
 
   const { body } = await got(new URL(permalink, baseUrl).toString());
 

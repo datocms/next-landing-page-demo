@@ -85,6 +85,51 @@ async function installWebPreviewsPlugin(client: Client) {
   });
 }
 
+async function installSEOAnalysisPlugin(client: Client) {
+  const seoPlugin = await client.plugins.create({
+    package_name: 'datocms-plugin-seo-readability-analysis',
+  });
+
+  await client.plugins.update(seoPlugin.id, {
+    parameters: {
+      htmlGeneratorUrl: `${baseUrl}/api/seoAnalysis?token=${secretToken}`,
+      autoApplyToFieldsWithApiKey: 'seo_analysis',
+      setSeoReadabilityAnalysisFieldExtensionId: true,
+    },
+  });
+}
+
+async function createCacheInvalidationWebhook(client: Client) {
+  await client.webhooks.create({
+    name: '🔄 Cache Revalidation',
+    url: `${baseUrl}api/revalidateCache?token=${secretToken}`,
+    custom_payload: null,
+    headers: {},
+    events: [
+      {
+        filters: [],
+        entity_type: 'item',
+        event_types: ['create', 'update', 'delete', 'publish', 'unpublish'],
+      },
+      {
+        filters: [],
+        entity_type: 'item_type',
+        event_types: ['create', 'update', 'delete'],
+      },
+      {
+        filters: [],
+        entity_type: 'upload',
+        event_types: ['update', 'delete'],
+      },
+    ],
+    http_basic_user: null,
+    http_basic_password: null,
+    enabled: true,
+    payload_api_version: '3',
+    nested_items_in_payload: false,
+  });
+}
+
 export async function POST(request: Request) {
   const body = await request.json();
 
@@ -103,34 +148,8 @@ export async function POST(request: Request) {
   try {
     await Promise.all([
       installWebPreviewsPlugin(client),
-      client.webhooks.create({
-        name: '🔄 Cache Revalidation',
-        url: `${baseUrl}api/revalidateCache?token=${secretToken}`,
-        custom_payload: null,
-        headers: {},
-        events: [
-          {
-            filters: [],
-            entity_type: 'item',
-            event_types: ['create', 'update', 'delete', 'publish', 'unpublish'],
-          },
-          {
-            filters: [],
-            entity_type: 'item_type',
-            event_types: ['create', 'update', 'delete'],
-          },
-          {
-            filters: [],
-            entity_type: 'upload',
-            event_types: ['update', 'delete'],
-          },
-        ],
-        http_basic_user: null,
-        http_basic_password: null,
-        enabled: true,
-        payload_api_version: '3',
-        nested_items_in_payload: false,
-      }),
+      createCacheInvalidationWebhook(client),
+      installSEOAnalysisPlugin(client),
     ]);
 
     return NextResponse.json({ success: true }, cors);
