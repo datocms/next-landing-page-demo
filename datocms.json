@@ -18,5 +18,6 @@
       "tokenName": "Read-only API token"
     }
   },
-  "buildCommand": "npm run build"
+  "buildCommand": "npm run build",
+  "postInstallUrl": "/api/post-install"
 }
