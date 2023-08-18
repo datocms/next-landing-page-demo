@@ -43,7 +43,10 @@ export async function GET(req: NextRequest) {
   const token = searchParams.get('token');
 
   if (token !== process.env.SEO_SECRET_TOKEN)
-    return new Response('Invalid token', { status: 401 });
+    return new Response(
+      `Invalid token token: ${token} ${process.env.SEO_SECRET_TOKEN} `,
+      { status: 401, headers }
+    );
 
   if (
     !itemId ||
