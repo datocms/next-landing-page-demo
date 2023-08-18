@@ -44,7 +44,9 @@ export async function GET(req: NextRequest) {
 
   if (token !== process.env.SEO_SECRET_TOKEN)
     return new Response(
-      `Invalid token token: ${token} ${process.env.SEO_SECRET_TOKEN} ${process.env} `,
+      `Invalid token token: ${token} ${
+        process.env.SEO_SECRET_TOKEN
+      } ${JSON.stringify(process.env, null, 2)} `,
       { status: 401, headers }
     );
 
