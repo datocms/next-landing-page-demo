@@ -3,8 +3,6 @@ import got from 'got';
 import { JSDOM } from 'jsdom';
 import { NextRequest } from 'next/server';
 
-export const runtime = 'edge';
-
 const findSlugAndPermalink = async (
   item: any,
   itemTypeApiKey: string,
@@ -46,7 +44,7 @@ export async function GET(req: NextRequest) {
 
   if (token !== process.env.SEO_SECRET_TOKEN)
     return new Response(
-      `Invalid token token: ${token} ${process.env.SEO_SECRET_TOKEN} `,
+      `Invalid token token: ${token} ${process.env.SEO_SECRET_TOKEN} ${process.env} `,
       { status: 401, headers }
     );
 
