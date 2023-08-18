@@ -16,6 +16,18 @@
     "DATOCMS_READONLY_API_TOKEN": {
       "type": "datocmsAccessToken",
       "tokenName": "Read-only API token"
+    },
+    "SEO_SECRET_TOKEN": {
+      "type": "string",
+      "value": "superSecretToken"
+    },
+    "DRAFT_SECRET_TOKEN": {
+      "type": "string",
+      "value": "superSecretToken"
+    },
+    "CACHE_INVALIDATION_SECRET_TOKEN": {
+      "type": "string",
+      "value": "superSecretToken"
     }
   },
   "buildCommand": "npm run build",

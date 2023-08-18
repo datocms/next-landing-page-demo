@@ -9,47 +9,6 @@ const cors = {
   },
 };
 
-async function vercelInitialization(
-  vercelProjectId: string,
-  vercelTeamId_: string,
-  vercelApiToken: string,
-  sectetToken: string,
-  datoApiToken: string
-) {
-  await fetch(`https://api.vercel.com/v10/projects/${vercelProjectId}/env`, {
-    headers: {
-      Authorization: `Bearer ${vercelApiToken}`,
-    },
-    method: 'post',
-    body: JSON.stringify([
-      {
-        type: 'encrypted',
-        key: 'SEO_SECRET_TOKEN',
-        value: sectetToken,
-        target: ['development', 'production', 'preview'],
-      },
-      {
-        type: 'encrypted',
-        key: 'DRAFT_SECRET_TOKEN',
-        value: sectetToken,
-        target: ['development', 'production', 'preview'],
-      },
-      {
-        type: 'encrypted',
-        key: 'CACHE_INVALIDATION_SECRET_TOKEN',
-        value: sectetToken,
-        target: ['development', 'production', 'preview'],
-      },
-      // {
-      //   type: 'encrypted',
-      //   key: 'DATOCMS_READONLY_API_TOKEN',
-      //   value: datoApiToken,
-      //   target: ['development', 'production', 'preview'],
-      // },
-    ]),
-  });
-}
-
 /*
   These endpoints are called right after bootstrapping the Starter project...
   they can be removed afterwards!
@@ -134,16 +93,6 @@ export async function POST(request: Request) {
   const body = await request.json();
 
   const client = buildClient({ apiToken: body.datocmsApiToken });
-
-  if (body.integrationInfo.adapter === 'vercel') {
-    await vercelInitialization(
-      body.integrationInfo.vercelProjectId,
-      body.integrationInfo.vercelTeamId,
-      body.integrationInfo.vercelApiToken,
-      secretToken,
-      body.datocmsApiToken
-    );
-  }
 
   try {
     await Promise.all([
