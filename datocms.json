@@ -1,0 +1,22 @@
+{
+  "name": "Landing Page Demonstration",
+  "description": "A Landing Page Demonstration using DatoCMS",
+  "previewImage": "https://www.datocms-assets.com/104169/1692326020-demopreview.png",
+  "livePreviewUrl": "https://saas-starter-marcelofinamorvieira.vercel.app/en/home",
+  "datocmsProjectId": "105274",
+  "deploymentType": "vercel",
+  "environmentVariables": {
+    "DATOCMS_BACKEND_URL": {
+      "type": "datocmsProjectUrl"
+    },
+    "DATOCMS_READ_ONLY_API_TOKEN": {
+      "type": "datocmsAccessToken",
+      "tokenName": "Read-only API token"
+    },
+    "DATOCMS_READONLY_API_TOKEN": {
+      "type": "datocmsAccessToken",
+      "tokenName": "Read-only API token"
+    }
+  },
+  "buildCommand": "npm run build"
+}

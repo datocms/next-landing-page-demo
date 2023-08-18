@@ -40,12 +40,12 @@ async function vercelInitialization(
         value: sectetToken,
         target: ['development', 'production', 'preview'],
       },
-      {
-        type: 'encrypted',
-        key: 'DATOCMS_READONLY_API_TOKEN',
-        value: datoApiToken,
-        target: ['development', 'production', 'preview'],
-      },
+      // {
+      //   type: 'encrypted',
+      //   key: 'DATOCMS_READONLY_API_TOKEN',
+      //   value: datoApiToken,
+      //   target: ['development', 'production', 'preview'],
+      // },
     ]),
   });
 }
