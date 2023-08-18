@@ -3,6 +3,8 @@ import got from 'got';
 import { JSDOM } from 'jsdom';
 import { NextRequest } from 'next/server';
 
+export const runtime = 'edge';
+
 const findSlugAndPermalink = async (
   item: any,
   itemTypeApiKey: string,

@@ -1,0 +1,93 @@
+query About($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
+  page(
+    filter: { label: { eq: "About" } }
+    locale: $locale
+    fallbackLocales: $fallbackLocale
+  ) {
+    sections {
+      ... on AboutIntroRecord {
+        id
+        _modelApiKey
+        preHeader
+        header
+        subheader
+        introductionText {
+          value
+        }
+        images {
+          id
+          responsiveImage {
+            srcSet
+            webpSrcSet
+            sizes
+            src
+            width
+            height
+            aspectRatio
+            alt
+            title
+            bgColor
+            base64
+          }
+        }
+      }
+      ... on StatsSectionRecord {
+        _modelApiKey
+        id
+        title
+        subtitle
+        statistic {
+          id
+          label
+          quantity
+          icon {
+            url
+          }
+        }
+      }
+      ... on TeamSectionRecord {
+        _modelApiKey
+        id
+        displayOptions
+        title
+        subtitle
+        showcasedMembers {
+          name
+          id
+          slug
+          bio
+          description
+          picture {
+            responsiveImage {
+              srcSet
+              webpSrcSet
+              sizes
+              src
+              width
+              height
+              aspectRatio
+              alt
+              title
+              bgColor
+              base64
+            }
+          }
+        }
+      }
+      ... on FaqSectionRecord {
+        _modelApiKey
+        displayOptions
+        id
+        title
+        subtitle
+        questions {
+          question
+          id
+          answer {
+            value
+          }
+        }
+      }
+    }
+  }
+}
