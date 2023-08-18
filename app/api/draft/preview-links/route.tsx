@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
     },
     {
       label: 'Draft version',
-      url: `${baseUrl}api/draft/enable?url=${url}&token=${token}`,
+      url: `${baseUrl}/api/draft/enable?url=${url}&token=${token}`,
     },
   ];
 
