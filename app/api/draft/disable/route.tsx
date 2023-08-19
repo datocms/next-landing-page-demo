@@ -1,6 +1,25 @@
-import { draftMode } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { cookies, draftMode } from 'next/headers';
 
 export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+
+  const url = searchParams.get('url');
+
   draftMode().disable();
-  return new Response('Draft mode is disabled');
+
+  if (!url) return new Response('Draft mode is disabled');
+
+  const cookieStore = cookies();
+  const cookie = cookieStore.get('__prerender_bypass')!;
+  cookies().set({
+    name: '__prerender_bypass',
+    value: cookie?.value,
+    httpOnly: true,
+    path: '/',
+    secure: true,
+    sameSite: 'none',
+  });
+
+  redirect(url);
 }

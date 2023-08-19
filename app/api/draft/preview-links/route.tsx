@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
   const previewLinks = [
     {
       label: 'Published version',
-      url: `${baseUrl}${url}`,
+      url: `${baseUrl}/api/draft/disable?url=${url}}`,
     },
     {
       label: 'Draft version',
