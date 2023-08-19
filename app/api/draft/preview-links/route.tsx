@@ -15,7 +15,6 @@ const generatePreviewUrl = ({
 }: generatePreviewUrlParams) => {
   switch (itemType.attributes.api_key) {
     case 'page':
-      if (item.attributes.slug === 'home') return `/${locale}/`; //special case for default home page
       return `/${locale}/${item.attributes.slug}`;
     case 'post':
       return `/${locale}/posts/${item.attributes.slug}`;
@@ -71,7 +70,7 @@ export async function POST(request: NextRequest) {
   const previewLinks = [
     {
       label: 'Published version',
-      url: `${baseUrl}/api/draft/disable?url=${url}}`,
+      url: `${baseUrl}/api/draft/disable?url=${url}`,
     },
     {
       label: 'Draft version',
