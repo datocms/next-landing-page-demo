@@ -34,9 +34,6 @@ export default async function RootLayout({
   children,
   params: { lng },
 }: Params) {
-  const { isEnabled } = draftMode();
-  const menuData = await GetMenuItems(lng, isEnabled);
-  const languages = await getAvailableLocales();
 
   return (
     <html suppressHydrationWarning lang={lng}>

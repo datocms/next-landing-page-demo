@@ -61,7 +61,7 @@ async function installSEOAnalysisPlugin(client: Client) {
 async function createCacheInvalidationWebhook(client: Client) {
   await client.webhooks.create({
     name: '🔄 Cache Revalidation',
-    url: `${baseUrl}api/revalidateCache?token=${secretToken}`,
+    url: `${baseUrl}/api/revalidateCache?token=${secretToken}`,
     custom_payload: null,
     headers: {},
     events: [
