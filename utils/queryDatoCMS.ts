@@ -19,6 +19,22 @@ export default async function queryDatoCMS<
 
   if (isDraft) headers['X-Include-Drafts'] = 'true';
 
+  try {
+    const { data } = await (
+      await fetch('https://graphql.datocms.com/', {
+        // cache: 'no-cache',
+        cache: 'force-cache',
+        next: { tags: ['datocms'] },
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ query: print(document), variables }),
+      })
+    ).json();
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
+
   const { data } = await (
     await fetch('https://graphql.datocms.com/', {
       // cache: 'no-cache',
