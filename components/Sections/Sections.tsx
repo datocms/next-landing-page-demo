@@ -14,6 +14,7 @@ import StatsSection from '../About/StatsSection';
 import AboutIntro from '../About/AboutIntro';
 import {
   AboutIntroRecord,
+  AllDocumentationSectionRecord,
   AllPostsSectionRecord,
   BrandSectionRecord,
   CollectionMetadata,
@@ -193,7 +194,7 @@ export default function Section({ sections, locale, posts, postMeta }: Props) {
               />
             );
           case 'all_posts_section':
-            const AllPostsSectionRecord = section as AllPostsSectionRecord;
+            const allPostsSectionRecord = section as AllPostsSectionRecord;
             return (
               <PostGridRenderer data={posts} lng={locale} postMeta={postMeta} />
             );

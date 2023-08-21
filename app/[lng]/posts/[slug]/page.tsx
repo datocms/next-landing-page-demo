@@ -1,4 +1,4 @@
-import { fallbackLng } from '@/app/i18n/settings';
+import { getFallbackLocale } from '@/app/i18n/settings';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { notFound } from 'next/navigation';
 import { draftMode } from 'next/headers';
@@ -14,6 +14,7 @@ type Params = {
 };
 
 const BlogDetailsPage = async ({ params: { slug, lng } }: Params) => {
+  const fallbackLng = await getFallbackLocale();
   const { isEnabled } = draftMode();
 
   const data = await queryDatoCMS(

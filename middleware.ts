@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import getAvailableLocales, { fallbackLng } from './app/i18n/settings';
+import getAvailableLocales, { getFallbackLocale } from './app/i18n/settings';
 import { match } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
 import { SiteLocale } from './graphql/generated';
 
-function getLocale(request: Request, locales: SiteLocale[]): string {
+async function getLocale(
+  request: Request,
+  locales: SiteLocale[]
+): Promise<string> {
+  const fallbackLng = await getFallbackLocale();
   const headers = new Headers(request.headers);
   const acceptLanguage = headers.get('accept-language');
   if (acceptLanguage) {
@@ -27,7 +31,7 @@ export async function middleware(request: NextRequest) {
 
   //go to home in browser language if pathname & locale is missing
   if (pathname === '/') {
-    const locale = getLocale(request, locales);
+    const locale = await getLocale(request, locales);
     return NextResponse.redirect(new URL(`/${locale}/home`, request.url));
   }
 

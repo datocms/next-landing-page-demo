@@ -1,24 +1,11 @@
-import { fallbackLng } from '@/app/i18n/settings';
+import { getFallbackLocale } from '@/app/i18n/settings';
 import { MenuDocument, SiteLocale } from '@/graphql/generated';
 import queryDatoCMS from '@/utils/queryDatoCMS';
-
-export type Menu = {
-  id: string;
-  title: string;
-  path?: string;
-  newTab: boolean;
-  submenu?: Menu[];
-};
-
-export type NotificationStripType = {
-  displayNotification: boolean;
-  text: string;
-  urlLabel: string | null | undefined;
-  url: string | undefined | null;
-};
+import { Menu, NotificationStripType } from './HeaderRenderer';
 
 export default async function GetMenuData(lng: SiteLocale, isEnabled: boolean) {
   const menuData: Menu[] = [];
+  const fallbackLng = await getFallbackLocale();
 
   const { header } = await queryDatoCMS(
     MenuDocument,

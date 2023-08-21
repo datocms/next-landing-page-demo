@@ -2,6 +2,7 @@ import { TestimonialRecord } from '@/graphql/generated';
 import SectionTitle from '../../Common/SectionTitle';
 import SingleTestimonial from './SingleTestimonial';
 import { Maybe } from 'graphql/jsutils/Maybe';
+import { primaryColor } from '@/app/i18n/settings';
 
 type Props = {
   reviews: TestimonialRecord[];
@@ -58,8 +59,8 @@ const Testimonials = ({ reviews, header, subheader }: Props) => {
               y2="459.865"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stopColor="#4A6CF7" />
-              <stop offset="1" stopColor="#4A6CF7" stopOpacity="0" />
+              <stop stopColor={primaryColor} />
+              <stop offset="1" stopColor={primaryColor} stopOpacity="0" />
             </linearGradient>
             <linearGradient
               id="paint1_linear_83:2"
@@ -69,8 +70,8 @@ const Testimonials = ({ reviews, header, subheader }: Props) => {
               y2="675.565"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stopColor="#4A6CF7" />
-              <stop offset="1" stopColor="#4A6CF7" stopOpacity="0" />
+              <stop stopColor={primaryColor} />
+              <stop offset="1" stopColor={primaryColor} stopOpacity="0" />
             </linearGradient>
           </defs>
         </svg>
@@ -110,8 +111,8 @@ const Testimonials = ({ reviews, header, subheader }: Props) => {
               y2="8.15715"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stopColor="#4A6CF7" stopOpacity="0" />
-              <stop offset="1" stopColor="#4A6CF7" />
+              <stop stopColor={primaryColor} stopOpacity="0" />
+              <stop offset="1" stopColor={primaryColor} />
             </linearGradient>
             <linearGradient
               id="paint1_linear_72:302"
@@ -121,8 +122,8 @@ const Testimonials = ({ reviews, header, subheader }: Props) => {
               y2="-2.84285"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stopColor="#4A6CF7" stopOpacity="0" />
-              <stop offset="1" stopColor="#4A6CF7" />
+              <stop stopColor={primaryColor} stopOpacity="0" />
+              <stop offset="1" stopColor={primaryColor} />
             </linearGradient>
             <linearGradient
               id="paint2_linear_72:302"
@@ -132,8 +133,8 @@ const Testimonials = ({ reviews, header, subheader }: Props) => {
               y2="19.1572"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stopColor="#4A6CF7" stopOpacity="0" />
-              <stop offset="1" stopColor="#4A6CF7" />
+              <stop stopColor={primaryColor} stopOpacity="0" />
+              <stop offset="1" stopColor={primaryColor} />
             </linearGradient>
             <linearGradient
               id="paint3_linear_72:302"
@@ -143,8 +144,8 @@ const Testimonials = ({ reviews, header, subheader }: Props) => {
               y2="31.1572"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stopColor="#4A6CF7" stopOpacity="0" />
-              <stop offset="1" stopColor="#4A6CF7" />
+              <stop stopColor={primaryColor} stopOpacity="0" />
+              <stop offset="1" stopColor={primaryColor} />
             </linearGradient>
           </defs>
         </svg>

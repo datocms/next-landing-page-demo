@@ -24,8 +24,8 @@ const generatePreviewUrl = ({
       return `/${locale}/posts/author/${item.attributes.slug}`;
     case 'legal_page':
       return `/${locale}/legal/${item.attributes.slug}`;
-    case 'type_name':
-      return `/${locale}/type_name/${item.attributes.slug}`;
+    case 'header':
+      return `/${locale}/home`;
     default:
       return '/en/404';
   }

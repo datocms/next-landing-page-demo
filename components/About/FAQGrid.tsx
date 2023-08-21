@@ -21,7 +21,7 @@ const FAQGrid = ({ title, subtitle, questions }: Props) => {
           {questions.map((question) => {
             return (
               <div key={question.id} className="flex gap-4">
-                <div className="inline-block h-12 rounded-lg bg-blue-600 p-3 text-white">
+                <div className="inline-block h-12 rounded-lg bg-primary/80 p-3 text-white">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6"

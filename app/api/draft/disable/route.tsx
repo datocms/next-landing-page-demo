@@ -10,6 +10,7 @@ export async function GET(request: Request) {
 
   if (!url) return new Response('Draft mode is disabled');
 
+  //to avoid losing the cookie on redirect in the iFrame
   const cookieStore = cookies();
   const cookie = cookieStore.get('__prerender_bypass')!;
   cookies().set({

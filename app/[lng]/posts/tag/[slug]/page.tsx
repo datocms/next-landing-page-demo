@@ -1,4 +1,4 @@
-import { fallbackLng } from '@/app/i18n/settings';
+import { getFallbackLocale } from '@/app/i18n/settings';
 import RealTimeTagPosts from '@/components/Blog/RealTime/RealTimeTagPosts';
 import TagPosts from '@/components/Blog/TagPosts';
 import { SiteLocale, TagDocument } from '@/graphql/generated';
@@ -13,6 +13,7 @@ type Params = {
 };
 
 const TagPage = async ({ params }: Params) => {
+  const fallbackLng = await getFallbackLocale();
   const { lng } = params;
   const { isEnabled } = draftMode();
 

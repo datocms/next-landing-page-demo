@@ -1,3 +1,4 @@
+import { primaryColor } from '@/app/i18n/settings';
 import { JSXElementConstructor, ReactElement } from 'react';
 
 type Props = {
@@ -65,7 +66,13 @@ const QuoteBlock = ({ text }: Props) => {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <circle opacity="0.8" cx="37.5" cy="37.5" r="37.5" fill="#4A6CF7" />
+          <circle
+            opacity="0.8"
+            cx="37.5"
+            cy="37.5"
+            r="37.5"
+            fill={primaryColor}
+          />
           <mask
             id="mask0_111:596"
             style={{ maskType: 'alpha' }}
@@ -75,7 +82,13 @@ const QuoteBlock = ({ text }: Props) => {
             width="75"
             height="75"
           >
-            <circle opacity="0.8" cx="37.5" cy="37.5" r="37.5" fill="#4A6CF7" />
+            <circle
+              opacity="0.8"
+              cx="37.5"
+              cy="37.5"
+              r="37.5"
+              fill={primaryColor}
+            />
           </mask>
           <g mask="url(#mask0_111:596)">
             <circle

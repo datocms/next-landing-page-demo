@@ -1,9 +1,9 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 const NotFound = () => {
   return (
     <>
-      <div className="relative z-10 pt-36 pb-16 md:pb-20 lg:pt-[180px] lg:pb-28">
+      <div className="relative z-10 pb-16 pt-36 md:pb-20 lg:pb-28 lg:pt-[180px]">
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4">
@@ -37,7 +37,7 @@ const NotFound = () => {
                     />
                     <mask
                       id="mask0_116:1137"
-                      style={{ maskType: "alpha" }}
+                      style={{ maskType: 'alpha' }}
                       maskUnits="userSpaceOnUse"
                       x="159"
                       y="13"
@@ -142,7 +142,7 @@ const NotFound = () => {
                 </p>
                 <Link
                   href="/"
-                  className="rounded-md bg-primary py-3 px-8 text-base font-bold text-white shadow-signUp duration-300 hover:bg-white hover:text-primary md:px-9 lg:px-8 xl:px-9"
+                  className="rounded-md bg-primary px-8 py-3 text-base font-bold text-white shadow-signUp duration-300 hover:bg-white hover:text-primary md:px-9 lg:px-8 xl:px-9"
                 >
                   Back to Homepage
                 </Link>
@@ -150,7 +150,7 @@ const NotFound = () => {
             </div>
           </div>
         </div>
-        <div className="absolute left-0 bottom-0 z-[-1] hidden sm:block">
+        <div className="absolute bottom-0 left-0 z-[-1] hidden sm:block">
           <svg
             width="406"
             height="286"
@@ -336,7 +336,7 @@ const NotFound = () => {
             </defs>
           </svg>
         </div>
-        <div className="absolute top-0 right-0 z-[-1] hidden sm:block">
+        <div className="absolute right-0 top-0 z-[-1] hidden sm:block">
           <svg
             width="406"
             height="286"

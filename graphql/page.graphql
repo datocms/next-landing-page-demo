@@ -214,6 +214,11 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
         displayOptions
         _modelApiKey
       }
+      ... on AllDocumentationSectionRecord {
+        id
+        displayOptions
+        _modelApiKey
+      }
     }
     id
     label

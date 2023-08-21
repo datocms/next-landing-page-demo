@@ -30,6 +30,7 @@
     "i18next-resources-to-backend": "^1.1.4",
     "jsdom": "^22.1.0",
     "language-name-map": "^0.3.0",
+    "lucide-react": "^0.268.0",
     "negotiator": "^0.6.3",
     "next": "13.4.12",
     "next-themes": "^0.2.1",

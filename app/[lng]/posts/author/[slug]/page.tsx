@@ -1,4 +1,4 @@
-import { fallbackLng } from '@/app/i18n/settings';
+import { getFallbackLocale } from '@/app/i18n/settings';
 import AuthorPosts from '@/components/Blog/AuthorPosts';
 import RealTimeAuthorPosts from '@/components/Blog/RealTime/RealTimeAuthorPosts';
 import { AuthorDocument, SiteLocale } from '@/graphql/generated';
@@ -14,6 +14,7 @@ type Params = {
 };
 
 const AuthorPage = async ({ params }: Params) => {
+  const fallbackLng = await getFallbackLocale();
   const { lng } = params;
   const { isEnabled } = draftMode();
 

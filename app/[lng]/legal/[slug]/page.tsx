@@ -1,4 +1,4 @@
-import { fallbackLng } from '@/app/i18n/settings';
+import { getFallbackLocale } from '@/app/i18n/settings';
 import Legal from '@/components/Footer/Legal/Legal';
 import RealTimeLegal from '@/components/Footer/Legal/RealTimeLegal';
 import { LegalDocument, SiteLocale } from '@/graphql/generated';
@@ -13,6 +13,7 @@ type Params = {
 };
 
 const BlogDetailsPage = async ({ params: { slug, lng } }: Params) => {
+  const fallbackLng = await getFallbackLocale();
   const { isEnabled } = draftMode();
 
   const data = await queryDatoCMS(

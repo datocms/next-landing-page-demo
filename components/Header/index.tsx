@@ -1,37 +1,57 @@
 'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import LanguageSelector from './LanguageSelector';
 import { useRouter } from 'next/navigation';
-import { ResponsiveImage, SiteLocale } from '@/graphql/generated';
-import GetMenuItems, { Menu, NotificationStripType } from './GetMenuData';
-import { Image as DatoImage } from 'react-datocms';
+import { MenuQuery, SiteLocale } from '@/graphql/generated';
 import NotificationStrip from './NotificationStrip';
+import { Menu } from './HeaderRenderer';
 
 type Props = {
   lng: SiteLocale;
-  isDraft: boolean;
-  menuData: Menu[];
-  availableLocales: SiteLocale[];
-  logoImage: string;
-  notificationStripObject: NotificationStripType;
+  data: MenuQuery;
 };
 
-const Header = ({
-  lng,
-  isDraft,
-  menuData,
-  availableLocales,
-  logoImage,
-  notificationStripObject,
-}: Props) => {
+const Header = ({ lng, data }: Props) => {
   const router = useRouter();
+
+  const menuData: Menu[] = [];
+
+  data.header!.pages.map((page) => {
+    menuData.push({
+      id: page.id,
+      title: page.label,
+      path: `/${page.slug}`,
+      newTab: false,
+    });
+  });
+
+  menuData.push({
+    id: '1',
+    title: 'Other Demos',
+    newTab: false,
+    submenu: [
+      {
+        id: '2',
+        title: 'Landing Page Variation One',
+        path: `/HomeVariationOne`,
+        newTab: true,
+      },
+      {
+        id: '3',
+        title: 'Landing Page Variation Two',
+        path: `/HomeVariationTwo`,
+        newTab: true,
+      },
+    ],
+  });
 
   // Navbar toggle
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [notificationStrip, setNotificationStrip] = useState(
-    notificationStripObject.displayNotification
+    data.header!.displayNotification
   );
 
   const navbarToggleHandler = () => {
@@ -65,7 +85,9 @@ const Header = ({
     <>
       {notificationStrip && (
         <NotificationStrip
-          notificationStripObject={notificationStripObject}
+          text={data.header!.text}
+          url={data.header!.url}
+          urlLabel={data.header!.urlLabel}
           lng={lng}
           setNotificationStrip={setNotificationStrip}
         />
@@ -81,18 +103,20 @@ const Header = ({
           <div className="relative -mx-4 flex items-center justify-between">
             <div className="w-60 max-w-full px-4 xl:mr-12">
               <Link
-                href="/"
+                href={'/' + lng}
                 className={`header-logo block w-full ${
                   sticky ? 'py-5 lg:py-2' : 'py-8'
                 } `}
               >
-                <Image
-                  src={logoImage}
-                  alt="logo"
-                  width={140}
-                  height={30}
-                  className="w-full dark:hidden"
-                />
+                {data.header?.logo.url && (
+                  <Image
+                    src={data.header.logo.url}
+                    alt="logo"
+                    width={140}
+                    height={30}
+                    className="w-full dark:hidden"
+                  />
+                )}
               </Link>
             </div>
             <div className="flex w-full items-center justify-between px-4">
@@ -176,7 +200,7 @@ const Header = ({
                 </nav>
               </div>
               <div className="flex items-center justify-end pr-16 lg:pr-0">
-                <LanguageSelector lng={lng} languages={availableLocales} />
+                <LanguageSelector lng={lng} languages={data._site.locales} />
               </div>
             </div>
           </div>

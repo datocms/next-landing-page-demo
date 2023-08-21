@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
 
   if (!url) return new Response('Draft mode is enabled');
 
-  //to avoid losing the cookie in the iFrame
+  //to avoid losing the cookie on redirect in the iFrame
   const cookieStore = cookies();
   const cookie = cookieStore.get('__prerender_bypass')!;
   cookies().set({

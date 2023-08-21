@@ -28,7 +28,7 @@ const ExpandedTeam = ({ header, subheader, members, lng }: Props) => {
               <Link
                 href={`/${lng}/posts/author/${member.slug}`}
                 key={member.id}
-                className=" group transform cursor-pointer rounded-xl border px-12 py-8 transition-colors duration-300 hover:border-transparent hover:bg-blue-600 dark:border-gray-700 dark:hover:border-transparent"
+                className=" group transform cursor-pointer rounded-xl border px-12 py-8 transition-colors duration-300 hover:border-transparent hover:bg-primary/95 dark:border-gray-700 dark:hover:border-transparent"
               >
                 <div className="flex flex-col items-center sm:-mx-4 sm:flex-row">
                   <div className="relative z-50 h-24 w-24 flex-shrink-0 overflow-hidden rounded-full object-cover ring-4 ring-gray-300 sm:mx-4">
@@ -45,13 +45,13 @@ const ExpandedTeam = ({ header, subheader, members, lng }: Props) => {
                       {member.name}
                     </h1>
 
-                    <p className="mt-2 capitalize text-gray-500 group-hover:text-gray-300 dark:text-gray-300">
+                    <p className="mt-2 capitalize text-gray-500 group-hover:text-white">
                       {member.bio}
                     </p>
                   </div>
                 </div>
 
-                <p className="mt-4 capitalize text-gray-500 group-hover:text-gray-300 dark:text-gray-300">
+                <p className="mt-4 capitalize text-gray-500 group-hover:text-white dark:text-gray-300">
                   {member.description}
                 </p>
 

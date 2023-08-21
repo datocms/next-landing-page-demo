@@ -1,27 +1,30 @@
 import { SiteLocale } from '@/graphql/generated';
-import { NotificationStripType } from './GetMenuData';
 import Link from 'next/link';
+import { SetStateAction } from 'react';
 
 type Props = {
-  notificationStripObject: NotificationStripType;
+  text: string;
+  url: string | undefined | null;
+  urlLabel: string | null | undefined;
   lng: SiteLocale;
-  setNotificationStrip: React.Dispatch<React.SetStateAction<boolean>>;
+  setNotificationStrip: React.Dispatch<
+    SetStateAction<boolean | null | undefined>
+  >;
 };
 
 const NotificationStrip = ({
-  notificationStripObject,
+  text,
+  url,
+  urlLabel,
   lng,
   setNotificationStrip,
 }: Props) => {
   return (
     <div className="bg-primary px-4 py-3 text-white">
       <p className="text-center text-sm font-medium">
-        {notificationStripObject.text}{' '}
-        <Link
-          href={'/' + lng + notificationStripObject.url || '#'}
-          className="inline-block underline"
-        >
-          {notificationStripObject.urlLabel}
+        {text}{' '}
+        <Link href={'/' + lng + url || '#'} className="inline-block underline">
+          {urlLabel}
         </Link>
       </p>
       <svg

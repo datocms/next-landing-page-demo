@@ -17,6 +17,9 @@ query Menu($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
     url
     text
   }
+  _site {
+    locales
+  }
 }
 
 fragment DatoImage_responsiveImage on ResponsiveImage {

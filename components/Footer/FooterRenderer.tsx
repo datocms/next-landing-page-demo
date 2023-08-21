@@ -9,6 +9,7 @@ import {
   SiteLocale,
 } from '@/graphql/generated';
 import { notFound } from 'next/navigation';
+import { primaryColor } from '@/app/i18n/settings';
 
 type Props = {
   data: FooterQuery;
@@ -102,7 +103,13 @@ const Footer = ({ data, lng }: Props) => {
             width="99"
             height="99"
           >
-            <circle opacity="0.8" cx="49.5" cy="49.5" r="49.5" fill="#4A6CF7" />
+            <circle
+              opacity="0.8"
+              cx="49.5"
+              cy="49.5"
+              r="49.5"
+              fill={primaryColor}
+            />
           </mask>
           <g mask="url(#mask0_94:899)">
             <circle
@@ -110,7 +117,7 @@ const Footer = ({ data, lng }: Props) => {
               cx="49.5"
               cy="49.5"
               r="49.5"
-              fill="url(#paint0_radial_94:899)"
+              fill={primaryColor}
             />
             <g opacity="0.8" filter="url(#filter0_f_94:899)">
               <circle cx="53.8676" cy="26.2061" r="20.3824" fill="white" />
@@ -207,8 +214,8 @@ const Footer = ({ data, lng }: Props) => {
               y2="59.8878"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stopColor="#4A6CF7" stopOpacity="0.62" />
-              <stop offset="1" stopColor="#4A6CF7" stopOpacity="0" />
+              <stop stopColor={primaryColor} stopOpacity="0.62" />
+              <stop offset="1" stopColor={primaryColor} stopOpacity="0" />
             </linearGradient>
             <linearGradient
               id="paint1_linear_94:889"
@@ -218,8 +225,8 @@ const Footer = ({ data, lng }: Props) => {
               y2="20.668"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stopColor="#4A6CF7" stopOpacity="0" />
-              <stop offset="1" stopColor="#4A6CF7" stopOpacity="0.51" />
+              <stop stopColor={primaryColor} stopOpacity="0" />
+              <stop offset="1" stopColor={primaryColor} stopOpacity="0.51" />
             </linearGradient>
             <linearGradient
               id="paint2_linear_94:889"
@@ -229,8 +236,8 @@ const Footer = ({ data, lng }: Props) => {
               y2="25.1062"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stopColor="#4A6CF7" stopOpacity="0.62" />
-              <stop offset="1" stopColor="#4A6CF7" stopOpacity="0" />
+              <stop stopColor={primaryColor} stopOpacity="0.62" />
+              <stop offset="1" stopColor={primaryColor} stopOpacity="0" />
             </linearGradient>
             <linearGradient
               id="paint3_linear_94:889"
@@ -240,8 +247,8 @@ const Footer = ({ data, lng }: Props) => {
               y2="80.6826"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stopColor="#4A6CF7" stopOpacity="0" />
-              <stop offset="1" stopColor="#4A6CF7" stopOpacity="0.51" />
+              <stop stopColor={primaryColor} stopOpacity="0" />
+              <stop offset="1" stopColor={primaryColor} stopOpacity="0.51" />
             </linearGradient>
             <linearGradient
               id="paint4_linear_94:889"
@@ -251,8 +258,8 @@ const Footer = ({ data, lng }: Props) => {
               y2="58.2156"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stopColor="#4A6CF7" stopOpacity="0.62" />
-              <stop offset="1" stopColor="#4A6CF7" stopOpacity="0" />
+              <stop stopColor={primaryColor} stopOpacity="0.62" />
+              <stop offset="1" stopColor={primaryColor} stopOpacity="0" />
             </linearGradient>
             <linearGradient
               id="paint5_linear_94:889"
@@ -262,8 +269,8 @@ const Footer = ({ data, lng }: Props) => {
               y2="41.6598"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stopColor="#4A6CF7" stopOpacity="0" />
-              <stop offset="1" stopColor="#4A6CF7" stopOpacity="0.51" />
+              <stop stopColor={primaryColor} stopOpacity="0" />
+              <stop offset="1" stopColor={primaryColor} stopOpacity="0.51" />
             </linearGradient>
           </defs>
         </svg>

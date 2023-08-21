@@ -1,6 +1,5 @@
 import Sections from '@/components/Sections/Sections';
 import queryDatoCMS from '@/utils/queryDatoCMS';
-import { fallbackLng } from '../../i18n/settings';
 import { draftMode } from 'next/headers';
 import RealTimeSections from '@/components/Sections/RealTimeSections';
 import {
@@ -11,6 +10,7 @@ import {
   SiteLocale,
 } from '@/graphql/generated';
 import { notFound } from 'next/navigation';
+import { getFallbackLocale } from '@/app/i18n/settings';
 
 type Params = {
   params: {
@@ -20,6 +20,7 @@ type Params = {
 };
 
 export default async function Home({ params: { lng, slug } }: Params) {
+  const fallbackLng = await getFallbackLocale();
   const { isEnabled } = draftMode();
 
   const data = await queryDatoCMS(
