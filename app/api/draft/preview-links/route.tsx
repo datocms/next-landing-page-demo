@@ -26,6 +26,14 @@ const generatePreviewUrl = ({
       return `/${locale}/legal/${item.attributes.slug}`;
     case 'header':
       return `/${locale}/home`;
+    case 'documentation_home':
+      return `/${locale}/docs`;
+    case 'documentation_page':
+      return `/${locale}/docs/${item.attributes.slug}`;
+    case 'testimonial':
+      return `/${locale}/home`;
+    case 'footer':
+      return `/${locale}/home`;
     default:
       return '/en/404';
   }

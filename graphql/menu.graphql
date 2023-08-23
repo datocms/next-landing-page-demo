@@ -11,7 +11,6 @@ query Menu($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
       id
       label
     }
-    displayOptions
     dropdown
     dropdownLabel
     dropdownItems {
