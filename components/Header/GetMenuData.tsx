@@ -46,10 +46,10 @@ export default async function GetMenuData(lng: SiteLocale, isEnabled: boolean) {
   });
 
   const notificationStripObject: NotificationStripType = {
-    displayNotification: header!.displayNotification || false,
-    text: header!.text,
-    urlLabel: header!.urlLabel,
-    url: header!.url,
+    displayNotification: header!.notificationStrip === 'on' || false,
+    text: header!.notificationStripText || '',
+    urlLabel: header!.notificationStripUrlLabel,
+    url: header!.notificationStripUrl,
   };
 
   return {

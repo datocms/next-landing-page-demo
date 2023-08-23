@@ -2,11 +2,11 @@
 
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
+import { DocumentationPageRecord, SiteLocale } from '@/graphql/generated';
 
-const variants = {
-  hidden: { opacity: 0 },
-  enter: { opacity: 1 },
-  exit: { opacity: 0 },
+type Props = {
+  featuredSection: DocumentationPageRecord;
+  lng: SiteLocale;
 };
 
 const mainImage = {
@@ -49,9 +49,9 @@ const subText = {
   },
 };
 
-const PreviewCard = () => {
+const PreviewCard = ({ featuredSection, lng }: Props) => {
   return (
-    <Link href={`/`}>
+    <Link href={`/${lng}/docs/${featuredSection.slug}`}>
       <motion.div
         initial="initial"
         whileHover="hover"
@@ -62,31 +62,14 @@ const PreviewCard = () => {
           variants={mainImage}
           className="relative h-1/2 w-full overflow-hidden rounded-xl border border-slate-300 bg-slate-200/70 dark:border-slate-700 dark:bg-slate-800/50"
         >
-          <div className="flex h-full w-full flex-col justify-center p-6">
-            <p className="whitespace-nowrap text-4xl font-black text-slate-400 dark:text-slate-500">
-              Getting Started
+          <div className="flex h-full w-full flex-col flex-wrap justify-center p-6">
+            <p className="whitespace-nowrap text-2xl font-black text-slate-400 dark:text-slate-500">
+              {featuredSection.title}
             </p>
-            <p className="whitespace-nowrap text-2xl font-bold text-slate-400 dark:text-slate-500">
-              The firsts steps on our platform
+            <p className=" text-md font-bold text-slate-400 dark:text-slate-500">
+              {featuredSection.subtitle}
             </p>
           </div>
-        </motion.div>
-        <motion.div
-          variants={mainTextContainer}
-          className="absolute bottom-0 rounded-xl px-4 py-2 backdrop-blur-md md:bg-white/90 md:dark:bg-slate-900/90"
-        >
-          <motion.h3
-            variants={mainText}
-            className="truncate text-base font-bold text-slate-900 dark:text-white"
-          >
-            title
-          </motion.h3>
-          <motion.p
-            variants={subText}
-            className="line-clamp-3 text-xs text-slate-700 dark:text-slate-50"
-          >
-            description
-          </motion.p>
         </motion.div>
       </motion.div>
     </Link>

@@ -6,13 +6,6 @@
   "datocmsProjectId": "105385",
   "deploymentType": "vercel",
   "environmentVariables": {
-    "DATOCMS_BACKEND_URL": {
-      "type": "datocmsProjectUrl"
-    },
-    "DATOCMS_READ_ONLY_API_TOKEN": {
-      "type": "datocmsAccessToken",
-      "tokenName": "Read-only API token"
-    },
     "DATOCMS_READONLY_API_TOKEN": {
       "type": "datocmsAccessToken",
       "tokenName": "Read-only API token"

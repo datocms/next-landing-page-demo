@@ -1,10 +1,17 @@
 import '@/styles/index.css';
 import { draftMode } from 'next/headers';
-import { SiteLocale } from '@/graphql/generated';
+import {
+  DocumentationPageRecord,
+  DocumentationSidebarDocument,
+  SiteLocale,
+} from '@/graphql/generated';
 import getAvailableLocales from '@/app/i18n/settings';
 import Link from 'next/link';
 import { Github, Search } from 'lucide-react';
 import Image from 'next/image';
+import queryDatoCMS from '@/utils/queryDatoCMS';
+import { notFound } from 'next/navigation';
+import DocumentationSidebarItem from '@/components/Documentaiton/DocumentationSidebarItem';
 
 type Params = {
   children: React.ReactNode;
@@ -13,18 +20,16 @@ type Params = {
   };
 };
 
-export async function generateStaticParams() {
-  const languages = await getAvailableLocales();
-  return languages.map((language) => {
-    language;
-  });
-}
-
 export default async function RootLayout({
   children,
   params: { lng },
 }: Params) {
   const { isEnabled } = draftMode();
+
+  const data = await queryDatoCMS(DocumentationSidebarDocument, {}, isEnabled);
+
+  if (!data || !data.allDocumentationPages.length || !data.documentationHome)
+    notFound();
 
   return (
     <div>
@@ -36,12 +41,10 @@ export default async function RootLayout({
               className={`header-logo block w-full`}
             >
               <Image
-                src={
-                  'https://www.datocms-assets.com/104169/1690984731-logo-2.svg'
-                } //todo: make it dynamic!
+                src={data.documentationHome.logo.url}
                 alt="logo"
-                width={140}
-                height={30}
+                width={data.documentationHome.logo.width || 140}
+                height={data.documentationHome.logo.height || 30}
                 className="w-full dark:hidden"
               />
             </Link>
@@ -60,137 +63,21 @@ export default async function RootLayout({
           </div>
 
           <ul className="mt-6 space-y-1">
-            <li>
-              <a
-                href=""
-                className="block rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700"
-              >
-                General
-              </a>
-            </li>
-
-            <li>
-              <details className="group [&_summary::-webkit-details-marker]:hidden">
-                <summary className="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-                  <span className="text-sm font-medium"> Teams </span>
-
-                  <span className="shrink-0 transition duration-300 group-open:-rotate-180">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                </summary>
-
-                <ul className="mt-2 space-y-1 px-4">
-                  <li>
-                    <a
-                      href=""
-                      className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                    >
-                      Banned Users
-                    </a>
-                  </li>
-
-                  <li>
-                    <a
-                      href=""
-                      className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                    >
-                      Calendar
-                    </a>
-                  </li>
-                </ul>
-              </details>
-            </li>
-
-            <li>
-              <a
-                href=""
-                className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-              >
-                Billing
-              </a>
-            </li>
-
-            <li>
-              <a
-                href=""
-                className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-              >
-                Invoices
-              </a>
-            </li>
-
-            <li>
-              <details className="group [&_summary::-webkit-details-marker]:hidden">
-                <summary className="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-                  <span className="text-sm font-medium"> Account </span>
-
-                  <span className="shrink-0 transition duration-300 group-open:-rotate-180">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                </summary>
-
-                <ul className="mt-2 space-y-1 px-4">
-                  <li>
-                    <a
-                      href=""
-                      className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                    >
-                      Details
-                    </a>
-                  </li>
-
-                  <li>
-                    <a
-                      href=""
-                      className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                    >
-                      Security
-                    </a>
-                  </li>
-
-                  <li>
-                    <form action="/logout">
-                      <button
-                        type="submit"
-                        className="w-full rounded-lg px-4 py-2 text-sm font-medium text-gray-500 [text-align:_inherit] hover:bg-gray-100 hover:text-gray-700"
-                      >
-                        Logout
-                      </button>
-                    </form>
-                  </li>
-                </ul>
-              </details>
-            </li>
+            {data.allDocumentationPages.map((page) => {
+              return (
+                <DocumentationSidebarItem
+                  key={page.id}
+                  page={page as DocumentationPageRecord}
+                  lng={lng}
+                />
+              );
+            })}
           </ul>
         </div>
 
-        <div className="sticky inset-x-0 bottom-0 border-t border-gray-100 p-8">
+        <div className="sticky inset-x-0 bottom-0 z-40 border-t border-gray-100 bg-white p-8">
           <div>
-            <p className="text-sm">
-              Copyright ©Startup 2023
-            </p>
+            <p className="text-sm">{data.documentationHome.footerText}</p>
           </div>
         </div>
       </div>

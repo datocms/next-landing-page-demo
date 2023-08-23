@@ -3,7 +3,6 @@ import Link from 'next/link';
 import SvgRenderer from '../Common/SvgRenderer';
 import {
   ChangeLogRecord,
-  DocumentationRecord,
   FooterQuery,
   LegalPageRecord,
   SiteLocale,
@@ -65,7 +64,6 @@ const Footer = ({ data, lng }: Props) => {
                   {data.footer.links.map((link) => {
                     const pageLink = link as
                       | LegalPageRecord
-                      | DocumentationRecord
                       | ChangeLogRecord; // The field has a "at least one" validation
                     return (
                       <li key={pageLink.id}>

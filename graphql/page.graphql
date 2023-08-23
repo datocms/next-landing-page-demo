@@ -214,10 +214,10 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
         displayOptions
         _modelApiKey
       }
-      ... on AllDocumentationSectionRecord {
+      ... on RedirectSectionRecord {
         id
-        displayOptions
         _modelApiKey
+        slugToRedirectTo
       }
     }
     id

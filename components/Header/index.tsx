@@ -28,30 +28,26 @@ const Header = ({ lng, data }: Props) => {
     });
   });
 
-  menuData.push({
-    id: '1',
-    title: 'Other Demos',
-    newTab: false,
-    submenu: [
-      {
-        id: '2',
-        title: 'Landing Page Variation One',
-        path: `/HomeVariationOne`,
-        newTab: true,
-      },
-      {
-        id: '3',
-        title: 'Landing Page Variation Two',
-        path: `/HomeVariationTwo`,
-        newTab: true,
-      },
-    ],
-  });
+  if (data.header?.dropdown) {
+    menuData.push({
+      id: '1',
+      title: data.header.dropdownLabel || 'Other Items',
+      newTab: false,
+      submenu: data.header.dropdownItems.map((item) => {
+        return {
+          id: item.id,
+          title: item.label,
+          path: `/${item.slug}`,
+          newTab: true,
+        };
+      }),
+    });
+  }
 
   // Navbar toggle
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [notificationStrip, setNotificationStrip] = useState(
-    data.header!.displayNotification
+    data.header!.notificationStrip === 'on'
   );
 
   const navbarToggleHandler = () => {
@@ -85,9 +81,9 @@ const Header = ({ lng, data }: Props) => {
     <>
       {notificationStrip && (
         <NotificationStrip
-          text={data.header!.text}
-          url={data.header!.url}
-          urlLabel={data.header!.urlLabel}
+          text={data.header!.notificationStripText || ''}
+          url={data.header!.notificationStripUrl}
+          urlLabel={data.header!.notificationStripUrlLabel}
           lng={lng}
           setNotificationStrip={setNotificationStrip}
         />

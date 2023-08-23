@@ -1,0 +1,15 @@
+query DocumentationHomePage {
+  documentationHome {
+    title
+    subheader
+    _modelApiKey
+    id
+    featuredPages {
+      id
+      _modelApiKey
+      title
+      subtitle
+      slug
+    }
+  }
+}

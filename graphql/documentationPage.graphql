@@ -1,0 +1,18 @@
+query DocumentationPage(
+  $slug: String
+  $locale: SiteLocale
+  $fallbackLocale: [SiteLocale!]
+) {
+  documentationPage(
+    filter: { slug: { eq: $slug } }
+    locale: $locale
+    fallbackLocales: $fallbackLocale
+  ) {
+    title
+    _modelApiKey
+    id
+    content {
+      value
+    }
+  }
+}

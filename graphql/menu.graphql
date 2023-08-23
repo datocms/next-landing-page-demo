@@ -11,11 +11,18 @@ query Menu($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
       id
       label
     }
-    displayNotification
     displayOptions
-    urlLabel
-    url
-    text
+    dropdown
+    dropdownLabel
+    dropdownItems {
+      slug
+      id
+      label
+    }
+    notificationStrip
+    notificationStripText
+    notificationStripUrl
+    notificationStripUrlLabel
   }
   _site {
     locales

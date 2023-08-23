@@ -1,0 +1,57 @@
+query DocumentationSidebar {
+  allDocumentationPages(filter: { parent: { exists: "false" } }) {
+    children {
+      title
+      subtitle
+      slug
+      id
+      _modelApiKey
+      content {
+        value
+      }
+      children {
+        title
+        subtitle
+        slug
+        id
+        _modelApiKey
+        content {
+          value
+        }
+        children {
+          title
+          subtitle
+          slug
+          id
+          _modelApiKey
+          content {
+            value
+          }
+          children {
+            title
+            subtitle
+            slug
+            id
+            _modelApiKey
+            content {
+              value
+            }
+          }
+        }
+      }
+    }
+    title
+    subtitle
+    slug
+    id
+    _modelApiKey
+  }
+  documentationHome {
+    footerText
+    logo {
+      url
+      width
+      height
+    }
+  }
+}

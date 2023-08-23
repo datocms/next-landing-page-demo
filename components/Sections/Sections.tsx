@@ -14,7 +14,6 @@ import StatsSection from '../About/StatsSection';
 import AboutIntro from '../About/AboutIntro';
 import {
   AboutIntroRecord,
-  AllDocumentationSectionRecord,
   AllPostsSectionRecord,
   BrandSectionRecord,
   CollectionMetadata,
@@ -26,6 +25,7 @@ import {
   PageModelSectionsField,
   PostRecord,
   PricingSectionRecord,
+  RedirectSectionRecord,
   ReviewSectionRecord,
   SiteLocale,
   StatsSectionRecord,
@@ -35,6 +35,7 @@ import {
 import GradientHero from '../Home/Hero/GradientHero';
 import FeatureCards from '../Home/Features/FeatureCards';
 import PostGridRenderer from '../Blog/PostGridRenderer';
+import { redirect } from 'next/navigation';
 
 type Props = {
   sections: Array<PageModelSectionsField>;
@@ -198,6 +199,9 @@ export default function Section({ sections, locale, posts, postMeta }: Props) {
             return (
               <PostGridRenderer data={posts} lng={locale} postMeta={postMeta} />
             );
+          case 'redirect_section':
+            const redirectSectionRecord = section as RedirectSectionRecord;
+            redirect(`/${locale}/${redirectSectionRecord.slugToRedirectTo}`);
           default:
             return <></>;
         }

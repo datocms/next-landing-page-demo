@@ -7,9 +7,7 @@ type Props = {
   url: string | undefined | null;
   urlLabel: string | null | undefined;
   lng: SiteLocale;
-  setNotificationStrip: React.Dispatch<
-    SetStateAction<boolean | null | undefined>
-  >;
+  setNotificationStrip: React.Dispatch<SetStateAction<boolean>>;
 };
 
 const NotificationStrip = ({
