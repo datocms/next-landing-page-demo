@@ -1,9 +1,11 @@
 import ScrollToTop from '@/components/ScrollToTop';
 import 'node_modules/react-modal-video/css/modal-video.css';
-import '@/styles/index.css';
+import '@/styles/global.css';
 import { draftMode } from 'next/headers';
-import { SiteLocale } from '@/graphql/generated';
+import { CustomColorDocument, SiteLocale } from '@/graphql/generated';
 import getAvailableLocales from '@/app/i18n/settings';
+import CustomColor from '@/components/Common/CustomColor';
+import queryDatoCMS from '@/utils/queryDatoCMS';
 
 type Params = {
   children: React.ReactNode;
@@ -24,9 +26,15 @@ export default async function RootLayout({
   params: { lng },
 }: Params) {
   const { isEnabled } = draftMode();
+  const data = await queryDatoCMS(CustomColorDocument, {}, isEnabled);
 
   return (
     <>
+      <CustomColor
+        r={data.header?.mainColor.red || 74}
+        g={data.header?.mainColor.green || 247}
+        b={data.header?.mainColor.blue || 108}
+      />
       {children}
       <ScrollToTop lng={lng} isDraft={isEnabled} />
     </>

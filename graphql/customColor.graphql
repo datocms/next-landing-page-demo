@@ -1,0 +1,9 @@
+query CustomColor {
+  header {
+    mainColor {
+      red
+      blue
+      green
+    }
+  }
+}

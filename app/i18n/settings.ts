@@ -13,4 +13,4 @@ export async function getFallbackLocale() {
   return _site.locales[0]; //using the first ordered locale as fallback
 }
 
-export const primaryColor = '#4A6CF7'; //TODO: move this to settings
+export const primaryColor = 'rgb(var(--color-primary))';

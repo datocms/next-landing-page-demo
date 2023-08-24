@@ -17,7 +17,7 @@ const FeatureCards = ({
     <section className="relative">
       {/* Section background (needs .relative class on parent and next sibling elements) */}
       <div
-        className="pointer-events-none absolute inset-0 top-1/2 bg-primary/5 md:mt-24 lg:mt-0"
+        className="pointer-events-none absolute inset-0 top-1/2 bg-primary bg-opacity-5 md:mt-24 lg:mt-0"
         aria-hidden="true"
       ></div>
 
@@ -40,7 +40,7 @@ const FeatureCards = ({
                   key={feature.id}
                   className="relative flex h-64 flex-col items-center justify-center rounded bg-white p-6 shadow-xl"
                 >
-                  <div className="-mt-1 mb-2 flex h-20 w-20 items-center justify-center rounded-full bg-primary/5">
+                  <div className="bg-primary bg-opacity-5 -mt-1 mb-2 flex h-20 w-20 items-center justify-center rounded-full">
                     <SvgRenderer url={feature.featureIcon.url} />
                   </div>
                   <h4 className="mb-1 text-xl font-bold leading-snug tracking-tight">

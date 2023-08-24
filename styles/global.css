@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --color-primary: 74 108 247;
+    --color-primary: #4A6CF7;
   }
   body {
     font-family: 'Inter', sans-serif;

@@ -62,9 +62,7 @@ const Footer = ({ data, lng }: Props) => {
                 </h2>
                 <ul>
                   {data.footer.links.map((link) => {
-                    const pageLink = link as
-                      | LegalPageRecord
-                      | ChangeLogRecord; // The field has a "at least one" validation
+                    const pageLink = link as LegalPageRecord; // The field has a "at least one" validation
                     return (
                       <li key={pageLink.id}>
                         <a

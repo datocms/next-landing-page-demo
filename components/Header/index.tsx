@@ -4,7 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import LanguageSelector from './LanguageSelector';
-import { useRouter } from 'next/navigation';
 import { MenuQuery, SiteLocale } from '@/graphql/generated';
 import NotificationStrip from './NotificationStrip';
 import { Menu } from './HeaderRenderer';
@@ -15,8 +14,6 @@ type Props = {
 };
 
 const Header = ({ lng, data }: Props) => {
-  const router = useRouter();
-
   const menuData: Menu[] = [];
 
   data.header!.pages.map((page) => {

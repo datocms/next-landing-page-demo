@@ -28,7 +28,7 @@ const ExpandedTeam = ({ header, subheader, members, lng }: Props) => {
               <Link
                 href={`/${lng}/posts/author/${member.slug}`}
                 key={member.id}
-                className=" group transform cursor-pointer rounded-xl border px-12 py-8 transition-colors duration-300 hover:border-transparent hover:bg-primary/95 dark:border-gray-700 dark:hover:border-transparent"
+                className=" group transform cursor-pointer rounded-xl border px-12 py-8 transition-colors duration-300 hover:border-transparent hover:bg-primary hover:opacity-95 dark:border-gray-700 dark:hover:border-transparent"
               >
                 <div className="flex flex-col items-center sm:-mx-4 sm:flex-row">
                   <div className="relative z-50 h-24 w-24 flex-shrink-0 overflow-hidden rounded-full object-cover ring-4 ring-gray-300 sm:mx-4">

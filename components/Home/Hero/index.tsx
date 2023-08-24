@@ -45,7 +45,7 @@ const Hero = ({ heroTitle, heroSubtitle, buttons }: Props) => {
                   className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0"
                 >
                   {buttons.map((button) => {
-                    const primary = 'bg-primary text-white hover:bg-primary/80';
+                    const primary = 'bg-primary text-white hover:bg-primary opacity-80';
                     const secondary =
                       'bg-black/20 hover:bg-black/30 text-black';
                     return (

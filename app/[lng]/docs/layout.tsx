@@ -1,4 +1,4 @@
-import '@/styles/index.css';
+import '@/styles/global.css';
 import { draftMode } from 'next/headers';
 import {
   DocumentationPageRecord,

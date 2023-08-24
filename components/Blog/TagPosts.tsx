@@ -20,7 +20,7 @@ const TagPosts = ({ data, lng }: Props) => {
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="currentColor"
-          className="h-16 w-16 stroke-primary/90"
+          className="h-16 w-16 stroke-primary opacity-90"
         >
           <path
             strokeLinecap="round"
