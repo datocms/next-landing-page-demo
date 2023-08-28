@@ -82,15 +82,19 @@ const FeatureListSelector = ({ header, subheader, plans }: Props) => {
           })}
         </div>
 
-        <div className="mt-8 space-y-8 rounded-xl bg-gray-100 p-8 dark:bg-gray-800">
-          {selectedPlanFeatures &&
-            selectedPlanFeatures.map((feature) => {
-              return (
-                <AnimatePresence key={feature}>
+        <motion.div
+          layout
+          className="mt-8 space-y-8 rounded-xl bg-gray-100 p-8 dark:bg-gray-800"
+        >
+          <AnimatePresence>
+            {selectedPlanFeatures &&
+              selectedPlanFeatures.map((feature) => {
+                return (
                   <motion.div
+                    key={feature}
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 20 }}
+                    exit={{ opacity: 0, y: -20, transition: { duration: 0.1 } }}
                     className="flex items-center justify-between text-gray-800 dark:text-gray-200"
                   >
                     <p className="textlg sm:text-xl">{feature}</p>
@@ -108,10 +112,10 @@ const FeatureListSelector = ({ header, subheader, plans }: Props) => {
                       />
                     </svg>
                   </motion.div>
-                </AnimatePresence>
-              );
-            })}
-        </div>
+                );
+              })}
+          </AnimatePresence>
+        </motion.div>
 
         <div className="mt-8 flex justify-center">
           <button className="transform rounded-md bg-blue-600 px-8 py-2 capitalize tracking-wide text-white transition-colors duration-300 hover:bg-blue-500 focus:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80">

@@ -25,7 +25,7 @@ const DetailSection = ({ details, image, imagePosition }: Props) => {
     <section className="py-16 text-center md:py-20 lg:py-28 lg:text-start">
       <div className="container">
         <div className="-mx-4 flex flex-col items-center justify-center lg:flex-row lg:flex-wrap ">
-          <div className="grid gap-8 md:grid-cols-2 lg:gap-12">
+          <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
             {!imagePosition && image.responsiveImage && (
               <div className="relative h-64 overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-auto">
                 <DatoImage

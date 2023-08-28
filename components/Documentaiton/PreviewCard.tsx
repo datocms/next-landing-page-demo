@@ -56,7 +56,7 @@ const PreviewCard = ({ featuredSection, lng }: Props) => {
         initial="initial"
         whileHover="hover"
         animate="initial"
-        className="hover:bg-primary-200/20 hover:ring-primary-300 dark:hover:bg-primary-500/10 hover:dark:ring-primary-500/30 relative h-60 w-full cursor-pointer overflow-hidden rounded-xl p-2 transition-all hover:ring"
+        className="hover:bg-primary-200/20 hover:ring-primary/40 dark:hover:bg-primary-500/10 hover:dark:ring-primary-500/30 relative h-60 w-full cursor-pointer overflow-hidden rounded-xl p-2 transition-all hover:ring"
       >
         <motion.div
           variants={mainImage}

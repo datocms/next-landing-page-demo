@@ -21,9 +21,9 @@ const SplitImage = ({ heroTitle, heroSubtitle, buttons, image }: Props) => {
         >
           <path d="M50 0H100L50 100H0L50 0Z" />
         </svg>
-        {image?.responsiveImage && (
+        {image?.responsiveImage && ( 
           <DatoImage
-            className="h-56 w-full rounded object-cover shadow-lg md:h-96 lg:h-full lg:rounded-none lg:shadow-none"
+            className="h-56 w-full rounded object-cover shadow-lg md:h-96 lg:h-full lg:rounded-none lg:shadow-none hidden lg:block"
             layout="fill"
             objectFit="cover"
             objectPosition="left"

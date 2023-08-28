@@ -27,7 +27,7 @@ const MinimalistFeaturedPostsGrid = ({
         <div className="mt-8 grid grid-cols-1 gap-8 md:mt-16 md:grid-cols-2">
           {blogData.map((post) => {
             return (
-              <div key={post.id} className="flex">
+              <div key={post.id} className="flex gap-4">
                 {post.seoTags?.image?.responsiveImage && (
                   <div className="relative h-56 w-56 flex-shrink-0 overflow-hidden rounded-lg object-cover">
                     <DatoImage

@@ -37,7 +37,7 @@ const Minimal = ({ header, subheader, plans }: Props) => {
             <p className="mt-4 text-gray-500 dark:text-gray-400">{subheader}</p>
           </div>
 
-          <div className="mt-6 overflow-hidden rounded-lg border p-0.5 dark:border-gray-700">
+          <div className="m-2 rounded-lg border p-0.5 dark:border-gray-700">
             <div className="flex sm:-mx-0.5">
               <button
                 onClick={() => setIsMonthly(true)}

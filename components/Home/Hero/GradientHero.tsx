@@ -78,7 +78,7 @@ const GradientHero = ({ heroTitle, heroSubtitle, buttons }: Props) => {
                 {heroSubtitle}
               </p>
               <div
-                className="mx-auto max-w-xs sm:flex sm:max-w-none sm:justify-center"
+                className="mx-auto flex max-w-xs flex-col justify-center sm:max-w-none sm:flex-row"
                 data-aos="zoom-y-out"
                 data-aos-delay="300"
               >

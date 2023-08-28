@@ -73,7 +73,7 @@ export default async function RootLayout({
           </ul>
         </div>
 
-        <div className="sticky inset-x-0 bottom-0 z-40 border-t border-gray-100 bg-white p-8 border-b">
+        <div className="sticky inset-x-0 bottom-0 z-40 border-b border-t border-gray-100 bg-white p-8">
           <div>
             <p className="text-sm">{data.documentationHome.footerText}</p>
           </div>
