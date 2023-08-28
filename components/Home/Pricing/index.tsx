@@ -16,7 +16,6 @@ type Props = {
 
 const Pricing = ({ header, subheader, plans }: Props) => {
   const [isMonthly, setIsMonthly] = useState(true);
-
   return (
     <section id="pricing" className="relative z-10 py-16 md:py-20 lg:py-28">
       <div className="container">
@@ -69,6 +68,8 @@ const Pricing = ({ header, subheader, plans }: Props) => {
 
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
           {plans.map((plan) => {
+            const planFeatures = plan.planFeatures.split(', ');
+
             return (
               <PricingBox
                 key={plan.id}
@@ -77,30 +78,9 @@ const Pricing = ({ header, subheader, plans }: Props) => {
                 duration={isMonthly ? 'mo' : 'yr'}
                 subtitle={plan.tierDescription}
               >
-                <OfferList
-                  text="All UI Components"
-                  status={plan.allUiComponents ? 'active' : 'inactive'}
-                />
-                <OfferList
-                  text="Use with Unlimited Projects"
-                  status={plan.useWithUnlimitedProjects ? 'active' : 'inactive'}
-                />
-                <OfferList
-                  text="Commercial Use"
-                  status={plan.commercialUse ? 'active' : 'inactive'}
-                />
-                <OfferList
-                  text="Email Support"
-                  status={plan.emailSupport ? 'active' : 'inactive'}
-                />
-                <OfferList
-                  text="Lifetime Access"
-                  status={plan.lifetimeAccess ? 'active' : 'inactive'}
-                />
-                <OfferList
-                  text="Free Lifetime Updates"
-                  status={plan.freeLifetimeUpdates ? 'active' : 'inactive'}
-                />
+                {planFeatures.map((feature) => (
+                  <OfferList key={feature} text={feature} status="active" />
+                ))}
               </PricingBox>
             );
           })}

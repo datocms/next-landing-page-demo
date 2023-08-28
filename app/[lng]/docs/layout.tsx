@@ -32,7 +32,7 @@ export default async function RootLayout({
 
   return (
     <div>
-      <div className="absolute z-50 hidden h-screen w-1/5 flex-col justify-between border-e bg-white lg:flex">
+      <div className="absolute z-50 hidden w-1/4 flex-col justify-between border-e bg-white lg:flex">
         <div className="px-4 py-6">
           <div className="w-60 max-w-full px-4 xl:mr-12">
             <Link
@@ -70,17 +70,16 @@ export default async function RootLayout({
                 />
               );
             })}
-          </ul>{' '}
-          ee
+          </ul>
         </div>
 
-        <div className="sticky inset-x-0 bottom-0 z-40 border-t border-gray-100 bg-white p-8">
+        <div className="sticky inset-x-0 bottom-0 z-40 border-t border-gray-100 bg-white p-8 border-b">
           <div>
             <p className="text-sm">{data.documentationHome.footerText}</p>
           </div>
         </div>
       </div>
-      <div className="ml-0 lg:ml-[20%] ">{children}</div>
+      <div className="ml-0 lg:ml-[25%] ">{children}</div>
     </div>
   );
 }

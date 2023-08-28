@@ -4,14 +4,16 @@ import { useState } from 'react';
 import SectionTitle from '../../Common/SectionTitle';
 
 import ModalVideo from 'react-modal-video';
-import Image from 'next/image';
 import { Maybe } from 'graphql/jsutils/Maybe';
+import { ImageFileField } from '@/graphql/generated';
+import { Image as DatoImage } from 'react-datocms';
+import Image from 'next/image';
 
 type Props = {
   videoHeader: string;
   videoSubheader: Maybe<string>;
   videoUid: string;
-  videoThumbnail: string;
+  videoThumbnail: ImageFileField;
   videoProvider: string;
 };
 
@@ -36,9 +38,15 @@ const Video = ({
 
         <div className="-mx-4 flex flex-wrap">
           <div className="w-full px-4">
-            <div className="mx-auto max-w-[770px] overflow-hidden rounded-md">
+            <div className="mx-auto max-w-[1024px] overflow-hidden rounded-md">
               <div className="relative aspect-[77/40] items-center justify-center">
-                <Image src={videoThumbnail} className='w-full h-full object-cover' alt="video thumbnail" fill />
+                <DatoImage
+                  className="h-full w-full object-cover"
+                  layout="fill"
+                  objectFit="cover"
+                  objectPosition="top"
+                  data={videoThumbnail.responsiveImage}
+                />
                 <div className="absolute right-0 top-0 flex h-full w-full items-center justify-center">
                   <button
                     onClick={() => setOpen(true)}

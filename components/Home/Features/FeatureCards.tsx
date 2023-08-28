@@ -1,6 +1,6 @@
-import SvgRenderer from '@/components/Common/SvgRenderer';
 import { FeatureRecord } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
+import { Image as DatoImage } from 'react-datocms';
 
 type Props = {
   features: FeatureRecord[];
@@ -40,8 +40,14 @@ const FeatureCards = ({
                   key={feature.id}
                   className="relative flex h-64 flex-col items-center justify-center rounded bg-white p-6 shadow-xl"
                 >
-                  <div className="bg-primary bg-opacity-5 -mt-1 mb-2 flex h-20 w-20 items-center justify-center rounded-full">
-                    <SvgRenderer url={feature.featureIcon.url} />
+                  <div className="relative -mt-1 mb-2 flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-primary bg-opacity-5">
+                    <DatoImage
+                      data={feature.featureIcon.responsiveImage}
+                      className="h-full w-full object-contain"
+                      layout="fill"
+                      objectFit="cover"
+                      objectPosition="50% 50%"
+                    />
                   </div>
                   <h4 className="mb-1 text-xl font-bold leading-snug tracking-tight">
                     {feature.featureTitle}

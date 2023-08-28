@@ -36,6 +36,25 @@ import GradientHero from '../Home/Hero/GradientHero';
 import FeatureCards from '../Home/Features/FeatureCards';
 import PostGridRenderer from '../Blog/PostGridRenderer';
 import { redirect } from 'next/navigation';
+import RightImageHero from '../Home/Hero/RightImageHero';
+import BackgroundImageHero from '../Home/Hero/BackgroundImage';
+import SplitImage from '../Home/Hero/SplitImage';
+import GradientCards from '../Home/Pricing/GradientCards';
+import Minimal from '../Home/Pricing/Minimal';
+import FeatureListSelector from '../Home/Pricing/FeatureListSelector';
+import SmallCards from '../Home/Pricing/SmallCards';
+import Carrousel from '../Home/Testimonials/Carrousel';
+import ModernCarrousel from '../Home/Testimonials/ModernCarrousel';
+import MinimalCarrousel from '../Home/Testimonials/MinimalCarrousel';
+import MinimalReviewCards from '../Home/Testimonials/MinimalReviewCards';
+import BrandCards from '../Home/Brands/BrandCards';
+import ModernPostCards from '../Home/Featured Posts/ModernPostCards';
+import CarrouselFeaturedPosts from '../Home/Featured Posts/CarrouselFeaturedPosts';
+import MinimalistFeaturedPostsGrid from '../Home/Featured Posts/MinimalistFeaturedPostsGrid';
+import FullImageFeaturedPosts from '../Home/Featured Posts/FullImageFeaturedPosts';
+import MinimalCardsFeature from '../Home/Features/MinimalCardsFeature';
+import BigImageHorizontalFeatures from '../Home/Features/BigImageHorizontalFeatures';
+import BigImageVerticalFeatures from '../Home/Features/BigImageVerticalFeatures';
 
 type Props = {
   sections: Array<PageModelSectionsField>;
@@ -51,39 +70,108 @@ export default function Section({ sections, locale, posts, postMeta }: Props) {
         switch (section._modelApiKey) {
           case 'hero_section':
             const heroSectionRecord = section as HeroSectionRecord;
-            if (heroSectionRecord.displayOptions === 'default')
-              return (
-                <Hero
-                  heroTitle={heroSectionRecord.heroTitle}
-                  heroSubtitle={heroSectionRecord.heroSubtitle}
-                  buttons={heroSectionRecord.buttons}
-                />
-              );
-            return (
-              <GradientHero
-                heroTitle={heroSectionRecord.heroTitle}
-                heroSubtitle={heroSectionRecord.heroSubtitle}
-                buttons={heroSectionRecord.buttons}
-              />
-            );
+            switch (heroSectionRecord.displayOptions) {
+              case 'gradient':
+                return (
+                  <GradientHero
+                    heroTitle={heroSectionRecord.heroTitle}
+                    heroSubtitle={heroSectionRecord.heroSubtitle}
+                    buttons={heroSectionRecord.buttons}
+                  />
+                );
+              case 'right_image':
+                return (
+                  <RightImageHero
+                    heroTitle={heroSectionRecord.heroTitle}
+                    heroSubtitle={heroSectionRecord.heroSubtitle}
+                    buttons={heroSectionRecord.buttons}
+                    image={heroSectionRecord.heroImage}
+                  />
+                );
+              case 'background_image':
+                return (
+                  <BackgroundImageHero
+                    heroTitle={heroSectionRecord.heroTitle}
+                    heroSubtitle={heroSectionRecord.heroSubtitle}
+                    buttons={heroSectionRecord.buttons}
+                    image={heroSectionRecord.heroImage}
+                  />
+                );
+              case 'split_image':
+                return (
+                  <SplitImage
+                    heroTitle={heroSectionRecord.heroTitle}
+                    heroSubtitle={heroSectionRecord.heroSubtitle}
+                    buttons={heroSectionRecord.buttons}
+                    image={heroSectionRecord.heroImage}
+                  />
+                );
+              default:
+                return (
+                  <Hero
+                    heroTitle={heroSectionRecord.heroTitle}
+                    heroSubtitle={heroSectionRecord.heroSubtitle}
+                    buttons={heroSectionRecord.buttons}
+                  />
+                );
+            }
+
           case 'feature_list_section':
             const featureListSectionRecord =
               section as FeatureListSectionRecord;
-            if (featureListSectionRecord.displayOption === 'grid')
-              return (
-                <Features
-                  features={featureListSectionRecord.feature}
-                  featuresHeader={featureListSectionRecord.featuresHeader}
-                  featuresSubheader={featureListSectionRecord.featuresSubheader}
-                />
-              );
-            return (
-              <FeatureCards
-                features={featureListSectionRecord.feature}
-                featuresHeader={featureListSectionRecord.featuresHeader}
-                featuresSubheader={featureListSectionRecord.featuresSubheader}
-              />
-            );
+            switch (featureListSectionRecord.displayOption) {
+              case 'card_minimal':
+                return (
+                  <MinimalCardsFeature
+                    features={featureListSectionRecord.feature}
+                    featuresHeader={featureListSectionRecord.featuresHeader}
+                    featuresSubheader={
+                      featureListSectionRecord.featuresSubheader
+                    }
+                  />
+                );
+              case 'grid':
+                return (
+                  <Features
+                    features={featureListSectionRecord.feature}
+                    featuresHeader={featureListSectionRecord.featuresHeader}
+                    featuresSubheader={
+                      featureListSectionRecord.featuresSubheader
+                    }
+                  />
+                );
+              case 'big_image_horizontal':
+                return (
+                  <BigImageHorizontalFeatures
+                    features={featureListSectionRecord.feature}
+                    featuresHeader={featureListSectionRecord.featuresHeader}
+                    featuresSubheader={
+                      featureListSectionRecord.featuresSubheader
+                    }
+                  />
+                );
+              case 'big_image_vertical':
+                return (
+                  <BigImageVerticalFeatures
+                    features={featureListSectionRecord.feature}
+                    featuresHeader={featureListSectionRecord.featuresHeader}
+                    featuresSubheader={
+                      featureListSectionRecord.featuresSubheader
+                    }
+                  />
+                );
+              default:
+                return (
+                  <FeatureCards
+                    features={featureListSectionRecord.feature}
+                    featuresHeader={featureListSectionRecord.featuresHeader}
+                    featuresSubheader={
+                      featureListSectionRecord.featuresSubheader
+                    }
+                  />
+                );
+            }
+
           case 'video_section':
             const videoSectionRecord = section as VideoSectionRecord;
             return (
@@ -91,53 +179,178 @@ export default function Section({ sections, locale, posts, postMeta }: Props) {
                 videoHeader={videoSectionRecord.videoHeader}
                 videoSubheader={videoSectionRecord.videoSubheader}
                 videoUid={videoSectionRecord.video?.providerUid}
-                videoThumbnail={videoSectionRecord.video?.thumbnailUrl}
+                videoThumbnail={videoSectionRecord.videoThumbnail}
                 videoProvider={videoSectionRecord.video?.provider}
               />
             );
           case 'brand_section':
             const brandSectionRecord = section as BrandSectionRecord;
-            return <Brands brandShowcase={brandSectionRecord.brand} />;
+            switch (brandSectionRecord.displayOptions) {
+              case 'brand_cards':
+                return <BrandCards brandShowcase={brandSectionRecord.brand} />;
+              default:
+                return <Brands brandShowcase={brandSectionRecord.brand} />;
+            }
           case 'detail_section':
             const detailSectionRecord = section as DetailSectionRecord;
             return (
               <DetailSection
                 imagePosition={detailSectionRecord.imagePosition as boolean}
-                imageURL={detailSectionRecord.image.url}
+                image={detailSectionRecord.image}
                 details={detailSectionRecord.details}
               />
             );
           case 'review_section':
             const reviewSectionRecord = section as ReviewSectionRecord;
-            return (
-              <Testimonials
-                header={reviewSectionRecord.reviewSectionHeader}
-                subheader={reviewSectionRecord.reviewSectionSubheader}
-                reviews={reviewSectionRecord.reviews}
-              />
-            );
+            switch (reviewSectionRecord.displayOptions) {
+              case 'card_carrousel':
+                return (
+                  <Carrousel
+                    header={reviewSectionRecord.reviewSectionHeader}
+                    subheader={reviewSectionRecord.reviewSectionSubheader}
+                    reviews={reviewSectionRecord.reviews}
+                  />
+                );
+              case 'modern_carrousel':
+                return (
+                  <ModernCarrousel
+                    header={reviewSectionRecord.reviewSectionHeader}
+                    subheader={reviewSectionRecord.reviewSectionSubheader}
+                    reviews={reviewSectionRecord.reviews}
+                  />
+                );
+              case 'minimal_carrousel':
+                return (
+                  <MinimalCarrousel
+                    header={reviewSectionRecord.reviewSectionHeader}
+                    subheader={reviewSectionRecord.reviewSectionSubheader}
+                    reviews={reviewSectionRecord.reviews}
+                  />
+                );
+              case 'minimal_cards':
+                return (
+                  <MinimalReviewCards
+                    header={reviewSectionRecord.reviewSectionHeader}
+                    subheader={reviewSectionRecord.reviewSectionSubheader}
+                    reviews={reviewSectionRecord.reviews}
+                  />
+                );
+              default:
+                return (
+                  <Testimonials
+                    header={reviewSectionRecord.reviewSectionHeader}
+                    subheader={reviewSectionRecord.reviewSectionSubheader}
+                    reviews={reviewSectionRecord.reviews}
+                  />
+                );
+            }
+
           case 'pricing_section':
             const pricingSectionRecord = section as PricingSectionRecord;
-            return (
-              <Pricing
-                header={pricingSectionRecord.pricingSectionHeader}
-                subheader={pricingSectionRecord.pricingSectionSubheader}
-                plans={pricingSectionRecord.plans}
-              />
-            );
+            switch (pricingSectionRecord.displayOption) {
+              case 'cards_gradient':
+                return (
+                  <GradientCards
+                    header={pricingSectionRecord.pricingSectionHeader}
+                    subheader={pricingSectionRecord.pricingSectionSubheader}
+                    plans={pricingSectionRecord.plans}
+                  />
+                );
+              case 'minimal':
+                return (
+                  <Minimal
+                    header={pricingSectionRecord.pricingSectionHeader}
+                    subheader={pricingSectionRecord.pricingSectionSubheader}
+                    plans={pricingSectionRecord.plans}
+                  />
+                );
+              case 'feature_list':
+                return (
+                  <FeatureListSelector
+                    header={pricingSectionRecord.pricingSectionHeader}
+                    subheader={pricingSectionRecord.pricingSectionSubheader}
+                    plans={pricingSectionRecord.plans}
+                  />
+                );
+              case 'mini_cards':
+                return (
+                  <SmallCards
+                    header={pricingSectionRecord.pricingSectionHeader}
+                    subheader={pricingSectionRecord.pricingSectionSubheader}
+                    plans={pricingSectionRecord.plans}
+                  />
+                );
+              default:
+                return (
+                  <Pricing
+                    header={pricingSectionRecord.pricingSectionHeader}
+                    subheader={pricingSectionRecord.pricingSectionSubheader}
+                    plans={pricingSectionRecord.plans}
+                  />
+                );
+            }
+
           case 'featured_posts_section':
             const featuredPostsSectionRecord =
               section as FeaturedPostsSectionRecord;
-            return (
-              <Blog
-                locale={locale}
-                blogData={featuredPostsSectionRecord.featuredPosts}
-                blogHeader={featuredPostsSectionRecord.featuredPostsHeader}
-                blogSubheader={
-                  featuredPostsSectionRecord.featuredPostsSubheader
-                }
-              />
-            );
+            switch (featuredPostsSectionRecord.displayOptions) {
+              case 'modern_cards':
+                return (
+                  <ModernPostCards
+                    locale={locale}
+                    blogData={featuredPostsSectionRecord.featuredPosts}
+                    blogHeader={featuredPostsSectionRecord.featuredPostsHeader}
+                    blogSubheader={
+                      featuredPostsSectionRecord.featuredPostsSubheader
+                    }
+                  />
+                );
+              case 'carrousel':
+                return (
+                  <CarrouselFeaturedPosts
+                    locale={locale}
+                    blogData={featuredPostsSectionRecord.featuredPosts}
+                    blogHeader={featuredPostsSectionRecord.featuredPostsHeader}
+                    blogSubheader={
+                      featuredPostsSectionRecord.featuredPostsSubheader
+                    }
+                  />
+                );
+              case 'minimalist_grid':
+                return (
+                  <MinimalistFeaturedPostsGrid
+                    locale={locale}
+                    blogData={featuredPostsSectionRecord.featuredPosts}
+                    blogHeader={featuredPostsSectionRecord.featuredPostsHeader}
+                    blogSubheader={
+                      featuredPostsSectionRecord.featuredPostsSubheader
+                    }
+                  />
+                );
+              case 'full_image_card':
+                return (
+                  <FullImageFeaturedPosts
+                    locale={locale}
+                    blogData={featuredPostsSectionRecord.featuredPosts}
+                    blogHeader={featuredPostsSectionRecord.featuredPostsHeader}
+                    blogSubheader={
+                      featuredPostsSectionRecord.featuredPostsSubheader
+                    }
+                  />
+                );
+              default:
+                return (
+                  <Blog
+                    locale={locale}
+                    blogData={featuredPostsSectionRecord.featuredPosts}
+                    blogHeader={featuredPostsSectionRecord.featuredPostsHeader}
+                    blogSubheader={
+                      featuredPostsSectionRecord.featuredPostsSubheader
+                    }
+                  />
+                );
+            }
+
           case 'team_section':
             const teamSectionRecord = section as TeamSectionRecord;
             if (teamSectionRecord.displayOptions === 'compact')

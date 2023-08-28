@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { StructuredText, renderNodeRule } from 'react-datocms/structured-text';
 import {
   isHeading,
@@ -6,7 +5,8 @@ import {
   isListItem,
   isList,
 } from 'datocms-structured-text-utils';
-import { DetailSectionModelDetailsField } from '@/graphql/generated';
+import { DetailSectionModelDetailsField, FileField } from '@/graphql/generated';
+import { Image as DatoImage } from 'react-datocms';
 
 const checkIcon = (
   <svg width="16" height="13" viewBox="0 0 16 13" className="fill-current">
@@ -16,81 +16,91 @@ const checkIcon = (
 
 type Props = {
   details: DetailSectionModelDetailsField;
-  imageURL: string;
+  image: FileField;
   imagePosition: boolean;
 };
 
-const DetailSection = ({ details, imageURL, imagePosition }: Props) => {
+const DetailSection = ({ details, image, imagePosition }: Props) => {
   return (
     <section className="py-16 text-center md:py-20 lg:py-28 lg:text-start">
       <div className="container">
         <div className="-mx-4 flex flex-col items-center justify-center lg:flex-row lg:flex-wrap ">
-          {!imagePosition && (
-            <div className="w-full px-4 lg:w-1/2">
-              <div className=" relative mx-auto mb-12 aspect-[25/24] max-w-[500px] text-center lg:m-0">
-                <Image src={imageURL} alt="about image" fill />
+          <div className="grid gap-8 md:grid-cols-2 lg:gap-12">
+            {!imagePosition && image.responsiveImage && (
+              <div className="relative h-64 overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-auto">
+                <DatoImage
+                  className="h-full w-full object-cover object-center"
+                  layout="fill"
+                  objectFit="cover"
+                  objectPosition="50% 50%"
+                  data={image.responsiveImage}
+                />
+              </div>
+            )}
+            <div className="w-full">
+              <div className="sm:ml-6 md:px-24 lg:px-0">
+                <StructuredText
+                  data={details.value}
+                  customNodeRules={[
+                    renderNodeRule(isHeading, ({ children, key }) => {
+                      return (
+                        <h3
+                          className="mb-4 mt-9 text-xl font-bold text-black dark:text-white sm:text-2xl lg:text-xl xl:text-2xl"
+                          key={key}
+                        >
+                          {children}
+                        </h3>
+                      );
+                    }),
+                    renderNodeRule(isParagraph, ({ children, key }) => {
+                      return (
+                        <p
+                          className="text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed"
+                          key={key}
+                        >
+                          {children}
+                        </p>
+                      );
+                    }),
+                    renderNodeRule(isListItem, ({ children, key }) => {
+                      return (
+                        <div
+                          key={key}
+                          className="mb-5 flex items-center text-lg font-medium text-body-color"
+                        >
+                          <span className="mr-4 flex h-[30px] w-[30px] items-center justify-center rounded-md bg-primary bg-opacity-10 text-primary">
+                            {checkIcon}
+                          </span>
+                          <div>{children}</div>
+                        </div>
+                      );
+                    }),
+                    renderNodeRule(isList, ({ children, key }) => {
+                      return (
+                        <div
+                          key={key}
+                          className="mb-6 mt-6 grid w-full grid-cols-2 gap-4 text-center lg:ml-0"
+                        >
+                          {children}
+                        </div>
+                      );
+                    }),
+                  ]}
+                />
               </div>
             </div>
-          )}
-          <div className="w-full px-4 lg:w-1/2">
-            <div className="sm:ml-6 md:px-24 lg:px-0">
-              <StructuredText
-                data={details.value}
-                customNodeRules={[
-                  renderNodeRule(isHeading, ({ children, key }) => {
-                    return (
-                      <h3
-                        className="mb-4 mt-9 text-xl font-bold text-black dark:text-white sm:text-2xl lg:text-xl xl:text-2xl"
-                        key={key}
-                      >
-                        {children}
-                      </h3>
-                    );
-                  }),
-                  renderNodeRule(isParagraph, ({ children, key }) => {
-                    return (
-                      <p
-                        className="text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed"
-                        key={key}
-                      >
-                        {children}
-                      </p>
-                    );
-                  }),
-                  renderNodeRule(isListItem, ({ children, key }) => {
-                    return (
-                      <div
-                        key={key}
-                        className="mb-5 flex items-center text-lg font-medium text-body-color"
-                      >
-                        <span className="mr-4 flex h-[30px] w-[30px] items-center justify-center rounded-md bg-primary bg-opacity-10 text-primary">
-                          {checkIcon}
-                        </span>
-                        <div>{children}</div>
-                      </div>
-                    );
-                  }),
-                  renderNodeRule(isList, ({ children, key }) => {
-                    return (
-                      <div
-                        key={key}
-                        className="mb-6 mt-6 grid w-full grid-cols-2 gap-4 text-center lg:ml-0"
-                      >
-                        {children}
-                      </div>
-                    );
-                  }),
-                ]}
-              />
-            </div>
+            {imagePosition && image.responsiveImage && (
+              <div className="relative h-64 overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-auto">
+                <DatoImage
+                  className="h-full w-full object-cover"
+                  layout="fill"
+                  objectFit="cover"
+                  objectPosition="50% 50%"
+                  data={image.responsiveImage}
+                />
+              </div>
+            )}
           </div>
-          {imagePosition && (
-            <div className="w-full px-4 pt-8 lg:w-1/2">
-              <div className="relative mx-auto mb-12 aspect-[25/24] max-w-[500px] text-center lg:m-0">
-                <Image src={imageURL} alt="about image" fill />
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </section>

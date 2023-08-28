@@ -80,6 +80,11 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
         heroSubtitle
         heroTitle
         displayOptions
+        heroImage {
+          responsiveImage {
+            ...DatoImage_responsiveImage
+          }
+        }
       }
       ... on VideoSectionRecord {
         _modelApiKey
@@ -91,6 +96,11 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
           provider
           thumbnailUrl
         }
+        videoThumbnail {
+          responsiveImage {
+            ...DatoImage_responsiveImage
+          }
+        }
       }
       ... on DetailSectionRecord {
         _modelApiKey
@@ -100,7 +110,9 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
         }
         imagePosition
         image {
-          url
+          responsiveImage {
+            ...DatoImage_responsiveImage
+          }
         }
       }
       ... on ReviewSectionRecord {
@@ -108,6 +120,7 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
         id
         reviewSectionHeader
         reviewSectionSubheader
+        displayOptions
         reviews {
           id
           rating
@@ -130,26 +143,23 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
         id
         pricingSectionHeader
         pricingSectionSubheader
+        displayOption
         plans {
           id
           yearlyPrice
-          useWithUnlimitedProjects
+          monthlyPrice
           tierName
           tierDescription {
             value
           }
           slug
-          monthlyPrice
-          lifetimeAccess
-          freeLifetimeUpdates
-          emailSupport
-          commercialUse
-          allUiComponents
+          planFeatures
         }
       }
       ... on BrandSectionRecord {
         _modelApiKey
         id
+        displayOptions
         brand {
           _modelApiKey
           brandName
@@ -165,6 +175,7 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
         id
         featuredPostsHeader
         featuredPostsSubheader
+        displayOptions
         featuredPosts {
           _publishedAt
           slug
@@ -205,7 +216,9 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
           featureTitle
           featureDescription
           featureIcon {
-            url
+            responsiveImage {
+              ...DatoImage_responsiveImage
+            }
           }
         }
       }
