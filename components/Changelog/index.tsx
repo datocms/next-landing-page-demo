@@ -24,6 +24,7 @@ const Changelog = ({ title, subtitle, featuredChangeLogs, locale }: Props) => {
         {featuredChangeLogs.map((changeLog) => {
           return (
             <Link
+              key={changeLog.id}
               href={`/${locale}/changelog/${changeLog.slug}`}
               className="prose group mx-auto mb-2 flex cursor-pointer flex-col items-center border-b border-gray-200 py-6 sm:flex-row lg:w-1/2"
             >

@@ -28,7 +28,7 @@ const CompactTeam = ({ header, subheader, members, lng }: Props) => {
               <Link
                 href={`/${lng}/posts/author/${member.slug}`}
                 key={member.id}
-                className="group flex transform flex-col items-center rounded-xl p-8 transition-colors duration-300 hover:bg-blue-600"
+                className="group flex transform flex-col items-center rounded-xl p-8 transition-colors duration-300 hover:bg-primary/90"
               >
                 <div className="relative h-32 w-32 overflow-hidden rounded-full object-cover ring-4 ring-gray-300">
                   <DatoImage

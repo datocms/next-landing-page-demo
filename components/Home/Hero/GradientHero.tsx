@@ -65,7 +65,7 @@ const GradientHero = ({ heroTitle, heroSubtitle, buttons }: Props) => {
               data-aos="zoom-y-out"
             >
               {heroTitleWords.join(' ')}{' '}
-              <span className="bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary to-teal-400 bg-clip-text text-transparent">
                 {lastWord}
               </span>
             </h1>
@@ -84,7 +84,7 @@ const GradientHero = ({ heroTitle, heroSubtitle, buttons }: Props) => {
               >
                 {buttons.map((button) => {
                   const primary =
-                    'mb-4 w-full cursor-pointer rounded-lg bg-gradient-to-r from-blue-500 to-teal-400 p-4 text-xl font-bold text-white transition-all hover:opacity-80 sm:mb-0 sm:w-auto';
+                    'mb-4 w-full cursor-pointer rounded-lg bg-gradient-to-r from-primary to-teal-400 p-4 text-xl font-bold text-white transition-all hover:opacity-80 sm:mb-0 sm:w-auto';
                   const secondary =
                     'btn -md w-full cursor-pointer rounded bg-gray-900 p-4 text-xl text-white transition-all hover:bg-gray-700 sm:ml-4 sm:w-auto';
 
