@@ -21,6 +21,19 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
           }
         }
       }
+      ... on ChangelogSectionRecord {
+        id
+        _modelApiKey
+        subtitle
+        title
+        featuredVersions {
+          timeOfRelease
+          versionName
+          slug
+          id
+          _modelApiKey
+        }
+      }
       ... on StatsSectionRecord {
         _modelApiKey
         id

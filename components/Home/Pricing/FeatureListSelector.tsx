@@ -83,7 +83,6 @@ const FeatureListSelector = ({ header, subheader, plans }: Props) => {
         </div>
 
         <motion.div
-          layout
           className="mt-8 space-y-8 rounded-xl bg-gray-100 p-8 dark:bg-gray-800"
         >
           <AnimatePresence>

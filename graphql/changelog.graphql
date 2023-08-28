@@ -1,0 +1,10 @@
+query Changelog($slug: String) {
+  changeLog(filter: { slug: { eq: $slug } }) {
+    timeOfRelease
+    versionName
+    slug
+    content {
+      value
+    }
+  }
+}
