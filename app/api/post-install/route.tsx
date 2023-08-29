@@ -122,6 +122,8 @@ export async function POST(request: Request) {
     baseUrl
   );
 
+  await client.buildTriggers.trigger(buildTriggers[0].id);
+
   try {
     await Promise.all([
       installWebPreviewsPlugin(client, baseUrl),
