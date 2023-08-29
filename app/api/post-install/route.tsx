@@ -18,11 +18,7 @@ export async function OPTIONS() {
   return new Response('OK', cors);
 }
 
-const baseUrl = process.env.VERCEL_URL
-  ? // Vercel auto-populates this environment variable
-    `https://${process.env.VERCEL_URL}`
-  : // Netlify auto-populates this environment variable
-    process.env.URL;
+const baseUrl = process.env.BASE_URL;
 
 const secretToken = 'superSecretToken';
 
