@@ -9,6 +9,30 @@ const cors = {
   },
 };
 
+async function vercelInitialization(
+  vercelProjectId: string,
+  vercelApiToken: string,
+  baseUrl: string
+) {
+  return await fetch(
+    `https://api.vercel.com/v10/projects/${vercelProjectId}/env`,
+    {
+      headers: {
+        Authorization: `Bearer ${vercelApiToken}`,
+      },
+      method: 'post',
+      body: JSON.stringify([
+        {
+          type: 'encrypted',
+          key: 'BASE_URL',
+          value: baseUrl,
+          target: ['development', 'production', 'preview'],
+        },
+      ]),
+    }
+  );
+}
+
 /*
   These endpoints are called right after bootstrapping the Starter project...
   they can be removed afterwards!
@@ -18,11 +42,9 @@ export async function OPTIONS() {
   return new Response('OK', cors);
 }
 
-const baseUrl = process.env.BASE_URL;
-
 const secretToken = 'superSecretToken';
 
-async function installWebPreviewsPlugin(client: Client) {
+async function installWebPreviewsPlugin(client: Client, baseUrl: string) {
   const webPreviewsPlugin = await client.plugins.create({
     package_name: 'datocms-plugin-web-previews',
   });
@@ -40,7 +62,7 @@ async function installWebPreviewsPlugin(client: Client) {
   });
 }
 
-async function installSEOAnalysisPlugin(client: Client) {
+async function installSEOAnalysisPlugin(client: Client, baseUrl: string) {
   const seoPlugin = await client.plugins.create({
     package_name: 'datocms-plugin-seo-readability-analysis',
   });
@@ -54,7 +76,7 @@ async function installSEOAnalysisPlugin(client: Client) {
   });
 }
 
-async function createCacheInvalidationWebhook(client: Client) {
+async function createCacheInvalidationWebhook(client: Client, baseUrl: string) {
   await client.webhooks.create({
     name: '🔄 Cache Revalidation',
     url: `${baseUrl}/api/revalidateCache?token=${secretToken}`,
@@ -90,11 +112,21 @@ export async function POST(request: Request) {
 
   const client = buildClient({ apiToken: body.datocmsApiToken });
 
+  const buildTriggers = await client.buildTriggers.list();
+
+  const baseUrl = buildTriggers[0].frontend_url as string;
+
+  await vercelInitialization(
+    body.integrationInfo.vercelProjectId,
+    body.integrationInfo.vercelApiToken,
+    baseUrl
+  );
+
   try {
     await Promise.all([
-      installWebPreviewsPlugin(client),
-      createCacheInvalidationWebhook(client),
-      installSEOAnalysisPlugin(client),
+      installWebPreviewsPlugin(client, baseUrl),
+      createCacheInvalidationWebhook(client, baseUrl),
+      installSEOAnalysisPlugin(client, baseUrl),
     ]);
 
     return NextResponse.json({ success: true }, cors);
