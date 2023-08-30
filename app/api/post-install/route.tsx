@@ -9,30 +9,6 @@ const cors = {
   },
 };
 
-async function vercelInitialization(
-  vercelProjectId: string,
-  vercelApiToken: string,
-  baseUrl: string
-) {
-  return await fetch(
-    `https://api.vercel.com/v10/projects/${vercelProjectId}/env`,
-    {
-      headers: {
-        Authorization: `Bearer ${vercelApiToken}`,
-      },
-      method: 'post',
-      body: JSON.stringify([
-        {
-          type: 'encrypted',
-          key: 'BASE_URL',
-          value: baseUrl,
-          target: ['development', 'production', 'preview'],
-        },
-      ]),
-    }
-  );
-}
-
 /*
   These endpoints are called right after bootstrapping the Starter project...
   they can be removed afterwards!
@@ -112,26 +88,14 @@ export async function POST(request: Request) {
 
   const client = buildClient({ apiToken: body.datocmsApiToken });
 
-  const buildTriggers = await client.buildTriggers.list();
-
-  const baseUrl = buildTriggers[0].frontend_url as string;
-
-  await vercelInitialization(
-    body.integrationInfo.vercelProjectId,
-    body.integrationInfo.vercelApiToken,
-    baseUrl
-  );
-
-  await client.buildTriggers.trigger(buildTriggers[0].id);
+  const projectName = process.env.VERCEL_BRANCH_URL!.split('-git')[0];
+  const baseUrl = `https://${projectName}.vercel.app`;
 
   try {
     await Promise.all([
-      installWebPreviewsPlugin(client, process.env.VERCEL_BRANCH_URL!),
-      createCacheInvalidationWebhook(
-        client,
-        process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL!
-      ),
-      installSEOAnalysisPlugin(client, process.env.NEXT_PUBLIC_VERCEL_URL!),
+      installWebPreviewsPlugin(client, baseUrl),
+      createCacheInvalidationWebhook(client, baseUrl),
+      installSEOAnalysisPlugin(client, baseUrl),
     ]);
 
     return NextResponse.json({ success: true }, cors);

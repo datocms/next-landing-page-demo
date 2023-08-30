@@ -71,7 +71,8 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  const baseUrl = process.env.BASE_URL;
+  const projectName = process.env.VERCEL_BRANCH_URL!.split('-git')[0];
+  const baseUrl = `https://${projectName}.vercel.app`;
 
   const previewLinks = [
     {

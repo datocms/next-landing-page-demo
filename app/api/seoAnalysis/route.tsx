@@ -80,7 +80,8 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const baseUrl = process.env.BASE_URL;
+  const projectName = process.env.VERCEL_BRANCH_URL!.split('-git')[0];
+  const baseUrl = `https://${projectName}.vercel.app`;
 
   const { body } = await got(new URL(permalink, baseUrl).toString());
 
