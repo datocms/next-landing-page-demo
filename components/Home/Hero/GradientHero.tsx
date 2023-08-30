@@ -16,7 +16,7 @@ const GradientHero = ({ heroTitle, heroSubtitle, buttons }: Props) => {
   const lastWord = heroTitleWords.pop();
 
   return (
-    <section className="relative">
+    <section className="relative overflow-hidden">
       {/* Illustration behind hero content */}
       <motion.div
         initial={{ opacity: 0 }}
