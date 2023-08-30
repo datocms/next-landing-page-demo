@@ -3,6 +3,7 @@ import transformDate from '@/utils/transformDate';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { Image as DatoImage } from 'react-datocms';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type BlogProps = {
   blogData: PostRecord[];
@@ -25,7 +26,9 @@ const ModernPostCards = ({
             {blogHeader}
           </h1>
 
-          <p className="mx-auto mt-4 max-w-lg text-gray-500">{blogSubheader}</p>
+          <div className="mx-auto mt-4 max-w-lg text-gray-500">
+            <ReactMarkdown>{blogSubheader || ''}</ReactMarkdown>
+          </div>
         </div>
 
         <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">

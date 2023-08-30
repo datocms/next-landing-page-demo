@@ -1,6 +1,7 @@
 import { QuestionRecord } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { StructuredText } from 'react-datocms/structured-text';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
   title: Maybe<string>;
@@ -15,13 +16,15 @@ const FAQGrid = ({ title, subtitle, questions }: Props) => {
         <h1 className="mb-4 text-center text-2xl font-semibold text-gray-800 dark:text-white lg:text-4xl">
           {title}
         </h1>
-        <h2 className=" text-center text-gray-500">{subtitle}</h2>
+        <div className=" text-center text-gray-500">
+          <ReactMarkdown>{subtitle || ''}</ReactMarkdown>
+        </div>
 
         <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:mt-16 xl:grid-cols-2">
           {questions.map((question) => {
             return (
               <div key={question.id} className="flex gap-4">
-                <div className="inline-block h-12 rounded-lg bg-primary opacity-80 p-3 text-white">
+                <div className="inline-block h-12 rounded-lg bg-primary p-3 text-white opacity-80">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6"

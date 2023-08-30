@@ -5,6 +5,7 @@ import { StructuredText } from 'react-datocms/structured-text';
 import { motion } from 'framer-motion';
 import { QuestionRecord } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 const closeIcon = (
   <span className="rounded-full bg-gray-200 text-gray-400">
@@ -69,7 +70,9 @@ const FAQAccordion = ({ title, subtitle, questions }: Props) => {
         <h1 className="mb-4 text-center text-2xl font-semibold text-gray-800 dark:text-white lg:text-4xl">
           {title}
         </h1>
-        <h2 className=" text-center text-gray-500">{subtitle}</h2>
+        <div className=" text-center text-gray-500">
+          <ReactMarkdown>{subtitle || ''}</ReactMarkdown>
+        </div>
 
         <div className="mx-8 mt-8 grid gap-4 lg:mx-40">
           {questions.map((question) => {

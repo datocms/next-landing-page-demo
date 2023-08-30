@@ -1,6 +1,7 @@
 import SvgRenderer from '../Common/SvgRenderer';
 import { StatisticRecord } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 function formatNumber(num: number) {
   if (num >= 1000000) {
@@ -26,9 +27,9 @@ const StatsSection = ({ title, subtitle, statistic }: Props) => {
           <h1 className="title-font mb-4 text-2xl font-semibold text-gray-900 sm:text-4xl">
             {title}
           </h1>
-          <p className="mx-auto text-base leading-relaxed lg:w-2/3">
-            {subtitle}
-          </p>
+          <div className="mx-auto text-base leading-relaxed lg:w-2/3">
+            <ReactMarkdown>{subtitle || ''}</ReactMarkdown>
+          </div>
         </div>
         <div className="-m-4 flex flex-col flex-wrap items-center justify-center text-center md:flex-row">
           {statistic.map((stat) => {

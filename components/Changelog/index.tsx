@@ -1,6 +1,7 @@
 import { ChangeLogRecord, SiteLocale } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
   title: string;
@@ -18,7 +19,9 @@ const Changelog = ({ title, subtitle, featuredChangeLogs, locale }: Props) => {
             <h1 className="mb-16 mt-4 text-4xl font-semibold leading-5">
               {title}
             </h1>
-            <p>{subtitle}</p>
+            <div>
+              <ReactMarkdown>{subtitle || ''}</ReactMarkdown>
+            </div>
           </div>
         </div>
         {featuredChangeLogs.map((changeLog) => {

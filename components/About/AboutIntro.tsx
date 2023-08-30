@@ -13,6 +13,7 @@ import {
   renderNodeRule,
 } from 'react-datocms';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
   header: string;
@@ -77,7 +78,9 @@ const AboutIntro = ({
           </span>{' '}
           {restOfTheString}
         </h2>
-        <p className="text-base text-gray-700 md:text-lg">{subheader}</p>
+        <div className="text-base text-gray-700 md:text-lg">
+          <ReactMarkdown>{subheader || ''}</ReactMarkdown>
+        </div>
       </motion.div>
       <div className="grid max-w-screen-lg gap-8 sm:mx-auto lg:grid-cols-2">
         <motion.div

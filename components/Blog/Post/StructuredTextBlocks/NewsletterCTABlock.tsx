@@ -1,3 +1,5 @@
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+
 type Params = {
   title: string;
   subtitle: string;
@@ -13,7 +15,9 @@ const NewsletterCTABlock = ({ title, subtitle, buttonLabel }: Params) => {
             {title}
           </h2>
 
-          <p className="hidden text-gray-500 sm:mt-4 sm:block">{subtitle}</p>
+          <div className="hidden text-gray-500 sm:mt-4 sm:block">
+            <ReactMarkdown>{subtitle || ''}</ReactMarkdown>
+          </div>
         </div>
 
         <div className="mx-auto mt-8 max-w-xl">

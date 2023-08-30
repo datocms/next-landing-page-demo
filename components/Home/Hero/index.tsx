@@ -5,6 +5,7 @@ import { ButtonRecord } from '@/graphql/generated';
 import { useScroll, useTransform, motion } from 'framer-motion';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
   heroTitle: string;
@@ -34,9 +35,9 @@ const Hero = ({ heroTitle, heroSubtitle, buttons }: Props) => {
                   <h1 className="mb-5 text-3xl font-bold leading-tight text-black dark:text-white sm:text-4xl sm:leading-tight md:text-5xl md:leading-tight">
                     {heroTitle}
                   </h1>
-                  <p className="mb-12 text-base font-medium !leading-relaxed text-body-color dark:text-white dark:opacity-90 sm:text-lg md:text-xl">
-                    {heroSubtitle}
-                  </p>
+                  <div className="mb-12 text-base font-medium !leading-relaxed text-body-color dark:text-white dark:opacity-90 sm:text-lg md:text-xl">
+                    <ReactMarkdown>{heroSubtitle || ''}</ReactMarkdown>
+                  </div>
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -45,7 +46,8 @@ const Hero = ({ heroTitle, heroSubtitle, buttons }: Props) => {
                   className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0"
                 >
                   {buttons.map((button) => {
-                    const primary = 'bg-primary text-white hover:bg-primary opacity-80';
+                    const primary =
+                      'bg-primary text-white hover:bg-primary opacity-80';
                     const secondary =
                       'bg-black/20 hover:bg-black/30 text-black';
                     return (

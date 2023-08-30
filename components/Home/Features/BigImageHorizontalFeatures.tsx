@@ -1,6 +1,7 @@
 import { FeatureRecord } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { Image as DatoImage } from 'react-datocms';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
   features: FeatureRecord[];
@@ -21,9 +22,9 @@ const BigImageHorizontalFeatures = ({
             {featuresHeader}
           </h2>
 
-          <p className="mx-auto max-w-screen-md text-center text-gray-500 md:text-lg">
-            {featuresSubheader}
-          </p>
+          <div className="mx-auto max-w-screen-md text-center text-gray-500 md:text-lg">
+            <ReactMarkdown>{featuresSubheader || ''}</ReactMarkdown>
+          </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-2 xl:grid-cols-2 xl:gap-8">
@@ -52,7 +53,11 @@ const BigImageHorizontalFeatures = ({
                     </div>
                   </h2>
 
-                  <p className="text-gray-500">{feature.featureDescription}</p>
+                  <div className="text-gray-500">
+                    <ReactMarkdown>
+                      {feature.featureDescription || ''}
+                    </ReactMarkdown>
+                  </div>
                 </div>
               </div>
             );

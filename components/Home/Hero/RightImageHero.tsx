@@ -5,6 +5,7 @@ import { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { delay, motion } from 'framer-motion';
 import { Image as DatoImage } from 'react-datocms';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
   heroTitle: string;
@@ -23,9 +24,9 @@ const RightImageHero = ({ heroTitle, heroSubtitle, buttons, image }: Props) => {
               {heroTitle}
             </h1>
 
-            <p className="mb-8 leading-relaxed text-gray-500 md:mb-12 lg:w-4/5 xl:text-lg">
-              {heroSubtitle}
-            </p>
+            <div className="mb-8 leading-relaxed text-gray-500 md:mb-12 lg:w-4/5 xl:text-lg">
+              <ReactMarkdown>{heroSubtitle || ''}</ReactMarkdown>
+            </div>
 
             <div className="flex w-full flex-row items-center justify-center gap-2.5 sm:justify-center lg:justify-start">
               {buttons.map((button) => {

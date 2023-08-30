@@ -1,6 +1,7 @@
 import { FeatureRecord } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { Image as DatoImage } from 'react-datocms';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
   features: FeatureRecord[];
@@ -28,7 +29,9 @@ const FeatureCards = ({
             <h1 className="mb-4 text-3xl font-bold !leading-tight text-black dark:text-white sm:text-4xl md:text-[45px]">
               {featuresHeader}
             </h1>
-            <p className="text-xl text-gray-600">{featuresSubheader}</p>
+            <div className="text-xl text-gray-600">
+              <ReactMarkdown>{featuresSubheader || ''}</ReactMarkdown>
+            </div>
           </div>
 
           {/* Items */}
@@ -52,9 +55,11 @@ const FeatureCards = ({
                   <h4 className="mb-1 text-xl font-bold leading-snug tracking-tight">
                     {feature.featureTitle}
                   </h4>
-                  <p className="text-center text-gray-600">
-                    {feature.featureDescription}
-                  </p>
+                  <div className="text-center text-gray-600">
+                    <ReactMarkdown>
+                      {feature.featureDescription || ''}
+                    </ReactMarkdown>
+                  </div>
                 </div>
               );
             })}

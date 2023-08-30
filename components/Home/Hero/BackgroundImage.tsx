@@ -1,5 +1,6 @@
 import { ButtonRecord, FileField } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
   heroTitle: string;
@@ -16,7 +17,7 @@ const BackgroundImageHero = ({
 }: Props) => {
   return (
     <div
-      className="mt-20 h-[48rem] w-full object-cover bg-cover bg-center"
+      className="mt-20 h-[48rem] w-full bg-cover bg-center object-cover"
       style={{
         backgroundSize: 'cover',
         backgroundImage: `url('${image?.responsiveImage?.src}')`,
@@ -25,9 +26,9 @@ const BackgroundImageHero = ({
       <div className="flex h-full w-full flex-col items-center justify-center bg-gray-900/30 px-8 lg:px-32">
         <div className="flex flex-col items-center gap-8 text-center">
           <h1 className="text-7xl font-bold text-white">{heroTitle}</h1>
-          <h2 className="leading-relaxed text-white xl:text-xl">
-            {heroSubtitle}
-          </h2>
+          <div className="leading-relaxed text-white xl:text-xl">
+            <ReactMarkdown>{heroSubtitle || ''}</ReactMarkdown>
+          </div>
           <div className="flex gap-4">
             {buttons.map((button) => {
               const primary =

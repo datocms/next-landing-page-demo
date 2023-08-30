@@ -1,6 +1,7 @@
 import { FeatureRecord } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { Image as DatoImage } from 'react-datocms';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
   features: FeatureRecord[];
@@ -14,7 +15,7 @@ const MinimalCardsFeature = ({
   featuresSubheader,
 }: Props) => {
   return (
-    <div className="flex flex-wrap justify-center gap-8 py-16 px-32  text-center md:grid md:grid-cols-2 md:text-primary lg:grid-cols-3">
+    <div className="flex flex-wrap justify-center gap-8 px-32 py-16  text-center md:grid md:grid-cols-2 md:text-primary lg:grid-cols-3">
       {features.map((feature) => {
         return (
           <div
@@ -37,9 +38,9 @@ const MinimalCardsFeature = ({
               {feature.featureTitle}
             </h2>
 
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-200">
-              {feature.featureDescription}
-            </p>
+            <div className="mt-2 text-sm text-gray-600 dark:text-gray-200">
+              <ReactMarkdown>{feature.featureDescription || ''}</ReactMarkdown>
+            </div>
           </div>
         );
       })}

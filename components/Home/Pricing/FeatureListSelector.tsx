@@ -9,6 +9,7 @@ import { PricingRecord } from '@/graphql/generated';
 import { primaryColor } from '@/app/i18n/settings';
 import { StructuredText } from 'react-datocms/structured-text';
 import { AnimatePresence, motion } from 'framer-motion';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
   header: string;
@@ -30,9 +31,9 @@ const FeatureListSelector = ({ header, subheader, plans }: Props) => {
           {header}
         </h1>
 
-        <p className="mx-auto mt-4 max-w-2xl text-center text-gray-500 dark:text-gray-300 xl:mt-6">
-          {subheader}
-        </p>
+        <div className="mx-auto mt-4 max-w-2xl text-center text-gray-500 dark:text-gray-300 xl:mt-6">
+          <ReactMarkdown>{subheader || ''}</ReactMarkdown>
+        </div>
 
         <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-3 xl:mt-12">
           {plans.map((plan) => {
@@ -82,9 +83,7 @@ const FeatureListSelector = ({ header, subheader, plans }: Props) => {
           })}
         </div>
 
-        <motion.div
-          className="mt-8 space-y-8 rounded-xl bg-gray-100 p-8 dark:bg-gray-800"
-        >
+        <motion.div className="mt-8 space-y-8 rounded-xl bg-gray-100 p-8 dark:bg-gray-800">
           <AnimatePresence>
             {selectedPlanFeatures &&
               selectedPlanFeatures.map((feature) => {

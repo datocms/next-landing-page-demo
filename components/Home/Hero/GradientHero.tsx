@@ -4,6 +4,7 @@ import { ButtonRecord } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { delay, motion } from 'framer-motion';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
   heroTitle: string;
@@ -70,13 +71,13 @@ const GradientHero = ({ heroTitle, heroSubtitle, buttons }: Props) => {
               </span>
             </h1>
             <div className="mx-auto max-w-3xl">
-              <p
+              <div
                 className="mb-8 text-xl text-gray-600"
                 data-aos="zoom-y-out"
                 data-aos-delay="150"
               >
-                {heroSubtitle}
-              </p>
+                <ReactMarkdown>{heroSubtitle || ''}</ReactMarkdown>
+              </div>
               <div
                 className="mx-auto flex max-w-xs flex-col justify-center sm:max-w-none sm:flex-row"
                 data-aos="zoom-y-out"

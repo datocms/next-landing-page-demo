@@ -3,6 +3,7 @@ import transformDate from '@/utils/transformDate';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { Image as DatoImage } from 'react-datocms';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type BlogProps = {
   blogData: PostRecord[];
@@ -25,9 +26,9 @@ const FullImageFeaturedPosts = ({
             {blogHeader}
           </h2>
 
-          <p className="mx-auto max-w-screen-md text-center text-gray-500 md:text-lg">
-            {blogSubheader}
-          </p>
+          <div className="mx-auto max-w-screen-md text-center text-gray-500 md:text-lg">
+            <ReactMarkdown>{blogSubheader || ''}</ReactMarkdown>
+          </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-3 xl:gap-8">

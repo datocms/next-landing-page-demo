@@ -1,6 +1,7 @@
 import { PricingRecord } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { StructuredText } from 'react-datocms/structured-text';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
   header: string;
@@ -20,9 +21,9 @@ const GradientCards = ({ header, subheader, plans }: Props) => {
             {header}
           </h2>
 
-          <p className="mx-auto max-w-screen-md text-center text-gray-500 md:text-lg">
-            {subheader}
-          </p>
+          <div className="mx-auto max-w-screen-md text-center text-gray-500 md:text-lg">
+            <ReactMarkdown>{subheader || ''}</ReactMarkdown>
+          </div>
         </div>
 
         <div className="flex w-full flex-row flex-wrap items-center justify-center gap-4">

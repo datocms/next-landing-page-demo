@@ -2,6 +2,7 @@ import { AuthorQuery, PostRecord, SiteLocale } from '@/graphql/generated';
 import SingleBlog from './SingleBlog';
 import { Image as DatoImage } from 'react-datocms';
 import { notFound } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
 
 type Props = {
   data: AuthorQuery;
@@ -30,9 +31,9 @@ const AuthorPosts = ({ data, lng }: Props) => {
               </h1>
               <p className="text-base text-body-color">{data.author.bio}</p>
 
-              <p className="mt-4 max-w-2xl text-gray-500 dark:text-gray-300">
-                {data.author.description}
-              </p>
+              <div className="mt-4 max-w-2xl text-gray-500 dark:text-gray-300">
+                <ReactMarkdown>{data.author.description}</ReactMarkdown>
+              </div>
             </div>
           </div>
         </div>

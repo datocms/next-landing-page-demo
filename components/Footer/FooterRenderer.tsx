@@ -9,6 +9,7 @@ import {
 } from '@/graphql/generated';
 import { notFound } from 'next/navigation';
 import { primaryColor } from '@/app/i18n/settings';
+import ReactMarkdown from 'react-markdown';
 
 type Props = {
   data: FooterQuery;
@@ -34,9 +35,9 @@ const Footer = ({ data, lng }: Props) => {
                   />
                 )}
               </Link>
-              <p className="mb-9 text-base font-medium leading-relaxed text-body-color">
-                {data.footer.subtitle}
-              </p>
+              <div className="mb-9 text-base font-medium leading-relaxed text-body-color">
+                <ReactMarkdown>{data.footer.subtitle || ''}</ReactMarkdown>
+              </div>
               <div className="flex items-center justify-center md:justify-start">
                 {data.footer.socialMediaLinks.map((socialMedia) => {
                   return (

@@ -1,6 +1,7 @@
 import { ButtonRecord, FileField } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { Image as DatoImage } from 'react-datocms';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
   heroTitle: string;
@@ -21,9 +22,9 @@ const SplitImage = ({ heroTitle, heroSubtitle, buttons, image }: Props) => {
         >
           <path d="M50 0H100L50 100H0L50 0Z" />
         </svg>
-        {image?.responsiveImage && ( 
+        {image?.responsiveImage && (
           <DatoImage
-            className="h-56 w-full rounded object-cover shadow-lg md:h-96 lg:h-full lg:rounded-none lg:shadow-none hidden lg:block"
+            className="hidden h-56 w-full rounded object-cover shadow-lg md:h-96 lg:block lg:h-full lg:rounded-none lg:shadow-none"
             layout="fill"
             objectFit="cover"
             objectPosition="left"
@@ -36,9 +37,9 @@ const SplitImage = ({ heroTitle, heroSubtitle, buttons, image }: Props) => {
           <h2 className="mb-5 font-sans text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl sm:leading-none">
             {heroTitle}
           </h2>
-          <p className="mb-5 pr-5 text-base text-gray-700 md:text-lg">
-            {heroSubtitle}
-          </p>
+          <div className="mb-5 pr-5 text-base text-gray-700 md:text-lg">
+            <ReactMarkdown>{heroSubtitle || ''}</ReactMarkdown>
+          </div>
           <div className="flex items-center">
             {buttons.map((button) => {
               const primary =

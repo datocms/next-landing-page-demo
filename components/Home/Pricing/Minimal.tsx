@@ -8,6 +8,7 @@ import { Maybe } from 'graphql/jsutils/Maybe';
 import { PricingRecord } from '@/graphql/generated';
 import { primaryColor } from '@/app/i18n/settings';
 import { StructuredText } from 'react-datocms/structured-text';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
   header: string;
@@ -34,7 +35,9 @@ const Minimal = ({ header, subheader, plans }: Props) => {
             <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 lg:text-3xl">
               {header}
             </h2>
-            <p className="mt-4 text-gray-500 dark:text-gray-400">{subheader}</p>
+            <div className="mt-4 text-gray-500 dark:text-gray-400">
+              <ReactMarkdown>{subheader || ''}</ReactMarkdown>
+            </div>
           </div>
 
           <div className="m-2 rounded-lg border p-0.5 dark:border-gray-700">

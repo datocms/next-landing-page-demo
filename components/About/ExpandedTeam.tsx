@@ -2,6 +2,7 @@ import { AuthorRecord, SiteLocale } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { Image as DatoImage } from 'react-datocms';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
   header: Maybe<string>;
@@ -18,9 +19,9 @@ const ExpandedTeam = ({ header, subheader, members, lng }: Props) => {
           {header}
         </h1>
 
-        <p className="mx-auto my-6 max-w-2xl text-center text-gray-500 dark:text-gray-300">
-          {subheader}
-        </p>
+        <div className="mx-auto my-6 max-w-2xl text-center text-gray-500 dark:text-gray-300">
+          <ReactMarkdown>{subheader || ''}</ReactMarkdown>
+        </div>
 
         <div className="mt-8 grid grid-cols-1 gap-4 text-center md:grid-cols-2 md:gap-8 md:text-start xl:mt-16 xl:grid-cols-2">
           {members.map((member) => {
