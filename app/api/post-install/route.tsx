@@ -126,9 +126,12 @@ export async function POST(request: Request) {
 
   try {
     await Promise.all([
-      installWebPreviewsPlugin(client, baseUrl),
-      createCacheInvalidationWebhook(client, baseUrl),
-      installSEOAnalysisPlugin(client, baseUrl),
+      installWebPreviewsPlugin(client, process.env.VERCEL_BRANCH_URL!),
+      createCacheInvalidationWebhook(
+        client,
+        process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL!
+      ),
+      installSEOAnalysisPlugin(client, process.env.NEXT_PUBLIC_VERCEL_URL!),
     ]);
 
     return NextResponse.json({ success: true }, cors);
