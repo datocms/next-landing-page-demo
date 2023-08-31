@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "prebuild": "node prebuild.js",
     "start": "next start",
     "lint": "next lint",
     "generate-ts-types": "graphql-codegen --config graphql.config.yml"
