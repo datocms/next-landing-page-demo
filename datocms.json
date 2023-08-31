@@ -21,6 +21,10 @@
     "CACHE_INVALIDATION_SECRET_TOKEN": {
       "type": "string",
       "value": "superSecretToken"
+    },
+    "__NEXT_PRIVATE_PREBUNDLED_REACT": {
+      "type": "string",
+      "value": "next"
     }
   },
   "buildCommand": "npm run build",
