@@ -5,13 +5,13 @@ import SectionTitle from '../../Common/SectionTitle';
 import OfferList from './OfferList';
 import PricingBox from './PricingBox';
 import { Maybe } from 'graphql/jsutils/Maybe';
-import { PricingRecord } from '@/graphql/generated';
 import { primaryColor } from '@/app/i18n/settings';
+import { PricingTierRecord } from '@/graphql/generated';
 
 type Props = {
   header: string;
   subheader: Maybe<string>;
-  plans: PricingRecord[];
+  plans: PricingTierRecord[];
 };
 
 const Pricing = ({ header, subheader, plans }: Props) => {

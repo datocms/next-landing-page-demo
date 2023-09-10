@@ -5,15 +5,15 @@ import SectionTitle from '../../Common/SectionTitle';
 import OfferList from './OfferList';
 import PricingBox from './PricingBox';
 import { Maybe } from 'graphql/jsutils/Maybe';
-import { PricingRecord } from '@/graphql/generated';
 import { primaryColor } from '@/app/i18n/settings';
 import { StructuredText } from 'react-datocms/structured-text';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import { PricingTierRecord } from '@/graphql/generated';
 
 type Props = {
   header: string;
   subheader: Maybe<string>;
-  plans: PricingRecord[];
+  plans: PricingTierRecord[];
 };
 
 const Minimal = ({ header, subheader, plans }: Props) => {
@@ -24,7 +24,7 @@ const Minimal = ({ header, subheader, plans }: Props) => {
   const secondary =
     ' w-1/2 rounded-lg bg-transparent px-3 py-1 text-gray-800 hover:bg-gray-200 focus:outline-none dark:text-gray-200 dark:hover:bg-gray-800 sm:mx-0.5 sm:w-auto';
 
-  const planInEvidence = plans[0] as PricingRecord;
+  const planInEvidence = plans[0] as PricingTierRecord;
   const evidencePlanFeatures = planInEvidence.planFeatures.split(', ');
 
   return (

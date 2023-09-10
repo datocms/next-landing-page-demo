@@ -1,11 +1,11 @@
-import { HeaderModelNotificationField, SiteLocale } from '@/graphql/generated';
+import { LayoutModelNotificationField, SiteLocale } from '@/graphql/generated';
 import { isLink } from 'datocms-structured-text-utils';
 import Link from 'next/link';
 import { SetStateAction } from 'react';
 import { StructuredText, renderNodeRule } from 'react-datocms/structured-text';
 
 type Props = {
-  notification: HeaderModelNotificationField;
+  notification: LayoutModelNotificationField;
   lng: SiteLocale;
   setNotificationStrip: React.Dispatch<SetStateAction<boolean>>;
 };

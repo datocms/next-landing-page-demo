@@ -1,4 +1,4 @@
-import { PricingRecord } from '@/graphql/generated';
+import { PricingTierRecord } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { StructuredText } from 'react-datocms/structured-text';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
@@ -6,11 +6,11 @@ import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 type Props = {
   header: string;
   subheader: Maybe<string>;
-  plans: PricingRecord[];
+  plans: PricingTierRecord[];
 };
 
 const GradientCards = ({ header, subheader, plans }: Props) => {
-  const planInEvidence = plans.shift() as PricingRecord;
+  const planInEvidence = plans.shift() as PricingTierRecord;
   const evidencePlanFeatures = planInEvidence.planFeatures.split(', ');
 
   return (

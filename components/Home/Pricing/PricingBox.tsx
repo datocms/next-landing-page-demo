@@ -1,12 +1,12 @@
 import { primaryColor } from '@/app/i18n/settings';
-import { PricingModelTierDescriptionField } from '@/graphql/generated';
+import { PricingTierModelTierDescriptionField } from '@/graphql/generated';
 import { StructuredText } from 'react-datocms/structured-text';
 
 const PricingBox = (props: {
   price: string;
   duration: string;
   packageName: string;
-  subtitle: PricingModelTierDescriptionField;
+  subtitle: PricingTierModelTierDescriptionField;
   children: React.ReactNode;
 }) => {
   const { price, duration, packageName, subtitle, children } = props;

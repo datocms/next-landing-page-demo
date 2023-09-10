@@ -1,11 +1,11 @@
-import { PricingRecord } from '@/graphql/generated';
+import { PricingTierRecord } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
   header: string;
   subheader: Maybe<string>;
-  plans: PricingRecord[];
+  plans: PricingTierRecord[];
 };
 
 const SmallCards = ({ header, subheader, plans }: Props) => {
