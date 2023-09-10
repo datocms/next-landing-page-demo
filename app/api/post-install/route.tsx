@@ -90,7 +90,9 @@ export async function POST(request: Request) {
 
   const projectName = process.env.VERCEL_BRANCH_URL?.split('-git')[0];
   const baseUrl = (
-    projectName ? `https://${projectName}.vercel.app` : process.env.URL
+    projectName
+      ? `VERCEL_BRANCH:${process.env.VERCEL_BRANCH_URL}VERCEL_URL:${process.env.VERCEL_URL}`
+      : process.env.URL
   ) as string;
 
   try {
