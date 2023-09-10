@@ -31,9 +31,9 @@ export default async function RootLayout({
   return (
     <>
       <CustomColor
-        r={data.header?.mainColor.red || 74}
-        g={data.header?.mainColor.green || 247}
-        b={data.header?.mainColor.blue || 108}
+        r={data.layout?.mainColor.red || 74}
+        g={data.layout?.mainColor.green || 247}
+        b={data.layout?.mainColor.blue || 108}
       />
       {children}
       <ScrollToTop lng={lng} isDraft={isEnabled} />

@@ -1,27 +1,40 @@
 query Menu($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
-  header(locale: $locale, fallbackLocales: $fallbackLocale) {
+  layout(locale: $locale, fallbackLocales: $fallbackLocale) {
     logo {
       url
       responsiveImage {
         ...DatoImage_responsiveImage
       }
     }
-    pages {
-      slug
-      id
-      label
-    }
-    dropdown
-    dropdownLabel
-    dropdownItems {
-      slug
-      id
-      label
+    menu {
+      ... on MenuItemRecord {
+        id
+        title
+        _modelApiKey
+        page {
+          slug
+        }
+      }
+      ... on MenuDropdownRecord {
+        id
+        title
+        _modelApiKey
+        items {
+          ... on MenuItemRecord {
+            id
+            title
+            _modelApiKey
+            page {
+              slug
+            }
+          }
+        }
+      }
     }
     notificationStrip
-    notificationStripText
-    notificationStripUrl
-    notificationStripUrlLabel
+    notification {
+      value
+    }
   }
   _site {
     locales

@@ -17,7 +17,6 @@ type Props = {
 };
 
 const Footer = ({ data, lng }: Props) => {
-  if (!data.footer) notFound();
   return (
     <footer className="relative z-10 mx-auto flex w-full flex-col items-center justify-center bg-primary bg-opacity-5 pt-16 text-center md:text-start lg:pt-24">
       <div className="container w-full">
@@ -25,21 +24,23 @@ const Footer = ({ data, lng }: Props) => {
           <div className="w-full">
             <div className="mx- mb-12 lg:mb-16">
               <Link href={'/' + lng + '/home'} className="mb-8 inline-block">
-                {data.footer.logo && (
+                {data.layout?.footerLogo && (
                   <Image
-                    src={data.footer.logo.url}
+                    src={data.layout.footerLogo.url}
                     alt="logo"
                     className="w-full"
-                    width={data.footer.logo.width || 100}
-                    height={data.footer.logo.height || 100}
+                    width={data.layout.footerLogo.width || 100}
+                    height={data.layout.footerLogo.height || 100}
                   />
                 )}
               </Link>
               <div className="mb-9 text-base font-medium leading-relaxed text-body-color">
-                <ReactMarkdown>{data.footer.subtitle || ''}</ReactMarkdown>
+                <ReactMarkdown>
+                  {data.layout!.footerSubtitle || ''}
+                </ReactMarkdown>
               </div>
               <div className="flex items-center justify-center md:justify-start">
-                {data.footer.socialMediaLinks.map((socialMedia) => {
+                {data.layout!.socialMediaLinks.map((socialMedia) => {
                   return (
                     <a
                       href={socialMedia.url}
@@ -62,7 +63,7 @@ const Footer = ({ data, lng }: Props) => {
                   Legal
                 </h2>
                 <ul>
-                  {data.footer.links.map((link) => {
+                  {data.layout!.footerLinks.map((link) => {
                     const pageLink = link as LegalPageRecord; // The field has a "at least one" validation
                     return (
                       <li key={pageLink.id}>

@@ -1,30 +1,40 @@
-import { SiteLocale } from '@/graphql/generated';
+import { HeaderModelNotificationField, SiteLocale } from '@/graphql/generated';
+import { isLink } from 'datocms-structured-text-utils';
 import Link from 'next/link';
 import { SetStateAction } from 'react';
+import { StructuredText, renderNodeRule } from 'react-datocms/structured-text';
 
 type Props = {
-  text: string;
-  url: string | undefined | null;
-  urlLabel: string | null | undefined;
+  notification: HeaderModelNotificationField;
   lng: SiteLocale;
   setNotificationStrip: React.Dispatch<SetStateAction<boolean>>;
 };
 
 const NotificationStrip = ({
-  text,
-  url,
-  urlLabel,
+  notification,
   lng,
   setNotificationStrip,
 }: Props) => {
   return (
     <div className="bg-primary px-4 py-3 text-white">
-      <p className="text-center text-sm font-medium">
-        {text}{' '}
-        <Link href={'/' + lng + url || '#'} className="inline-block underline">
-          {urlLabel}
-        </Link>
-      </p>
+      <div className="text-center text-sm font-medium">
+        <StructuredText
+          data={notification.value}
+          customNodeRules={[
+            renderNodeRule(isLink, ({ node, children, key }) => {
+              return (
+                <Link
+                  href={'/' + lng + node.url || '#'}
+                  className="inline-block underline"
+                  key={key}
+                >
+                  {children}
+                </Link>
+              );
+            }),
+          ]}
+        />
+      </div>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

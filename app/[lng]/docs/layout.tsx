@@ -32,7 +32,7 @@ export default async function RootLayout({
 
   return (
     <div>
-      <div className="absolute z-50 hidden w-1/4 flex-col justify-between border-e bg-white lg:flex">
+      <div className="fixed z-50 hidden w-1/4 flex-col justify-between border-e bg-white lg:flex h-full">
         <div className="px-4 py-6">
           <div className="w-60 max-w-full px-4 xl:mr-12">
             <Link

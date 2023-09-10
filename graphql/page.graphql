@@ -237,7 +237,6 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
       }
       ... on AllPostsSectionRecord {
         id
-        displayOptions
         _modelApiKey
       }
       ... on RedirectSectionRecord {

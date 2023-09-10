@@ -4,7 +4,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import LanguageSelector from './LanguageSelector';
-import { MenuQuery, SiteLocale } from '@/graphql/generated';
+import {
+  LayoutModelNotificationField,
+  MenuDropdownRecord,
+  MenuItemRecord,
+  MenuQuery,
+  SiteLocale,
+} from '@/graphql/generated';
 import NotificationStrip from './NotificationStrip';
 import { Menu } from './HeaderRenderer';
 
@@ -16,35 +22,37 @@ type Props = {
 const Header = ({ lng, data }: Props) => {
   const menuData: Menu[] = [];
 
-  data.header!.pages.map((page) => {
-    menuData.push({
-      id: page.id,
-      title: page.label,
-      path: `/${page.slug}`,
-      newTab: false,
-    });
+  data.layout!.menu.map((item) => {
+    if (item._modelApiKey === 'menu_dropdown') {
+      const dropdownItem = item as MenuDropdownRecord;
+      menuData.push({
+        id: '1',
+        title: dropdownItem.title || 'Other Items',
+        newTab: false,
+        submenu: dropdownItem.items.map((item) => {
+          return {
+            id: item.id,
+            title: item.title,
+            path: `/${item.page.slug}`,
+            newTab: true,
+          };
+        }),
+      });
+    } else {
+      const menuItem = item as MenuItemRecord;
+      menuData.push({
+        id: menuItem.id,
+        title: menuItem.title,
+        path: `/${menuItem.page.slug}`,
+        newTab: false,
+      });
+    }
   });
-
-  if (data.header?.dropdown) {
-    menuData.push({
-      id: '1',
-      title: data.header.dropdownLabel || 'Other Items',
-      newTab: false,
-      submenu: data.header.dropdownItems.map((item) => {
-        return {
-          id: item.id,
-          title: item.label,
-          path: `/${item.slug}`,
-          newTab: true,
-        };
-      }),
-    });
-  }
 
   // Navbar toggle
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [notificationStrip, setNotificationStrip] = useState(
-    data.header!.notificationStrip === 'on'
+    data.layout!.notificationStrip === 'on'
   );
 
   const navbarToggleHandler = () => {
@@ -78,9 +86,9 @@ const Header = ({ lng, data }: Props) => {
     <>
       {notificationStrip && (
         <NotificationStrip
-          text={data.header!.notificationStripText || ''}
-          url={data.header!.notificationStripUrl}
-          urlLabel={data.header!.notificationStripUrlLabel}
+          notification={
+            data.layout?.notification as LayoutModelNotificationField
+          }
           lng={lng}
           setNotificationStrip={setNotificationStrip}
         />
@@ -101,9 +109,9 @@ const Header = ({ lng, data }: Props) => {
                   sticky ? 'py-5 lg:py-2' : 'py-8'
                 } `}
               >
-                {data.header?.logo.url && (
+                {data.layout?.logo.url && (
                   <Image
-                    src={data.header.logo.url}
+                    src={data.layout.logo.url}
                     alt="logo"
                     width={140}
                     height={30}
@@ -144,7 +152,7 @@ const Header = ({ lng, data }: Props) => {
                       : 'invisible top-[120%] opacity-0'
                   }`}
                 >
-                  <ul className="block lg:flex lg:space-x-12 items-center">
+                  <ul className="block items-center lg:flex lg:space-x-12">
                     {menuData.map((menuItem, index) => (
                       <li key={menuItem.id} className="group relative">
                         {menuItem.path ? (

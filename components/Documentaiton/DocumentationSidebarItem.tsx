@@ -2,6 +2,7 @@
 
 import { DocumentationPageRecord, SiteLocale } from '@/graphql/generated';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -9,6 +10,28 @@ type Props = {
   page: DocumentationPageRecord;
   lng: SiteLocale;
 };
+
+function findChildBySlug(
+  page: Maybe<DocumentationPageRecord>,
+  currentSlug: string
+): Maybe<DocumentationPageRecord> {
+  if (!page) return null;
+
+  if (page.slug === currentSlug) {
+    return page; // Found the matching page
+  }
+
+  if (page.children) {
+    for (const child of page.children) {
+      const foundChild = findChildBySlug(child, currentSlug);
+      if (foundChild) {
+        return foundChild; // Found the matching page within children
+      }
+    }
+  }
+
+  return null; // Child not found
+}
 
 const DocumentationSidebarItem = ({ page, lng }: Props) => {
   const pathname = usePathname();
@@ -48,14 +71,7 @@ const DocumentationSidebarItem = ({ page, lng }: Props) => {
     );
   }
 
-  if (
-    page.children?.find(
-      (child) =>
-        child!.slug === currentSlug ||
-        child?.children?.find((child) => child?.slug === currentSlug) //todo make this recursive later
-    )
-  )
-    isActive = true;
+  if (findChildBySlug(page, currentSlug)) isActive = true;
 
   return (
     <li>

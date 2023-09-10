@@ -1,7 +1,7 @@
 query Footer($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
-  footer(locale: $locale, fallbackLocales: $fallbackLocale) {
-    subtitle
-    logo {
+  layout(locale: $locale, fallbackLocales: $fallbackLocale) {
+    footerSubtitle
+    footerLogo {
       url
       height
       width
@@ -16,7 +16,7 @@ query Footer($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
         width
       }
     }
-    links {
+    footerLinks {
       ... on LegalPageRecord {
         id
         slug
