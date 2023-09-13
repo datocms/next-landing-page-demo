@@ -16,6 +16,7 @@ import {
   DocumentationPageQuery,
 } from '@/graphql/generated';
 import QuoteBlock from '../Blog/Post/StructuredTextBlocks/QuoteBlock';
+import { CSSProperties } from 'react';
 
 type Props = {
   data: DocumentationPageQuery;
@@ -55,7 +56,7 @@ const DocumentaitonPageRenderer = ({ data }: Props) => {
           renderNodeRule(isList, ({ children, key }) => {
             return (
               <div
-                className="text-base font-medium leading-relaxed text-gray-500 sm:text-lg sm:leading-relaxed my-4"
+                className="my-4 text-base font-medium leading-relaxed text-gray-500 sm:text-lg sm:leading-relaxed"
                 key={key}
               >
                 {children}
@@ -68,7 +69,21 @@ const DocumentaitonPageRenderer = ({ data }: Props) => {
           renderNodeRule(isCode, ({ node, key }) => {
             return (
               <div className="py-4">
-                <SyntaxHighlighter language={node.language} style={docco}>
+                <SyntaxHighlighter
+                  wrapLines={true}
+                  showLineNumbers={true}
+                  lineNumberStyle={{ display: 'none' }}
+                  lineProps={(lineNumber) => {
+                    if (!node.highlight) return { display: 'block' };
+                    let style: CSSProperties = { display: 'block' };
+                    if (node.highlight.includes(lineNumber - 1)) {
+                      style.backgroundColor = 'rgb(235, 235, 245)';
+                    }
+                    return { style };
+                  }}
+                  language={node.language}
+                  style={docco}
+                >
                   {node.code}
                 </SyntaxHighlighter>
               </div>
