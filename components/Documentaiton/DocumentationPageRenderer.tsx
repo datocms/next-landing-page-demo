@@ -53,17 +53,6 @@ const DocumentaitonPageRenderer = ({ data }: Props) => {
               </div>
             );
           }),
-          renderNodeRule(isSpan, ({ children, key, node }) => {
-            const isHighlighted = node.marks?.includes('highlight');
-            return (
-              <span
-                className={isHighlighted ? ' px-1 py-1 inline bg-primary/20 rounded-sm' : ''}
-                key={key}
-              >
-                {node.value}
-              </span>
-            );
-          }),
           renderNodeRule(isList, ({ children, key }) => {
             return (
               <ul
@@ -101,6 +90,16 @@ const DocumentaitonPageRenderer = ({ data }: Props) => {
             );
           }),
         ]}
+        renderNode={(rawTagName, props, ...children) => {
+          if (rawTagName === 'mark')
+            return (
+              <span className={'inline rounded-sm bg-primary/20 px-1 py-1'}>
+                {children}
+              </span>
+            );
+
+          return React.createElement(rawTagName, props, ...children);
+        }}
       />
     </div>
   );

@@ -28,6 +28,7 @@ import {
   SiteLocale,
 } from '@/graphql/generated';
 import { notFound } from 'next/navigation';
+import React from 'react';
 
 type Props = {
   data: PostQuery;
@@ -92,6 +93,20 @@ const Post = ({ data, lng }: Props) => {
               <div>
                 <StructuredText
                   data={data.post.content as any}
+                  renderNode={(rawTagName, props, ...children) => {
+                    if (rawTagName === 'mark')
+                      return (
+                        <span
+                          className={
+                            'inline rounded-sm bg-primary/20 px-1 py-1'
+                          }
+                        >
+                          {children}
+                        </span>
+                      );
+
+                    return React.createElement(rawTagName, props, ...children);
+                  }}
                   renderBlock={({ record }: any) => {
                     //type this
                     switch (record.__typename) {
