@@ -1,5 +1,6 @@
 import { getFallbackLocale } from '@/app/i18n/settings';
 import DocumentaitonPageRenderer from '@/components/Documentaiton/DocumentationPageRenderer';
+import RealTimeDocumentationPage from '@/components/Documentaiton/RealTimeDocumentationPage';
 import { DocumentationPageDocument, SiteLocale } from '@/graphql/generated';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
@@ -28,7 +29,20 @@ const DocumentaitonPage = async ({ params: { slug, lng } }: Params) => {
 
   if (!data || !data.documentationPage) notFound();
 
-  return <DocumentaitonPageRenderer data={data} />;
+  return (
+    <>
+      {!isEnabled && <DocumentaitonPageRenderer data={data} />}
+      {isEnabled && (
+        <RealTimeDocumentationPage
+          initialData={data}
+          locale={lng}
+          token={process.env.DATOCMS_READONLY_API_TOKEN || ''}
+          query={DocumentationPageDocument}
+          variables={{ slug, locale: lng, fallbackLocale: [fallbackLng] }}
+        />
+      )}
+    </>
+  );
 };
 
 export default DocumentaitonPage;

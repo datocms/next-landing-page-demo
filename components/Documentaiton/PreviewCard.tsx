@@ -60,10 +60,10 @@ const PreviewCard = ({ featuredSection, lng }: Props) => {
       >
         <motion.div
           variants={mainImage}
-          className="relative h-1/2 w-full overflow-hidden rounded-xl border border-slate-300 bg-slate-200/70 dark:border-slate-700 dark:bg-slate-800/50"
+          className="relative h-1/2 w-full overflow-hidden rounded-xl border bg-primary/10 border-slate-300 dark:border-slate-700 dark:bg-slate-800/50"
         >
           <div className="flex h-full w-full flex-col flex-wrap justify-center p-6">
-            <p className="whitespace-nowrap text-2xl font-black text-slate-400 dark:text-slate-500">
+            <p className="whitespace-nowrap text-2xl font-black text-slate-700 dark:text-slate-500">
               {featuredSection.title}
             </p>
             <p className=" text-md font-bold text-slate-400 dark:text-slate-500">

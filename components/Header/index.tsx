@@ -13,6 +13,7 @@ import {
 } from '@/graphql/generated';
 import NotificationStrip from './NotificationStrip';
 import { Menu } from './HeaderRenderer';
+import { isEmptyDocument } from 'datocms-structured-text-utils';
 
 type Props = {
   lng: SiteLocale;
@@ -52,7 +53,7 @@ const Header = ({ lng, data }: Props) => {
   // Navbar toggle
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [notificationStrip, setNotificationStrip] = useState(
-    data.layout!.notificationStrip === 'on'
+    !isEmptyDocument(data.layout?.notification)
   );
 
   const navbarToggleHandler = () => {

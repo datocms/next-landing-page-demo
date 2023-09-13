@@ -5,6 +5,7 @@ import transformDate from '@/utils/transformDate';
 import {
   isBlockquote,
   isHeading,
+  isLink,
   isParagraph,
 } from 'datocms-structured-text-utils';
 import {
@@ -36,7 +37,7 @@ type Props = {
 const Post = ({ data, lng }: Props) => {
   if (!data.post) notFound();
   return (
-    <section className="pb-[120px] mt-40">
+    <section className="mt-40 pb-[120px]">
       <div className="container">
         <div className="-mx-4 flex flex-wrap justify-center">
           <div className="w-full px-4 lg:w-8/12">
@@ -133,6 +134,26 @@ const Post = ({ data, lng }: Props) => {
                         return null;
                     }
                   }}
+                  renderLinkToRecord={({
+                    record,
+                    children,
+                    transformedMeta,
+                  }) => {
+                    switch (record.__typename) {
+                      case 'PostRecord':
+                        return (
+                          <Link
+                            {...transformedMeta}
+                            href={`/${lng}/posts/${record.slug}`}
+                            className="text-base font-medium leading-relaxed text-body-color underline sm:text-lg sm:leading-relaxed"
+                          >
+                            {children}
+                          </Link>
+                        );
+                      default:
+                        return null;
+                    }
+                  }}
                   renderInlineRecord={({ record }) => {
                     switch (record.__typename) {
                       case 'PostRecord':
@@ -172,6 +193,24 @@ const Post = ({ data, lng }: Props) => {
                         >
                           {children}
                         </div>
+                      );
+                    }),
+                    renderNodeRule(isLink, ({ node, children, key }) => {
+                      const attributeObject =
+                        node.meta?.reduce((acc: any, { id, value }) => {
+                          acc[id] = value;
+                          return acc;
+                        }, {}) || {};
+
+                      return (
+                        <a
+                          className="text-base font-medium leading-relaxed text-body-color underline sm:text-lg sm:leading-relaxed"
+                          href={node.url}
+                          key={key}
+                          {...attributeObject}
+                        >
+                          {children}
+                        </a>
                       );
                     }),
                     renderNodeRule(isBlockquote, ({ children, key }) => {

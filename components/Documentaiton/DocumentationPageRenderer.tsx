@@ -7,6 +7,8 @@ import {
   isBlockquote,
   isCode,
   isHeading,
+  isList,
+  isListItem,
   isParagraph,
 } from 'datocms-structured-text-utils';
 import {
@@ -43,7 +45,17 @@ const DocumentaitonPageRenderer = ({ data }: Props) => {
           renderNodeRule(isParagraph, ({ children, key }) => {
             return (
               <div
-                className="text-base font-medium leading-relaxed text-gray-500 sm:text-lg sm:leading-relaxed"
+                className="inline text-base font-medium leading-relaxed text-gray-500 sm:text-lg sm:leading-relaxed"
+                key={key}
+              >
+                {children}
+              </div>
+            );
+          }),
+          renderNodeRule(isList, ({ children, key }) => {
+            return (
+              <div
+                className="text-base font-medium leading-relaxed text-gray-500 sm:text-lg sm:leading-relaxed my-4"
                 key={key}
               >
                 {children}

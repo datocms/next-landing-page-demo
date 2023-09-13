@@ -31,7 +31,6 @@ query Menu($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
         }
       }
     }
-    notificationStrip
     notification {
       value
     }
