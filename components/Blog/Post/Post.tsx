@@ -19,6 +19,7 @@ import DateIcon from '@/components/Blog/svgs/DateIcon';
 import SingleBlog from '@/components/Blog/SingleBlog';
 import Link from 'next/link';
 import {
+  AppCtaRecord,
   CtaButtonWithImageRecord,
   ImageBlockRecord,
   NewsletterSubscriptionRecord,
@@ -30,6 +31,7 @@ import {
 import { notFound } from 'next/navigation';
 import React from 'react';
 import Highlighter from '@/components/Common/Highlighter';
+import CTAAppBlock from './StructuredTextBlocks/CTAAppBlock';
 
 type Props = {
   data: PostQuery;
@@ -96,7 +98,6 @@ const Post = ({ data, lng }: Props) => {
                   data={data.post.content as any}
                   renderNode={Highlighter}
                   renderBlock={({ record }: any) => {
-                    //type this
                     switch (record.__typename) {
                       case 'ImageBlockRecord':
                         const ImageBlockRecord = record as ImageBlockRecord;
@@ -131,6 +132,16 @@ const Post = ({ data, lng }: Props) => {
                             subtitle={CtaButtonWithImageRecord.subtitle}
                             buttonLabel={CtaButtonWithImageRecord.buttonLabel}
                             image={CtaButtonWithImageRecord.image}
+                          />
+                        );
+                      case 'AppCtaRecord':
+                        const appCtaRecord = record as AppCtaRecord;
+                        return (
+                          <CTAAppBlock
+                            title={appCtaRecord.title}
+                            text={appCtaRecord.text}
+                            googleURL={appCtaRecord.googlePlayUrl}
+                            appleURL={appCtaRecord.appstoreUrl}
                           />
                         );
                       default:
