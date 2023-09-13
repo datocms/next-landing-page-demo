@@ -8,15 +8,15 @@ import {
   isCode,
   isHeading,
   isList,
-  isListItem,
   isParagraph,
+  isSpan,
 } from 'datocms-structured-text-utils';
 import {
   DocumentationPageModelContentField,
   DocumentationPageQuery,
 } from '@/graphql/generated';
 import QuoteBlock from '../Blog/Post/StructuredTextBlocks/QuoteBlock';
-import { CSSProperties } from 'react';
+import React, { CSSProperties } from 'react';
 
 type Props = {
   data: DocumentationPageQuery;
@@ -43,24 +43,35 @@ const DocumentaitonPageRenderer = ({ data }: Props) => {
               </h3>
             );
           }),
-          renderNodeRule(isParagraph, ({ children, key }) => {
+          renderNodeRule(isParagraph, ({ children, key, node }) => {
             return (
               <div
-                className="inline text-base font-medium leading-relaxed text-gray-500 sm:text-lg sm:leading-relaxed"
+                className="py-1 text-base font-medium leading-relaxed text-gray-500 sm:text-lg sm:leading-relaxed"
                 key={key}
               >
                 {children}
               </div>
             );
           }),
+          renderNodeRule(isSpan, ({ children, key, node }) => {
+            const isHighlighted = node.marks?.includes('highlight');
+            return (
+              <span
+                className={isHighlighted ? ' px-1 py-1 inline bg-primary/20 rounded-sm' : ''}
+                key={key}
+              >
+                {node.value}
+              </span>
+            );
+          }),
           renderNodeRule(isList, ({ children, key }) => {
             return (
-              <div
-                className="my-4 text-base font-medium leading-relaxed text-gray-500 sm:text-lg sm:leading-relaxed"
+              <ul
+                className="list-disc pl-4 text-base font-medium leading-relaxed text-gray-500 sm:text-lg sm:leading-relaxed"
                 key={key}
               >
                 {children}
-              </div>
+              </ul>
             );
           }),
           renderNodeRule(isBlockquote, ({ children, key }) => {
