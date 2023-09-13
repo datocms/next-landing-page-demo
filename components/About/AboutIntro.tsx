@@ -14,6 +14,8 @@ import {
 } from 'react-datocms';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import React from 'react';
+import Highlighter from '../Common/Highlighter';
 
 type Props = {
   header: string;
@@ -152,6 +154,7 @@ const AboutIntro = ({
                   );
                 }),
               ]}
+              renderNode={Highlighter}
             />
           )}
         </motion.div>

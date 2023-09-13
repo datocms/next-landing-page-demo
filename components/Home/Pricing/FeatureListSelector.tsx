@@ -1,12 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import SectionTitle from '../../Common/SectionTitle';
-import OfferList from './OfferList';
-import PricingBox from './PricingBox';
+import { useState } from 'react';
 import { Maybe } from 'graphql/jsutils/Maybe';
-import { primaryColor } from '@/app/i18n/settings';
-import { StructuredText } from 'react-datocms/structured-text';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import { PricingTierRecord } from '@/graphql/generated';

@@ -5,6 +5,7 @@ import { Maybe } from 'graphql/jsutils/Maybe';
 import { StructuredText } from 'react-datocms/structured-text';
 import { Image as DatoImage } from 'react-datocms';
 import { useState } from 'react';
+import Highlighter from '@/components/Common/Highlighter';
 
 type Props = {
   reviews: TestimonialRecord[];
@@ -28,10 +29,10 @@ const ModernCarrousel = ({ reviews, header, subheader }: Props) => {
   const currentReview = reviews[currentIndex];
 
   return (
-    <section className="bg-white dark:bg-gray-900 py-16">
+    <section className="bg-white py-16 dark:bg-gray-900">
       <div className="relative flex">
         <div className="min-h-screen lg:w-1/3"></div>
-        <div className="hidden mt-32 h-[750px] w-3/4 rounded-xl bg-primary/10 dark:bg-gray-800 lg:block"></div>
+        <div className="mt-32 hidden h-[750px] w-3/4 rounded-xl bg-primary/10 dark:bg-gray-800 lg:block"></div>
 
         <div className="container mx-auto flex min-h-screen w-full flex-col justify-center px-6 py-10 lg:absolute lg:inset-x-0">
           <h1 className="text-2xl font-semibold capitalize text-gray-800 dark:text-white lg:text-3xl">
@@ -50,7 +51,10 @@ const ModernCarrousel = ({ reviews, header, subheader }: Props) => {
 
             <div className="mt-8 lg:mt-0 lg:px-10">
               <div className="mt-6 max-w-lg text-gray-500 dark:text-gray-400">
-                <StructuredText data={currentReview.review.value} />
+                <StructuredText
+                  data={currentReview.review.value}
+                  renderNode={Highlighter}
+                />
               </div>
 
               <h3 className="mt-6 text-lg font-medium text-primary">

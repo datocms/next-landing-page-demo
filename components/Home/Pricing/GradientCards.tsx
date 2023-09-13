@@ -1,3 +1,4 @@
+import Highlighter from '@/components/Common/Highlighter';
 import { PricingTierRecord } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { StructuredText } from 'react-datocms/structured-text';
@@ -40,6 +41,7 @@ const GradientCards = ({ header, subheader, plans }: Props) => {
                   <div className="h-24 text-indigo-100">
                     <StructuredText
                       data={planInEvidence.tierDescription.value}
+                      renderNode={Highlighter}
                     />
                   </div>
                 </div>
@@ -95,7 +97,10 @@ const GradientCards = ({ header, subheader, plans }: Props) => {
                       {plan.tierName}
                     </h3>
                     <div className="h-24 text-gray-300">
-                      <StructuredText data={plan.tierDescription.value} />
+                      <StructuredText
+                        data={plan.tierDescription.value}
+                        renderNode={Highlighter}
+                      />
                     </div>
                   </div>
 

@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { QuestionRecord } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import Highlighter from '../Common/Highlighter';
 
 const closeIcon = (
   <span className="rounded-full bg-gray-200 text-gray-400">
@@ -107,7 +108,10 @@ const FAQAccordion = ({ title, subtitle, questions }: Props) => {
                     (isOpen ? '' : ' hidden')
                   }
                 >
-                  <StructuredText data={question.answer.value} />
+                  <StructuredText
+                    data={question.answer.value}
+                    renderNode={Highlighter}
+                  />
                 </motion.div>
               </motion.div>
             );

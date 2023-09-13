@@ -5,6 +5,7 @@ import { Maybe } from 'graphql/jsutils/Maybe';
 import { StructuredText } from 'react-datocms/structured-text';
 import { Image as DatoImage } from 'react-datocms';
 import { useState } from 'react';
+import Highlighter from '@/components/Common/Highlighter';
 
 type Props = {
   reviews: TestimonialRecord[];
@@ -40,7 +41,7 @@ const MinimalCarrousel = ({ reviews, header, subheader }: Props) => {
           <span className="inline-block h-1 w-1 rounded-full bg-primary"></span>
         </div>
 
-        <div className="mx-auto mt-16 flex w-full max-w-6xl flex-row items-center text-center justify-center">
+        <div className="mx-auto mt-16 flex w-full max-w-6xl flex-row items-center justify-center text-center">
           <button
             title="left arrow"
             className="rounded-full border p-2 text-gray-800 transition-colors duration-300 hover:bg-gray-100 rtl:-scale-x-100 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800 lg:block"
@@ -62,7 +63,10 @@ const MinimalCarrousel = ({ reviews, header, subheader }: Props) => {
             </svg>
           </button>
           <div className="flex items-center text-center text-gray-500 lg:mx-8">
-            <StructuredText data={currentReview.review.value} />
+            <StructuredText
+              data={currentReview.review.value}
+              renderNode={Highlighter}
+            />
           </div>
           <button
             title="right arrow"

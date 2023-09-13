@@ -17,6 +17,7 @@ import {
 } from '@/graphql/generated';
 import QuoteBlock from '../Blog/Post/StructuredTextBlocks/QuoteBlock';
 import React, { CSSProperties } from 'react';
+import Highlighter from '../Common/Highlighter';
 
 type Props = {
   data: DocumentationPageQuery;
@@ -90,16 +91,7 @@ const DocumentaitonPageRenderer = ({ data }: Props) => {
             );
           }),
         ]}
-        renderNode={(rawTagName, props, ...children) => {
-          if (rawTagName === 'mark')
-            return (
-              <span className={'inline rounded-sm bg-primary/20 px-1 py-1'}>
-                {children}
-              </span>
-            );
-
-          return React.createElement(rawTagName, props, ...children);
-        }}
+        renderNode={Highlighter}
       />
     </div>
   );

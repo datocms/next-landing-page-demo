@@ -1,3 +1,4 @@
+import Highlighter from '@/components/Common/Highlighter';
 import {
   LegalPageModelContentField,
   LegalQuery,
@@ -25,6 +26,7 @@ const Legal = ({ data, lng }: Props) => {
                   data={
                     (data.legalPage.content as LegalPageModelContentField).value
                   }
+                  renderNode={Highlighter}
                   customNodeRules={[
                     renderNodeRule(isHeading, ({ children, key }) => {
                       return (

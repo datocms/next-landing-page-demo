@@ -5,6 +5,7 @@ import { Maybe } from 'graphql/jsutils/Maybe';
 import { StructuredText } from 'react-datocms/structured-text';
 import { Image as DatoImage } from 'react-datocms';
 import { useState } from 'react';
+import Highlighter from '@/components/Common/Highlighter';
 
 type Props = {
   reviews: TestimonialRecord[];
@@ -28,13 +29,13 @@ const Carrousel = ({ reviews, header, subheader }: Props) => {
   const currentReview = reviews[currentIndex];
 
   return (
-    <section className="bg-white dark:bg-gray-900 mb-24">
+    <section className="mb-24 bg-white dark:bg-gray-900">
       <div className="mx-auto max-w-6xl px-6 py-10">
         <main className="relative z-20 mt-8 w-full md:flex md:items-center xl:mt-12">
           <div className="absolute -z-10 w-full rounded-2xl bg-primary/70 md:h-96"></div>
 
           <div className="w-full rounded-2xl bg-primary p-6 md:flex md:items-center md:justify-evenly md:bg-transparent md:p-0 lg:px-12">
-            <div className="relative h-24 w-24 overflow-hidden rounded-full object-cover object-center shadow-md md:mx-6 md:h-[32rem] md:w-80 md:rounded-2xl lg:h-[36rem] lg:w-[24rem] flex-shrink-0">
+            <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-full object-cover object-center shadow-md md:mx-6 md:h-[32rem] md:w-80 md:rounded-2xl lg:h-[36rem] lg:w-[24rem]">
               <DatoImage
                 layout="fill"
                 objectFit="cover"
@@ -52,7 +53,10 @@ const Carrousel = ({ reviews, header, subheader }: Props) => {
               </div>
 
               <div className="mt-4 text-lg leading-relaxed text-white md:text-xl">
-                <StructuredText data={currentReview.review.value} />
+                <StructuredText
+                  data={currentReview.review.value}
+                  renderNode={Highlighter}
+                />
               </div>
 
               <div className="mt-6 flex items-center justify-between md:justify-start">

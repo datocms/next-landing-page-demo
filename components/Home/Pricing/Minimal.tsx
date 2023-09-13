@@ -9,6 +9,7 @@ import { primaryColor } from '@/app/i18n/settings';
 import { StructuredText } from 'react-datocms/structured-text';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import { PricingTierRecord } from '@/graphql/generated';
+import Highlighter from '@/components/Common/Highlighter';
 
 type Props = {
   header: string;
@@ -75,7 +76,10 @@ const Minimal = ({ header, subheader, plans }: Props) => {
             </h4>
 
             <div className="mt-4 h-24 text-gray-300">
-              <StructuredText data={planInEvidence.tierDescription.value} />
+              <StructuredText
+                data={planInEvidence.tierDescription.value}
+                renderNode={Highlighter}
+              />
             </div>
 
             <div className="mt-8 h-80 space-y-8">
@@ -123,7 +127,10 @@ const Minimal = ({ header, subheader, plans }: Props) => {
                 </h4>
 
                 <div className="mt-4 h-24 text-gray-500 dark:text-gray-300">
-                  <StructuredText data={plan.tierDescription.value} />
+                  <StructuredText
+                    data={plan.tierDescription.value}
+                    renderNode={Highlighter}
+                  />
                 </div>
 
                 <div className="mt-8 h-80 space-y-8">

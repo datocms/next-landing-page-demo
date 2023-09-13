@@ -2,6 +2,7 @@ import { QuestionRecord } from '@/graphql/generated';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { StructuredText } from 'react-datocms/structured-text';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import Highlighter from '../Common/Highlighter';
 
 type Props = {
   title: Maybe<string>;
@@ -47,7 +48,10 @@ const FAQGrid = ({ title, subtitle, questions }: Props) => {
                   </h1>
 
                   <div className="mt-2 text-sm text-gray-500 dark:text-gray-300">
-                    <StructuredText data={question.answer.value} />
+                    <StructuredText
+                      data={question.answer.value}
+                      renderNode={Highlighter}
+                    />
                   </div>
                 </div>
               </div>

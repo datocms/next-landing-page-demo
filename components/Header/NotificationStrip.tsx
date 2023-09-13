@@ -3,6 +3,7 @@ import { isLink } from 'datocms-structured-text-utils';
 import Link from 'next/link';
 import { SetStateAction } from 'react';
 import { StructuredText, renderNodeRule } from 'react-datocms/structured-text';
+import Highlighter from '../Common/Highlighter';
 
 type Props = {
   notification: LayoutModelNotificationField;
@@ -20,6 +21,7 @@ const NotificationStrip = ({
       <div className="text-center text-sm font-medium">
         <StructuredText
           data={notification.value}
+          renderNode={Highlighter}
           customNodeRules={[
             renderNodeRule(isLink, ({ node, children, key }) => {
               return (

@@ -1,4 +1,5 @@
 import { getFallbackLocale } from '@/app/i18n/settings';
+import Highlighter from '@/components/Common/Highlighter';
 import DocumentaitonPageRenderer from '@/components/Documentaiton/DocumentationPageRenderer';
 import {
   ChangeLogModelContentField,
@@ -11,6 +12,7 @@ import transformDate from '@/utils/transformDate';
 import { isHeading, isParagraph } from 'datocms-structured-text-utils';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
+import React from 'react';
 import { StructuredText, renderNodeRule } from 'react-datocms/structured-text';
 
 type Params = {
@@ -71,6 +73,7 @@ const ChangelogPage = async ({ params: { slug, lng } }: Params) => {
                     );
                   }),
                 ]}
+                renderNode={Highlighter}
               />
             </div>
           </div>

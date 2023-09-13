@@ -1,3 +1,4 @@
+import Highlighter from '@/components/Common/Highlighter';
 import { TestimonialRecord } from '@/graphql/generated';
 import { Image as DatoImage } from 'react-datocms';
 import { StructuredText } from 'react-datocms/structured-text';
@@ -29,7 +30,7 @@ const SingleTestimonial = ({ testimonial }: Props) => {
       <div className="flex h-full flex-col items-center justify-center rounded-md bg-white p-8 shadow-one dark:bg-[#1D2144] lg:items-start lg:px-5 xl:px-8">
         <div className="mb-5 flex items-center space-x-1">{ratingIcons}</div>
         <div className="mb-8 h-36 border-b border-body-color border-opacity-10 pb-8 text-base leading-relaxed text-body-color dark:border-white dark:border-opacity-10 dark:text-white">
-          <StructuredText data={review.value} />
+          <StructuredText data={review.value} renderNode={Highlighter} />
         </div>
         <div className="flex w-96 items-center px-16 md:w-full md:px-4 lg:px-0">
           <div className="relative mr-4 h-[50px] w-full max-w-[50px] overflow-hidden rounded-full">
