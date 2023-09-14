@@ -171,18 +171,15 @@ const Post = ({ data, lng }: Props) => {
                   renderInlineRecord={({ record }) => {
                     switch (record.__typename) {
                       case 'PostRecord':
+                        const PostRecord = record as PostRecord;
                         return (
-                          <div
-                            key={(data.post as PostRecord).id}
-                            className="mt-8 flex w-full items-center justify-center"
+                          <Link
+                            key={PostRecord.id}
+                            href={`/${lng}/posts/${record.slug}`}
+                            className="underline"
                           >
-                            <div className="md:w-[55%]">
-                              <SingleBlog
-                                blog={record as PostRecord}
-                                locale={lng}
-                              />
-                            </div>
-                          </div>
+                            {PostRecord.title}
+                          </Link>
                         );
                       default:
                         return null;
