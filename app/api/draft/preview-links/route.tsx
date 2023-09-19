@@ -30,12 +30,14 @@ const generatePreviewUrl = ({
       return `/${locale}/docs`;
     case 'documentation_page':
       return `/${locale}/docs/${item.attributes.slug}`;
-    case 'testimonial':
+    case 'layout':
       return `/${locale}/home`;
     case 'footer':
       return `/${locale}/home`;
-    default:
-      return '/en/404';
+    case 'pricing_tier':
+      return `/${locale}/pricing`;
+    case 'change_log':
+      return `/${locale}/changelog`;
   }
 };
 
@@ -76,16 +78,21 @@ export async function POST(request: NextRequest) {
     projectName ? `https://${projectName}.vercel.app` : process.env.URL
   ) as string;
 
-  const previewLinks = [
-    {
+  const isPublished = parsedRequest.item.meta.status === 'published';
+
+  const previewLinks = [];
+
+  if (parsedRequest.item.meta.status !== 'draft')
+    previewLinks.push({
       label: 'Published version',
       url: `${baseUrl}/api/draft/disable?url=${url}`,
-    },
-    {
+    });
+
+  if (parsedRequest.item.meta.status !== 'published')
+    previewLinks.push({
       label: 'Draft version',
       url: `${baseUrl}/api/draft/enable?url=${url}&token=${token}`,
-    },
-  ];
+    });
 
   return new Response(JSON.stringify({ previewLinks }), {
     status: 200,
