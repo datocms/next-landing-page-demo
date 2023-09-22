@@ -8,7 +8,7 @@ It uses GraphQL CodeGen to type all of the requests comming from Dato automatica
 
 Have a look at the end result live:
 
-### [https://company-website-demo.vercel.app/](https://company-website-demo.vercel.app/)
+### [https://company-website-demo-preview.vercel.app/](https://company-website-demo-preview.vercel.app/)
 
 ## How to use
 
