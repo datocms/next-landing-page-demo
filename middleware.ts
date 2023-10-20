@@ -47,7 +47,7 @@ export async function middleware(request: NextRequest) {
 
   //go to pathname in browser language if locale is missing but pathname is set
   if (pathnameIsMissingLocale) {
-    const locale = getLocale(request, locales);
+    const locale = await getLocale(request, locales);
 
     // e.g. incoming request is /products
     // The new URL is now /en/products
