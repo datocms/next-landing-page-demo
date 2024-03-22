@@ -1,7 +1,7 @@
 import { getFallbackLocale } from '@/app/i18n/settings';
 import AuthorPosts from '@/components/Blog/AuthorPosts';
 import RealTimeAuthorPosts from '@/components/Blog/RealTime/RealTimeAuthorPosts';
-import { AuthorDocument, SiteLocale } from '@/graphql/generated';
+import { AuthorDocument, SiteLocale } from '@/graphql/types/graphql';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';

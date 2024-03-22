@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
-import { DocumentationPageRecord, SiteLocale } from '@/graphql/generated';
+import { DocumentationPageRecord, SiteLocale } from '@/graphql/types/graphql';
 
 type Props = {
   featuredSection: DocumentationPageRecord;

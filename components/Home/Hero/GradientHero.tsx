@@ -1,6 +1,6 @@
 'use client';
 
-import { ButtonRecord } from '@/graphql/generated';
+import { ButtonRecord } from '@/graphql/types/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { delay, motion } from 'framer-motion';

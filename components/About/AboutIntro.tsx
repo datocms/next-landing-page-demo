@@ -3,7 +3,7 @@
 import {
   AboutIntroModelIntroductionTextField,
   ImageFileField,
-} from '@/graphql/generated';
+} from '@/graphql/types/graphql';
 import { isHeading, isParagraph } from 'datocms-structured-text-utils';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import {

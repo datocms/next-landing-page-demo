@@ -1,6 +1,6 @@
 'use client';
 
-import { SiteLocale } from '@/graphql/generated';
+import { SiteLocale } from '@/graphql/types/graphql';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';

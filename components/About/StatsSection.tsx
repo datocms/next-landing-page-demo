@@ -1,5 +1,5 @@
 import SvgRenderer from '../Common/SvgRenderer';
-import { StatisticRecord } from '@/graphql/generated';
+import { StatisticRecord } from '@/graphql/types/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 

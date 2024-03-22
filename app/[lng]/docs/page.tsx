@@ -6,7 +6,7 @@ import {
   DocumentationHomePageDocument,
   DocumentationPageRecord,
   SiteLocale,
-} from '@/graphql/generated';
+} from '@/graphql/types/graphql';
 import { notFound } from 'next/navigation';
 import FeaturedSection from '@/components/Documentaiton/FeaturedSection';
 

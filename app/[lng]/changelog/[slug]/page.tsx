@@ -6,7 +6,7 @@ import {
   ChangelogDocument,
   DocumentationPageDocument,
   SiteLocale,
-} from '@/graphql/generated';
+} from '@/graphql/types/graphql';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import transformDate from '@/utils/transformDate';
 import { isHeading, isParagraph } from 'datocms-structured-text-utils';

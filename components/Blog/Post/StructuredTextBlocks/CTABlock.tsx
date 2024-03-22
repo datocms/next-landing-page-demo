@@ -1,4 +1,4 @@
-import { ImageFileField } from '@/graphql/generated';
+import { ImageFileField } from '@/graphql/types/graphql';
 import { Image as DatoImage } from 'react-datocms';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 

@@ -1,4 +1,4 @@
-import { FeatureRecord } from '@/graphql/generated';
+import { FeatureRecord } from '@/graphql/types/graphql';
 import SectionTitle from '../../Common/SectionTitle';
 import SingleFeature from './SingleFeature';
 import { Maybe } from 'graphql/jsutils/Maybe';

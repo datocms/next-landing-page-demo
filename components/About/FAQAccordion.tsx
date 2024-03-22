@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { StructuredText } from 'react-datocms/structured-text';
 import { motion } from 'framer-motion';
-import { QuestionRecord } from '@/graphql/generated';
+import { QuestionRecord } from '@/graphql/types/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import Highlighter from '../Common/Highlighter';

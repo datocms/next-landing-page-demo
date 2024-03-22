@@ -1,4 +1,4 @@
-import { AuthorQuery, PostRecord, SiteLocale } from '@/graphql/generated';
+import { AuthorQuery, PostRecord, SiteLocale } from '@/graphql/types/graphql';
 import SingleBlog from './SingleBlog';
 import { Image as DatoImage } from 'react-datocms';
 import { notFound } from 'next/navigation';

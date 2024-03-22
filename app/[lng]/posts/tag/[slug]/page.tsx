@@ -1,7 +1,7 @@
 import { getFallbackLocale } from '@/app/i18n/settings';
 import RealTimeTagPosts from '@/components/Blog/RealTime/RealTimeTagPosts';
 import TagPosts from '@/components/Blog/TagPosts';
-import { SiteLocale, TagDocument } from '@/graphql/generated';
+import { SiteLocale, TagDocument } from '@/graphql/types/graphql';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
 

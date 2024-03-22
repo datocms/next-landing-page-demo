@@ -5,7 +5,7 @@ import {
   DocumentationPageQuery,
   DocumentationPageQueryVariables,
   SiteLocale,
-} from '@/graphql/generated';
+} from '@/graphql/types/graphql';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import DocumentaitonPageRenderer from './DocumentationPageRenderer';
 

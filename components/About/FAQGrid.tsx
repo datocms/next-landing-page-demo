@@ -1,4 +1,4 @@
-import { QuestionRecord } from '@/graphql/generated';
+import { QuestionRecord } from '@/graphql/types/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { StructuredText } from 'react-datocms/structured-text';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';

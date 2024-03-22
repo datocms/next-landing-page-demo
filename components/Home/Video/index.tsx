@@ -5,7 +5,7 @@ import SectionTitle from '../../Common/SectionTitle';
 
 import ModalVideo from 'react-modal-video';
 import { Maybe } from 'graphql/jsutils/Maybe';
-import { ImageFileField } from '@/graphql/generated';
+import { ImageFileField } from '@/graphql/types/graphql';
 import { Image as DatoImage } from 'react-datocms';
 import Image from 'next/image';
 

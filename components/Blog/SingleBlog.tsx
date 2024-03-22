@@ -1,4 +1,4 @@
-import { PostRecord, ResponsiveImage, SiteLocale } from '@/graphql/generated';
+import { PostRecord, ResponsiveImage, SiteLocale } from '@/graphql/types/graphql';
 import transformDate from '@/utils/transformDate';
 import Link from 'next/link';
 import { Image as DatoImage } from 'react-datocms';

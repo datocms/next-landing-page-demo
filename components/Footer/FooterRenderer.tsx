@@ -6,7 +6,7 @@ import {
   FooterQuery,
   LegalPageRecord,
   SiteLocale,
-} from '@/graphql/generated';
+} from '@/graphql/types/graphql';
 import { notFound } from 'next/navigation';
 import { primaryColor } from '@/app/i18n/settings';
 import ReactMarkdown from 'react-markdown';

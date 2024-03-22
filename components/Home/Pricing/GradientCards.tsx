@@ -1,5 +1,5 @@
 import Highlighter from '@/components/Common/Highlighter';
-import { PricingTierRecord } from '@/graphql/generated';
+import { PricingTierRecord } from '@/graphql/types/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { StructuredText } from 'react-datocms/structured-text';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';

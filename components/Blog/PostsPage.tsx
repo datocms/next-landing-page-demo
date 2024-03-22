@@ -1,6 +1,6 @@
 import PageIndicatorList from '@/components/Blog/PageIndicatorList';
 import SingleBlog from '@/components/Blog/SingleBlog';
-import { PostRecord, PostsQuery, SiteLocale } from '@/graphql/generated';
+import { PostRecord, PostsQuery, SiteLocale } from '@/graphql/types/graphql';
 
 type Props = {
   data: PostsQuery;

@@ -1,4 +1,4 @@
-import { LayoutModelNotificationField, SiteLocale } from '@/graphql/generated';
+import { LayoutModelNotificationField, SiteLocale } from '@/graphql/types/graphql';
 import { isLink } from 'datocms-structured-text-utils';
 import Link from 'next/link';
 import { SetStateAction } from 'react';

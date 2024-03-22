@@ -1,4 +1,4 @@
-import { PostRecord, SiteLocale, TagQuery } from '@/graphql/generated';
+import { PostRecord, SiteLocale, TagQuery } from '@/graphql/types/graphql';
 import SingleBlog from './SingleBlog';
 import { notFound } from 'next/navigation';
 

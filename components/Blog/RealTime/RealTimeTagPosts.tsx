@@ -2,7 +2,7 @@
 
 import { useQuerySubscription } from 'react-datocms/use-query-subscription';
 import TagPosts from '../TagPosts';
-import { SiteLocale, TagQuery, TagQueryVariables } from '@/graphql/generated';
+import { SiteLocale, TagQuery, TagQueryVariables } from '@/graphql/types/graphql';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 
 export default function RealTimeTagPosts({

@@ -1,4 +1,4 @@
-import { TestimonialRecord } from '@/graphql/generated';
+import { TestimonialRecord } from '@/graphql/types/graphql';
 import SectionTitle from '../../Common/SectionTitle';
 import SingleTestimonial from './SingleTestimonial';
 import { Maybe } from 'graphql/jsutils/Maybe';

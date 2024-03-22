@@ -1,6 +1,6 @@
 'use client';
 
-import { PostRecord, SiteLocale } from '@/graphql/generated';
+import { PostRecord, SiteLocale } from '@/graphql/types/graphql';
 import transformDate from '@/utils/transformDate';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';

@@ -5,7 +5,7 @@ import {
   isListItem,
   isList,
 } from 'datocms-structured-text-utils';
-import { DetailSectionModelDetailsField, FileField } from '@/graphql/generated';
+import { DetailSectionModelDetailsField, FileField } from '@/graphql/types/graphql';
 import { Image as DatoImage } from 'react-datocms';
 import Highlighter from '@/components/Common/Highlighter';
 

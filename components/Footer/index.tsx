@@ -2,7 +2,7 @@ import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
 import FooterRenderer from './FooterRenderer';
 import RealTimeFooter from './RealTimeFooter';
-import { FooterDocument, SiteLocale } from '@/graphql/generated';
+import { FooterDocument, SiteLocale } from '@/graphql/types/graphql';
 import { getFallbackLocale } from '@/app/i18n/settings';
 
 type Props = {

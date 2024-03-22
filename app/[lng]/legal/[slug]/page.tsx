@@ -1,7 +1,7 @@
 import { getFallbackLocale } from '@/app/i18n/settings';
 import Legal from '@/components/Footer/Legal/Legal';
 import RealTimeLegal from '@/components/Footer/Legal/RealTimeLegal';
-import { LegalDocument, SiteLocale } from '@/graphql/generated';
+import { LegalDocument, SiteLocale } from '@/graphql/types/graphql';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
 

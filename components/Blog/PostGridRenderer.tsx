@@ -2,7 +2,7 @@ import {
   CollectionMetadata,
   PostRecord,
   SiteLocale,
-} from '@/graphql/generated';
+} from '@/graphql/types/graphql';
 import PageIndicatorList from './PageIndicatorList';
 import SingleBlog from './SingleBlog';
 

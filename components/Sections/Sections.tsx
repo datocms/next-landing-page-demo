@@ -32,7 +32,7 @@ import {
   StatsSectionRecord,
   TeamSectionRecord,
   VideoSectionRecord,
-} from '@/graphql/generated';
+} from '@/graphql/types/graphql';
 import GradientHero from '../Home/Hero/GradientHero';
 import FeatureCards from '../Home/Features/FeatureCards';
 import PostGridRenderer from '../Blog/PostGridRenderer';

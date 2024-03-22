@@ -1,4 +1,4 @@
-import { MenuDocument, SiteLocale } from '@/graphql/generated';
+import { MenuDocument, SiteLocale } from '@/graphql/types/graphql';
 import Header from '.';
 import { getFallbackLocale } from '@/app/i18n/settings';
 import queryDatoCMS from '@/utils/queryDatoCMS';

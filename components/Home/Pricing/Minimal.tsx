@@ -8,7 +8,7 @@ import { Maybe } from 'graphql/jsutils/Maybe';
 import { primaryColor } from '@/app/i18n/settings';
 import { StructuredText } from 'react-datocms/structured-text';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
-import { PricingTierRecord } from '@/graphql/generated';
+import { PricingTierRecord } from '@/graphql/types/graphql';
 import Highlighter from '@/components/Common/Highlighter';
 
 type Props = {

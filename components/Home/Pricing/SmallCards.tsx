@@ -1,4 +1,4 @@
-import { PricingTierRecord } from '@/graphql/generated';
+import { PricingTierRecord } from '@/graphql/types/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 

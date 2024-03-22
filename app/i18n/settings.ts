@@ -1,4 +1,4 @@
-import { LocalesDocument, SiteLocale } from '@/graphql/generated';
+import { LocalesDocument } from '@/graphql/types/graphql';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 
 export default async function getAvailableLocales() {

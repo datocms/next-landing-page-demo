@@ -27,7 +27,7 @@ import {
   PostRecord,
   ResponsiveImage,
   SiteLocale,
-} from '@/graphql/generated';
+} from '@/graphql/types/graphql';
 import { notFound } from 'next/navigation';
 import React from 'react';
 import Highlighter from '@/components/Common/Highlighter';

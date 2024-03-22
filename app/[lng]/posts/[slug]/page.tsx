@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { draftMode } from 'next/headers';
 import Post from '@/components/Blog/Post/Post';
 import RealTimePost from '@/components/Blog/RealTime/RealTimePost';
-import { PostDocument, SiteLocale } from '@/graphql/generated';
+import { PostDocument, SiteLocale } from '@/graphql/types/graphql';
 
 type Params = {
   params: {

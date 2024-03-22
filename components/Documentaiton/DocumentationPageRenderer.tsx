@@ -14,7 +14,7 @@ import {
 import {
   DocumentationPageModelContentField,
   DocumentationPageQuery,
-} from '@/graphql/generated';
+} from '@/graphql/types/graphql';
 import QuoteBlock from '../Blog/Post/StructuredTextBlocks/QuoteBlock';
 import React, { CSSProperties } from 'react';
 import Highlighter from '../Common/Highlighter';

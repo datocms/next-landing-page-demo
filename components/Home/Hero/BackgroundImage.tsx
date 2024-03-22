@@ -1,4 +1,4 @@
-import { ButtonRecord, FileField } from '@/graphql/generated';
+import { ButtonRecord, FileField } from '@/graphql/types/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 

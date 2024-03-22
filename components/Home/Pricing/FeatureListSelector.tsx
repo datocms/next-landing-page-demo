@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
-import { PricingTierRecord } from '@/graphql/generated';
+import { PricingTierRecord } from '@/graphql/types/graphql';
 
 type Props = {
   header: string;

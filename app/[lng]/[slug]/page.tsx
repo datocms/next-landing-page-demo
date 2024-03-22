@@ -8,7 +8,7 @@ import {
   PageModelSectionsField,
   PostRecord,
   SiteLocale,
-} from '@/graphql/generated';
+} from '@/graphql/types/graphql';
 import { notFound } from 'next/navigation';
 import { getFallbackLocale } from '@/app/i18n/settings';
 

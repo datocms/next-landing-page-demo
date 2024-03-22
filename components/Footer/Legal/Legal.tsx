@@ -3,7 +3,7 @@ import {
   LegalPageModelContentField,
   LegalQuery,
   SiteLocale,
-} from '@/graphql/generated';
+} from '@/graphql/types/graphql';
 import { isHeading, isParagraph } from 'datocms-structured-text-utils';
 import { notFound } from 'next/navigation';
 import { StructuredText, renderNodeRule } from 'react-datocms';

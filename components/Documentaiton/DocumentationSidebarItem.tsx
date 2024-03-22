@@ -1,6 +1,6 @@
 'use client';
 
-import { DocumentationPageRecord, SiteLocale } from '@/graphql/generated';
+import { DocumentationPageRecord, SiteLocale } from '@/graphql/types/graphql';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';

@@ -1,7 +1,7 @@
 'use client';
 
 import { primaryColor } from '@/app/i18n/settings';
-import { ButtonRecord } from '@/graphql/generated';
+import { ButtonRecord } from '@/graphql/types/graphql';
 import { useScroll, useTransform, motion } from 'framer-motion';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';

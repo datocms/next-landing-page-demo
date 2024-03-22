@@ -1,4 +1,4 @@
-import { SiteLocale } from '@/graphql/generated';
+import { SiteLocale } from '@/graphql/types/graphql';
 
 type Props = {
   postCount: number;

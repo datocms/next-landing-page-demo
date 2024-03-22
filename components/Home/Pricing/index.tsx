@@ -6,7 +6,7 @@ import OfferList from './OfferList';
 import PricingBox from './PricingBox';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import { primaryColor } from '@/app/i18n/settings';
-import { PricingTierRecord } from '@/graphql/generated';
+import { PricingTierRecord } from '@/graphql/types/graphql';
 
 type Props = {
   header: string;

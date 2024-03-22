@@ -1,7 +1,7 @@
 import { getFallbackLocale } from '@/app/i18n/settings';
 import DocumentaitonPageRenderer from '@/components/Documentaiton/DocumentationPageRenderer';
 import RealTimeDocumentationPage from '@/components/Documentaiton/RealTimeDocumentationPage';
-import { DocumentationPageDocument, SiteLocale } from '@/graphql/generated';
+import { DocumentationPageDocument, SiteLocale } from '@/graphql/types/graphql';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';

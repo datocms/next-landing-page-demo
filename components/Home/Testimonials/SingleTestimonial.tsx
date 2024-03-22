@@ -1,5 +1,5 @@
 import Highlighter from '@/components/Common/Highlighter';
-import { TestimonialRecord } from '@/graphql/generated';
+import { TestimonialRecord } from '@/graphql/types/graphql';
 import { Image as DatoImage } from 'react-datocms';
 import { StructuredText } from 'react-datocms/structured-text';
 const starIcon = (

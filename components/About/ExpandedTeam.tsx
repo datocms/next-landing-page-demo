@@ -1,4 +1,4 @@
-import { AuthorRecord, SiteLocale } from '@/graphql/generated';
+import { AuthorRecord, SiteLocale } from '@/graphql/types/graphql';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { Image as DatoImage } from 'react-datocms';

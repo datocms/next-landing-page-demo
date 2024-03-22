@@ -4,7 +4,7 @@ import {
   DocumentationPageRecord,
   DocumentationSidebarDocument,
   SiteLocale,
-} from '@/graphql/generated';
+} from '@/graphql/types/graphql';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
 import Image from 'next/image';
