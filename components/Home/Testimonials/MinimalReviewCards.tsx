@@ -1,9 +1,10 @@
-import { TestimonialRecord } from '@/graphql/types/graphql';
-import { Maybe } from 'graphql/jsutils/Maybe';
-import { StructuredText } from 'react-datocms/structured-text';
-import { Image as DatoImage } from 'react-datocms';
-import { useState } from 'react';
-import Highlighter from '@/components/Common/Highlighter';
+import { TestimonialRecord } from "@/graphql/types/graphql";
+import { Maybe } from "graphql/jsutils/Maybe";
+import { StructuredText as StructuredTextField } from "react-datocms/structured-text";
+import { Image as DatoImage } from "react-datocms";
+import { useState } from "react";
+import Highlighter from "@/components/Common/Highlighter";
+import { Record, StructuredText } from "datocms-structured-text-utils";
 
 type Props = {
   reviews: TestimonialRecord[];
@@ -27,8 +28,8 @@ const MinimalReviewCards = ({ reviews, header, subheader }: Props) => {
                 className="flex flex-col items-center justify-between gap-4 rounded-lg bg-primary/80 px-8 py-6 md:gap-6"
               >
                 <div className="max-w-md text-center text-white lg:text-lg">
-                  <StructuredText
-                    data={review.review.value}
+                  <StructuredTextField
+                    data={review.review.value as StructuredText<Record, Record>}
                     renderNode={Highlighter}
                   />
                 </div>

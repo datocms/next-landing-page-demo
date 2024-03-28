@@ -1,12 +1,17 @@
-import Highlighter from '@/components/Common/Highlighter';
+import Highlighter from "@/components/Common/Highlighter";
 import {
   LegalPageModelContentField,
   LegalQuery,
   SiteLocale,
-} from '@/graphql/types/graphql';
-import { isHeading, isParagraph } from 'datocms-structured-text-utils';
-import { notFound } from 'next/navigation';
-import { StructuredText, renderNodeRule } from 'react-datocms';
+} from "@/graphql/types/graphql";
+import {
+  Record,
+  StructuredText,
+  isHeading,
+  isParagraph,
+} from "datocms-structured-text-utils";
+import { notFound } from "next/navigation";
+import { StructuredText as StructuredTextField, renderNodeRule } from "react-datocms";
 
 type Props = {
   data: LegalQuery;
@@ -22,9 +27,12 @@ const Legal = ({ data, lng }: Props) => {
           <div className="w-full px-4 lg:w-8/12">
             <div>
               <div>
-                <StructuredText
+                <StructuredTextField
                   data={
-                    (data.legalPage.content as LegalPageModelContentField).value
+                    data.legalPage.content.value as StructuredText<
+                      Record,
+                      Record
+                    >
                   }
                   renderNode={Highlighter}
                   customNodeRules={[

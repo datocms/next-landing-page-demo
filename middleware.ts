@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import getAvailableLocales, { getFallbackLocale } from './app/i18n/settings';
-import { match } from '@formatjs/intl-localematcher';
-import Negotiator from 'negotiator';
-import { SiteLocale } from './graphql/generated';
+import { NextRequest, NextResponse } from "next/server";
+import getAvailableLocales, { getFallbackLocale } from "./app/i18n/settings";
+import { match } from "@formatjs/intl-localematcher";
+import Negotiator from "negotiator";
+import { SiteLocale } from "./graphql/types/graphql";
 
 async function getLocale(
   request: Request,
@@ -10,9 +10,9 @@ async function getLocale(
 ): Promise<string> {
   const fallbackLng = await getFallbackLocale();
   const headers = new Headers(request.headers);
-  const acceptLanguage = headers.get('accept-language');
+  const acceptLanguage = headers.get("accept-language");
   if (acceptLanguage) {
-    headers.set('accept-language', acceptLanguage.replaceAll('_', '-'));
+    headers.set("accept-language", acceptLanguage.replaceAll("_", "-"));
   }
 
   const headersObject = Object.fromEntries(headers.entries());
@@ -30,18 +30,18 @@ export async function middleware(request: NextRequest) {
   );
 
   //go to home in browser language if pathname & locale is missing
-  if (pathname === '/') {
+  if (pathname === "/") {
     const locale = await getLocale(request, locales);
     return NextResponse.redirect(new URL(`/${locale}/home`, request.url));
   }
 
   //go to the specific locale home if there is no pathname but the locale is set
   if (
-    pathname.split('/').length === 2 &&
-    locales.includes(pathname.split('/')[1] as SiteLocale)
+    pathname.split("/").length === 2 &&
+    locales.includes(pathname.split("/")[1] as SiteLocale)
   ) {
     return NextResponse.redirect(
-      new URL(`/${pathname.split('/')[1]}/home`, request.url)
+      new URL(`/${pathname.split("/")[1]}/home`, request.url)
     );
   }
 
@@ -58,5 +58,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!.*\\.|_next|api\\/).*)'],
+  matcher: ["/((?!.*\\.|_next|api\\/).*)"],
 };

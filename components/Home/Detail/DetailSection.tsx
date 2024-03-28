@@ -1,13 +1,21 @@
-import { StructuredText, renderNodeRule } from 'react-datocms/structured-text';
+import {
+  StructuredText as StructuredTextField,
+  renderNodeRule,
+} from "react-datocms/structured-text";
 import {
   isHeading,
   isParagraph,
   isListItem,
   isList,
-} from 'datocms-structured-text-utils';
-import { DetailSectionModelDetailsField, FileField } from '@/graphql/types/graphql';
-import { Image as DatoImage } from 'react-datocms';
-import Highlighter from '@/components/Common/Highlighter';
+  StructuredText,
+  Record,
+} from "datocms-structured-text-utils";
+import {
+  DetailSectionModelDetailsField,
+  FileField,
+} from "@/graphql/types/graphql";
+import { Image as DatoImage } from "react-datocms";
+import Highlighter from "@/components/Common/Highlighter";
 
 const checkIcon = (
   <svg width="16" height="13" viewBox="0 0 16 13" className="fill-current">
@@ -40,8 +48,8 @@ const DetailSection = ({ details, image, imagePosition }: Props) => {
             )}
             <div className="w-full">
               <div className="sm:ml-6 md:px-24 lg:px-0">
-                <StructuredText
-                  data={details.value}
+                <StructuredTextField
+                  data={details.value as StructuredText<Record, Record>}
                   renderNode={Highlighter}
                   customNodeRules={[
                     renderNodeRule(isHeading, ({ children, key }) => {

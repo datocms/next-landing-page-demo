@@ -4,12 +4,12 @@ import {
   AboutIntroModelIntroductionTextField,
   ImageFileField,
 } from '@/graphql/types/graphql';
-import { isHeading, isParagraph } from 'datocms-structured-text-utils';
+import { Record, StructuredText, isHeading, isParagraph } from 'datocms-structured-text-utils';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import {
   Image as DatoImage,
   ResponsiveImageType,
-  StructuredText,
+  StructuredText as StructuredTextField,
   renderNodeRule,
 } from 'react-datocms';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -133,8 +133,8 @@ const AboutIntro = ({
           className="z-0 flex flex-col justify-center"
         >
           {introduction && (
-            <StructuredText
-              data={introduction.value}
+            <StructuredTextField
+              data={introduction.value as StructuredText<Record, Record>}
               customNodeRules={[
                 renderNodeRule(isHeading, ({ children, key }) => {
                   return (

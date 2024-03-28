@@ -1,11 +1,12 @@
-'use client';
+"use client";
 
-import { TestimonialRecord } from '@/graphql/types/graphql';
-import { Maybe } from 'graphql/jsutils/Maybe';
-import { StructuredText } from 'react-datocms/structured-text';
-import { Image as DatoImage } from 'react-datocms';
-import { useState } from 'react';
-import Highlighter from '@/components/Common/Highlighter';
+import { TestimonialRecord } from "@/graphql/types/graphql";
+import { Maybe } from "graphql/jsutils/Maybe";
+import { StructuredText as StructuredTextField } from "react-datocms/structured-text";
+import { Image as DatoImage } from "react-datocms";
+import { useState } from "react";
+import Highlighter from "@/components/Common/Highlighter";
+import { Record, StructuredText } from "datocms-structured-text-utils";
 
 type Props = {
   reviews: TestimonialRecord[];
@@ -53,8 +54,10 @@ const Carrousel = ({ reviews, header, subheader }: Props) => {
               </div>
 
               <div className="mt-4 text-lg leading-relaxed text-white md:text-xl">
-                <StructuredText
-                  data={currentReview.review.value}
+                <StructuredTextField
+                  data={
+                    currentReview.review.value as StructuredText<Record, Record>
+                  }
                   renderNode={Highlighter}
                 />
               </div>

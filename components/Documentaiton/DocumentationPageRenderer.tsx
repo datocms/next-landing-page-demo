@@ -1,23 +1,28 @@
-'use client';
+"use client";
 
-import { StructuredText, renderNodeRule } from 'react-datocms/structured-text';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import {
+  StructuredText as StructuredTextField,
+  renderNodeRule,
+} from "react-datocms/structured-text";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import {
+  Record,
+  StructuredText,
   isBlockquote,
   isCode,
   isHeading,
   isList,
   isParagraph,
   isSpan,
-} from 'datocms-structured-text-utils';
+} from "datocms-structured-text-utils";
 import {
   DocumentationPageModelContentField,
   DocumentationPageQuery,
-} from '@/graphql/types/graphql';
-import QuoteBlock from '../Blog/Post/StructuredTextBlocks/QuoteBlock';
-import React, { CSSProperties } from 'react';
-import Highlighter from '../Common/Highlighter';
+} from "@/graphql/types/graphql";
+import QuoteBlock from "../Blog/Post/StructuredTextBlocks/QuoteBlock";
+import React, { CSSProperties } from "react";
+import Highlighter from "../Common/Highlighter";
 
 type Props = {
   data: DocumentationPageQuery;
@@ -26,12 +31,12 @@ type Props = {
 const DocumentaitonPageRenderer = ({ data }: Props) => {
   return (
     <div className="px-24 py-8">
-      <StructuredText
+      <StructuredTextField
         data={
-          (
-            data.documentationPage!
-              .content as DocumentationPageModelContentField
-          ).value
+          data.documentationPage!.content.value as StructuredText<
+            Record,
+            Record
+          >
         }
         customNodeRules={[
           renderNodeRule(isHeading, ({ children, key }) => {
@@ -73,12 +78,12 @@ const DocumentaitonPageRenderer = ({ data }: Props) => {
                 <SyntaxHighlighter
                   wrapLines={true}
                   showLineNumbers={true}
-                  lineNumberStyle={{ display: 'none' }}
+                  lineNumberStyle={{ display: "none" }}
                   lineProps={(lineNumber) => {
-                    if (!node.highlight) return { display: 'block' };
-                    let style: CSSProperties = { display: 'block' };
+                    if (!node.highlight) return { display: "block" };
+                    let style: CSSProperties = { display: "block" };
                     if (node.highlight.includes(lineNumber - 1)) {
-                      style.backgroundColor = 'rgb(235, 235, 245)';
+                      style.backgroundColor = "rgb(235, 235, 245)";
                     }
                     return { style };
                   }}

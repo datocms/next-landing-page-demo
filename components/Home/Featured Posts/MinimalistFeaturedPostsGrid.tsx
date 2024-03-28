@@ -1,8 +1,8 @@
-import { PostRecord, SiteLocale } from '@/graphql/types/graphql';
-import transformDate from '@/utils/transformDate';
-import { Maybe } from 'graphql/jsutils/Maybe';
-import Link from 'next/link';
-import { Image as DatoImage } from 'react-datocms';
+import { PostRecord, SiteLocale } from "@/graphql/types/graphql";
+import transformDate from "@/utils/transformDate";
+import { Maybe } from "graphql/jsutils/Maybe";
+import Link from "next/link";
+import { Image as DatoImage } from "react-datocms";
 
 type BlogProps = {
   blogData: PostRecord[];
@@ -41,15 +41,17 @@ const MinimalistFeaturedPostsGrid = ({
 
                 <div className="flex flex-col justify-between py-6 lg:mx-6">
                   <Link
-                    href={'/' + locale + '/posts/' + post.slug}
+                    href={"/" + locale + "/posts/" + post.slug}
                     className="text-xl font-semibold text-gray-800 hover:underline dark:text-white "
                   >
                     {post.title}
                   </Link>
 
-                  <span className="text-sm text-gray-500 dark:text-gray-300">
-                    {transformDate(post._publishedAt)}
-                  </span>
+                  {post._publishedAt && (
+                    <span className="text-sm text-gray-500 dark:text-gray-300">
+                      {transformDate(post._publishedAt)}
+                    </span>
+                  )}
                 </div>
               </div>
             );
