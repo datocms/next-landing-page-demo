@@ -1,6 +1,10 @@
 import 'dotenv/config';
 import type { IGraphQLConfig } from 'graphql-config';
 
+if (!process.env.DATOCMS_READONLY_API_TOKEN) {
+  throw new Error('Missing DatoCMS API token: make sure a DATOCMS_READONLY_API_TOKEN environment variable is set.');
+}
+
 const config: IGraphQLConfig = {
 	schema: [
 		{

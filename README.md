@@ -38,7 +38,7 @@ In your DatoCMS' project, go to the **Settings** menu at the top and click **API
 
 Then click **Read-only API token** and copy the token.
 
-Next, copy the `.env.example` file in this directory to `.env` (which will be ignored by Git):
+Next, copy the `.env.local.sample` file in this directory to `.env.local` (which will be ignored by Git):
 
 ```bash
 cp .env.local.sample .env.local

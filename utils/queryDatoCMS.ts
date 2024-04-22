@@ -2,6 +2,12 @@ import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { GraphQLClientRequestHeaders } from 'graphql-request/build/esm/types';
 import { print } from 'graphql';
 
+console.log(process.env)
+
+if (!process.env.DATOCMS_READONLY_API_TOKEN) {
+  throw new Error('Missing DatoCMS API token: make sure a DATOCMS_READONLY_API_TOKEN environment variable is set.');
+}
+
 export default async function queryDatoCMS<
   TResult = unknown,
   TVariables = Record<string, any>
