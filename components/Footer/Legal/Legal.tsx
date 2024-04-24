@@ -1,17 +1,20 @@
-import Highlighter from "@/components/Common/Highlighter";
+import Highlighter from '@/components/Common/Highlighter';
 import {
   LegalPageModelContentField,
   LegalQuery,
   SiteLocale,
-} from "@/graphql/types/graphql";
+} from '@/graphql/types/graphql';
 import {
   Record,
   StructuredText,
   isHeading,
   isParagraph,
-} from "datocms-structured-text-utils";
-import { notFound } from "next/navigation";
-import { StructuredText as StructuredTextField, renderNodeRule } from "react-datocms";
+} from 'datocms-structured-text-utils';
+import { notFound } from 'next/navigation';
+import {
+  StructuredText as StructuredTextField,
+  renderNodeRule,
+} from 'react-datocms';
 
 type Props = {
   data: LegalQuery;

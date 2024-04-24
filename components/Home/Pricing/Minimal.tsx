@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import SectionTitle from "../../Common/SectionTitle";
-import OfferList from "./OfferList";
-import PricingBox from "./PricingBox";
-import { Maybe } from "graphql/jsutils/Maybe";
-import { primaryColor } from "@/app/i18n/settings";
-import { StructuredText as StructuredTextField } from "react-datocms/structured-text";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import { PricingTierRecord } from "@/graphql/types/graphql";
-import Highlighter from "@/components/Common/Highlighter";
-import { Record, StructuredText } from "datocms-structured-text-utils";
+import { useEffect, useState } from 'react';
+import SectionTitle from '../../Common/SectionTitle';
+import OfferList from './OfferList';
+import PricingBox from './PricingBox';
+import { Maybe } from 'graphql/jsutils/Maybe';
+import { primaryColor } from '@/app/i18n/settings';
+import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import { PricingTierRecord } from '@/graphql/types/graphql';
+import Highlighter from '@/components/Common/Highlighter';
+import { Record, StructuredText } from 'datocms-structured-text-utils';
 
 type Props = {
   header: string;
@@ -22,12 +22,12 @@ const Minimal = ({ header, subheader, plans }: Props) => {
   const [isMonthly, setIsMonthly] = useState(true);
 
   const primary =
-    "w-1/2 rounded-lg bg-primary px-3 py-1 text-white focus:outline-none sm:mx-0.5 sm:w-auto";
+    'w-1/2 rounded-lg bg-primary px-3 py-1 text-white focus:outline-none sm:mx-0.5 sm:w-auto';
   const secondary =
-    " w-1/2 rounded-lg bg-transparent px-3 py-1 text-gray-800 hover:bg-gray-200 focus:outline-none dark:text-gray-200 dark:hover:bg-gray-800 sm:mx-0.5 sm:w-auto";
+    ' w-1/2 rounded-lg bg-transparent px-3 py-1 text-gray-800 hover:bg-gray-200 focus:outline-none dark:text-gray-200 dark:hover:bg-gray-800 sm:mx-0.5 sm:w-auto';
 
   const planInEvidence = plans[0] as PricingTierRecord;
-  const evidencePlanFeatures = planInEvidence.planFeatures.split(", ");
+  const evidencePlanFeatures = planInEvidence.planFeatures.split(', ');
 
   return (
     <section className="bg-white dark:bg-gray-900">
@@ -38,7 +38,7 @@ const Minimal = ({ header, subheader, plans }: Props) => {
               {header}
             </h2>
             <div className="mt-4 text-gray-500 dark:text-gray-400">
-              <ReactMarkdown>{subheader || ""}</ReactMarkdown>
+              <ReactMarkdown>{subheader || ''}</ReactMarkdown>
             </div>
           </div>
 
@@ -70,9 +70,9 @@ const Minimal = ({ header, subheader, plans }: Props) => {
               $
               {isMonthly
                 ? planInEvidence.monthlyPrice
-                : planInEvidence.yearlyPrice}{" "}
+                : planInEvidence.yearlyPrice}{' '}
               <span className="text-base font-normal text-gray-400">
-                / {isMonthly ? "Month" : "Year"}
+                / {isMonthly ? 'Month' : 'Year'}
               </span>
             </h4>
 
@@ -126,9 +126,9 @@ const Minimal = ({ header, subheader, plans }: Props) => {
                 </p>
 
                 <h4 className="mt-2 text-3xl font-semibold text-gray-800 dark:text-gray-100">
-                  ${isMonthly ? plan.monthlyPrice : plan.yearlyPrice}{" "}
+                  ${isMonthly ? plan.monthlyPrice : plan.yearlyPrice}{' '}
                   <span className="text-base font-normal text-gray-600 dark:text-gray-400">
-                    / {isMonthly ? "Month" : "Year"}
+                    / {isMonthly ? 'Month' : 'Year'}
                   </span>
                 </h4>
 
@@ -145,7 +145,7 @@ const Minimal = ({ header, subheader, plans }: Props) => {
                 </div>
 
                 <div className="mt-8 h-80 space-y-8">
-                  {plan.planFeatures.split(", ").map((feature) => {
+                  {plan.planFeatures.split(', ').map((feature) => {
                     return (
                       <div key={feature} className="flex items-center">
                         <svg

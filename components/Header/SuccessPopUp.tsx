@@ -10,7 +10,7 @@ const SuccessPopUp = ({ setSuccessToast }: Props) => {
       role="alert"
       className="rounded-xl border border-gray-100 bg-white p-6 shadow-xl"
     >
-      <div className="flex items-center text-center justify-center gap-4">
+      <div className="flex items-center justify-center gap-4 text-center">
         <span className="text-green-600">
           <svg
             xmlns="http://www.w3.org/2000/svg"

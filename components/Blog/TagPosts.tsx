@@ -13,7 +13,7 @@ const TagPosts = ({ data, lng }: Props) => {
   }
   return (
     <section className="py-[32px]">
-      <div className='flex width-full justify-center items-center gap-4'>
+      <div className="width-full flex items-center justify-center gap-4">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

@@ -1,9 +1,9 @@
-import { QuestionRecord } from "@/graphql/types/graphql";
-import { Maybe } from "graphql/jsutils/Maybe";
-import { StructuredText as StructuredTextField } from "react-datocms/structured-text";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import Highlighter from "../Common/Highlighter";
-import { Record, StructuredText } from "datocms-structured-text-utils";
+import { QuestionRecord } from '@/graphql/types/graphql';
+import { Maybe } from 'graphql/jsutils/Maybe';
+import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import Highlighter from '../Common/Highlighter';
+import { Record, StructuredText } from 'datocms-structured-text-utils';
 
 type Props = {
   title: Maybe<string>;
@@ -19,7 +19,7 @@ const FAQGrid = ({ title, subtitle, questions }: Props) => {
           {title}
         </h1>
         <div className=" text-center text-gray-500">
-          <ReactMarkdown>{subtitle || ""}</ReactMarkdown>
+          <ReactMarkdown>{subtitle || ''}</ReactMarkdown>
         </div>
 
         <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:mt-16 xl:grid-cols-2">

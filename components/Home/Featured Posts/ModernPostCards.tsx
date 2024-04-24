@@ -1,9 +1,9 @@
-import { PostRecord, SiteLocale } from "@/graphql/types/graphql";
-import transformDate from "@/utils/transformDate";
-import { Maybe } from "graphql/jsutils/Maybe";
-import Link from "next/link";
-import { Image as DatoImage } from "react-datocms";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import { PostRecord, SiteLocale } from '@/graphql/types/graphql';
+import transformDate from '@/utils/transformDate';
+import { Maybe } from 'graphql/jsutils/Maybe';
+import Link from 'next/link';
+import { Image as DatoImage } from 'react-datocms';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type BlogProps = {
   blogData: PostRecord[];
@@ -27,7 +27,7 @@ const ModernPostCards = ({
           </h1>
 
           <div className="mx-auto mt-4 max-w-lg text-gray-500">
-            <ReactMarkdown>{blogSubheader || ""}</ReactMarkdown>
+            <ReactMarkdown>{blogSubheader || ''}</ReactMarkdown>
           </div>
         </div>
 
@@ -47,7 +47,7 @@ const ModernPostCards = ({
                 </div>
                 <div className="relative z-20 mx-auto -mt-20 max-w-lg rounded-md bg-white p-6 shadow dark:bg-gray-900">
                   <Link
-                    href={"/" + locale + "/posts/" + post.slug}
+                    href={'/' + locale + '/posts/' + post.slug}
                     className="font-semibold text-gray-800 hover:underline dark:text-white md:text-xl"
                   >
                     {post.title}

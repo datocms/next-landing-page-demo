@@ -1,8 +1,8 @@
-import { primaryColor } from "@/app/i18n/settings";
-import Highlighter from "@/components/Common/Highlighter";
-import { PricingTierModelTierDescriptionField } from "@/graphql/types/graphql";
-import { Record, StructuredText } from "datocms-structured-text-utils";
-import { StructuredText as StructuredTextField } from "react-datocms/structured-text";
+import { primaryColor } from '@/app/i18n/settings';
+import Highlighter from '@/components/Common/Highlighter';
+import { PricingTierModelTierDescriptionField } from '@/graphql/types/graphql';
+import { Record, StructuredText } from 'datocms-structured-text-utils';
+import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 
 const PricingBox = (props: {
   price: number;

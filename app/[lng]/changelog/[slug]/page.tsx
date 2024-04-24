@@ -9,11 +9,19 @@ import {
 } from '@/graphql/types/graphql';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import transformDate from '@/utils/transformDate';
-import { Record, StructuredText, isHeading, isParagraph } from 'datocms-structured-text-utils';
+import {
+  Record,
+  StructuredText,
+  isHeading,
+  isParagraph,
+} from 'datocms-structured-text-utils';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import React from 'react';
-import { StructuredText as StructuredTextField, renderNodeRule } from 'react-datocms/structured-text';
+import {
+  StructuredText as StructuredTextField,
+  renderNodeRule,
+} from 'react-datocms/structured-text';
 
 type Params = {
   params: {

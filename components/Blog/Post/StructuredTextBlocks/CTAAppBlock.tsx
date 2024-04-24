@@ -10,7 +10,7 @@ type Props = {
 
 const CTAAppBlock = ({ title, text, googleURL, appleURL }: Props) => {
   return (
-    <section className="bg-white py-16 dark:bg-gray-900 px-8">
+    <section className="bg-white px-8 py-16 dark:bg-gray-900">
       <div className="container mx-auto flex flex-col items-center px-4 py-12 text-center">
         <h2 className="text-2xl font-bold tracking-tight text-gray-800 dark:text-white xl:text-3xl">
           {title}

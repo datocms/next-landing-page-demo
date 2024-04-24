@@ -1,10 +1,10 @@
-import { TestimonialRecord } from "@/graphql/types/graphql";
-import { Maybe } from "graphql/jsutils/Maybe";
-import { StructuredText as StructuredTextField } from "react-datocms/structured-text";
-import { Image as DatoImage } from "react-datocms";
-import { useState } from "react";
-import Highlighter from "@/components/Common/Highlighter";
-import { Record, StructuredText } from "datocms-structured-text-utils";
+import { TestimonialRecord } from '@/graphql/types/graphql';
+import { Maybe } from 'graphql/jsutils/Maybe';
+import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
+import { Image as DatoImage } from 'react-datocms';
+import { useState } from 'react';
+import Highlighter from '@/components/Common/Highlighter';
+import { Record, StructuredText } from 'datocms-structured-text-utils';
 
 type Props = {
   reviews: TestimonialRecord[];

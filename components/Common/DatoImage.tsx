@@ -1,4 +1,3 @@
-
 // import { graphql } from 'graphql';
 // import { Image as ReactDatocmsImage, type ImagePropTypes } from 'react-datocms';
 

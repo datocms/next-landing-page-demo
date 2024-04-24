@@ -50,7 +50,7 @@ const Documentation = async ({ params: { lng } }: Params) => {
           </button>
           <Link
             href=""
-            className="focus:ring-primary-400 dark:bg-primary-600 dark:hover:bg-primary-500 flex h-10 min-w-[6rem] flex-none items-center justify-center whitespace-nowrap rounded-xl bg-primary opacity-90 px-6 text-base font-medium text-white hover:bg-primary hover:bg-opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-50 dark:ring-offset-slate-800"
+            className="focus:ring-primary-400 dark:bg-primary-600 dark:hover:bg-primary-500 flex h-10 min-w-[6rem] flex-none items-center justify-center whitespace-nowrap rounded-xl bg-primary px-6 text-base font-medium text-white opacity-90 hover:bg-primary hover:bg-opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-50 dark:ring-offset-slate-800"
           >
             Get Started
           </Link>

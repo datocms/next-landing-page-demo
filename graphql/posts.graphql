@@ -1,5 +1,16 @@
-query Posts($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $skip: IntType = "0")  {
-  allPosts(filter: {title: {isBlank: "false"}}, orderBy: _createdAt_DESC, first: "9", locale: $locale, fallbackLocales: $fallbackLocale, skip: $skip) {
+query Posts(
+  $locale: SiteLocale
+  $fallbackLocale: [SiteLocale!]
+  $skip: IntType = "0"
+) {
+  allPosts(
+    filter: { title: { isBlank: "false" } }
+    orderBy: _createdAt_DESC
+    first: "9"
+    locale: $locale
+    fallbackLocales: $fallbackLocale
+    skip: $skip
+  ) {
     _publishedAt
     slug
     id
@@ -30,7 +41,7 @@ query Posts($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $skip: IntType 
       slug
       bio
       picture {
-        responsiveImage(imgixParams: {w: "64", h: "64", fit: crop}) {
+        responsiveImage(imgixParams: { w: "64", h: "64", fit: crop }) {
           srcSet
           webpSrcSet
           sizes
@@ -46,7 +57,7 @@ query Posts($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $skip: IntType 
       }
     }
   }
-  _allPostsMeta(locale: $locale, filter: {title: {isBlank: "false"}}) {
+  _allPostsMeta(locale: $locale, filter: { title: { isBlank: "false" } }) {
     count
   }
 }

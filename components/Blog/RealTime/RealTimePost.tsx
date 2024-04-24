@@ -2,7 +2,11 @@
 
 import { useQuerySubscription } from 'react-datocms/use-query-subscription';
 import Post from '../Post/Post';
-import { PostQuery, PostQueryVariables, SiteLocale } from '@/graphql/types/graphql';
+import {
+  PostQuery,
+  PostQueryVariables,
+  SiteLocale,
+} from '@/graphql/types/graphql';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 
 export default function RealTimePost({

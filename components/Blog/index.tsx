@@ -12,7 +12,10 @@ type BlogProps = {
 
 const Blog = ({ blogData, blogHeader, blogSubheader, locale }: BlogProps) => {
   return (
-    <section id="blog" className="bg-primary py-16 bg-opacity-5 md:py-20 lg:py-28">
+    <section
+      id="blog"
+      className="bg-primary bg-opacity-5 py-16 md:py-20 lg:py-28"
+    >
       <div className="container">
         <SectionTitle title={blogHeader} paragraph={blogSubheader} center />
 

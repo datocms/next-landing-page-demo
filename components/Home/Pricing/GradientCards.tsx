@@ -1,9 +1,9 @@
-import Highlighter from "@/components/Common/Highlighter";
-import { PricingTierRecord } from "@/graphql/types/graphql";
-import { Record, StructuredText } from "datocms-structured-text-utils";
-import { Maybe } from "graphql/jsutils/Maybe";
-import { StructuredText as StructuredTextField } from "react-datocms/structured-text";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import Highlighter from '@/components/Common/Highlighter';
+import { PricingTierRecord } from '@/graphql/types/graphql';
+import { Record, StructuredText } from 'datocms-structured-text-utils';
+import { Maybe } from 'graphql/jsutils/Maybe';
+import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
   header: string;
@@ -13,7 +13,7 @@ type Props = {
 
 const GradientCards = ({ header, subheader, plans }: Props) => {
   const planInEvidence = plans.shift() as PricingTierRecord;
-  const evidencePlanFeatures = planInEvidence.planFeatures.split(", ");
+  const evidencePlanFeatures = planInEvidence.planFeatures.split(', ');
 
   return (
     <div className="bg-white py-6 sm:py-8 lg:py-12">
@@ -24,7 +24,7 @@ const GradientCards = ({ header, subheader, plans }: Props) => {
           </h2>
 
           <div className="mx-auto max-w-screen-md text-center text-gray-500 md:text-lg">
-            <ReactMarkdown>{subheader || ""}</ReactMarkdown>
+            <ReactMarkdown>{subheader || ''}</ReactMarkdown>
           </div>
         </div>
 
@@ -91,7 +91,7 @@ const GradientCards = ({ header, subheader, plans }: Props) => {
             </a>
           </div>
           {plans.map((plan) => {
-            const planFeatures = plan.planFeatures.split(", ");
+            const planFeatures = plan.planFeatures.split(', ');
             return (
               <div
                 key={plan.id}

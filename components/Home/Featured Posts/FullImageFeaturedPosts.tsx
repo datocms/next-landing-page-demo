@@ -1,9 +1,9 @@
-import { PostRecord, SiteLocale } from "@/graphql/types/graphql";
-import transformDate from "@/utils/transformDate";
-import { Maybe } from "graphql/jsutils/Maybe";
-import Link from "next/link";
-import { Image as DatoImage } from "react-datocms";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import { PostRecord, SiteLocale } from '@/graphql/types/graphql';
+import transformDate from '@/utils/transformDate';
+import { Maybe } from 'graphql/jsutils/Maybe';
+import Link from 'next/link';
+import { Image as DatoImage } from 'react-datocms';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type BlogProps = {
   blogData: PostRecord[];
@@ -27,7 +27,7 @@ const FullImageFeaturedPosts = ({
           </h2>
 
           <div className="mx-auto max-w-screen-md text-center text-gray-500 md:text-lg">
-            <ReactMarkdown>{blogSubheader || ""}</ReactMarkdown>
+            <ReactMarkdown>{blogSubheader || ''}</ReactMarkdown>
           </div>
         </div>
 
@@ -36,7 +36,7 @@ const FullImageFeaturedPosts = ({
             return (
               <Link
                 key={post.id}
-                href={"/" + locale + "/posts/" + post.slug}
+                href={'/' + locale + '/posts/' + post.slug}
                 className="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64 xl:h-96"
               >
                 <div className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110">

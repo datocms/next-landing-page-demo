@@ -9,7 +9,7 @@ const BrandCards = ({ brandShowcase }: Props) => {
   return (
     <div className="bg-white py-6 lg:py-8">
       <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
-        <div className="grid grid-cols-1 gap-4 rounded-lg md:grid-cols-3 mx-4 lg:mx-12">
+        <div className="mx-4 grid grid-cols-1 gap-4 rounded-lg md:grid-cols-3 lg:mx-12">
           {brandShowcase.map((brand) => {
             return (
               <div

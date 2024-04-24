@@ -4,7 +4,12 @@ import {
   AboutIntroModelIntroductionTextField,
   ImageFileField,
 } from '@/graphql/types/graphql';
-import { Record, StructuredText, isHeading, isParagraph } from 'datocms-structured-text-utils';
+import {
+  Record,
+  StructuredText,
+  isHeading,
+  isParagraph,
+} from 'datocms-structured-text-utils';
 import { Maybe } from 'graphql/jsutils/Maybe';
 import {
   Image as DatoImage,
