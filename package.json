@@ -43,6 +43,7 @@
     "react-syntax-highlighter": "^15.5.0"
   },
   "devDependencies": {
+    "@datocms/cma-client": "^3.3.0",
     "@graphql-codegen/cli": "^5.0.2",
     "@types/jsdom": "^21.1.1",
     "@types/language-name-map": "^0.3.0",

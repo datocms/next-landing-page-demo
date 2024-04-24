@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { cookies, draftMode } from 'next/headers';
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -15,9 +15,14 @@ export async function GET(request: NextRequest) {
 
   if (!url) return new Response('Draft mode is enabled');
 
-  //to avoid losing the cookie on redirect in the iFrame
+  // By performing a redirect(), we would lose the __prerender_bypass cookie just
+  // set by draftMode().enable(), so we would effectively not enter into Next.js's draft mode!
+  //
+  // The solution is to read the cookie just set by draftMode().enable()...
   const cookieStore = cookies();
   const cookie = cookieStore.get('__prerender_bypass')!;
+
+  // and reapply it before launching the redirect.
   cookies().set({
     name: '__prerender_bypass',
     value: cookie?.value,
@@ -25,6 +30,9 @@ export async function GET(request: NextRequest) {
     path: '/',
     secure: true,
     sameSite: 'none',
+    // Given that this route can also be accessed within the iframe of the Web Previews plugin,
+    // it is important to bypass the restrictions for third-party cookies by setting the
+    // `partitioned: true` option (https://developers.google.com/privacy-sandbox/3pcd)
     partitioned: true,
   });
 
