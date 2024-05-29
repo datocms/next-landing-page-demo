@@ -1,39 +1,35 @@
 'use client';
 
+import QuoteBlock from '@/components/Blog/Post/StructuredTextBlocks/QuoteBlock';
+import Highlighter from '@/components/Common/Highlighter';
+import type { DocumentationPageQuery } from '@/graphql/types/graphql';
+import {
+  type Record,
+  type StructuredText,
+  isBlockquote,
+  isCode,
+  isHeading,
+  isList,
+  isParagraph,
+} from 'datocms-structured-text-utils';
+import type { CSSProperties } from 'react';
 import {
   StructuredText as StructuredTextField,
   renderNodeRule,
 } from 'react-datocms/structured-text';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import {
-  Record,
-  StructuredText,
-  isBlockquote,
-  isCode,
-  isHeading,
-  isList,
-  isParagraph,
-  isSpan,
-} from 'datocms-structured-text-utils';
-import {
-  DocumentationPageModelContentField,
-  DocumentationPageQuery,
-} from '@/graphql/types/graphql';
-import QuoteBlock from '../Blog/Post/StructuredTextBlocks/QuoteBlock';
-import React, { CSSProperties } from 'react';
-import Highlighter from '../Common/Highlighter';
 
 type Props = {
   data: DocumentationPageQuery;
 };
 
-const DocumentaitonPageRenderer = ({ data }: Props) => {
+const DocumentationPageRenderer = ({ data }: Props) => {
   return (
     <div className="px-24 py-8">
       <StructuredTextField
         data={
-          data.documentationPage!.content.value as StructuredText<
+          data.documentationPage?.content.value as StructuredText<
             Record,
             Record
           >
@@ -81,7 +77,7 @@ const DocumentaitonPageRenderer = ({ data }: Props) => {
                   lineNumberStyle={{ display: 'none' }}
                   lineProps={(lineNumber) => {
                     if (!node.highlight) return { display: 'block' };
-                    let style: CSSProperties = { display: 'block' };
+                    const style: CSSProperties = { display: 'block' };
                     if (node.highlight.includes(lineNumber - 1)) {
                       style.backgroundColor = 'rgb(235, 235, 245)';
                     }
@@ -102,4 +98,4 @@ const DocumentaitonPageRenderer = ({ data }: Props) => {
   );
 };
 
-export default DocumentaitonPageRenderer;
+export default DocumentationPageRenderer;

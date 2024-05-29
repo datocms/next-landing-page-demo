@@ -1,21 +1,21 @@
+import Highlighter from '@/components/Common/Highlighter';
+import type {
+  DetailSectionModelDetailsField,
+  FileField,
+} from '@/graphql/types/graphql';
+import {
+  type Record,
+  type StructuredText,
+  isHeading,
+  isList,
+  isListItem,
+  isParagraph,
+} from 'datocms-structured-text-utils';
+import { Image as DatoImage } from 'react-datocms';
 import {
   StructuredText as StructuredTextField,
   renderNodeRule,
 } from 'react-datocms/structured-text';
-import {
-  isHeading,
-  isParagraph,
-  isListItem,
-  isList,
-  StructuredText,
-  Record,
-} from 'datocms-structured-text-utils';
-import {
-  DetailSectionModelDetailsField,
-  FileField,
-} from '@/graphql/types/graphql';
-import { Image as DatoImage } from 'react-datocms';
-import Highlighter from '@/components/Common/Highlighter';
 
 const checkIcon = (
   <svg width="16" height="13" viewBox="0 0 16 13" className="fill-current">

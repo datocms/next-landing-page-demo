@@ -1,26 +1,26 @@
 'use client';
 
-import {
+import Highlighter from '@/components/Common/Highlighter';
+import type {
   AboutIntroModelIntroductionTextField,
   ImageFileField,
 } from '@/graphql/types/graphql';
 import {
-  Record,
-  StructuredText,
+  type Record,
+  type StructuredText,
   isHeading,
   isParagraph,
 } from 'datocms-structured-text-utils';
-import { Maybe } from 'graphql/jsutils/Maybe';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import type { Maybe } from 'graphql/jsutils/Maybe';
+import React from 'react';
 import {
   Image as DatoImage,
-  ResponsiveImageType,
+  type ResponsiveImageType,
   StructuredText as StructuredTextField,
   renderNodeRule,
 } from 'react-datocms';
-import { motion, useScroll, useTransform } from 'framer-motion';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
-import React from 'react';
-import Highlighter from '../Common/Highlighter';
 
 type Props = {
   header: string;
@@ -37,7 +37,7 @@ const AboutIntro = ({
   introduction,
   preHeader,
 }: Props) => {
-  let [firstWord, ...restOfTheStringArray] = header.split(/\s+/);
+  const [firstWord, ...restOfTheStringArray] = header.split(/\s+/);
   const restOfTheString = restOfTheStringArray.join(' ');
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '600%']);

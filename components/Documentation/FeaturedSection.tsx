@@ -1,8 +1,11 @@
 'use client';
 
+import PreviewCard from '@/components/Documentation/PreviewCard';
+import type {
+  DocumentationPageRecord,
+  SiteLocale,
+} from '@/graphql/types/graphql';
 import { AnimatePresence, motion } from 'framer-motion';
-import PreviewCard from '@/components/Documentaiton/PreviewCard';
-import { DocumentationPageRecord, SiteLocale } from '@/graphql/types/graphql';
 
 const variants = {
   hidden: { opacity: 0 },

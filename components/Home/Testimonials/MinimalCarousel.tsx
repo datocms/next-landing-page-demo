@@ -1,12 +1,12 @@
 'use client';
 
-import { TestimonialRecord } from '@/graphql/types/graphql';
-import { Maybe } from 'graphql/jsutils/Maybe';
-import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
-import { Image as DatoImage } from 'react-datocms';
-import { useState } from 'react';
 import Highlighter from '@/components/Common/Highlighter';
-import { Record, StructuredText } from 'datocms-structured-text-utils';
+import type { TestimonialRecord } from '@/graphql/types/graphql';
+import type { Record, StructuredText } from 'datocms-structured-text-utils';
+import type { Maybe } from 'graphql/jsutils/Maybe';
+import { useState } from 'react';
+import { Image as DatoImage } from 'react-datocms';
+import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 
 type Props = {
   reviews: TestimonialRecord[];
@@ -14,7 +14,7 @@ type Props = {
   subheader: Maybe<string>;
 };
 
-const MinimalCarrousel = ({ reviews, header, subheader }: Props) => {
+const MinimalCarousel = ({ reviews, header, subheader }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleNext = () => {
@@ -23,7 +23,7 @@ const MinimalCarrousel = ({ reviews, header, subheader }: Props) => {
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? reviews.length - 1 : prevIndex - 1
+      prevIndex === 0 ? reviews.length - 1 : prevIndex - 1,
     );
   };
 
@@ -37,13 +37,14 @@ const MinimalCarrousel = ({ reviews, header, subheader }: Props) => {
         </h1>
 
         <div className="mx-auto mt-6 flex justify-center">
-          <span className="inline-block h-1 w-40 rounded-full bg-primary"></span>
-          <span className="mx-1 inline-block h-1 w-3 rounded-full bg-primary"></span>
-          <span className="inline-block h-1 w-1 rounded-full bg-primary"></span>
+          <span className="inline-block h-1 w-40 rounded-full bg-primary" />
+          <span className="mx-1 inline-block h-1 w-3 rounded-full bg-primary" />
+          <span className="inline-block h-1 w-1 rounded-full bg-primary" />
         </div>
 
         <div className="mx-auto mt-16 flex w-full max-w-6xl flex-row items-center justify-center text-center">
           <button
+            type="button"
             title="left arrow"
             className="rounded-full border p-2 text-gray-800 transition-colors duration-300 hover:bg-gray-100 rtl:-scale-x-100 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800 lg:block"
             onClick={handlePrev}
@@ -72,6 +73,7 @@ const MinimalCarrousel = ({ reviews, header, subheader }: Props) => {
             />
           </div>
           <button
+            type="button"
             title="right arrow"
             className="rounded-full border p-2 text-gray-800 transition-colors duration-300 hover:bg-gray-100 rtl:-scale-x-100 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800 lg:block"
             onClick={handleNext}
@@ -116,4 +118,4 @@ const MinimalCarrousel = ({ reviews, header, subheader }: Props) => {
   );
 };
 
-export default MinimalCarrousel;
+export default MinimalCarousel;

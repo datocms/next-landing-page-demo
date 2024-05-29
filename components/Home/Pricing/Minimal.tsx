@@ -1,16 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import SectionTitle from '../../Common/SectionTitle';
-import OfferList from './OfferList';
-import PricingBox from './PricingBox';
-import { Maybe } from 'graphql/jsutils/Maybe';
-import { primaryColor } from '@/app/i18n/settings';
+import Highlighter from '@/components/Common/Highlighter';
+import type { PricingTierRecord } from '@/graphql/types/graphql';
+import type { Record, StructuredText } from 'datocms-structured-text-utils';
+import type { Maybe } from 'graphql/jsutils/Maybe';
+import { useState } from 'react';
 import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
-import { PricingTierRecord } from '@/graphql/types/graphql';
-import Highlighter from '@/components/Common/Highlighter';
-import { Record, StructuredText } from 'datocms-structured-text-utils';
 
 type Props = {
   header: string;
@@ -45,12 +41,14 @@ const Minimal = ({ header, subheader, plans }: Props) => {
           <div className="m-2 rounded-lg border p-0.5 dark:border-gray-700">
             <div className="flex sm:-mx-0.5">
               <button
+                type="button"
                 onClick={() => setIsMonthly(true)}
                 className={isMonthly ? primary : secondary}
               >
                 Monthly
               </button>
               <button
+                type="button"
                 onClick={() => setIsMonthly(false)}
                 className={isMonthly ? secondary : primary}
               >
@@ -111,7 +109,10 @@ const Minimal = ({ header, subheader, plans }: Props) => {
               })}
             </div>
 
-            <button className="mt-10 w-full transform rounded-md bg-primary px-4 py-2 font-medium capitalize tracking-wide text-white transition-colors duration-300 hover:bg-primary/90 focus:bg-primary/80 focus:outline-none">
+            <button
+              type="button"
+              className="mt-10 w-full transform rounded-md bg-primary px-4 py-2 font-medium capitalize tracking-wide text-white transition-colors duration-300 hover:bg-primary/90 focus:bg-primary/80 focus:outline-none"
+            >
               Choose plan
             </button>
           </div>
@@ -169,7 +170,10 @@ const Minimal = ({ header, subheader, plans }: Props) => {
                   })}
                 </div>
 
-                <button className="mt-10 w-full transform rounded-md bg-primary px-4 py-2 font-medium capitalize tracking-wide text-white transition-colors duration-300 hover:bg-primary/90 focus:bg-primary/80 focus:outline-none">
+                <button
+                  type="button"
+                  className="mt-10 w-full transform rounded-md bg-primary px-4 py-2 font-medium capitalize tracking-wide text-white transition-colors duration-300 hover:bg-primary/90 focus:bg-primary/80 focus:outline-none"
+                >
                   Choose plan
                 </button>
               </div>

@@ -1,9 +1,9 @@
 'use client';
 
-import { ButtonRecord, FileField } from '@/graphql/types/graphql';
-import { Maybe } from 'graphql/jsutils/Maybe';
-import Link from 'next/link';
+import type { ButtonRecord, FileField } from '@/graphql/types/graphql';
 import { delay, motion } from 'framer-motion';
+import type { Maybe } from 'graphql/jsutils/Maybe';
+import Link from 'next/link';
 import { Image as DatoImage } from 'react-datocms';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
@@ -47,7 +47,7 @@ const RightImageHero = ({ heroTitle, heroSubtitle, buttons, image }: Props) => {
             </div>
           </div>
 
-          {image && image.responsiveImage && (
+          {image?.responsiveImage && (
             <div className="relative w-3/5 overflow-hidden rounded-lg bg-gray-100 shadow-lg lg:h-auto">
               <DatoImage
                 data={image.responsiveImage}

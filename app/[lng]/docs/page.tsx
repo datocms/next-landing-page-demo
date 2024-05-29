@@ -1,14 +1,14 @@
-import Link from 'next/link';
-import { Search } from 'lucide-react';
-import { draftMode } from 'next/headers';
-import queryDatoCMS from '@/utils/queryDatoCMS';
+import FeaturedSection from '@/components/Documentation/FeaturedSection';
 import {
   DocumentationHomePageDocument,
-  DocumentationPageRecord,
-  SiteLocale,
+  type DocumentationPageRecord,
+  type SiteLocale,
 } from '@/graphql/types/graphql';
+import queryDatoCMS from '@/utils/queryDatoCMS';
+import { Search } from 'lucide-react';
+import { draftMode } from 'next/headers';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import FeaturedSection from '@/components/Documentaiton/FeaturedSection';
 
 type Params = {
   params: {
@@ -39,6 +39,7 @@ const Documentation = async ({ params: { lng } }: Params) => {
 
         <div className="mx-auto flex max-w-xl flex-col justify-center gap-2 py-8 md:flex-row">
           <button
+            type="button"
             // onClick={() => toggleCommand()}
             className="hover:ring-primary-300 flex h-10 w-full flex-row items-center gap-2 truncate rounded-xl border border-slate-300 pl-4 pr-2 text-left text-sm text-slate-500 outline-none hover:ring-2 hover:ring-offset-2 hover:ring-offset-slate-50 dark:border-slate-700 dark:text-slate-100 dark:hover:ring-offset-slate-800"
           >

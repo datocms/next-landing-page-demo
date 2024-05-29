@@ -1,6 +1,6 @@
-import { PostRecord, SiteLocale } from '@/graphql/types/graphql';
+import type { PostRecord, SiteLocale } from '@/graphql/types/graphql';
 import transformDate from '@/utils/transformDate';
-import { Maybe } from 'graphql/jsutils/Maybe';
+import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { Image as DatoImage } from 'react-datocms';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
@@ -36,7 +36,7 @@ const FullImageFeaturedPosts = ({
             return (
               <Link
                 key={post.id}
-                href={'/' + locale + '/posts/' + post.slug}
+                href={`/${locale}/posts/${post.slug}`}
                 className="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64 xl:h-96"
               >
                 <div className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110">
@@ -56,7 +56,7 @@ const FullImageFeaturedPosts = ({
                   className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110"
                 /> */}
 
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent md:via-transparent"></div>
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent md:via-transparent" />
 
                 <div className="relative mt-auto p-4">
                   {post._publishedAt && (

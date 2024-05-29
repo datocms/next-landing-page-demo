@@ -1,5 +1,5 @@
-import { FeatureRecord } from '@/graphql/types/graphql';
-import { Maybe } from 'graphql/jsutils/Maybe';
+import type { FeatureRecord } from '@/graphql/types/graphql';
+import type { Maybe } from 'graphql/jsutils/Maybe';
 import { Image as DatoImage } from 'react-datocms';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
@@ -20,7 +20,7 @@ const FeatureCards = ({
       <div
         className="pointer-events-none absolute inset-0 top-1/2 bg-primary bg-opacity-5 md:mt-24 lg:mt-0"
         aria-hidden="true"
-      ></div>
+      />
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
         <div className="py-12 md:py-20">

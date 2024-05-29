@@ -1,4 +1,4 @@
-import { BrandRecord } from '@/graphql/types/graphql';
+import type { BrandRecord } from '@/graphql/types/graphql';
 import Image from 'next/image';
 
 type Props = {

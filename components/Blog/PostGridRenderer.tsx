@@ -1,10 +1,10 @@
-import {
+import PageIndicatorList from '@/components/Blog/PageIndicatorList';
+import SingleBlog from '@/components/Blog/SingleBlog';
+import type {
   CollectionMetadata,
   PostRecord,
   SiteLocale,
 } from '@/graphql/types/graphql';
-import PageIndicatorList from './PageIndicatorList';
-import SingleBlog from './SingleBlog';
 
 type Props = {
   data: PostRecord[];

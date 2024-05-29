@@ -1,7 +1,11 @@
-import { AuthorQuery, PostRecord, SiteLocale } from '@/graphql/types/graphql';
-import SingleBlog from './SingleBlog';
-import { Image as DatoImage } from 'react-datocms';
+import SingleBlog from '@/components/Blog/SingleBlog';
+import type {
+  AuthorQuery,
+  PostRecord,
+  SiteLocale,
+} from '@/graphql/types/graphql';
 import { notFound } from 'next/navigation';
+import { Image as DatoImage } from 'react-datocms';
 import ReactMarkdown from 'react-markdown';
 
 type Props = {
@@ -51,7 +55,7 @@ const AuthorPosts = ({ data, lng }: Props) => {
           ))}
         </div>
 
-        <div className=" -mx-4 flex flex-wrap"></div>
+        <div className=" -mx-4 flex flex-wrap" />
       </div>
     </section>
   );

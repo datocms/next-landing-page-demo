@@ -1,4 +1,4 @@
-import { Maybe } from 'graphql/jsutils/Maybe';
+import type { Maybe } from 'graphql/jsutils/Maybe';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 const SectionTitle = ({

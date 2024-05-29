@@ -1,6 +1,6 @@
 import Highlighter from '@/components/Common/Highlighter';
-import { TestimonialRecord } from '@/graphql/types/graphql';
-import { Record, StructuredText } from 'datocms-structured-text-utils';
+import type { TestimonialRecord } from '@/graphql/types/graphql';
+import type { Record, StructuredText } from 'datocms-structured-text-utils';
 import { Image as DatoImage } from 'react-datocms';
 import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 const starIcon = (
@@ -17,12 +17,12 @@ const SingleTestimonial = ({ testimonial }: Props) => {
   const { rating, reviewerName, reviewerPicture, review, reviewerTitle } =
     testimonial;
 
-  let ratingIcons = [];
+  const ratingIcons = [];
   for (let index = 0; index < rating; index++) {
     ratingIcons.push(
       <span key={index} className="text-yellow">
         {starIcon}
-      </span>
+      </span>,
     );
   }
 

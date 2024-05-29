@@ -1,5 +1,5 @@
-import { FeatureRecord } from '@/graphql/types/graphql';
-import { Maybe } from 'graphql/jsutils/Maybe';
+import type { FeatureRecord } from '@/graphql/types/graphql';
+import type { Maybe } from 'graphql/jsutils/Maybe';
 import { Image as DatoImage } from 'react-datocms';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 

@@ -1,13 +1,13 @@
 'use client';
 
-import { useQuerySubscription } from 'react-datocms/use-query-subscription';
-import Legal from './Legal';
-import {
+import Legal from '@/components/Footer/Legal/Legal';
+import type {
   LegalQuery,
   LegalQueryVariables,
   SiteLocale,
 } from '@/graphql/types/graphql';
-import { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import { useQuerySubscription } from 'react-datocms/use-query-subscription';
 
 export default function RealTimeLegal({
   locale,

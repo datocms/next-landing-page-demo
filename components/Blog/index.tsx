@@ -1,7 +1,7 @@
-import { PostRecord, SiteLocale } from '@/graphql/types/graphql';
-import SectionTitle from '../Common/SectionTitle';
-import SingleBlog from './SingleBlog';
-import { Maybe } from 'graphql/jsutils/Maybe';
+import SingleBlog from '@/components/Blog/SingleBlog';
+import SectionTitle from '@/components/Common/SectionTitle';
+import type { PostRecord, SiteLocale } from '@/graphql/types/graphql';
+import type { Maybe } from 'graphql/jsutils/Maybe';
 
 type BlogProps = {
   blogData: PostRecord[];

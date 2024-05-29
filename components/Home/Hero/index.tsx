@@ -1,9 +1,9 @@
 'use client';
 
 import { primaryColor } from '@/app/i18n/settings';
-import { ButtonRecord } from '@/graphql/types/graphql';
-import { useScroll, useTransform, motion } from 'framer-motion';
-import { Maybe } from 'graphql/jsutils/Maybe';
+import type { ButtonRecord } from '@/graphql/types/graphql';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
@@ -57,10 +57,9 @@ const Hero = ({ heroTitle, heroSubtitle, buttons }: Props) => {
                         style={{
                           backgroundColor: button.primary ? primary : secondary,
                         }}
-                        className={
-                          'rounded-md px-8 py-4 text-base font-semibold duration-300 ease-in-out ' +
-                          (button.primary ? primary : secondary)
-                        }
+                        className={`rounded-md px-8 py-4 text-base font-semibold duration-300 ease-in-out ${
+                          button.primary ? primary : secondary
+                        }`}
                         id={button.id}
                       >
                         {button.label}

@@ -1,4 +1,4 @@
-import { ImageFileField } from '@/graphql/types/graphql';
+import type { ImageFileField } from '@/graphql/types/graphql';
 import { Image as DatoImage } from 'react-datocms';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
@@ -34,7 +34,9 @@ const CTABlock = ({ title, subtitle, buttonLabel, image }: Props) => {
 
             <div className="mt-auto">
               <div
-                className={`rounded-lg bg-primary px-8 py-3 text-center text-sm font-semibold text-white hover:cursor-pointer md:text-base`}
+                className={
+                  'rounded-lg bg-primary px-8 py-3 text-center text-sm font-semibold text-white hover:cursor-pointer md:text-base'
+                }
               >
                 {buttonLabel}
               </div>

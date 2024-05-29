@@ -1,16 +1,16 @@
+import { getFallbackLocale } from '@/app/i18n/settings';
+import RealTimeSections from '@/components/Sections/RealTimeSections';
 import Sections from '@/components/Sections/Sections';
+import {
+  type CollectionMetadata,
+  PageDocument,
+  type PageModelSectionsField,
+  type PostRecord,
+  type SiteLocale,
+} from '@/graphql/types/graphql';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
-import RealTimeSections from '@/components/Sections/RealTimeSections';
-import {
-  CollectionMetadata,
-  PageDocument,
-  PageModelSectionsField,
-  PostRecord,
-  SiteLocale,
-} from '@/graphql/types/graphql';
 import { notFound } from 'next/navigation';
-import { getFallbackLocale } from '@/app/i18n/settings';
 
 type Params = {
   params: {
@@ -30,7 +30,7 @@ export default async function Home({ params: { lng, slug } }: Params) {
       fallbackLocale: [fallbackLng],
       slug,
     },
-    isEnabled
+    isEnabled,
   );
 
   if (!data.page) notFound();

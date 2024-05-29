@@ -1,5 +1,5 @@
-import { PostRecord, SiteLocale, TagQuery } from '@/graphql/types/graphql';
-import SingleBlog from './SingleBlog';
+import SingleBlog from '@/components/Blog/SingleBlog';
+import type { PostRecord, SiteLocale, TagQuery } from '@/graphql/types/graphql';
 import { notFound } from 'next/navigation';
 
 type Props = {
@@ -40,7 +40,7 @@ const TagPosts = ({ data, lng }: Props) => {
 
       <div className="container">
         <div className="-mx-4 flex flex-wrap justify-center">
-          {data.tag['_allReferencingPosts'].map((post) => (
+          {data.tag._allReferencingPosts.map((post) => (
             <div
               key={post.id}
               className="mb-10 w-full px-4 md:w-2/3 lg:w-1/2 xl:w-1/3"
@@ -50,7 +50,7 @@ const TagPosts = ({ data, lng }: Props) => {
           ))}
         </div>
 
-        <div className="-mx-4 flex flex-wrap"></div>
+        <div className="-mx-4 flex flex-wrap" />
       </div>
     </section>
   );

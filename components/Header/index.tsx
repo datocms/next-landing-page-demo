@@ -1,19 +1,19 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import LanguageSelector from './LanguageSelector';
-import {
+import type { Menu } from '@/components/Header/HeaderRenderer';
+import LanguageSelector from '@/components/Header/LanguageSelector';
+import NotificationStrip from '@/components/Header/NotificationStrip';
+import type {
   LayoutModelNotificationField,
   MenuDropdownRecord,
   MenuItemRecord,
   MenuQuery,
   SiteLocale,
 } from '@/graphql/types/graphql';
-import NotificationStrip from './NotificationStrip';
-import { Menu } from './HeaderRenderer';
 import { isEmptyDocument } from 'datocms-structured-text-utils';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 type Props = {
   lng: SiteLocale;
@@ -23,7 +23,7 @@ type Props = {
 const Header = ({ lng, data }: Props) => {
   const menuData: Menu[] = [];
 
-  data.layout!.menu.map((item) => {
+  data.layout?.menu.map((item) => {
     if (item._modelApiKey === 'menu_dropdown') {
       const dropdownItem = item as MenuDropdownRecord;
       menuData.push({
@@ -53,7 +53,7 @@ const Header = ({ lng, data }: Props) => {
   // Navbar toggle
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [notificationStrip, setNotificationStrip] = useState(
-    !isEmptyDocument(data.layout?.notification)
+    !isEmptyDocument(data.layout?.notification),
   );
 
   const navbarToggleHandler = () => {
@@ -105,7 +105,7 @@ const Header = ({ lng, data }: Props) => {
           <div className="relative -mx-4 flex items-center justify-between">
             <div className="w-60 max-w-full px-4 xl:mr-12">
               <Link
-                href={'/' + lng}
+                href={`/${lng}`}
                 className={`header-logo block w-full ${
                   sticky ? 'py-5 lg:py-2' : 'py-8'
                 } `}
@@ -124,6 +124,7 @@ const Header = ({ lng, data }: Props) => {
             <div className="flex w-full items-center justify-between px-4">
               <div>
                 <button
+                  type="button"
                   onClick={navbarToggleHandler}
                   id="navbarToggler"
                   aria-label="Mobile Menu"
@@ -158,8 +159,10 @@ const Header = ({ lng, data }: Props) => {
                       <li key={menuItem.id} className="group relative">
                         {menuItem.path ? (
                           <Link
-                            href={'/' + lng + menuItem.path}
-                            className={`flex py-2 text-base text-dark group-hover:opacity-70 dark:text-white lg:mr-0 lg:inline-flex lg:px-0 lg:py-6`}
+                            href={`/${lng}${menuItem.path}`}
+                            className={
+                              'flex py-2 text-base text-dark group-hover:opacity-70 dark:text-white lg:mr-0 lg:inline-flex lg:px-0 lg:py-6'
+                            }
                           >
                             {menuItem.title}
                           </Link>
@@ -186,7 +189,7 @@ const Header = ({ lng, data }: Props) => {
                             >
                               {menuItem.submenu?.map((submenuItem) => (
                                 <Link
-                                  href={'/' + lng + submenuItem.path}
+                                  href={`/${lng}${submenuItem.path}`}
                                   key={submenuItem.id}
                                   className="block rounded py-2.5 text-sm text-dark hover:opacity-70 dark:text-white lg:px-3"
                                 >

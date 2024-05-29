@@ -1,10 +1,10 @@
 import { getFallbackLocale } from '@/app/i18n/settings';
-import queryDatoCMS from '@/utils/queryDatoCMS';
-import { notFound } from 'next/navigation';
-import { draftMode } from 'next/headers';
 import Post from '@/components/Blog/Post/Post';
 import RealTimePost from '@/components/Blog/RealTime/RealTimePost';
-import { PostDocument, SiteLocale } from '@/graphql/types/graphql';
+import { PostDocument, type SiteLocale } from '@/graphql/types/graphql';
+import queryDatoCMS from '@/utils/queryDatoCMS';
+import { draftMode } from 'next/headers';
+import { notFound } from 'next/navigation';
 
 type Params = {
   params: {
@@ -24,7 +24,7 @@ const BlogDetailsPage = async ({ params: { slug, lng } }: Params) => {
       locale: lng,
       fallbackLocale: [fallbackLng],
     },
-    isEnabled
+    isEnabled,
   );
 
   if (!data.post) {

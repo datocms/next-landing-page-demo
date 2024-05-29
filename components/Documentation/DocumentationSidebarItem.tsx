@@ -1,8 +1,11 @@
 'use client';
 
-import { DocumentationPageRecord, SiteLocale } from '@/graphql/types/graphql';
+import type {
+  DocumentationPageRecord,
+  SiteLocale,
+} from '@/graphql/types/graphql';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Maybe } from 'graphql/jsutils/Maybe';
+import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -13,7 +16,7 @@ type Props = {
 
 function findChildBySlug(
   page: Maybe<DocumentationPageRecord>,
-  currentSlug: string
+  currentSlug: string,
 ): Maybe<DocumentationPageRecord> {
   if (!page) return null;
 
@@ -76,9 +79,7 @@ const DocumentationSidebarItem = ({ page, lng }: Props) => {
   return (
     <li>
       <Link href={`/${lng}/docs/${page.slug}`}>
-        <summary
-          className={(isActive ? activeClass : inactiveClass) + ' gap-1'}
-        >
+        <summary className={`${isActive ? activeClass : inactiveClass} gap-1`}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

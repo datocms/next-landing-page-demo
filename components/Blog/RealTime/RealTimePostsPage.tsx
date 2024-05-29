@@ -1,13 +1,13 @@
 'use client';
 
-import { useQuerySubscription } from 'react-datocms/use-query-subscription';
-import PostsPage from '../PostsPage';
-import {
+import PostsPage from '@/components/Blog/PostsPage';
+import type {
   PostsQuery,
   PostsQueryVariables,
   SiteLocale,
 } from '@/graphql/types/graphql';
-import { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import { useQuerySubscription } from 'react-datocms/use-query-subscription';
 
 export default function RealTimePostsPage({
   locale,

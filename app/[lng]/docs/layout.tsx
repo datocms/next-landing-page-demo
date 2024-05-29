@@ -1,16 +1,16 @@
-import '@/styles/global.css';
-import { draftMode } from 'next/headers';
+import DocumentationSidebarItem from '@/components/Documentation/DocumentationSidebarItem';
 import {
-  DocumentationPageRecord,
+  type DocumentationPageRecord,
   DocumentationSidebarDocument,
-  SiteLocale,
+  type SiteLocale,
 } from '@/graphql/types/graphql';
-import Link from 'next/link';
-import { Search } from 'lucide-react';
-import Image from 'next/image';
+import '@/styles/global.css';
 import queryDatoCMS from '@/utils/queryDatoCMS';
+import { Search } from 'lucide-react';
+import { draftMode } from 'next/headers';
+import Image from 'next/image';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import DocumentationSidebarItem from '@/components/Documentaiton/DocumentationSidebarItem';
 
 type Params = {
   children: React.ReactNode;
@@ -35,10 +35,7 @@ export default async function RootLayout({
       <div className="fixed z-50 hidden h-full w-1/4 flex-col justify-between border-e bg-white lg:flex">
         <div className="px-4 py-6">
           <div className="w-60 max-w-full px-4 xl:mr-12">
-            <Link
-              href={'/' + lng + '/home'}
-              className={`header-logo block w-full`}
-            >
+            <Link href={`/${lng}/home`} className={'header-logo block w-full'}>
               <Image
                 src={data.documentationHome.logo.url}
                 alt="logo"
@@ -50,6 +47,7 @@ export default async function RootLayout({
           </div>
           <div className="mx-auto flex max-w-xl flex-col justify-center gap-2 pt-8 md:flex-row">
             <button
+              type="button"
               // onClick={() => toggleCommand()}
               className="hover:ring-primary-300 flex h-10 w-full flex-row items-center gap-2 truncate rounded-xl border border-slate-300 pl-4 pr-2 text-left text-sm text-slate-500 outline-none hover:ring-2 hover:ring-offset-2 hover:ring-offset-slate-50 dark:border-slate-700 dark:text-slate-100 dark:hover:ring-offset-slate-800"
             >

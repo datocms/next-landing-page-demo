@@ -1,5 +1,5 @@
+import { ApiError, type Client, buildClient } from '@datocms/cma-client-node';
 import { NextResponse } from 'next/server';
-import { ApiError, buildClient, Client } from '@datocms/cma-client-node';
 
 const cors = {
   headers: {
@@ -111,7 +111,7 @@ export async function POST(request: Request) {
           request: error.request,
           response: error.response,
         },
-        { status: 500, ...cors }
+        { status: 500, ...cors },
       );
     }
 

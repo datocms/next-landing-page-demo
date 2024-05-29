@@ -1,25 +1,24 @@
 'use client';
 
-import { PostRecord, SiteLocale } from '@/graphql/types/graphql';
-import transformDate from '@/utils/transformDate';
-import { Maybe } from 'graphql/jsutils/Maybe';
+import type { PostRecord, SiteLocale } from '@/graphql/types/graphql';
+import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Image as DatoImage } from 'react-datocms';
 
-type BlogProps = {
+type Props = {
   blogData: PostRecord[];
   blogHeader: string;
   blogSubheader: Maybe<string>;
   locale: SiteLocale;
 };
 
-const CarrouselFeaturedPosts = ({
+const CarouselFeaturedPosts = ({
   blogData,
   blogHeader,
   blogSubheader,
   locale,
-}: BlogProps) => {
+}: Props) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleNext = () => {
@@ -28,7 +27,7 @@ const CarrouselFeaturedPosts = ({
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? blogData.length - 1 : prevIndex - 1
+      prevIndex === 0 ? blogData.length - 1 : prevIndex - 1,
     );
   };
 
@@ -70,7 +69,7 @@ const CarrouselFeaturedPosts = ({
             </p>
 
             <Link
-              href={'/' + locale + '/posts/' + currentReview.slug}
+              href={`/${locale}/posts/${currentReview.slug}`}
               className="mt-2 inline-block text-blue-500 underline hover:text-blue-400"
             >
               Read more
@@ -96,6 +95,7 @@ const CarrouselFeaturedPosts = ({
             </div>
             <div className="mt-8">
               <button
+                type="button"
                 onClick={handlePrev}
                 title="left arrow"
                 className="rounded-full border p-2 text-black transition-colors duration-300 hover:bg-primary/80 rtl:-scale-x-100"
@@ -116,6 +116,7 @@ const CarrouselFeaturedPosts = ({
                 </svg>
               </button>
               <button
+                type="button"
                 onClick={handleNext}
                 title="right arrow"
                 className="rounded-full border p-2 text-black transition-colors duration-300 hover:bg-primary/80 rtl:-scale-x-100 md:mx-6"
@@ -143,4 +144,4 @@ const CarrouselFeaturedPosts = ({
   );
 };
 
-export default CarrouselFeaturedPosts;
+export default CarouselFeaturedPosts;

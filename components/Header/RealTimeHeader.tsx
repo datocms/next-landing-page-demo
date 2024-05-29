@@ -1,11 +1,11 @@
 'use client';
 
-import {
+import type {
   MenuQuery,
   MenuQueryVariables,
   SiteLocale,
 } from '@/graphql/types/graphql';
-import { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { useQuerySubscription } from 'react-datocms/use-query-subscription';
 import Header from '.';
 

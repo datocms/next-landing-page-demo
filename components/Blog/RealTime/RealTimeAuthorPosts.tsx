@@ -1,13 +1,13 @@
 'use client';
 
-import { useQuerySubscription } from 'react-datocms/use-query-subscription';
-import AuthorPosts from '../AuthorPosts';
-import {
+import AuthorPosts from '@/components/Blog/AuthorPosts';
+import type {
   AuthorQuery,
   AuthorQueryVariables,
   SiteLocale,
 } from '@/graphql/types/graphql';
-import { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import { useQuerySubscription } from 'react-datocms/use-query-subscription';
 
 export default function RealTimeAuthorPosts({
   locale,

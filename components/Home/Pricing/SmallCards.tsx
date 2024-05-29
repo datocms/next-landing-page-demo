@@ -1,5 +1,5 @@
-import { PricingTierRecord } from '@/graphql/types/graphql';
-import { Maybe } from 'graphql/jsutils/Maybe';
+import type { PricingTierRecord } from '@/graphql/types/graphql';
+import type { Maybe } from 'graphql/jsutils/Maybe';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
@@ -39,7 +39,10 @@ const SmallCards = ({ header, subheader, plans }: Props) => {
                   Per month
                 </p>
 
-                <button className="mt-10 w-full transform rounded-md bg-blue-600 px-4 py-2 capitalize tracking-wide text-white transition-colors duration-300 hover:bg-blue-500 focus:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80">
+                <button
+                  type="button"
+                  className="mt-10 w-full transform rounded-md bg-blue-600 px-4 py-2 capitalize tracking-wide text-white transition-colors duration-300 hover:bg-blue-500 focus:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+                >
                   Start Now
                 </button>
               </div>

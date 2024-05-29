@@ -1,16 +1,16 @@
-import SvgRenderer from '../Common/SvgRenderer';
-import { StatisticRecord } from '@/graphql/types/graphql';
-import { Maybe } from 'graphql/jsutils/Maybe';
+import SvgRenderer from '@/components/Common/SvgRenderer';
+import type { StatisticRecord } from '@/graphql/types/graphql';
+import type { Maybe } from 'graphql/jsutils/Maybe';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 function formatNumber(num: number) {
   if (num >= 1000000) {
-    return (num / 1000000).toFixed(1) + 'M';
-  } else if (num >= 1000) {
-    return (num / 1000).toFixed(1) + 'k';
-  } else {
-    return num.toString();
+    return `${(num / 1000000).toFixed(1)}M`;
   }
+  if (num >= 1000) {
+    return `${(num / 1000).toFixed(1)}k`;
+  }
+  return num.toString();
 }
 
 type Props = {

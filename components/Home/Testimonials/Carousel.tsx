@@ -1,12 +1,12 @@
 'use client';
 
-import { TestimonialRecord } from '@/graphql/types/graphql';
-import { Maybe } from 'graphql/jsutils/Maybe';
-import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
-import { Image as DatoImage } from 'react-datocms';
-import { useState } from 'react';
 import Highlighter from '@/components/Common/Highlighter';
-import { Record, StructuredText } from 'datocms-structured-text-utils';
+import type { TestimonialRecord } from '@/graphql/types/graphql';
+import type { Record, StructuredText } from 'datocms-structured-text-utils';
+import type { Maybe } from 'graphql/jsutils/Maybe';
+import { useState } from 'react';
+import { Image as DatoImage } from 'react-datocms';
+import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 
 type Props = {
   reviews: TestimonialRecord[];
@@ -14,7 +14,7 @@ type Props = {
   subheader: Maybe<string>;
 };
 
-const Carrousel = ({ reviews, header, subheader }: Props) => {
+const Carousel = ({ reviews, header, subheader }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleNext = () => {
@@ -23,7 +23,7 @@ const Carrousel = ({ reviews, header, subheader }: Props) => {
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? reviews.length - 1 : prevIndex - 1
+      prevIndex === 0 ? reviews.length - 1 : prevIndex - 1,
     );
   };
 
@@ -33,7 +33,7 @@ const Carrousel = ({ reviews, header, subheader }: Props) => {
     <section className="mb-24 bg-white dark:bg-gray-900">
       <div className="mx-auto max-w-6xl px-6 py-10">
         <main className="relative z-20 mt-8 w-full md:flex md:items-center xl:mt-12">
-          <div className="absolute -z-10 w-full rounded-2xl bg-primary/70 md:h-96"></div>
+          <div className="absolute -z-10 w-full rounded-2xl bg-primary/70 md:h-96" />
 
           <div className="w-full rounded-2xl bg-primary p-6 md:flex md:items-center md:justify-evenly md:bg-transparent md:p-0 lg:px-12">
             <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-full object-cover object-center shadow-md md:mx-6 md:h-[32rem] md:w-80 md:rounded-2xl lg:h-[36rem] lg:w-[24rem]">
@@ -64,6 +64,7 @@ const Carrousel = ({ reviews, header, subheader }: Props) => {
 
               <div className="mt-6 flex items-center justify-between md:justify-start">
                 <button
+                  type="button"
                   onClick={handlePrev}
                   title="left arrow"
                   className="rounded-full border p-2 text-white transition-colors duration-300 hover:bg-primary/80 rtl:-scale-x-100"
@@ -85,6 +86,7 @@ const Carrousel = ({ reviews, header, subheader }: Props) => {
                 </button>
 
                 <button
+                  type="button"
                   onClick={handleNext}
                   title="right arrow"
                   className="rounded-full border p-2 text-white transition-colors duration-300 hover:bg-primary/80 rtl:-scale-x-100 md:mx-6"
@@ -113,4 +115,4 @@ const Carrousel = ({ reviews, header, subheader }: Props) => {
   );
 };
 
-export default Carrousel;
+export default Carousel;

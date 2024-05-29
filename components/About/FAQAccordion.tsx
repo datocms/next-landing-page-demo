@@ -1,13 +1,13 @@
 'use client';
 
+import Highlighter from '@/components/Common/Highlighter';
+import type { QuestionRecord } from '@/graphql/types/graphql';
+import type { Record, StructuredText } from 'datocms-structured-text-utils';
+import { motion } from 'framer-motion';
+import type { Maybe } from 'graphql/jsutils/Maybe';
 import { useState } from 'react';
 import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
-import { motion } from 'framer-motion';
-import { QuestionRecord } from '@/graphql/types/graphql';
-import { Maybe } from 'graphql/jsutils/Maybe';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
-import Highlighter from '../Common/Highlighter';
-import { Record, StructuredText } from 'datocms-structured-text-utils';
 
 const closeIcon = (
   <span className="rounded-full bg-gray-200 text-gray-400">
@@ -90,7 +90,10 @@ const FAQAccordion = ({ title, subtitle, questions }: Props) => {
                   toggleQuestion(question.id);
                 }}
               >
-                <button className="flex w-full items-center justify-between">
+                <button
+                  type="button"
+                  className="flex w-full items-center justify-between"
+                >
                   <h1 className="font-semibold text-gray-700 dark:text-white">
                     {question.question}
                   </h1>
@@ -104,10 +107,9 @@ const FAQAccordion = ({ title, subtitle, questions }: Props) => {
                     closed: { opacity: 0 },
                   }}
                   transition={{ duration: 0.5 }}
-                  className={
-                    'mt-6 text-sm text-gray-500 dark:text-gray-300' +
-                    (isOpen ? '' : ' hidden')
-                  }
+                  className={`mt-6 text-sm text-gray-500 dark:text-gray-300${
+                    isOpen ? '' : ' hidden'
+                  }`}
                 >
                   <StructuredTextField
                     data={

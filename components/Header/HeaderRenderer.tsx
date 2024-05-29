@@ -1,8 +1,8 @@
-import { MenuDocument, SiteLocale } from '@/graphql/types/graphql';
-import Header from '.';
 import { getFallbackLocale } from '@/app/i18n/settings';
+import RealTimeHeader from '@/components/Header/RealTimeHeader';
+import { MenuDocument, type SiteLocale } from '@/graphql/types/graphql';
 import queryDatoCMS from '@/utils/queryDatoCMS';
-import RealTimeHeader from './RealTimeHeader';
+import Header from '.';
 
 type Props = {
   lng: SiteLocale;
@@ -32,7 +32,7 @@ const HeaderRenderer = async ({ lng, isDraft }: Props) => {
       locale: lng,
       fallbackLocale: [fallbackLng],
     },
-    isDraft
+    isDraft,
   );
 
   return (

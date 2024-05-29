@@ -1,17 +1,17 @@
 import { getFallbackLocale } from '@/app/i18n/settings';
 import Highlighter from '@/components/Common/Highlighter';
-import DocumentaitonPageRenderer from '@/components/Documentaiton/DocumentationPageRenderer';
+import DocumentationPageRenderer from '@/components/Documentation/DocumentationPageRenderer';
 import {
   ChangeLogModelContentField,
   ChangelogDocument,
   DocumentationPageDocument,
-  SiteLocale,
+  type SiteLocale,
 } from '@/graphql/types/graphql';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import transformDate from '@/utils/transformDate';
 import {
-  Record,
-  StructuredText,
+  type Record,
+  type StructuredText,
   isHeading,
   isParagraph,
 } from 'datocms-structured-text-utils';
@@ -39,7 +39,7 @@ const ChangelogPage = async ({ params: { slug, lng } }: Params) => {
     {
       slug,
     },
-    isEnabled
+    isEnabled,
   );
 
   if (!data || !data.changeLog) notFound();

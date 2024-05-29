@@ -1,8 +1,8 @@
-import { TestimonialRecord } from '@/graphql/types/graphql';
-import SectionTitle from '../../Common/SectionTitle';
-import SingleTestimonial from './SingleTestimonial';
-import { Maybe } from 'graphql/jsutils/Maybe';
 import { primaryColor } from '@/app/i18n/settings';
+import SectionTitle from '@/components/Common/SectionTitle';
+import SingleTestimonial from '@/components/Home/Testimonials/SingleTestimonial';
+import type { TestimonialRecord } from '@/graphql/types/graphql';
+import type { Maybe } from 'graphql/jsutils/Maybe';
 
 type Props = {
   reviews: TestimonialRecord[];

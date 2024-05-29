@@ -1,12 +1,12 @@
 'use client';
 
-import { TestimonialRecord } from '@/graphql/types/graphql';
-import { Maybe } from 'graphql/jsutils/Maybe';
-import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
-import { Image as DatoImage } from 'react-datocms';
-import { useState } from 'react';
 import Highlighter from '@/components/Common/Highlighter';
-import { Record, StructuredText } from 'datocms-structured-text-utils';
+import type { TestimonialRecord } from '@/graphql/types/graphql';
+import type { Record, StructuredText } from 'datocms-structured-text-utils';
+import type { Maybe } from 'graphql/jsutils/Maybe';
+import { useState } from 'react';
+import { Image as DatoImage } from 'react-datocms';
+import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 
 type Props = {
   reviews: TestimonialRecord[];
@@ -14,7 +14,7 @@ type Props = {
   subheader: Maybe<string>;
 };
 
-const ModernCarrousel = ({ reviews, header, subheader }: Props) => {
+const ModernCarousel = ({ reviews, header, subheader }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleNext = () => {
@@ -23,7 +23,7 @@ const ModernCarrousel = ({ reviews, header, subheader }: Props) => {
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? reviews.length - 1 : prevIndex - 1
+      prevIndex === 0 ? reviews.length - 1 : prevIndex - 1,
     );
   };
 
@@ -32,8 +32,8 @@ const ModernCarrousel = ({ reviews, header, subheader }: Props) => {
   return (
     <section className="bg-white py-16 dark:bg-gray-900">
       <div className="relative flex">
-        <div className="min-h-screen lg:w-1/3"></div>
-        <div className="mt-32 hidden h-[750px] w-3/4 rounded-xl bg-primary/10 dark:bg-gray-800 lg:block"></div>
+        <div className="min-h-screen lg:w-1/3" />
+        <div className="mt-32 hidden h-[750px] w-3/4 rounded-xl bg-primary/10 dark:bg-gray-800 lg:block" />
 
         <div className="container mx-auto flex min-h-screen w-full flex-col justify-center px-6 py-10 lg:absolute lg:inset-x-0">
           <h1 className="text-2xl font-semibold capitalize text-gray-800 dark:text-white lg:text-3xl">
@@ -71,6 +71,7 @@ const ModernCarrousel = ({ reviews, header, subheader }: Props) => {
 
           <div className="mt-12 flex items-center justify-between lg:justify-start">
             <button
+              type="button"
               title="left arrow"
               className="rounded-full border p-2 text-gray-800 transition-colors duration-300 hover:bg-gray-100 rtl:-scale-x-100 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
               onClick={handlePrev}
@@ -92,6 +93,7 @@ const ModernCarrousel = ({ reviews, header, subheader }: Props) => {
             </button>
 
             <button
+              type="button"
               title="right arrow"
               className="rounded-full border p-2 text-gray-800 transition-colors duration-300 hover:bg-gray-100 rtl:-scale-x-100 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800 lg:mx-6"
               onClick={handleNext}
@@ -118,4 +120,4 @@ const ModernCarrousel = ({ reviews, header, subheader }: Props) => {
   );
 };
 
-export default ModernCarrousel;
+export default ModernCarousel;

@@ -1,11 +1,11 @@
 'use client';
 
-import { SiteLocale } from '@/graphql/types/graphql';
+import AuthenticationModal from '@/components/Header/AuthenticationModal';
+import SuccessPopUp from '@/components/Header/SuccessPopUp';
+import type { SiteLocale } from '@/graphql/types/graphql';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import AuthenticationModal from '../Header/AuthenticationModal';
-import SuccessPopUp from '../Header/SuccessPopUp';
 
 type Props = {
   lng: SiteLocale;

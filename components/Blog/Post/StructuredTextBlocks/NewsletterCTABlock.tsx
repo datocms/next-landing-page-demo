@@ -36,7 +36,9 @@ const NewsletterCTABlock = ({ title, subtitle, buttonLabel }: Params) => {
 
             <button
               type="submit"
-              className={`focus:ring-yellow-400 group mt-4 flex w-full items-center justify-center gap-2 rounded-md bg-primary px-5 py-3 text-white transition focus:outline-none focus:ring sm:mt-0 sm:w-auto`}
+              className={
+                'focus:ring-yellow-400 group mt-4 flex w-full items-center justify-center gap-2 rounded-md bg-primary px-5 py-3 text-white transition focus:outline-none focus:ring sm:mt-0 sm:w-auto'
+              }
             >
               <span className="text-sm font-medium"> {buttonLabel} </span>
 

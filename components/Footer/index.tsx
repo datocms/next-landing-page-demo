@@ -1,9 +1,9 @@
+import { getFallbackLocale } from '@/app/i18n/settings';
+import FooterRenderer from '@/components/Footer/FooterRenderer';
+import RealTimeFooter from '@/components/Footer/RealTimeFooter';
+import { FooterDocument, type SiteLocale } from '@/graphql/types/graphql';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
-import FooterRenderer from './FooterRenderer';
-import RealTimeFooter from './RealTimeFooter';
-import { FooterDocument, SiteLocale } from '@/graphql/types/graphql';
-import { getFallbackLocale } from '@/app/i18n/settings';
 
 type Props = {
   lng: SiteLocale;
@@ -16,7 +16,7 @@ const Footer = async ({ lng }: Props) => {
   const data = await queryDatoCMS(
     FooterDocument,
     { locale: lng, fallbackLocale: fallbackLng },
-    isEnabled
+    isEnabled,
   );
 
   return (

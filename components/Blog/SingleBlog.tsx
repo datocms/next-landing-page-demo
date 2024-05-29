@@ -1,4 +1,4 @@
-import {
+import type {
   PostRecord,
   ResponsiveImage,
   SiteLocale,
@@ -19,7 +19,7 @@ const SingleBlog = ({ blog, locale }: Props) => {
     <>
       <div className="relative h-full overflow-hidden rounded-xl bg-white shadow-one dark:bg-dark">
         <Link
-          href={'/' + locale + '/posts/' + slug}
+          href={`/${locale}/posts/${slug}`}
           className="relative block h-[230px] w-full overflow-hidden"
         >
           <span className="absolute right-6 top-6 z-20 inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold capitalize text-white">
@@ -31,14 +31,14 @@ const SingleBlog = ({ blog, locale }: Props) => {
               layout="fill"
               objectFit="cover"
               objectPosition="50% 50%"
-              data={seoTags!.image!.responsiveImage as ResponsiveImage}
+              data={seoTags?.image?.responsiveImage as ResponsiveImage}
             />
           </div>
         </Link>
         <div className="p-6 sm:p-8 md:px-6 md:py-8 lg:p-8 xl:px-5 xl:py-8 2xl:p-8">
           <h3>
             <Link
-              href={'/' + locale + '/posts/' + slug}
+              href={`/${locale}/posts/${slug}`}
               className="mb-4 block h-16 text-xl text-black hover:text-primary dark:text-white dark:hover:text-primary"
             >
               {title}

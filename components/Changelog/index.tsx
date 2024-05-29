@@ -1,5 +1,5 @@
-import { ChangeLogRecord, SiteLocale } from '@/graphql/types/graphql';
-import { Maybe } from 'graphql/jsutils/Maybe';
+import type { ChangeLogRecord, SiteLocale } from '@/graphql/types/graphql';
+import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 

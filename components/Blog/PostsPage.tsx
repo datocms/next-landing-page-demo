@@ -1,6 +1,10 @@
 import PageIndicatorList from '@/components/Blog/PageIndicatorList';
 import SingleBlog from '@/components/Blog/SingleBlog';
-import { PostRecord, PostsQuery, SiteLocale } from '@/graphql/types/graphql';
+import type {
+  PostRecord,
+  PostsQuery,
+  SiteLocale,
+} from '@/graphql/types/graphql';
 
 type Props = {
   data: PostsQuery;
@@ -40,9 +44,9 @@ const PostsPage = ({ data, lng, page }: Props) => {
               </li>
               <PageIndicatorList
                 lng={lng}
-                postCount={data['_allPostsMeta'].count}
+                postCount={data._allPostsMeta.count}
               />
-              {page * 9 <= data['_allPostsMeta'].count && (
+              {page * 9 <= data._allPostsMeta.count && (
                 <li className="mx-1">
                   <a
                     href={`/${lng}/posts/page/${page + 1}`}

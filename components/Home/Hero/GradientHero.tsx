@@ -1,9 +1,9 @@
 'use client';
 
-import { ButtonRecord } from '@/graphql/types/graphql';
-import { Maybe } from 'graphql/jsutils/Maybe';
-import Link from 'next/link';
+import type { ButtonRecord } from '@/graphql/types/graphql';
 import { delay, motion } from 'framer-motion';
+import type { Maybe } from 'graphql/jsutils/Maybe';
+import Link from 'next/link';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {

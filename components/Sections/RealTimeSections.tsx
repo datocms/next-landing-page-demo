@@ -1,8 +1,7 @@
 'use client';
 
-import { useQuerySubscription } from 'react-datocms/use-query-subscription';
-import Section from './Sections';
-import {
+import Section from '@/components/Sections/Sections';
+import type {
   CollectionMetadata,
   PageModelSectionsField,
   PageQuery,
@@ -10,7 +9,8 @@ import {
   PostRecord,
   SiteLocale,
 } from '@/graphql/types/graphql';
-import { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import { useQuerySubscription } from 'react-datocms/use-query-subscription';
 
 export default function RealTimeSections({
   initialData,

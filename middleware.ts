@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
-import getAvailableLocales, { getFallbackLocale } from './app/i18n/settings';
+import getAvailableLocales, { getFallbackLocale } from '@/app/i18n/settings';
 import { match } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
-import { SiteLocale } from './graphql/types/graphql';
+import { type NextRequest, NextResponse } from 'next/server';
+import type { SiteLocale } from './graphql/types/graphql';
 
 async function getLocale(
   request: Request,
-  locales: SiteLocale[]
+  locales: SiteLocale[],
 ): Promise<string> {
   const fallbackLng = await getFallbackLocale();
   const headers = new Headers(request.headers);
@@ -26,7 +26,8 @@ export async function middleware(request: NextRequest) {
   const locales = await getAvailableLocales();
 
   const pathnameIsMissingLocale = locales.every(
-    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
+    (locale) =>
+      !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`,
   );
 
   //go to home in browser language if pathname & locale is missing
@@ -41,7 +42,7 @@ export async function middleware(request: NextRequest) {
     locales.includes(pathname.split('/')[1] as SiteLocale)
   ) {
     return NextResponse.redirect(
-      new URL(`/${pathname.split('/')[1]}/home`, request.url)
+      new URL(`/${pathname.split('/')[1]}/home`, request.url),
     );
   }
 
@@ -52,7 +53,7 @@ export async function middleware(request: NextRequest) {
     // e.g. incoming request is /products
     // The new URL is now /en/products
     return NextResponse.redirect(
-      new URL(`/${locale}/${pathname}`, request.url)
+      new URL(`/${locale}/${pathname}`, request.url),
     );
   }
 }

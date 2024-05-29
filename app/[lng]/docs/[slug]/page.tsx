@@ -1,7 +1,10 @@
 import { getFallbackLocale } from '@/app/i18n/settings';
-import DocumentaitonPageRenderer from '@/components/Documentaiton/DocumentationPageRenderer';
-import RealTimeDocumentationPage from '@/components/Documentaiton/RealTimeDocumentationPage';
-import { DocumentationPageDocument, SiteLocale } from '@/graphql/types/graphql';
+import DocumentationPageRenderer from '@/components/Documentation/DocumentationPageRenderer';
+import RealTimeDocumentationPage from '@/components/Documentation/RealTimeDocumentationPage';
+import {
+  DocumentationPageDocument,
+  type SiteLocale,
+} from '@/graphql/types/graphql';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
@@ -13,7 +16,7 @@ type Params = {
   };
 };
 
-const DocumentaitonPage = async ({ params: { slug, lng } }: Params) => {
+const DocumentationPage = async ({ params: { slug, lng } }: Params) => {
   const fallbackLng = await getFallbackLocale();
   const { isEnabled } = draftMode();
 
@@ -24,14 +27,14 @@ const DocumentaitonPage = async ({ params: { slug, lng } }: Params) => {
       locale: lng,
       fallbackLocale: [fallbackLng],
     },
-    isEnabled
+    isEnabled,
   );
 
   if (!data || !data.documentationPage) notFound();
 
   return (
     <>
-      {!isEnabled && <DocumentaitonPageRenderer data={data} />}
+      {!isEnabled && <DocumentationPageRenderer data={data} />}
       {isEnabled && (
         <RealTimeDocumentationPage
           initialData={data}
@@ -45,4 +48,4 @@ const DocumentaitonPage = async ({ params: { slug, lng } }: Params) => {
   );
 };
 
-export default DocumentaitonPage;
+export default DocumentationPage;

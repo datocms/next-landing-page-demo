@@ -1,9 +1,9 @@
-import { QuestionRecord } from '@/graphql/types/graphql';
-import { Maybe } from 'graphql/jsutils/Maybe';
+import Highlighter from '@/components/Common/Highlighter';
+import type { QuestionRecord } from '@/graphql/types/graphql';
+import type { Record, StructuredText } from 'datocms-structured-text-utils';
+import type { Maybe } from 'graphql/jsutils/Maybe';
 import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
-import Highlighter from '../Common/Highlighter';
-import { Record, StructuredText } from 'datocms-structured-text-utils';
 
 type Props = {
   title: Maybe<string>;

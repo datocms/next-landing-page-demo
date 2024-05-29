@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { type Dispatch, type SetStateAction, useState } from 'react';
 
 type Props = {
   setModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -16,15 +16,14 @@ const AuthenticationModal = ({
 
   async function enableDraft() {
     try {
-      const response = await fetch('/api/draft/enable?token=' + inputValue);
+      const response = await fetch(`/api/draft/enable?token=${inputValue}`);
       if (response.status === 200) {
         refresh();
         setModalOpen(false);
         triggerSuccessToast();
         return;
-      } else {
-        throw new Error('Wrong token!');
       }
+      throw new Error('Wrong token!');
     } catch (error) {
       setInputValue('');
       setHasError(true);
@@ -51,7 +50,7 @@ const AuthenticationModal = ({
               strokeLinecap="round"
               strokeLinejoin="round"
               d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-            ></path>
+            />
           </svg>
         </span>
 
@@ -69,10 +68,9 @@ const AuthenticationModal = ({
             setHasError(false);
           }}
           id="UserToken"
-          className={
-            'mt-4 w-full rounded-md border-2 border-gray-100 p-2 shadow-sm sm:text-sm' +
-            (hasError ? ' border-red-300' : '')
-          }
+          className={`mt-4 w-full rounded-md border-2 border-gray-100 p-2 shadow-sm sm:text-sm${
+            hasError ? ' border-red-300' : ''
+          }`}
         />
         {hasError && <p className="mt-4 text-red-400">Incorrect token!</p>}
       </div>

@@ -1,10 +1,10 @@
 'use client';
 
-import { SiteLocale } from '@/graphql/types/graphql';
+import type { SiteLocale } from '@/graphql/types/graphql';
+import { getLangNameFromCode } from 'language-name-map';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
-import { getLangNameFromCode } from 'language-name-map';
 
 type Props = {
   lng: SiteLocale;
@@ -32,16 +32,18 @@ const LanguageSelector = ({ lng, languages }: Props) => {
         }
         className="ml-4 inline-flex w-28 items-center overflow-hidden rounded-md bg-white transition duration-100 hover:bg-gray-200 active:scale-95 active:bg-gray-300"
       >
-        <button className="inline-flex cursor-pointer items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-gray-800">
+        <button
+          type="button"
+          className="inline-flex cursor-pointer items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-gray-800"
+        >
           {getLangNameFromCode(currentLocale)?.name || currentLocale}
         </button>
       </div>
 
       <div
-        className={
-          'absolute end-0 z-10 ml-4 mt-1 w-28 rounded-md border border-gray-100 bg-white shadow-lg' +
-          (isOpen ? '' : ' hidden')
-        }
+        className={`absolute end-0 z-10 ml-4 mt-1 w-28 rounded-md border border-gray-100 bg-white shadow-lg${
+          isOpen ? '' : ' hidden'
+        }`}
         role="menu"
       >
         {languages.map((locale) => {
@@ -51,7 +53,7 @@ const LanguageSelector = ({ lng, languages }: Props) => {
               className="inline-flex w-full cursor-pointer items-end justify-start rounded-lg text-sm font-medium text-gray-900 hover:bg-gray-100"
             >
               <Link
-                href={'/' + locale + '/' + pathString}
+                href={`/${locale}/${pathString}`}
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white"
                 role="menuitem"
               >

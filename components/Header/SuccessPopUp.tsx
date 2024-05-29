@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 
 type Props = {
   setSuccessToast: Dispatch<SetStateAction<boolean>>;
@@ -40,6 +40,7 @@ const SuccessPopUp = ({ setSuccessToast }: Props) => {
         </div>
 
         <button
+          type="button"
           onClick={() => {
             setSuccessToast(false);
           }}

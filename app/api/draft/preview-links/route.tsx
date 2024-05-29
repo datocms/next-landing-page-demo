@@ -1,6 +1,6 @@
-import type { NextRequest } from 'next/server';
 import type { SiteLocale } from '@/graphql/types/graphql';
 import type { SchemaTypes } from '@datocms/cma-client-node';
+import type { NextRequest } from 'next/server';
 
 const websiteBaseUrl = (
   process.env.VERCEL_BRANCH_URL
@@ -15,7 +15,7 @@ const websiteBaseUrl = (
 const generatePreviewUrl = (
   item: SchemaTypes.Item,
   itemType: SchemaTypes.ItemType,
-  locale: SiteLocale
+  locale: SiteLocale,
 ) => {
   switch (itemType.attributes.api_key) {
     case 'page':

@@ -1,7 +1,7 @@
 'use client';
 
+import type { URL } from 'node:url';
 import React, { useEffect, useState } from 'react';
-import { URL } from 'url';
 
 type Props = {
   url: string | URL;

@@ -1,8 +1,11 @@
 'use client';
 
-import Link from 'next/link';
+import type {
+  DocumentationPageRecord,
+  SiteLocale,
+} from '@/graphql/types/graphql';
 import { AnimatePresence, motion } from 'framer-motion';
-import { DocumentationPageRecord, SiteLocale } from '@/graphql/types/graphql';
+import Link from 'next/link';
 
 type Props = {
   featuredSection: DocumentationPageRecord;

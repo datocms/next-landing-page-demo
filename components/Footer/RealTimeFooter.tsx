@@ -1,13 +1,13 @@
 'use client';
 
-import { useQuerySubscription } from 'react-datocms/use-query-subscription';
-import FooterRenderer from './FooterRenderer';
-import {
+import FooterRenderer from '@/components/Footer/FooterRenderer';
+import type {
   FooterQuery,
   FooterQueryVariables,
   SiteLocale,
 } from '@/graphql/types/graphql';
-import { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import { useQuerySubscription } from 'react-datocms/use-query-subscription';
 
 export default function RealTimeFooter({
   locale,

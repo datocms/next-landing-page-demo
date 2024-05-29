@@ -1,12 +1,12 @@
 import Highlighter from '@/components/Common/Highlighter';
 import {
   LegalPageModelContentField,
-  LegalQuery,
-  SiteLocale,
+  type LegalQuery,
+  type SiteLocale,
 } from '@/graphql/types/graphql';
 import {
-  Record,
-  StructuredText,
+  type Record,
+  type StructuredText,
   isHeading,
   isParagraph,
 } from 'datocms-structured-text-utils';

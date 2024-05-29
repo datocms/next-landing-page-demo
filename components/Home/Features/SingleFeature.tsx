@@ -1,5 +1,4 @@
-import SvgRenderer from '../../Common/SvgRenderer';
-import { FeatureRecord } from '@/graphql/types/graphql';
+import type { FeatureRecord } from '@/graphql/types/graphql';
 import { Image as DatoImage } from 'react-datocms';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 

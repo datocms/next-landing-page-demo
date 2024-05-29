@@ -1,7 +1,7 @@
 import { getFallbackLocale } from '@/app/i18n/settings';
 import AuthorPosts from '@/components/Blog/AuthorPosts';
 import RealTimeAuthorPosts from '@/components/Blog/RealTime/RealTimeAuthorPosts';
-import { AuthorDocument, SiteLocale } from '@/graphql/types/graphql';
+import { AuthorDocument, type SiteLocale } from '@/graphql/types/graphql';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
@@ -25,7 +25,7 @@ const AuthorPage = async ({ params }: Params) => {
       fallbackLocale: fallbackLng,
       slug: params.slug,
     },
-    isEnabled
+    isEnabled,
   );
 
   if (!data.author) notFound();

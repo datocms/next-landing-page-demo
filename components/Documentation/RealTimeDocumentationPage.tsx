@@ -1,13 +1,13 @@
 'use client';
 
-import { useQuerySubscription } from 'react-datocms/use-query-subscription';
-import {
+import DocumentationPageRenderer from '@/components/Documentation/DocumentationPageRenderer';
+import type {
   DocumentationPageQuery,
   DocumentationPageQueryVariables,
   SiteLocale,
 } from '@/graphql/types/graphql';
-import { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import DocumentaitonPageRenderer from './DocumentationPageRenderer';
+import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import { useQuerySubscription } from 'react-datocms/use-query-subscription';
 
 export default function RealTimeDocumentationPage({
   locale,
@@ -32,5 +32,5 @@ export default function RealTimeDocumentationPage({
 
   if (!data) return <></>;
 
-  return <DocumentaitonPageRenderer data={data} />;
+  return <DocumentationPageRenderer data={data} />;
 }

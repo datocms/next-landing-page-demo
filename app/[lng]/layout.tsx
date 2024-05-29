@@ -1,11 +1,11 @@
-import ScrollToTop from '@/components/ScrollToTop';
-import 'node_modules/react-modal-video/css/modal-video.css';
-import '@/styles/global.css';
-import { draftMode } from 'next/headers';
-import { CustomColorDocument, SiteLocale } from '@/graphql/types/graphql';
 import getAvailableLocales from '@/app/i18n/settings';
 import CustomColor from '@/components/Common/CustomColor';
+import ScrollToTop from '@/components/ScrollToTop';
+import { CustomColorDocument, type SiteLocale } from '@/graphql/types/graphql';
+import '@/styles/global.css';
 import queryDatoCMS from '@/utils/queryDatoCMS';
+import { draftMode } from 'next/headers';
+import 'node_modules/react-modal-video/css/modal-video.css';
 
 type Params = {
   children: React.ReactNode;

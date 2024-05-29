@@ -1,13 +1,13 @@
 'use client';
 
-import { useQuerySubscription } from 'react-datocms/use-query-subscription';
-import TagPosts from '../TagPosts';
-import {
+import TagPosts from '@/components/Blog/TagPosts';
+import type {
   SiteLocale,
   TagQuery,
   TagQueryVariables,
 } from '@/graphql/types/graphql';
-import { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import { useQuerySubscription } from 'react-datocms/use-query-subscription';
 
 export default function RealTimeTagPosts({
   locale,

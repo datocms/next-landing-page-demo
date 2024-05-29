@@ -1,24 +1,12 @@
 import SharePost from '@/components/Blog/Post/SharePost';
-import TagButton from '@/components/Blog/TagButton';
-import QuoteBlock from '@/components/Blog/Post/StructuredTextBlocks/QuoteBlock';
-import transformDate from '@/utils/transformDate';
-import {
-  isBlockquote,
-  isHeading,
-  isLink,
-  isParagraph,
-} from 'datocms-structured-text-utils';
-import {
-  Image as DatoImage,
-  StructuredText,
-  renderNodeRule,
-} from 'react-datocms';
-import NewsletterCTABlock from '@/components/Blog/Post/StructuredTextBlocks/NewsletterCTABlock';
+import CTAAppBlock from '@/components/Blog/Post/StructuredTextBlocks/CTAAppBlock';
 import CTABlock from '@/components/Blog/Post/StructuredTextBlocks/CTABlock';
+import NewsletterCTABlock from '@/components/Blog/Post/StructuredTextBlocks/NewsletterCTABlock';
+import QuoteBlock from '@/components/Blog/Post/StructuredTextBlocks/QuoteBlock';
+import TagButton from '@/components/Blog/TagButton';
 import DateIcon from '@/components/Blog/svgs/DateIcon';
-import SingleBlog from '@/components/Blog/SingleBlog';
-import Link from 'next/link';
-import {
+import Highlighter from '@/components/Common/Highlighter';
+import type {
   AppCtaRecord,
   CtaButtonWithImageRecord,
   ImageBlockRecord,
@@ -28,10 +16,20 @@ import {
   ResponsiveImage,
   SiteLocale,
 } from '@/graphql/types/graphql';
+import transformDate from '@/utils/transformDate';
+import {
+  isBlockquote,
+  isHeading,
+  isLink,
+  isParagraph,
+} from 'datocms-structured-text-utils';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import React from 'react';
-import Highlighter from '@/components/Common/Highlighter';
-import CTAAppBlock from './StructuredTextBlocks/CTAAppBlock';
+import {
+  Image as DatoImage,
+  StructuredText,
+  renderNodeRule,
+} from 'react-datocms';
 
 type Props = {
   data: PostQuery;
@@ -99,7 +97,7 @@ const Post = ({ data, lng }: Props) => {
                   renderNode={Highlighter}
                   renderBlock={({ record }: any) => {
                     switch (record.__typename) {
-                      case 'ImageBlockRecord':
+                      case 'ImageBlockRecord': {
                         const ImageBlockRecord = record as ImageBlockRecord;
                         return (
                           <div className="relative mb-16 mt-16 overflow-hidden rounded-md shadow-md sm:h-[300px] md:h-[400px]">
@@ -111,7 +109,8 @@ const Post = ({ data, lng }: Props) => {
                             />
                           </div>
                         );
-                      case 'NewsletterSubscriptionRecord':
+                      }
+                      case 'NewsletterSubscriptionRecord': {
                         const NewsletterSubscriptionRecord =
                           record as NewsletterSubscriptionRecord;
                         return (
@@ -123,7 +122,8 @@ const Post = ({ data, lng }: Props) => {
                             }
                           />
                         );
-                      case 'CtaButtonWithImageRecord':
+                      }
+                      case 'CtaButtonWithImageRecord': {
                         const CtaButtonWithImageRecord =
                           record as CtaButtonWithImageRecord;
                         return (
@@ -134,7 +134,8 @@ const Post = ({ data, lng }: Props) => {
                             image={CtaButtonWithImageRecord.image}
                           />
                         );
-                      case 'AppCtaRecord':
+                      }
+                      case 'AppCtaRecord': {
                         const appCtaRecord = record as AppCtaRecord;
                         return (
                           <CTAAppBlock
@@ -144,6 +145,7 @@ const Post = ({ data, lng }: Props) => {
                             appleURL={appCtaRecord.appstoreUrl}
                           />
                         );
+                      }
                       default:
                         return null;
                     }
@@ -170,7 +172,7 @@ const Post = ({ data, lng }: Props) => {
                   }}
                   renderInlineRecord={({ record }) => {
                     switch (record.__typename) {
-                      case 'PostRecord':
+                      case 'PostRecord': {
                         const PostRecord = record as PostRecord;
                         return (
                           <Link
@@ -181,6 +183,7 @@ const Post = ({ data, lng }: Props) => {
                             {PostRecord.title}
                           </Link>
                         );
+                      }
                       default:
                         return null;
                     }

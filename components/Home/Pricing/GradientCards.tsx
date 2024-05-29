@@ -1,7 +1,7 @@
 import Highlighter from '@/components/Common/Highlighter';
-import { PricingTierRecord } from '@/graphql/types/graphql';
-import { Record, StructuredText } from 'datocms-structured-text-utils';
-import { Maybe } from 'graphql/jsutils/Maybe';
+import type { PricingTierRecord } from '@/graphql/types/graphql';
+import type { Record, StructuredText } from 'datocms-structured-text-utils';
+import type { Maybe } from 'graphql/jsutils/Maybe';
 import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 

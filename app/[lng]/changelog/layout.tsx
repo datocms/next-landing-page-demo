@@ -1,10 +1,10 @@
+import getAvailableLocales from '@/app/i18n/settings';
 import Footer from '@/components/Footer';
-import 'node_modules/react-modal-video/css/modal-video.css';
+import HeaderRenderer from '@/components/Header/HeaderRenderer';
+import type { SiteLocale } from '@/graphql/types/graphql';
 import '@/styles/global.css';
 import { draftMode } from 'next/headers';
-import { SiteLocale } from '@/graphql/types/graphql';
-import getAvailableLocales from '@/app/i18n/settings';
-import HeaderRenderer from '@/components/Header/HeaderRenderer';
+import 'node_modules/react-modal-video/css/modal-video.css';
 
 type Params = {
   children: React.ReactNode;

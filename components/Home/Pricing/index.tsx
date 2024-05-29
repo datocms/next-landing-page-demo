@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-import SectionTitle from '../../Common/SectionTitle';
-import OfferList from './OfferList';
-import PricingBox from './PricingBox';
-import { Maybe } from 'graphql/jsutils/Maybe';
 import { primaryColor } from '@/app/i18n/settings';
-import { PricingTierRecord } from '@/graphql/types/graphql';
+import SectionTitle from '@/components/Common/SectionTitle';
+import OfferList from '@/components/Home/Pricing/OfferList';
+import PricingBox from '@/components/Home/Pricing/PricingBox';
+import type { PricingTierRecord } from '@/graphql/types/graphql';
+import type { Maybe } from 'graphql/jsutils/Maybe';
+import { useState } from 'react';
 
 type Props = {
   header: string;
@@ -43,13 +43,13 @@ const Pricing = ({ header, subheader, plans }: Props) => {
               className="flex cursor-pointer items-center"
             >
               <div className="relative">
-                <div className="h-5 w-14 rounded-full bg-[#1D2144] shadow-inner"></div>
+                <div className="h-5 w-14 rounded-full bg-[#1D2144] shadow-inner" />
                 <div
                   className={`${
                     isMonthly ? '' : 'translate-x-full'
                   } shadow-switch-1 absolute left-0 top-[-4px] flex h-7 w-7 items-center justify-center rounded-full bg-primary transition`}
                 >
-                  <span className="active h-4 w-4 rounded-full bg-white"></span>
+                  <span className="active h-4 w-4 rounded-full bg-white" />
                 </div>
               </div>
             </div>

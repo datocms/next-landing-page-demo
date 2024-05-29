@@ -1,5 +1,5 @@
 import { primaryColor } from '@/app/i18n/settings';
-import { JSXElementConstructor, ReactElement } from 'react';
+import type { JSXElementConstructor, ReactElement } from 'react';
 
 type Props = {
   text:

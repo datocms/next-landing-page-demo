@@ -1,12 +1,12 @@
 import { buildClient } from '@datocms/cma-client-node';
 import got from 'got';
 import { JSDOM } from 'jsdom';
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 
 const findSlugAndPermalink = async (
   item: any,
   itemTypeApiKey: string,
-  locale: string
+  locale: string,
 ) => {
   switch (itemTypeApiKey) {
     case 'page':
@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
   const token = searchParams.get('token');
 
   if (token !== process.env.SEO_SECRET_TOKEN)
-    return new Response(`Invalid token token`, { status: 401, headers });
+    return new Response('Invalid token token', { status: 401, headers });
 
   if (
     !itemId ||
@@ -67,7 +67,7 @@ export async function GET(req: NextRequest) {
   const [slug, permalink] = await findSlugAndPermalink(
     item,
     itemTypeApiKey,
-    locale
+    locale,
   );
 
   if (!permalink) {
@@ -76,7 +76,7 @@ export async function GET(req: NextRequest) {
       {
         status: 422,
         headers,
-      }
+      },
     );
   }
 
@@ -109,6 +109,6 @@ export async function GET(req: NextRequest) {
       description: pageDescription,
       content: pageContent,
     }),
-    { status: 200, headers }
+    { status: 200, headers },
   );
 }
