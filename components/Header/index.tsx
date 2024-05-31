@@ -1,26 +1,34 @@
 'use client';
 
-import type { Menu } from '@/components/Header/HeaderRenderer';
 import LanguageSelector from '@/components/Header/LanguageSelector';
 import NotificationStrip from '@/components/Header/NotificationStrip';
 import type {
+  CommonLayoutQuery,
   LayoutModelNotificationField,
   MenuDropdownRecord,
   MenuItemRecord,
-  MenuQuery,
-  SiteLocale,
 } from '@/graphql/types/graphql';
+import type { GlobalPageProps } from '@/utils/globalPageProps';
+import { buildUrl } from '@/utils/globalPageProps';
 import { isEmptyDocument } from 'datocms-structured-text-utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-type Props = {
-  lng: SiteLocale;
-  data: MenuQuery;
+type Menu = {
+  id: string;
+  title: string;
+  path?: string;
+  newTab: boolean;
+  submenu?: Menu[];
 };
 
-const Header = ({ lng, data }: Props) => {
+type Props = {
+  globalPageProps: GlobalPageProps;
+  data: CommonLayoutQuery;
+};
+
+const Header = ({ globalPageProps, data }: Props) => {
   const menuData: Menu[] = [];
 
   data.layout?.menu.map((item) => {
@@ -90,7 +98,7 @@ const Header = ({ lng, data }: Props) => {
           notification={
             data.layout?.notification as LayoutModelNotificationField
           }
-          lng={lng}
+          globalPageProps={globalPageProps}
           setNotificationStrip={setNotificationStrip}
         />
       )}
@@ -105,7 +113,7 @@ const Header = ({ lng, data }: Props) => {
           <div className="relative -mx-4 flex items-center justify-between">
             <div className="w-60 max-w-full px-4 xl:mr-12">
               <Link
-                href={`/${lng}`}
+                href={buildUrl(globalPageProps)}
                 className={`header-logo block w-full ${
                   sticky ? 'py-5 lg:py-2' : 'py-8'
                 } `}
@@ -159,7 +167,7 @@ const Header = ({ lng, data }: Props) => {
                       <li key={menuItem.id} className="group relative">
                         {menuItem.path ? (
                           <Link
-                            href={`/${lng}${menuItem.path}`}
+                            href={buildUrl(globalPageProps, menuItem.path)}
                             className={
                               'flex py-2 text-base text-dark group-hover:opacity-70 dark:text-white lg:mr-0 lg:inline-flex lg:px-0 lg:py-6'
                             }
@@ -189,7 +197,10 @@ const Header = ({ lng, data }: Props) => {
                             >
                               {menuItem.submenu?.map((submenuItem) => (
                                 <Link
-                                  href={`/${lng}${submenuItem.path}`}
+                                  href={buildUrl(
+                                    globalPageProps,
+                                    submenuItem.path,
+                                  )}
                                   key={submenuItem.id}
                                   className="block rounded py-2.5 text-sm text-dark hover:opacity-70 dark:text-white lg:px-3"
                                 >
@@ -205,7 +216,10 @@ const Header = ({ lng, data }: Props) => {
                 </nav>
               </div>
               <div className="flex items-center justify-end pr-16 lg:pr-0">
-                <LanguageSelector lng={lng} languages={data._site.locales} />
+                <LanguageSelector
+                  globalPageProps={globalPageProps}
+                  languages={data._site.locales}
+                />
               </div>
             </div>
           </div>

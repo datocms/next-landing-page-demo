@@ -1,4 +1,9 @@
-import { type Dispatch, type SetStateAction, useState } from 'react';
+import {
+  type Dispatch,
+  type FormEvent,
+  type SetStateAction,
+  useState,
+} from 'react';
 
 type Props = {
   setModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -11,11 +16,13 @@ const AuthenticationModal = ({
   refresh,
   triggerSuccessToast,
 }: Props) => {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState('superSecretToken');
   const [hasError, setHasError] = useState(false);
 
-  async function enableDraft() {
+  async function enableDraft(e: FormEvent<HTMLFormElement>) {
     try {
+      e.preventDefault();
+
       const response = await fetch(`/api/draft/enable?token=${inputValue}`);
       if (response.status === 200) {
         refresh();
@@ -31,9 +38,10 @@ const AuthenticationModal = ({
   }
 
   return (
-    <div
+    <form
       className="rounded-2xl border border-blue-100 bg-white p-4 shadow-lg sm:p-6 lg:p-8"
       role="alert"
+      onSubmit={enableDraft}
     >
       <div className="flex items-center gap-2">
         <span className="shrink-0 rounded-full bg-primary p-2 text-white">
@@ -57,7 +65,8 @@ const AuthenticationModal = ({
         <p className="font-medium sm:text-lg">Authenticate First!</p>
       </div>
       <p className="mt-4 text-gray-500">
-        You will need a secret token to access the drafts, please add it bellow:
+        Please insert the password to access the content drafts (default:{' '}
+        <code>superSecretToken</code>):
       </p>
       <div>
         <input
@@ -75,12 +84,12 @@ const AuthenticationModal = ({
         {hasError && <p className="mt-4 text-red-400">Incorrect token!</p>}
       </div>
       <div className="mt-6 sm:flex sm:gap-4">
-        <div
-          onClick={enableDraft}
+        <button
+          type="submit"
           className="inline-block w-full rounded-lg bg-primary px-5 py-3 text-center text-sm font-semibold text-white hover:cursor-pointer sm:w-auto"
         >
           Authenticate
-        </div>
+        </button>
 
         <div
           className="mt-2 inline-block w-full rounded-lg bg-gray-50 px-5 py-3 text-center text-sm font-semibold text-gray-500 hover:cursor-pointer sm:mt-0 sm:w-auto"
@@ -89,7 +98,7 @@ const AuthenticationModal = ({
           Cancel
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 

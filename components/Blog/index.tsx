@@ -1,16 +1,22 @@
 import SingleBlog from '@/components/Blog/SingleBlog';
 import SectionTitle from '@/components/Common/SectionTitle';
 import type { PostRecord, SiteLocale } from '@/graphql/types/graphql';
+import type { GlobalPageProps } from '@/utils/globalPageProps';
 import type { Maybe } from 'graphql/jsutils/Maybe';
 
 type BlogProps = {
   blogData: PostRecord[];
   blogHeader: string;
   blogSubheader: Maybe<string>;
-  locale: SiteLocale;
+  globalPageProps: GlobalPageProps;
 };
 
-const Blog = ({ blogData, blogHeader, blogSubheader, locale }: BlogProps) => {
+const Blog = ({
+  blogData,
+  blogHeader,
+  blogSubheader,
+  globalPageProps,
+}: BlogProps) => {
   return (
     <section
       id="blog"
@@ -22,7 +28,7 @@ const Blog = ({ blogData, blogHeader, blogSubheader, locale }: BlogProps) => {
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 md:gap-x-6 lg:gap-x-8 xl:grid-cols-3">
           {blogData.map((blog) => (
             <div key={blog.id} className="w-full">
-              <SingleBlog blog={blog} locale={locale} />
+              <SingleBlog blog={blog} globalPageProps={globalPageProps} />
             </div>
           ))}
         </div>

@@ -25,7 +25,6 @@
     "framer-motion": "^10.15.1",
     "gql": "^1.1.2",
     "graphql": "^16.7.1",
-    "graphql-request": "^6.1.0",
     "i18next": "^23.4.1",
     "i18next-resources-to-backend": "^1.1.4",
     "jsdom": "^22.1.0",

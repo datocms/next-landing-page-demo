@@ -4,7 +4,7 @@
     "enabled": true
   },
   "files": {
-    "ignore": ["graphql/types"]
+    "ignore": [".next", "graphql/types"]
   },
   "linter": {
     "enabled": true,

@@ -1,10 +1,7 @@
 'use client';
-
 import PreviewCard from '@/components/Documentation/PreviewCard';
-import type {
-  DocumentationPageRecord,
-  SiteLocale,
-} from '@/graphql/types/graphql';
+import type { DocumentationPageRecord } from '@/graphql/types/graphql';
+import type { GlobalPageProps } from '@/utils/globalPageProps';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const variants = {
@@ -15,10 +12,10 @@ const variants = {
 
 type Props = {
   featuredSections: DocumentationPageRecord[];
-  lng: SiteLocale;
+  globalPageProps: GlobalPageProps;
 };
 
-const FeaturedSection = ({ featuredSections, lng }: Props) => {
+const FeaturedSection = ({ featuredSections, globalPageProps }: Props) => {
   return (
     <AnimatePresence>
       <motion.div
@@ -35,7 +32,7 @@ const FeaturedSection = ({ featuredSections, lng }: Props) => {
               <PreviewCard
                 key={featuredSection.id}
                 featuredSection={featuredSection}
-                lng={lng}
+                globalPageProps={globalPageProps}
               />
             );
           })}

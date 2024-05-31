@@ -1,19 +1,31 @@
+import type { SiteLocale } from '@/graphql/types/graphql';
+import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import { buildClient } from '@datocms/cma-client-node';
 import got from 'got';
 import { JSDOM } from 'jsdom';
+import { cookies, draftMode } from 'next/headers';
 import type { NextRequest } from 'next/server';
+
+const websiteBaseUrl = (
+  process.env.VERCEL_BRANCH_URL
+    ? // Vercel auto-populates this environment variable
+      `https://${process.env.VERCEL_BRANCH_URL}`
+    : // Netlify auto-populates this environment variable
+      process.env.URL
+) as string;
 
 const findSlugAndPermalink = async (
   item: any,
   itemTypeApiKey: string,
-  locale: string,
+  globalPageProps: GlobalPageProps,
 ) => {
   switch (itemTypeApiKey) {
     case 'page':
-      if (item.slug === 'home') return [item.slug, `/${locale}/`]; //special case for default home page
-      return [item.slug, `/${locale}/${item.slug}`];
+      if (item.slug === 'home')
+        return [item.slug, buildUrl(globalPageProps, '/')]; //special case for default home page
+      return [item.slug, buildUrl(globalPageProps, `/${item.slug}`)];
     case 'post':
-      return [item.slug, `/${locale}/posts/${item.slug}`];
+      return [item.slug, buildUrl(globalPageProps, `/posts/${item.slug}`)];
     default:
       return [null, null];
   }
@@ -43,7 +55,7 @@ export async function GET(req: NextRequest) {
   const token = searchParams.get('token');
 
   if (token !== process.env.SEO_SECRET_TOKEN)
-    return new Response('Invalid token token', { status: 401, headers });
+    return new Response('Invalid token!', { status: 401, headers });
 
   if (
     !itemId ||
@@ -62,13 +74,12 @@ export async function GET(req: NextRequest) {
     apiToken: process.env.DATOCMS_READONLY_API_TOKEN || '',
     environment: sandboxEnvironmentId,
   });
+
   const item = await client.items.find(itemId);
 
-  const [slug, permalink] = await findSlugAndPermalink(
-    item,
-    itemTypeApiKey,
-    locale,
-  );
+  const [slug, permalink] = await findSlugAndPermalink(item, itemTypeApiKey, {
+    params: { locale: locale as SiteLocale },
+  });
 
   if (!permalink) {
     return new Response(
@@ -80,13 +91,15 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const baseUrl = (
-    process.env.VERCEL_BRANCH_URL
-      ? `https://${process.env.VERCEL_BRANCH_URL}`
-      : process.env.URL
-  ) as string;
+  draftMode().enable();
 
-  const { body } = await got(new URL(permalink, baseUrl).toString());
+  const { body } = await got(new URL(permalink, websiteBaseUrl).toString(), {
+    headers: {
+      cookie: cookies().toString(),
+    },
+  });
+
+  draftMode().disable();
 
   const { document } = new JSDOM(body).window;
   const contentEl = document.querySelector('body');

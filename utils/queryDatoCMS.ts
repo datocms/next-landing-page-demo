@@ -1,6 +1,5 @@
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { print } from 'graphql';
-import type { GraphQLClientRequestHeaders } from 'graphql-request/build/esm/types';
 
 export default async function queryDatoCMS<
   TResult = unknown,
@@ -10,7 +9,13 @@ export default async function queryDatoCMS<
   variables?: TVariables,
   isDraft?: boolean,
 ): Promise<TResult> {
-  const headers: GraphQLClientRequestHeaders = {
+  if (!process.env.DATOCMS_READONLY_API_TOKEN) {
+    throw new Error(
+      'Missing DatoCMS API token: make sure a DATOCMS_READONLY_API_TOKEN environment variable is set!',
+    );
+  }
+
+  const headers: HeadersInit = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
     'X-Exclude-Invalid': 'true',

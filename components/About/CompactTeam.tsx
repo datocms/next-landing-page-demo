@@ -3,6 +3,8 @@ import {
   ResponsiveImage,
   type SiteLocale,
 } from '@/graphql/types/graphql';
+import { buildUrl } from '@/utils/globalPageProps';
+import type { GlobalPageProps } from '@/utils/globalPageProps';
 import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { Image as DatoImage } from 'react-datocms';
@@ -12,10 +14,15 @@ type Props = {
   header: Maybe<string>;
   subheader: Maybe<string>;
   members: Array<AuthorRecord>;
-  lng: SiteLocale;
+  globalPageProps: GlobalPageProps;
 };
 
-const CompactTeam = ({ header, subheader, members, lng }: Props) => {
+const CompactTeam = ({
+  header,
+  subheader,
+  members,
+  globalPageProps,
+}: Props) => {
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6 py-10">
@@ -31,7 +38,7 @@ const CompactTeam = ({ header, subheader, members, lng }: Props) => {
           {members.map((member) => {
             return (
               <Link
-                href={`/${lng}/posts/author/${member.slug}`}
+                href={buildUrl(globalPageProps, `/posts/author/${member.slug}`)}
                 key={member.id}
                 className="group flex transform flex-col items-center rounded-xl p-8 transition-colors duration-300 hover:bg-primary/90"
               >

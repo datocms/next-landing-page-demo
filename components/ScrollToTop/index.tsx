@@ -1,18 +1,17 @@
 'use client';
-
 import AuthenticationModal from '@/components/Header/AuthenticationModal';
 import SuccessPopUp from '@/components/Header/SuccessPopUp';
-import type { SiteLocale } from '@/graphql/types/graphql';
+import type { GlobalPageProps } from '@/utils/globalPageProps';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 type Props = {
-  lng: SiteLocale;
+  globalPageProps: GlobalPageProps;
   isDraft: boolean;
 };
 
-export default function ScrollToTop({ lng, isDraft }: Props) {
+export default function ScrollToTop({ globalPageProps, isDraft }: Props) {
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -91,7 +90,7 @@ export default function ScrollToTop({ lng, isDraft }: Props) {
               onClick={toggleDraft}
               className="flex cursor-pointer items-center justify-center rounded-md bg-primary p-4 font-bold text-white shadow-md transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
             >
-              {isDraft ? 'Enter Published Mode' : 'Enter Draft Mode'}
+              {isDraft ? 'Exit Draft Mode' : 'Enter Draft Mode'}
             </div>
           </motion.div>
         )}

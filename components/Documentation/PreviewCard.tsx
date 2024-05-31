@@ -1,15 +1,14 @@
 'use client';
+import type { GlobalPageProps } from '@/utils/globalPageProps';
+import { buildUrl } from '@/utils/globalPageProps';
 
-import type {
-  DocumentationPageRecord,
-  SiteLocale,
-} from '@/graphql/types/graphql';
-import { AnimatePresence, motion } from 'framer-motion';
+import type { DocumentationPageRecord } from '@/graphql/types/graphql';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 
 type Props = {
   featuredSection: DocumentationPageRecord;
-  lng: SiteLocale;
+  globalPageProps: GlobalPageProps;
 };
 
 const mainImage = {
@@ -52,9 +51,9 @@ const subText = {
   },
 };
 
-const PreviewCard = ({ featuredSection, lng }: Props) => {
+const PreviewCard = ({ featuredSection, globalPageProps }: Props) => {
   return (
-    <Link href={`/${lng}/docs/${featuredSection.slug}`}>
+    <Link href={buildUrl(globalPageProps, `/docs/${featuredSection.slug}`)}>
       <motion.div
         initial="initial"
         whileHover="hover"

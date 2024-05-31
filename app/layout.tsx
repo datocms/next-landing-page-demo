@@ -1,29 +1,18 @@
-import getAvailableLocales from '@/app/i18n/settings';
-import type { SiteLocale } from '@/graphql/types/graphql';
 import '@/styles/global.css';
+import type { GlobalPageProps } from '@/utils/globalPageProps';
 import 'node_modules/react-modal-video/css/modal-video.css';
-import Head from './[lng]/Head';
+import Head from './[locale]/Head';
 
-type Params = {
+type Params = GlobalPageProps & {
   children: React.ReactNode;
-  params: {
-    lng: SiteLocale;
-  };
 };
-
-export async function generateStaticParams() {
-  const languages = await getAvailableLocales();
-  return languages.map((language) => {
-    language;
-  });
-}
 
 export default async function RootLayout({
   children,
-  params: { lng },
+  params: { locale },
 }: Params) {
   return (
-    <html lang={lng}>
+    <html lang={locale}>
       <Head />
       <body className={'tracking-tight antialiased'}>{children}</body>
     </html>

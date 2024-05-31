@@ -1,4 +1,5 @@
 import type { SiteLocale } from '@/graphql/types/graphql';
+import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import type { SchemaTypes } from '@datocms/cma-client-node';
 import type { NextRequest } from 'next/server';
 
@@ -15,33 +16,33 @@ const websiteBaseUrl = (
 const generatePreviewUrl = (
   item: SchemaTypes.Item,
   itemType: SchemaTypes.ItemType,
-  locale: SiteLocale,
+  globalPageProps: GlobalPageProps,
 ) => {
   switch (itemType.attributes.api_key) {
     case 'page':
-      return `/${locale}/${item.attributes.slug}`;
+      return buildUrl(globalPageProps, `/${item.attributes.slug}`);
     case 'post':
-      return `/${locale}/posts/${item.attributes.slug}`;
+      return buildUrl(globalPageProps, `/posts/${item.attributes.slug}`);
     case 'tag':
-      return `/${locale}/posts/tag/${item.attributes.slug}`;
+      return buildUrl(globalPageProps, `/posts/tag/${item.attributes.slug}`);
     case 'author':
-      return `/${locale}/posts/author/${item.attributes.slug}`;
+      return buildUrl(globalPageProps, `/posts/author/${item.attributes.slug}`);
     case 'legal_page':
-      return `/${locale}/legal/${item.attributes.slug}`;
+      return buildUrl(globalPageProps, `/legal/${item.attributes.slug}`);
     case 'header':
-      return `/${locale}/home`;
+      return buildUrl(globalPageProps, '/home');
     case 'documentation_home':
-      return `/${locale}/docs`;
+      return buildUrl(globalPageProps, '/docs');
     case 'documentation_page':
-      return `/${locale}/docs/${item.attributes.slug}`;
+      return buildUrl(globalPageProps, `/docs/${item.attributes.slug}`);
     case 'layout':
-      return `/${locale}/home`;
+      return buildUrl(globalPageProps, '/home');
     case 'footer':
-      return `/${locale}/home`;
+      return buildUrl(globalPageProps, '/home');
     case 'pricing_tier':
-      return `/${locale}/pricing`;
+      return buildUrl(globalPageProps, '/pricing');
     case 'change_log':
-      return `/${locale}/changelog`;
+      return buildUrl(globalPageProps, '/changelog');
   }
 };
 
@@ -73,7 +74,7 @@ export async function POST(request: NextRequest) {
   const { item, itemType, locale } = await request.json();
 
   // We can use this info to generate the frontend URL associated
-  const url = generatePreviewUrl(item, itemType, locale);
+  const url = generatePreviewUrl(item, itemType, { params: { locale } });
 
   // If we don't have an URL for the record, simply return an empty array
   if (!url) {

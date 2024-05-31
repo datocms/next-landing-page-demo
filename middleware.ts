@@ -1,14 +1,17 @@
-import getAvailableLocales, { getFallbackLocale } from '@/app/i18n/settings';
+import getAvailableLocales from '@/app/i18n/settings';
 import { match } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import type { SiteLocale } from './graphql/types/graphql';
+import {
+  buildUrl as buildUrlForPage,
+  type GlobalPageProps,
+} from './utils/globalPageProps';
 
-async function getLocale(
+async function findBestLocaleForVisitor(
   request: Request,
   locales: SiteLocale[],
-): Promise<string> {
-  const fallbackLng = await getFallbackLocale();
+) {
   const headers = new Headers(request.headers);
   const acceptLanguage = headers.get('accept-language');
   if (acceptLanguage) {
@@ -17,44 +20,48 @@ async function getLocale(
 
   const headersObject = Object.fromEntries(headers.entries());
   const languages = new Negotiator({ headers: headersObject }).languages();
-  return match(languages, locales, fallbackLng);
+
+  return match(languages, locales, locales[0]) as SiteLocale;
+}
+
+function buildUrl(locale: SiteLocale, path: string) {
+  const simulatedPageProps: GlobalPageProps = {
+    params: {
+      locale,
+    },
+  };
+
+  return buildUrlForPage(simulatedPageProps, path);
 }
 
 export async function middleware(request: NextRequest) {
-  // Check if there is any supported locale in the pathname
-  const pathname = request.nextUrl.pathname;
+  const { pathname } = request.nextUrl;
+
   const locales = await getAvailableLocales();
 
-  const pathnameIsMissingLocale = locales.every(
-    (locale) =>
-      !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`,
+  const localeInPathname = locales.find((locale) =>
+    pathname.match(new RegExp(`^/${locale}($|/)`)),
   );
 
-  //go to home in browser language if pathname & locale is missing
-  if (pathname === '/') {
-    const locale = await getLocale(request, locales);
-    return NextResponse.redirect(new URL(`/${locale}/home`, request.url));
-  }
+  const normalizedLocale =
+    localeInPathname || (await findBestLocaleForVisitor(request, locales));
 
-  //go to the specific locale home if there is no pathname but the locale is set
-  if (
-    pathname.split('/').length === 2 &&
-    locales.includes(pathname.split('/')[1] as SiteLocale)
-  ) {
-    return NextResponse.redirect(
-      new URL(`/${pathname.split('/')[1]}/home`, request.url),
-    );
-  }
+  const pathnameWithoutLocale = localeInPathname
+    ? pathname.replace(new RegExp(`^/${localeInPathname}`), '')
+    : pathname;
 
-  //go to pathname in browser language if locale is missing but pathname is set
-  if (pathnameIsMissingLocale) {
-    const locale = await getLocale(request, locales);
+  const normalizedPathnameWithoutLocale =
+    pathnameWithoutLocale && pathnameWithoutLocale !== '/'
+      ? pathnameWithoutLocale
+      : '/home';
 
-    // e.g. incoming request is /products
-    // The new URL is now /en/products
-    return NextResponse.redirect(
-      new URL(`/${locale}/${pathname}`, request.url),
-    );
+  const normalizedPathname = buildUrl(
+    normalizedLocale,
+    normalizedPathnameWithoutLocale,
+  );
+
+  if (pathname !== normalizedPathname) {
+    return NextResponse.redirect(new URL(normalizedPathname, request.url));
   }
 }
 

@@ -1,4 +1,5 @@
-import type { PostRecord, SiteLocale } from '@/graphql/types/graphql';
+import type { PostRecord } from '@/graphql/types/graphql';
+import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import transformDate from '@/utils/transformDate';
 import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
@@ -9,14 +10,14 @@ type BlogProps = {
   blogData: PostRecord[];
   blogHeader: string;
   blogSubheader: Maybe<string>;
-  locale: SiteLocale;
+  globalPageProps: GlobalPageProps;
 };
 
 const FullImageFeaturedPosts = ({
   blogData,
   blogHeader,
   blogSubheader,
-  locale,
+  globalPageProps,
 }: BlogProps) => {
   return (
     <div className="bg-white py-6 sm:py-8 lg:py-12">
@@ -36,7 +37,7 @@ const FullImageFeaturedPosts = ({
             return (
               <Link
                 key={post.id}
-                href={`/${locale}/posts/${post.slug}`}
+                href={buildUrl(globalPageProps, `/posts/${post.slug}`)}
                 className="group relative flex h-48 flex-col overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-64 xl:h-96"
               >
                 <div className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110">

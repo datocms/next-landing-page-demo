@@ -1,4 +1,5 @@
-import type { ChangeLogRecord, SiteLocale } from '@/graphql/types/graphql';
+import type { ChangeLogRecord } from '@/graphql/types/graphql';
+import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
@@ -7,10 +8,15 @@ type Props = {
   title: string;
   subtitle: Maybe<string>;
   featuredChangeLogs: ChangeLogRecord[];
-  locale: SiteLocale;
+  globalPageProps: GlobalPageProps;
 };
 
-const Changelog = ({ title, subtitle, featuredChangeLogs, locale }: Props) => {
+const Changelog = ({
+  title,
+  subtitle,
+  featuredChangeLogs,
+  globalPageProps,
+}: Props) => {
   return (
     <section>
       <div className=" mx-auto flex flex-col items-center px-5 py-40">
@@ -28,7 +34,7 @@ const Changelog = ({ title, subtitle, featuredChangeLogs, locale }: Props) => {
           return (
             <Link
               key={changeLog.id}
-              href={`/${locale}/changelog/${changeLog.slug}`}
+              href={buildUrl(globalPageProps, `/changelog/${changeLog.slug}`)}
               className="prose group mx-auto mb-2 flex cursor-pointer flex-col items-center border-b border-gray-200 py-6 sm:flex-row lg:w-1/2"
             >
               <div className="mt-6 inline-flex flex-grow items-center text-left sm:mt-0">

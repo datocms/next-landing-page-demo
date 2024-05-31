@@ -1,23 +1,25 @@
 'use client';
-
 import type { SiteLocale } from '@/graphql/types/graphql';
+import { buildUrl } from '@/utils/globalPageProps';
+import type { GlobalPageProps } from '@/utils/globalPageProps';
 import { getLangNameFromCode } from 'language-name-map';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
 
 type Props = {
-  lng: SiteLocale;
+  globalPageProps: GlobalPageProps;
   languages: SiteLocale[];
 };
 
-const LanguageSelector = ({ lng, languages }: Props) => {
+const LanguageSelector = ({ globalPageProps, languages }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
+  const currentLocale = globalPageProps.params.locale;
   const pathname = usePathname();
-  const pathArray = pathname.split('/');
-  const currentLocale = pathArray[1] as SiteLocale; //will be a SiteLocale because of the middleware redirect rules
-
-  const pathString = pathArray.splice(2, pathArray.length).join('/');
+  const pathnameWithoutPrefix = pathname.replace(
+    new RegExp(`^\\/${currentLocale}`),
+    '',
+  );
 
   return (
     <div className="relative">
@@ -53,7 +55,7 @@ const LanguageSelector = ({ lng, languages }: Props) => {
               className="inline-flex w-full cursor-pointer items-end justify-start rounded-lg text-sm font-medium text-gray-900 hover:bg-gray-100"
             >
               <Link
-                href={`/${locale}/${pathString}`}
+                href={buildUrl({ params: { locale } }, pathnameWithoutPrefix)}
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white"
                 role="menuitem"
               >
@@ -70,8 +72,3 @@ const LanguageSelector = ({ lng, languages }: Props) => {
 };
 
 export default LanguageSelector;
-
-//if the current dir is /posts/ or /legal/
-//if the current page has a slug
-//try to fetch the slug in the new locale, if it doesn't return any, redirect the user to a 404
-//if it does return one, redirect the user to it

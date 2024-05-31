@@ -1,6 +1,6 @@
 'use client';
-
-import type { PostRecord, SiteLocale } from '@/graphql/types/graphql';
+import type { PostRecord } from '@/graphql/types/graphql';
+import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -10,14 +10,14 @@ type Props = {
   blogData: PostRecord[];
   blogHeader: string;
   blogSubheader: Maybe<string>;
-  locale: SiteLocale;
+  globalPageProps: GlobalPageProps;
 };
 
 const CarouselFeaturedPosts = ({
   blogData,
   blogHeader,
   blogSubheader,
-  locale,
+  globalPageProps,
 }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -69,7 +69,7 @@ const CarouselFeaturedPosts = ({
             </p>
 
             <Link
-              href={`/${locale}/posts/${currentReview.slug}`}
+              href={buildUrl(globalPageProps, `/posts/${currentReview.slug}`)}
               className="mt-2 inline-block text-blue-500 underline hover:text-blue-400"
             >
               Read more

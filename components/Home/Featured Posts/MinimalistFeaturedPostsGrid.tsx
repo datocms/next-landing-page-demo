@@ -1,4 +1,5 @@
-import type { PostRecord, SiteLocale } from '@/graphql/types/graphql';
+import type { PostRecord } from '@/graphql/types/graphql';
+import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import transformDate from '@/utils/transformDate';
 import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
@@ -8,14 +9,14 @@ type BlogProps = {
   blogData: PostRecord[];
   blogHeader: string;
   blogSubheader: Maybe<string>;
-  locale: SiteLocale;
+  globalPageProps: GlobalPageProps;
 };
 
 const MinimalistFeaturedPostsGrid = ({
   blogData,
   blogHeader,
   blogSubheader,
-  locale,
+  globalPageProps,
 }: BlogProps) => {
   return (
     <section className="bg-white dark:bg-gray-900">
@@ -41,7 +42,7 @@ const MinimalistFeaturedPostsGrid = ({
 
                 <div className="flex flex-col justify-between py-6 lg:mx-6">
                   <Link
-                    href={`/${locale}/posts/${post.slug}`}
+                    href={buildUrl(globalPageProps, `/posts/${post.slug}`)}
                     className="text-xl font-semibold text-gray-800 hover:underline dark:text-white "
                   >
                     {post.title}

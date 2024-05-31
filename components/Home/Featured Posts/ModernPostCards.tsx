@@ -1,4 +1,5 @@
-import type { PostRecord, SiteLocale } from '@/graphql/types/graphql';
+import type { PostRecord } from '@/graphql/types/graphql';
+import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import transformDate from '@/utils/transformDate';
 import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
@@ -9,14 +10,14 @@ type BlogProps = {
   blogData: PostRecord[];
   blogHeader: string;
   blogSubheader: Maybe<string>;
-  locale: SiteLocale;
+  globalPageProps: GlobalPageProps;
 };
 
 const ModernPostCards = ({
   blogData,
   blogHeader,
   blogSubheader,
-  locale,
+  globalPageProps,
 }: BlogProps) => {
   return (
     <section className="bg-white dark:bg-gray-900">
@@ -47,7 +48,7 @@ const ModernPostCards = ({
                 </div>
                 <div className="relative z-20 mx-auto -mt-20 max-w-lg rounded-md bg-white p-6 shadow dark:bg-gray-900">
                   <Link
-                    href={`/${locale}/posts/${post.slug}`}
+                    href={buildUrl(globalPageProps, `/posts/${post.slug}`)}
                     className="font-semibold text-gray-800 hover:underline dark:text-white md:text-xl"
                   >
                     {post.title}

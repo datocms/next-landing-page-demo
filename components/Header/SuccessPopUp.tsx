@@ -30,12 +30,13 @@ const SuccessPopUp = ({ setSuccessToast }: Props) => {
 
         <div className="flex-1">
           <strong className="block font-medium text-gray-900">
-            Authentication Successfull!
+            Draft Mode activated!
           </strong>
 
           <p className="mt-1 text-center text-sm text-gray-700">
-            You are now fetching DatoCMS from the Draft endpoint, with Real-Time
-            updates!
+            You&apos;re now pulling content from the DatoCMS Draft endpoint,
+            with real-time updates! As soon as you make a change on DatoCMS, the
+            new content will instantly show up on the pages!
           </p>
         </div>
 

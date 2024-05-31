@@ -3,6 +3,8 @@ import type {
   LayoutModelNotificationField,
   SiteLocale,
 } from '@/graphql/types/graphql';
+import { buildUrl } from '@/utils/globalPageProps';
+import type { GlobalPageProps } from '@/utils/globalPageProps';
 import {
   type Record,
   type StructuredText,
@@ -17,13 +19,13 @@ import {
 
 type Props = {
   notification: LayoutModelNotificationField;
-  lng: SiteLocale;
+  globalPageProps: GlobalPageProps;
   setNotificationStrip: React.Dispatch<SetStateAction<boolean>>;
 };
 
 const NotificationStrip = ({
   notification,
-  lng,
+  globalPageProps,
   setNotificationStrip,
 }: Props) => {
   return (
@@ -36,7 +38,7 @@ const NotificationStrip = ({
             renderNodeRule(isLink, ({ node, children, key }) => {
               return (
                 <Link
-                  href={`/${lng}${node.url}` || '#'}
+                  href={buildUrl(globalPageProps, `${node.url}`) || '#'}
                   className="inline-block underline"
                   key={key}
                 >

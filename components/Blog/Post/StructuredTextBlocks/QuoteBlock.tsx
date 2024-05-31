@@ -8,7 +8,7 @@ type Props = {
 };
 
 const QuoteBlock = ({ text }: Props) => {
-  if (!text) return <></>;
+  if (!text) return null;
   return (
     <div className="relative z-10 mb-8 mt-8 overflow-hidden rounded-md bg-primary bg-opacity-10 p-8 md:p-9 lg:p-8 xl:p-9">
       <div className="text-center text-base font-medium italic text-body-color">

@@ -1,9 +1,7 @@
 'use client';
-
-import type {
-  DocumentationPageRecord,
-  SiteLocale,
-} from '@/graphql/types/graphql';
+import type { DocumentationPageRecord } from '@/graphql/types/graphql';
+import type { GlobalPageProps } from '@/utils/globalPageProps';
+import { buildUrl } from '@/utils/globalPageProps';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
@@ -11,7 +9,7 @@ import { usePathname } from 'next/navigation';
 
 type Props = {
   page: DocumentationPageRecord;
-  lng: SiteLocale;
+  globalPageProps: GlobalPageProps;
 };
 
 function findChildBySlug(
@@ -36,7 +34,7 @@ function findChildBySlug(
   return null; // Child not found
 }
 
-const DocumentationSidebarItem = ({ page, lng }: Props) => {
+const DocumentationSidebarItem = ({ page, globalPageProps }: Props) => {
   const pathname = usePathname();
   const currentSlug = pathname.split('/')[pathname.split('/').length - 1];
 
@@ -51,7 +49,7 @@ const DocumentationSidebarItem = ({ page, lng }: Props) => {
     return (
       <li>
         <Link
-          href={`/${lng}/docs/${page.slug}`}
+          href={buildUrl(globalPageProps, `/docs/${page.slug}`)}
           className={isActive ? activeClass : inactiveClass}
         >
           <svg
@@ -78,7 +76,7 @@ const DocumentationSidebarItem = ({ page, lng }: Props) => {
 
   return (
     <li>
-      <Link href={`/${lng}/docs/${page.slug}`}>
+      <Link href={buildUrl(globalPageProps, `/docs/${page.slug}`)}>
         <summary className={`${isActive ? activeClass : inactiveClass} gap-1`}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -125,7 +123,7 @@ const DocumentationSidebarItem = ({ page, lng }: Props) => {
               const childPage = child as DocumentationPageRecord;
               return (
                 <DocumentationSidebarItem
-                  lng={lng}
+                  globalPageProps={globalPageProps}
                   key={childPage.id}
                   page={childPage}
                 />

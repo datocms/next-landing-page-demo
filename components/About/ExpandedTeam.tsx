@@ -1,4 +1,6 @@
 import type { AuthorRecord, SiteLocale } from '@/graphql/types/graphql';
+import { buildUrl } from '@/utils/globalPageProps';
+import type { GlobalPageProps } from '@/utils/globalPageProps';
 import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { Image as DatoImage } from 'react-datocms';
@@ -8,10 +10,15 @@ type Props = {
   header: Maybe<string>;
   subheader: Maybe<string>;
   members: Array<AuthorRecord>;
-  lng: SiteLocale;
+  globalPageProps: GlobalPageProps;
 };
 
-const ExpandedTeam = ({ header, subheader, members, lng }: Props) => {
+const ExpandedTeam = ({
+  header,
+  subheader,
+  members,
+  globalPageProps,
+}: Props) => {
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6 py-10">
@@ -27,7 +34,7 @@ const ExpandedTeam = ({ header, subheader, members, lng }: Props) => {
           {members.map((member) => {
             return (
               <Link
-                href={`/${lng}/posts/author/${member.slug}`}
+                href={buildUrl(globalPageProps, `/posts/author/${member.slug}`)}
                 key={member.id}
                 className=" group transform cursor-pointer rounded-xl border px-12 py-8 transition-colors duration-300 hover:border-transparent hover:bg-primary/90 hover:opacity-95 dark:border-gray-700 dark:hover:border-transparent"
               >
