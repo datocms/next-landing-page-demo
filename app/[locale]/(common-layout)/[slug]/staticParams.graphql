@@ -1,5 +1,5 @@
 query PageStaticParams {
-  allPages{
+  allPages {
     slug
   }
 }
