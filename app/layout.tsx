@@ -1,7 +1,6 @@
 import '@/styles/global.css';
 import type { GlobalPageProps } from '@/utils/globalPageProps';
 import 'node_modules/react-modal-video/css/modal-video.css';
-import Head from './[locale]/Head';
 
 type Params = GlobalPageProps & {
   children: React.ReactNode;
@@ -13,7 +12,13 @@ export default async function RootLayout({
 }: Params) {
   return (
     <html lang={locale}>
-      <Head />
+      <title>Landing page DatoCMS Starter</title>
+      <meta content="width=device-width, initial-scale=1" name="viewport" />
+      <meta
+        name="description"
+        content="Visit https://www.datocms.com/marketplace/starters for more starters"
+      />
+      <link rel="icon" href="/images/favicon.ico" />
       <body className={'tracking-tight antialiased'}>{children}</body>
     </html>
   );
