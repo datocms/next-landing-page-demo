@@ -1,5 +1,10 @@
 query Changelog($slug: String) {
   changeLog(filter: { slug: { eq: $slug } }) {
+    seo: _seoMetaTags {
+      attributes
+      content
+      tag
+    }
     timeOfRelease
     versionName
     slug

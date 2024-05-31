@@ -4,6 +4,11 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
     locale: $locale
     fallbackLocales: $fallbackLocale
   ) {
+    seo: _seoMetaTags {
+      attributes
+      content
+      tag
+    }
     sections {
       ... on AboutIntroRecord {
         id

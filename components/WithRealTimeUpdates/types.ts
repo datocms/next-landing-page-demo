@@ -1,5 +1,15 @@
+import type { SiteLocale } from '@/graphql/types/graphql';
 import type { GlobalPageProps } from '@/utils/globalPageProps';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
+
+export type BuildVariablesFn<
+  PageProps extends GlobalPageProps,
+  TVariables = Record<string, unknown>,
+> = (
+  context: PageProps & {
+    fallbackLocale: SiteLocale;
+  },
+) => TVariables;
 
 export type RealtimeUpdatesPage<
   PageProps extends GlobalPageProps,

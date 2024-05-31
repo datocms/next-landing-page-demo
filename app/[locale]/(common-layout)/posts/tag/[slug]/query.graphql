@@ -5,6 +5,11 @@ query Tag(
   $skip: IntType = "0"
 ) {
   tag(filter: { slug: { eq: $slug } }, locale: $locale) {
+    seo: _seoMetaTags {
+      attributes
+      content
+      tag
+    }
     tag
     _allReferencingPosts(
       filter: { title: { isBlank: "false" } }

@@ -1,21 +1,25 @@
 import CustomColor from '@/components/Common/CustomColor';
 import ScrollToTop from '@/components/ScrollToTop';
-import { CustomColorDocument } from '@/graphql/types/graphql';
+import { LayoutDocument } from '@/graphql/types/graphql';
 import type { GlobalPageProps } from '@/utils/globalPageProps';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
 import 'node_modules/react-modal-video/css/modal-video.css';
+import { toNextMetadata } from 'react-datocms/seo';
 
 type Params = GlobalPageProps & {
   children: React.ReactNode;
 };
 
-export default async function RootLayout({
-  children,
-  ...globalPageProps
-}: Params) {
+export async function generateMetadata() {
   const { isEnabled: isDraft } = draftMode();
-  const data = await queryDatoCMS(CustomColorDocument, {}, isDraft);
+  const data = await queryDatoCMS(LayoutDocument, {}, isDraft);
+  return toNextMetadata(data._site.faviconMetaTags);
+}
+
+export default async function RootLayout({ children, ...pageProps }: Params) {
+  const { isEnabled: isDraft } = draftMode();
+  const data = await queryDatoCMS(LayoutDocument, {}, isDraft);
 
   return (
     <>
@@ -25,7 +29,7 @@ export default async function RootLayout({
         b={data.layout?.mainColor.blue || 108}
       />
       {children}
-      <ScrollToTop globalPageProps={globalPageProps} isDraft={isDraft} />
+      <ScrollToTop globalPageProps={pageProps} isDraft={isDraft} />
     </>
   );
 }

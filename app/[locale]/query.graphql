@@ -1,4 +1,11 @@
-query CustomColor {
+query Layout {
+  _site {
+    faviconMetaTags {
+      attributes
+      content
+      tag
+    }
+  }
   layout {
     mainColor {
       red

@@ -8,6 +8,11 @@ query DocumentationPage(
     locale: $locale
     fallbackLocales: $fallbackLocale
   ) {
+    seo: _seoMetaTags {
+      attributes
+      content
+      tag
+    }
     title
     _modelApiKey
     id

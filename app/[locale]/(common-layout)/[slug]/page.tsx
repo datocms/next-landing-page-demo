@@ -1,5 +1,7 @@
 import getAvailableLocales from '@/app/i18n/settings';
+import { generateMetadataFn } from '@/components/WithRealTimeUpdates/generateMetadataFn';
 import { generateWrapper } from '@/components/WithRealTimeUpdates/generateWrapper';
+import type { BuildVariablesFn } from '@/components/WithRealTimeUpdates/types';
 import { PageStaticParamsDocument } from '@/graphql/types/graphql';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import Content from './Content';
@@ -18,13 +20,26 @@ export async function generateStaticParams() {
   );
 }
 
+const buildVariables: BuildVariablesFn<PageProps, Variables> = ({
+  params,
+  fallbackLocale,
+}) => ({
+  locale: params.locale,
+  fallbackLocale: [fallbackLocale],
+  slug: params.slug,
+});
+
+export const generateMetadata = generateMetadataFn<PageProps, Query, Variables>(
+  {
+    query,
+    buildVariables,
+    generate: (data) => data.page?.seo,
+  },
+);
+
 const Page = generateWrapper<PageProps, Query, Variables>({
   query,
-  buildVariables: ({ params, fallbackLocale }) => ({
-    locale: params.locale,
-    fallbackLocale: [fallbackLocale],
-    slug: params.slug,
-  }),
+  buildVariables,
   contentComponent: Content,
   realtimeComponent: RealTime,
 });

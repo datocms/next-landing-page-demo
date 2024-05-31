@@ -5,6 +5,11 @@ query Author(
   $skip: IntType = "0"
 ) {
   author(filter: { slug: { eq: $slug } }, locale: $locale) {
+    seo: _seoMetaTags {
+      attributes
+      content
+      tag
+    }
     name
     picture {
       responsiveImage {

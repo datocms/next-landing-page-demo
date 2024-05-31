@@ -1,12 +1,9 @@
 import getAvailableLocales from '@/app/i18n/settings';
+import { generateMetadataFn } from '@/components/WithRealTimeUpdates/generateMetadataFn';
 import { generateWrapper } from '@/components/WithRealTimeUpdates/generateWrapper';
-import {
-  PostDocument,
-  PostStaticParamsDocument,
-  type SiteLocale,
-} from '@/graphql/types/graphql';
+import type { BuildVariablesFn } from '@/components/WithRealTimeUpdates/types';
+import { PostStaticParamsDocument } from '@/graphql/types/graphql';
 import queryDatoCMS from '@/utils/queryDatoCMS';
-import { toNextMetadata } from 'react-datocms/seo';
 import Content from './Content';
 import RealTime from './RealTime';
 import { type PageProps, type Query, type Variables, query } from './meta';
@@ -23,27 +20,26 @@ export async function generateStaticParams() {
   );
 }
 
-export async function generateMetadata(props: PageProps) {
-  const response = await queryDatoCMS(PostDocument, {
-    slug: props.params.slug,
-    locale: props.params.locale,
-    fallbackLocale: 'en' as SiteLocale,
-  });
+const buildVariables: BuildVariablesFn<PageProps, Variables> = ({
+  params,
+  fallbackLocale,
+}) => ({
+  locale: params.locale,
+  fallbackLocale: [fallbackLocale],
+  slug: params.slug,
+});
 
-  if (!response.post) {
-    return {};
-  }
-
-  return toNextMetadata(response.post.seo);
-}
+export const generateMetadata = generateMetadataFn<PageProps, Query, Variables>(
+  {
+    query,
+    buildVariables,
+    generate: (data) => data.post?.seo,
+  },
+);
 
 const Page = generateWrapper<PageProps, Query, Variables>({
   query,
-  buildVariables: ({ params, fallbackLocale }) => ({
-    locale: params.locale,
-    fallbackLocale: [fallbackLocale],
-    slug: params.slug,
-  }),
+  buildVariables,
   contentComponent: Content,
   realtimeComponent: RealTime,
 });

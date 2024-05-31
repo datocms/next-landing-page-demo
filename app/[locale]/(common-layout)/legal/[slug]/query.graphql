@@ -8,6 +8,11 @@ query Legal(
     locale: $locale
     fallbackLocales: $fallbackLocale
   ) {
+    seo: _seoMetaTags {
+      attributes
+      content
+      tag
+    }
     content {
       value
     }
