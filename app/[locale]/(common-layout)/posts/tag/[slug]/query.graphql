@@ -9,7 +9,7 @@ query Tag(
     _allReferencingPosts(
       filter: { title: { isBlank: "false" } }
       orderBy: _createdAt_DESC
-      first: "100"
+      first: 100
       locale: $locale
       fallbackLocales: $fallbackLocale
       skip: $skip

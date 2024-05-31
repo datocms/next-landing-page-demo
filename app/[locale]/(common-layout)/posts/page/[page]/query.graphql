@@ -6,7 +6,7 @@ query Posts(
   allPosts(
     filter: { title: { isBlank: "false" } }
     orderBy: _createdAt_DESC
-    first: "9"
+    first: 9
     locale: $locale
     fallbackLocales: $fallbackLocale
     skip: $skip

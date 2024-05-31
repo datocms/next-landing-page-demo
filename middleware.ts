@@ -1,11 +1,11 @@
 import getAvailableLocales from '@/app/i18n/settings';
 import { match } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import type { SiteLocale } from './graphql/types/graphql';
 import {
-  buildUrl as buildUrlForPage,
   type GlobalPageProps,
+  buildUrl as buildUrlForPage,
 } from './utils/globalPageProps';
 
 async function findBestLocaleForVisitor(
