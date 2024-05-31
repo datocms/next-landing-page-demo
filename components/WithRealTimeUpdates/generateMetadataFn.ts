@@ -4,9 +4,13 @@ import type { GlobalPageProps } from '@/utils/globalPageProps';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { draftMode } from 'next/headers';
-import type { ContentPage, RealtimeUpdatesPage } from './types';
+import {
+  type SeoOrFaviconTag,
+  type TitleMetaLinkTag,
+  toNextMetadata,
+} from 'react-datocms/seo';
 
-export function generateWrapper<
+export function generateMetadataFn<
   PageProps extends GlobalPageProps,
   TResult = unknown,
   TVariables = Record<string, unknown>,
@@ -19,18 +23,11 @@ export function generateWrapper<
     },
   ) => TVariables;
 
-  contentComponent: ContentPage<PageProps, TResult>;
-
-  realtimeComponent: RealtimeUpdatesPage<PageProps, TResult, TVariables>;
+  generate: (data: TResult) => Promise<TitleMetaLinkTag[] | SeoOrFaviconTag[]>;
 }) {
-  return async function Page(unsanitizedPageProps: PageProps) {
+  return async function Page(pageProps: PageProps) {
     const fallbackLocale = await getFallbackLocale();
     const { isEnabled: isDraft } = draftMode();
-
-    const { searchParams, ...pagePropsWithoutSearchParams } =
-      unsanitizedPageProps as PageProps & { searchParams: unknown };
-
-    const pageProps = pagePropsWithoutSearchParams as unknown as PageProps;
 
     const variables =
       options.buildVariables?.({
@@ -40,18 +37,6 @@ export function generateWrapper<
 
     const data = await queryDatoCMS(options.query, variables, isDraft);
 
-    const { realtimeComponent: RealTime, contentComponent: Content } = options;
-
-    return isDraft ? (
-      <RealTime
-        token={process.env.DATOCMS_READONLY_API_TOKEN || ''}
-        query={options.query}
-        variables={variables}
-        initialData={data}
-        pageProps={pageProps}
-      />
-    ) : (
-      <Content {...pageProps} data={data} />
-    );
+    return toNextMetadata(await options.generate(data));
   };
 }

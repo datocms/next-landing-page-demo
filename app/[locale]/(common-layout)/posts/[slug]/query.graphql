@@ -4,6 +4,11 @@ query Post($slug: String, $locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
     locale: $locale
     fallbackLocales: $fallbackLocale
   ) {
+    seo: _seoMetaTags {
+      attributes
+      content
+      tag
+    }
     _publishedAt
     title
     author {
