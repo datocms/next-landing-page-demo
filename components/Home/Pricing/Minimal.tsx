@@ -1,5 +1,6 @@
 'use client';
 
+import type { Section } from '@/utils/types';
 import Highlighter from '@/components/Common/Highlighter';
 import type { PricingTierRecord } from '@/graphql/types/graphql';
 import type { Record, StructuredText } from 'datocms-structured-text-utils';
@@ -9,12 +10,16 @@ import { StructuredText as StructuredTextField } from 'react-datocms/structured-
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
-  header: string;
-  subheader: Maybe<string>;
-  plans: PricingTierRecord[];
+  section: Section<'PricingSectionRecord'>;
 };
 
-const Minimal = ({ header, subheader, plans }: Props) => {
+const Minimal = ({
+  section: {
+    pricingSectionHeader: header,
+    pricingSectionSubheader: subheader,
+    plans,
+  },
+}: Props) => {
   const [isMonthly, setIsMonthly] = useState(true);
 
   const primary =
@@ -22,7 +27,7 @@ const Minimal = ({ header, subheader, plans }: Props) => {
   const secondary =
     ' w-1/2 rounded-lg bg-transparent px-3 py-1 text-gray-800 hover:bg-gray-200 focus:outline-none dark:text-gray-200 dark:hover:bg-gray-800 sm:mx-0.5 sm:w-auto';
 
-  const planInEvidence = plans[0] as PricingTierRecord;
+  const planInEvidence = plans[0];
   const evidencePlanFeatures = planInEvidence.planFeatures.split(', ');
 
   return (
@@ -76,12 +81,7 @@ const Minimal = ({ header, subheader, plans }: Props) => {
 
             <div className="mt-4 h-24 text-gray-300">
               <StructuredTextField
-                data={
-                  planInEvidence.tierDescription.value as StructuredText<
-                    Record,
-                    Record
-                  >
-                }
+                data={planInEvidence.tierDescription}
                 renderNode={Highlighter}
               />
             </div>
@@ -135,12 +135,7 @@ const Minimal = ({ header, subheader, plans }: Props) => {
 
                 <div className="mt-4 h-24 text-gray-500 dark:text-gray-300">
                   <StructuredTextField
-                    data={
-                      plan.tierDescription.value as StructuredText<
-                        Record,
-                        Record
-                      >
-                    }
+                    data={plan.tierDescription}
                     renderNode={Highlighter}
                   />
                 </div>

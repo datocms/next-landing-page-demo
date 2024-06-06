@@ -25,10 +25,7 @@ const Content: ContentPage<PageProps, Query> = ({
               key={post.id}
               className="mb-10 w-full px-4 md:w-2/3 lg:w-1/2 xl:w-1/3"
             >
-              <SingleBlog
-                blog={post as PostRecord}
-                globalPageProps={globalPageProps}
-              />
+              <SingleBlog blog={post} globalPageProps={globalPageProps} />
             </div>
           ))}
         </div>

@@ -1,41 +1,28 @@
 'use client';
 
+import type { Section } from '@/utils/types';
 import Highlighter from '@/components/Common/Highlighter';
-import type {
-  AboutIntroModelIntroductionTextField,
-  ImageFileField,
-} from '@/graphql/types/graphql';
-import {
-  type Record,
-  type StructuredText,
-  isHeading,
-  isParagraph,
-} from 'datocms-structured-text-utils';
+import { isHeading, isParagraph } from 'datocms-structured-text-utils';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import type { Maybe } from 'graphql/jsutils/Maybe';
-import React from 'react';
 import {
-  Image as DatoImage,
-  type ResponsiveImageType,
   StructuredText as StructuredTextField,
   renderNodeRule,
 } from 'react-datocms';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import DatoImage from '../Common/DatoImage';
 
 type Props = {
-  header: string;
-  subheader: Maybe<string>;
-  images: ImageFileField[];
-  introduction: Maybe<AboutIntroModelIntroductionTextField>;
-  preHeader: Maybe<string>;
+  section: Section<'AboutIntroRecord'>;
 };
 
 const AboutIntro = ({
-  header,
-  subheader,
-  images,
-  introduction,
-  preHeader,
+  section: {
+    header,
+    subheader,
+    images,
+    introductionText: introduction,
+    preHeader,
+  },
 }: Props) => {
   const [firstWord, ...restOfTheStringArray] = header.split(/\s+/);
   const restOfTheString = restOfTheStringArray.join(' ');
@@ -98,12 +85,12 @@ const AboutIntro = ({
         >
           <div className="relative z-50 col-span-2 h-56 w-full rounded object-cover shadow-lg">
             {
-              // I can narrow down the type of the data prop to ResponsiveImageType because i know from
+              // I can narrow down the type of the data prop to responsiveImage because i know from
               // Dato's validation that the array will have exactly 3 images
             }
             <DatoImage
               key={images[0].id}
-              data={images[0].responsiveImage as ResponsiveImageType}
+              fragment={images[0].responsiveImage}
               className="h-full w-full object-contain"
               layout="fill"
               objectFit="cover"
@@ -113,7 +100,7 @@ const AboutIntro = ({
           <div className="relative h-48 w-full rounded object-cover shadow-lg">
             <DatoImage
               key={images[1].id}
-              data={images[1].responsiveImage as ResponsiveImageType}
+              fragment={images[1].responsiveImage}
               className="h-full w-full object-contain"
               layout="fill"
               objectFit="cover"
@@ -123,7 +110,7 @@ const AboutIntro = ({
           <div className="relative h-48 w-full rounded object-cover shadow-lg">
             <DatoImage
               key={images[2].id}
-              data={images[2].responsiveImage as ResponsiveImageType}
+              fragment={images[2].responsiveImage}
               className="h-full w-full object-contain"
               layout="fill"
               objectFit="cover"
@@ -139,7 +126,7 @@ const AboutIntro = ({
         >
           {introduction && (
             <StructuredTextField
-              data={introduction.value as StructuredText<Record, Record>}
+              data={introduction}
               customNodeRules={[
                 renderNodeRule(isHeading, ({ children, key }) => {
                   return (

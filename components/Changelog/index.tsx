@@ -1,20 +1,15 @@
-import type { ChangeLogRecord } from '@/graphql/types/graphql';
+import type { Section } from '@/utils/types';
 import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
-import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
-  title: string;
-  subtitle: Maybe<string>;
-  featuredChangeLogs: ChangeLogRecord[];
+  section: Section<'ChangelogSectionRecord'>;
   globalPageProps: GlobalPageProps;
 };
 
 const Changelog = ({
-  title,
-  subtitle,
-  featuredChangeLogs,
+  section: { title, subtitle, featuredVersions },
   globalPageProps,
 }: Props) => {
   return (
@@ -30,7 +25,7 @@ const Changelog = ({
             </div>
           </div>
         </div>
-        {featuredChangeLogs.map((changeLog) => {
+        {featuredVersions.map((changeLog) => {
           return (
             <Link
               key={changeLog.id}

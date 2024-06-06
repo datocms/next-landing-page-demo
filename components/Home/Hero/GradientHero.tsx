@@ -1,5 +1,6 @@
 'use client';
 
+import type { Section } from '@/utils/types';
 import type { ButtonRecord } from '@/graphql/types/graphql';
 import { delay, motion } from 'framer-motion';
 import type { Maybe } from 'graphql/jsutils/Maybe';
@@ -7,12 +8,12 @@ import Link from 'next/link';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
-  heroTitle: string;
-  heroSubtitle: Maybe<string>;
-  buttons: ButtonRecord[];
+  section: Section<'HeroSectionRecord'>;
 };
 
-const GradientHero = ({ heroTitle, heroSubtitle, buttons }: Props) => {
+const GradientHero = ({
+  section: { heroTitle, heroSubtitle, buttons },
+}: Props) => {
   const heroTitleWords = heroTitle.split(/\s+/);
   const lastWord = heroTitleWords.pop();
 

@@ -1,18 +1,14 @@
-import type { FeatureRecord } from '@/graphql/types/graphql';
-import type { Maybe } from 'graphql/jsutils/Maybe';
-import { Image as DatoImage } from 'react-datocms';
+import type { Section } from '@/utils/types';
+
+import DatoImage from '@/components/Common/DatoImage';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
-  features: FeatureRecord[];
-  featuresHeader: string;
-  featuresSubheader: Maybe<string>;
+  section: Section<'FeatureListSectionRecord'>;
 };
 
 const BigImageHorizontalFeatures = ({
-  features,
-  featuresHeader,
-  featuresSubheader,
+  section: { feature: features, featuresHeader, featuresSubheader },
 }: Props) => {
   return (
     <div className="cursor-default bg-white py-6 sm:py-8 lg:py-12">
@@ -37,7 +33,7 @@ const BigImageHorizontalFeatures = ({
                 <div className="relative block h-48 w-full shrink-0 self-start overflow-hidden bg-gray-100 md:h-full md:w-32 lg:w-48">
                   <div className="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110">
                     <DatoImage
-                      data={feature.featureIcon.responsiveImage}
+                      fragment={feature.featureIcon.responsiveImage}
                       className="h-full w-full object-contain"
                       layout="fill"
                       objectFit="cover"

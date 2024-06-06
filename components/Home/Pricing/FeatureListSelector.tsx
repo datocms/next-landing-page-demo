@@ -1,5 +1,6 @@
 'use client';
 
+import type { Section } from '@/utils/types';
 import type { PricingTierRecord } from '@/graphql/types/graphql';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { Maybe } from 'graphql/jsutils/Maybe';
@@ -7,12 +8,16 @@ import { useState } from 'react';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
-  header: string;
-  subheader: Maybe<string>;
-  plans: PricingTierRecord[];
+  section: Section<'PricingSectionRecord'>;
 };
 
-const FeatureListSelector = ({ header, subheader, plans }: Props) => {
+const FeatureListSelector = ({
+  section: {
+    pricingSectionHeader: header,
+    pricingSectionSubheader: subheader,
+    plans,
+  },
+}: Props) => {
   const [selectedPlan, setSelectedPlan] = useState(plans[1].tierName);
 
   const selectedPlanFeatures = plans

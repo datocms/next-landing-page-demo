@@ -1,3 +1,4 @@
+import type { Section } from '@/utils/types';
 import SvgRenderer from '@/components/Common/SvgRenderer';
 import type { StatisticRecord } from '@/graphql/types/graphql';
 import type { Maybe } from 'graphql/jsutils/Maybe';
@@ -14,12 +15,10 @@ function formatNumber(num: number) {
 }
 
 type Props = {
-  title: string;
-  subtitle: Maybe<string>;
-  statistic: Array<StatisticRecord>;
+  section: Section<'StatsSectionRecord'>;
 };
 
-const StatsSection = ({ title, subtitle, statistic }: Props) => {
+const StatsSection = ({ section: { title, subtitle, statistic } }: Props) => {
   return (
     <section className="body-font flex flex-col items-center justify-center text-gray-600">
       <div className="container mx-auto px-5 py-4 md:py-12">

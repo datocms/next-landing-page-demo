@@ -1,17 +1,12 @@
+import type { Section } from '@/utils/types';
+import DatoImage from '@/components/Common/DatoImage';
 import Highlighter from '@/components/Common/Highlighter';
-import type {
-  DetailSectionModelDetailsField,
-  FileField,
-} from '@/graphql/types/graphql';
 import {
-  type Record,
-  type StructuredText,
   isHeading,
   isList,
   isListItem,
   isParagraph,
 } from 'datocms-structured-text-utils';
-import { Image as DatoImage } from 'react-datocms';
 import {
   StructuredText as StructuredTextField,
   renderNodeRule,
@@ -24,12 +19,12 @@ const checkIcon = (
 );
 
 type Props = {
-  details: DetailSectionModelDetailsField;
-  image: FileField;
-  imagePosition: boolean;
+  section: Section<'DetailSectionRecord'>;
 };
 
-const DetailSection = ({ details, image, imagePosition }: Props) => {
+const DetailSection = ({
+  section: { details, image, imagePosition },
+}: Props) => {
   return (
     <section className="py-16 text-center md:py-20 lg:py-28 lg:text-start">
       <div className="container">
@@ -42,14 +37,14 @@ const DetailSection = ({ details, image, imagePosition }: Props) => {
                   layout="fill"
                   objectFit="cover"
                   objectPosition="50% 50%"
-                  data={image.responsiveImage}
+                  fragment={image.responsiveImage}
                 />
               </div>
             )}
             <div className="w-full">
               <div className="sm:ml-6 md:px-24 lg:px-0">
                 <StructuredTextField
-                  data={details.value as StructuredText<Record, Record>}
+                  data={details}
                   renderNode={Highlighter}
                   customNodeRules={[
                     renderNodeRule(isHeading, ({ children, key }) => {
@@ -106,7 +101,7 @@ const DetailSection = ({ details, image, imagePosition }: Props) => {
                   layout="fill"
                   objectFit="cover"
                   objectPosition="50% 50%"
-                  data={image.responsiveImage}
+                  fragment={image.responsiveImage}
                 />
               </div>
             )}

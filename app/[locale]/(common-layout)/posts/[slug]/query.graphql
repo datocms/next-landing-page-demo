@@ -17,17 +17,7 @@ query Post($slug: String, $locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
       slug
       picture {
         responsiveImage(imgixParams: { w: "64", h: "64", fit: crop }) {
-          srcSet
-          webpSrcSet
-          sizes
-          src
-          width
-          height
-          aspectRatio
-          alt
-          title
-          bgColor
-          base64
+        ...DatoImage_responsiveImage
         }
       }
     }
@@ -51,17 +41,7 @@ query Post($slug: String, $locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
           description
           image {
             responsiveImage {
-              srcSet
-              webpSrcSet
-              sizes
-              src
-              width
-              height
-              aspectRatio
-              alt
-              title
-              bgColor
-              base64
+              ...DatoImage_responsiveImage
             }
           }
         }
@@ -70,17 +50,7 @@ query Post($slug: String, $locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
           bio
           picture {
             responsiveImage(imgixParams: { w: "64", h: "64", fit: crop }) {
-              srcSet
-              webpSrcSet
-              sizes
-              src
-              width
-              height
-              aspectRatio
-              alt
-              title
-              bgColor
-              base64
+              ...DatoImage_responsiveImage
             }
           }
         }
@@ -92,16 +62,7 @@ query Post($slug: String, $locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
           image {
             id
             responsiveImage {
-              srcSet
-              webpSrcSet
-              sizes
-              src
-              width
-              height
-              aspectRatio
-              alt
-              title
-              base64
+              ...DatoImage_responsiveImage
             }
           }
         }
@@ -128,16 +89,7 @@ query Post($slug: String, $locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
           image {
             id
             responsiveImage {
-              srcSet
-              webpSrcSet
-              sizes
-              src
-              width
-              height
-              aspectRatio
-              alt
-              title
-              base64
+              ...DatoImage_responsiveImage
             }
           }
           buttonLabel

@@ -1,8 +1,8 @@
 import SingleBlog from '@/components/Blog/SingleBlog';
+import DatoImage from '@/components/Common/DatoImage';
 import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
 import type { PostRecord } from '@/graphql/types/graphql';
 import { notFound } from 'next/navigation';
-import { Image as DatoImage } from 'react-datocms';
 import ReactMarkdown from 'react-markdown';
 import type { PageProps, Query } from './meta';
 
@@ -25,7 +25,7 @@ const Content: ContentPage<PageProps, Query> = ({
                 layout="fill"
                 objectFit="cover"
                 objectPosition="top"
-                data={data.author.picture.responsiveImage}
+                fragment={data.author.picture.responsiveImage}
               />
             </div>
             <div className="xl:mx-4 xl:w-1/2">
@@ -49,10 +49,7 @@ const Content: ContentPage<PageProps, Query> = ({
               key={post.id}
               className="mb-10 w-full px-4 md:w-2/3 lg:w-1/2 xl:w-1/3"
             >
-              <SingleBlog
-                blog={post as PostRecord}
-                globalPageProps={globalPageProps}
-              />
+              <SingleBlog blog={post} globalPageProps={globalPageProps} />
             </div>
           ))}
         </div>

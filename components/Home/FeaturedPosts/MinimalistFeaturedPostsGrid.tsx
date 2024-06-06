@@ -1,23 +1,24 @@
-import type { PostRecord } from '@/graphql/types/graphql';
+import type { Section } from '@/utils/types';
+import DatoImage from '@/components/Common/DatoImage';
+import { getFragmentData } from '@/graphql/types';
+import { SingleBlogFragmentDoc } from '@/graphql/types/graphql';
 import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import transformDate from '@/utils/transformDate';
-import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
-import { Image as DatoImage } from 'react-datocms';
 
-type BlogProps = {
-  blogData: PostRecord[];
-  blogHeader: string;
-  blogSubheader: Maybe<string>;
+type Props = {
+  section: Section<'FeaturedPostsSectionRecord'>;
   globalPageProps: GlobalPageProps;
 };
 
 const MinimalistFeaturedPostsGrid = ({
-  blogData,
-  blogHeader,
-  blogSubheader,
+  section: {
+    featuredPosts: blogData,
+    featuredPostsHeader: blogHeader,
+    featuredPostsSubheader: blogSubheader,
+  },
   globalPageProps,
-}: BlogProps) => {
+}: Props) => {
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6 py-10">
@@ -26,7 +27,9 @@ const MinimalistFeaturedPostsGrid = ({
         </h1>
 
         <div className="mt-8 grid grid-cols-1 gap-8 md:mt-16 md:grid-cols-2">
-          {blogData.map((post) => {
+          {blogData.map((postFragment) => {
+            const post = getFragmentData(SingleBlogFragmentDoc, postFragment);
+
             return (
               <div key={post.id} className="flex gap-4">
                 {post.seoTags?.image?.responsiveImage && (
@@ -35,7 +38,7 @@ const MinimalistFeaturedPostsGrid = ({
                       layout="fill"
                       objectFit="cover"
                       objectPosition="50% 20%"
-                      data={post.seoTags?.image?.responsiveImage}
+                      fragment={post.seoTags?.image?.responsiveImage}
                     />
                   </div>
                 )}

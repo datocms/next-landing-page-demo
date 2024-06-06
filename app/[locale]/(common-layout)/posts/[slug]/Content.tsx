@@ -5,6 +5,7 @@ import NewsletterCTABlock from '@/components/Blog/Post/StructuredTextBlocks/News
 import QuoteBlock from '@/components/Blog/Post/StructuredTextBlocks/QuoteBlock';
 import TagButton from '@/components/Blog/TagButton';
 import DateIcon from '@/components/Blog/svgs/DateIcon';
+import DatoImage from '@/components/Common/DatoImage';
 import Highlighter from '@/components/Common/Highlighter';
 import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
 import type {
@@ -25,11 +26,7 @@ import {
 } from 'datocms-structured-text-utils';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import {
-  Image as DatoImage,
-  StructuredText,
-  renderNodeRule,
-} from 'react-datocms';
+import { StructuredText, renderNodeRule } from 'react-datocms';
 import type { PageProps, Query } from './meta';
 
 const Content: ContentPage<PageProps, Query> = ({
@@ -62,10 +59,7 @@ const Content: ContentPage<PageProps, Query> = ({
                       <div className="relative h-10 w-10 overflow-hidden rounded-full">
                         <DatoImage
                           className="h-full w-full object-cover"
-                          data={
-                            data.post.author.picture
-                              .responsiveImage as ResponsiveImage
-                          }
+                          fragment={data.post.author.picture.responsiveImage}
                         />
                       </div>
                     </div>

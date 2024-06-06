@@ -12,7 +12,7 @@ const config: IGraphQLConfig = {
       },
     },
   ],
-  documents: ['./app/**/*.graphql'],
+  documents: ['./app/**/*.graphql', './components/**/*.graphql'],
   extensions: {
     codegen: {
       generates: {

@@ -1,5 +1,5 @@
+import DatoImage from '@/components/Common/DatoImage';
 import type { ImageFileField } from '@/graphql/types/graphql';
-import { Image as DatoImage } from 'react-datocms';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {

@@ -1,20 +1,16 @@
 'use client';
 
-import type { ButtonRecord, FileField } from '@/graphql/types/graphql';
-import { delay, motion } from 'framer-motion';
-import type { Maybe } from 'graphql/jsutils/Maybe';
-import Link from 'next/link';
-import { Image as DatoImage } from 'react-datocms';
+import type { Section } from '@/utils/types';
+import DatoImage from '@/components/Common/DatoImage';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
-  heroTitle: string;
-  heroSubtitle: Maybe<string>;
-  buttons: ButtonRecord[];
-  image: Maybe<FileField> | undefined;
+  section: Section<'HeroSectionRecord'>;
 };
 
-const RightImageHero = ({ heroTitle, heroSubtitle, buttons, image }: Props) => {
+const RightImageHero = ({
+  section: { heroTitle, heroSubtitle, buttons, heroImage },
+}: Props) => {
   return (
     <div className="mt-40 bg-white pb-6 sm:pb-8 lg:pb-12">
       <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
@@ -47,10 +43,10 @@ const RightImageHero = ({ heroTitle, heroSubtitle, buttons, image }: Props) => {
             </div>
           </div>
 
-          {image?.responsiveImage && (
+          {heroImage?.responsiveImage && (
             <div className="relative w-3/5 overflow-hidden rounded-lg bg-gray-100 shadow-lg lg:h-auto">
               <DatoImage
-                data={image.responsiveImage}
+                fragment={heroImage.responsiveImage}
                 layout="fill"
                 objectFit="cover"
                 objectPosition="50% 50%"

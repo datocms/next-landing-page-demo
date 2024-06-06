@@ -1,3 +1,4 @@
+import type { Section } from '@/utils/types';
 import Highlighter from '@/components/Common/Highlighter';
 import type { PricingTierRecord } from '@/graphql/types/graphql';
 import type { Record, StructuredText } from 'datocms-structured-text-utils';
@@ -6,13 +7,17 @@ import { StructuredText as StructuredTextField } from 'react-datocms/structured-
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
-  header: string;
-  subheader: Maybe<string>;
-  plans: PricingTierRecord[];
+  section: Section<'PricingSectionRecord'>;
 };
 
-const GradientCards = ({ header, subheader, plans }: Props) => {
-  const planInEvidence = plans.shift() as PricingTierRecord;
+const GradientCards = ({
+  section: {
+    pricingSectionHeader: header,
+    pricingSectionSubheader: subheader,
+    plans,
+  },
+}: Props) => {
+  const planInEvidence = plans.shift()!;
   const evidencePlanFeatures = planInEvidence.planFeatures.split(', ');
 
   return (
@@ -41,12 +46,7 @@ const GradientCards = ({ header, subheader, plans }: Props) => {
                   </h3>
                   <div className="h-24 text-indigo-100">
                     <StructuredTextField
-                      data={
-                        planInEvidence.tierDescription.value as StructuredText<
-                          Record,
-                          Record
-                        >
-                      }
+                      data={planInEvidence.tierDescription}
                       renderNode={Highlighter}
                     />
                   </div>
@@ -104,12 +104,7 @@ const GradientCards = ({ header, subheader, plans }: Props) => {
                     </h3>
                     <div className="h-24 text-gray-300">
                       <StructuredTextField
-                        data={
-                          plan.tierDescription.value as StructuredText<
-                            Record,
-                            Record
-                          >
-                        }
+                        data={plan.tierDescription}
                         renderNode={Highlighter}
                       />
                     </div>

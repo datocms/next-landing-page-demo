@@ -35,9 +35,7 @@ const Content: ContentPage<PageProps, Query> = ({ data, params }) => {
             </div>
             <div className="prose prose-md md:flex-grow">
               <StructuredTextField
-                data={
-                  data.changeLog.content.value as StructuredText<Record, Record>
-                }
+                data={data.changeLog.content}
                 customNodeRules={[
                   renderNodeRule(isHeading, ({ children, key }) => {
                     return (

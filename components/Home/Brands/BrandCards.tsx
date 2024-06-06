@@ -1,11 +1,11 @@
-import type { BrandRecord } from '@/graphql/types/graphql';
+import type { Section } from '@/utils/types';
 import Image from 'next/image';
 
 type Props = {
-  brandShowcase: BrandRecord[];
+  section: Section<'BrandSectionRecord'>;
 };
 
-const BrandCards = ({ brandShowcase }: Props) => {
+const BrandCards = ({ section: { brand: brandShowcase } }: Props) => {
   return (
     <div className="bg-white py-6 lg:py-8">
       <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
@@ -19,7 +19,7 @@ const BrandCards = ({ brandShowcase }: Props) => {
                 <Image
                   className="w-6/12 md:w-9/12"
                   src={brand.brandLogo.url}
-                  alt={brand.brandLogo.alt || 'Logo'}
+                  alt="Logo"
                   width={300}
                   height={300}
                 />

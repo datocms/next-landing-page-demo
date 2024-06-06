@@ -3,26 +3,19 @@
 import SectionTitle from '@/components/Common/SectionTitle';
 import { useState } from 'react';
 
+import type { Section } from '@/utils/types';
+import DatoImage from '@/components/Common/DatoImage';
 import type { ImageFileField } from '@/graphql/types/graphql';
 import type { Maybe } from 'graphql/jsutils/Maybe';
 import Image from 'next/image';
-import { Image as DatoImage } from 'react-datocms';
 import ModalVideo from 'react-modal-video';
 
 type Props = {
-  videoHeader: string;
-  videoSubheader: Maybe<string>;
-  videoUid: string;
-  videoThumbnail: ImageFileField;
-  videoProvider: string;
+  section: Section<'VideoSectionRecord'>;
 };
 
 const Video = ({
-  videoHeader,
-  videoSubheader,
-  videoUid,
-  videoThumbnail,
-  videoProvider,
+  section: { videoHeader, videoSubheader, videoThumbnail, video },
 }: Props) => {
   const [isOpen, setOpen] = useState(false);
 
@@ -45,7 +38,7 @@ const Video = ({
                   layout="fill"
                   objectFit="cover"
                   objectPosition="top"
-                  data={videoThumbnail.responsiveImage}
+                  fragment={videoThumbnail.responsiveImage}
                 />
                 <div className="absolute right-0 top-0 flex h-full w-full items-center justify-center">
                   <button
@@ -71,7 +64,7 @@ const Video = ({
 
       <ModalVideo
         isOpen={isOpen}
-        videoId={videoUid}
+        videoId={video.providerUid}
         onClose={() => setOpen(false)}
       />
 

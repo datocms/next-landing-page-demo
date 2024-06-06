@@ -1,20 +1,20 @@
-import type {
-  PostRecord,
-  ResponsiveImage,
-  SiteLocale,
-} from '@/graphql/types/graphql';
-import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
+import DatoImage from '@/components/Common/DatoImage';
+import { getFragmentData, type FragmentType } from '@/graphql/types';
+import { SingleBlogFragmentDoc } from '@/graphql/types/graphql';
+import { buildUrl, type GlobalPageProps } from '@/utils/globalPageProps';
 import transformDate from '@/utils/transformDate';
 import Link from 'next/link';
-import { Image as DatoImage } from 'react-datocms';
 
 type Props = {
-  blog: PostRecord; //
+  blog: FragmentType<typeof SingleBlogFragmentDoc>;
   globalPageProps: GlobalPageProps;
 };
 
-const SingleBlog = ({ blog, globalPageProps }: Props) => {
-  const { title, seoTags, author, tags, _publishedAt, slug } = blog;
+const SingleBlog = ({ blog: blogFragment, globalPageProps }: Props) => {
+  const { title, seoTags, author, tags, _publishedAt, slug } = getFragmentData(
+    SingleBlogFragmentDoc,
+    blogFragment,
+  );
 
   return (
     <>
@@ -27,13 +27,15 @@ const SingleBlog = ({ blog, globalPageProps }: Props) => {
             {tags[0].tag}
           </span>
           <div className="relative h-full w-full overflow-hidden">
-            <DatoImage
-              className="h-full w-full object-contain"
-              layout="fill"
-              objectFit="cover"
-              objectPosition="50% 50%"
-              data={seoTags?.image?.responsiveImage as ResponsiveImage}
-            />
+            {seoTags?.image?.responsiveImage && (
+              <DatoImage
+                className="h-full w-full object-contain"
+                layout="fill"
+                objectFit="cover"
+                objectPosition="50% 50%"
+                fragment={seoTags.image.responsiveImage}
+              />
+            )}
           </div>
         </Link>
         <div className="p-6 sm:p-8 md:px-6 md:py-8 lg:p-8 xl:px-5 xl:py-8 2xl:p-8">
@@ -58,7 +60,7 @@ const SingleBlog = ({ blog, globalPageProps }: Props) => {
                     layout="fill"
                     objectFit="cover"
                     objectPosition="50% 50%"
-                    data={author.picture.responsiveImage}
+                    fragment={author.picture.responsiveImage}
                   />
                 </div>
               </div>

@@ -1,16 +1,13 @@
-import type { ButtonRecord, FileField } from '@/graphql/types/graphql';
-import type { Maybe } from 'graphql/jsutils/Maybe';
-import { Image as DatoImage } from 'react-datocms';
+import type { Section } from '@/utils/types';
+import DatoImage from '@/components/Common/DatoImage';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
-  heroTitle: string;
-  heroSubtitle: Maybe<string>;
-  buttons: ButtonRecord[];
-  image: Maybe<FileField> | undefined;
+  section: Section<'HeroSectionRecord'>;
 };
-
-const SplitImage = ({ heroTitle, heroSubtitle, buttons, image }: Props) => {
+const SplitImage = ({
+  section: { heroTitle, heroSubtitle, buttons, heroImage },
+}: Props) => {
   return (
     <div className="relative mt-24 flex flex-col-reverse py-16 lg:flex-col lg:pb-0 lg:pt-0">
       <div className="inset-y-0 right-0 top-0 z-0 mx-auto w-full max-w-xl px-4 md:px-0 lg:absolute lg:mx-0 lg:mb-0 lg:w-7/12 lg:max-w-full lg:pr-0 xl:px-0">
@@ -22,13 +19,13 @@ const SplitImage = ({ heroTitle, heroSubtitle, buttons, image }: Props) => {
         >
           <path d="M50 0H100L50 100H0L50 0Z" />
         </svg>
-        {image?.responsiveImage && (
+        {heroImage?.responsiveImage && (
           <DatoImage
             className="hidden h-56 w-full rounded object-cover shadow-lg md:h-96 lg:block lg:h-full lg:rounded-none lg:shadow-none"
             layout="fill"
             objectFit="cover"
             objectPosition="left"
-            data={image?.responsiveImage}
+            fragment={heroImage?.responsiveImage}
           />
         )}
       </div>

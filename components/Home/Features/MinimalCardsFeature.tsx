@@ -1,18 +1,13 @@
-import type { FeatureRecord } from '@/graphql/types/graphql';
-import type { Maybe } from 'graphql/jsutils/Maybe';
-import { Image as DatoImage } from 'react-datocms';
+import type { Section } from '@/utils/types';
+import DatoImage from '@/components/Common/DatoImage';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
-  features: FeatureRecord[];
-  featuresHeader: string;
-  featuresSubheader: Maybe<string>;
+  section: Section<'FeatureListSectionRecord'>;
 };
 
 const MinimalCardsFeature = ({
-  features,
-  featuresHeader,
-  featuresSubheader,
+  section: { feature: features, featuresHeader, featuresSubheader },
 }: Props) => {
   return (
     <div className="flex flex-wrap justify-center gap-8 px-32 py-16  text-center md:grid md:grid-cols-2 md:text-primary lg:grid-cols-3">
@@ -25,7 +20,7 @@ const MinimalCardsFeature = ({
             <div className="-mt-16 flex justify-center md:justify-end">
               <div className="relative h-20 w-20 overflow-hidden rounded-full border-2 border-primary object-cover">
                 <DatoImage
-                  data={feature.featureIcon.responsiveImage}
+                  fragment={feature.featureIcon.responsiveImage}
                   className="h-full w-full object-contain"
                   layout="fill"
                   objectFit="cover"

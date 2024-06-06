@@ -2,12 +2,7 @@
 
 import LanguageSelector from '@/components/Header/LanguageSelector';
 import NotificationStrip from '@/components/Header/NotificationStrip';
-import type {
-  CommonLayoutQuery,
-  LayoutModelNotificationField,
-  MenuDropdownRecord,
-  MenuItemRecord,
-} from '@/graphql/types/graphql';
+import type { CommonLayoutQuery } from '@/graphql/types/graphql';
 import type { GlobalPageProps } from '@/utils/globalPageProps';
 import { buildUrl } from '@/utils/globalPageProps';
 import { isEmptyDocument } from 'datocms-structured-text-utils';
@@ -32,8 +27,8 @@ const Header = ({ globalPageProps, data }: Props) => {
   const menuData: Menu[] = [];
 
   data.layout?.menu.map((item) => {
-    if (item._modelApiKey === 'menu_dropdown') {
-      const dropdownItem = item as MenuDropdownRecord;
+    if (item.__typename === 'MenuDropdownRecord') {
+      const dropdownItem = item;
       menuData.push({
         id: '1',
         title: dropdownItem.title || 'Other Items',
@@ -48,7 +43,7 @@ const Header = ({ globalPageProps, data }: Props) => {
         }),
       });
     } else {
-      const menuItem = item as MenuItemRecord;
+      const menuItem = item;
       menuData.push({
         id: menuItem.id,
         title: menuItem.title,
@@ -95,9 +90,7 @@ const Header = ({ globalPageProps, data }: Props) => {
     <>
       {notificationStrip && (
         <NotificationStrip
-          notification={
-            data.layout?.notification as LayoutModelNotificationField
-          }
+          notification={data.layout?.notification}
           globalPageProps={globalPageProps}
           setNotificationStrip={setNotificationStrip}
         />

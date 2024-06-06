@@ -1,14 +1,19 @@
+import type { Section } from '@/utils/types';
 import type { PricingTierRecord } from '@/graphql/types/graphql';
 import type { Maybe } from 'graphql/jsutils/Maybe';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
-  header: string;
-  subheader: Maybe<string>;
-  plans: PricingTierRecord[];
+  section: Section<'PricingSectionRecord'>;
 };
 
-const SmallCards = ({ header, subheader, plans }: Props) => {
+const SmallCards = ({
+  section: {
+    pricingSectionHeader: header,
+    pricingSectionSubheader: subheader,
+    plans,
+  },
+}: Props) => {
   return (
     <div className="bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6 py-8">

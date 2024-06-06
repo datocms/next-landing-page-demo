@@ -31,9 +31,7 @@ const Content: ContentPage<PageProps, Query> = ({ data, params }) => {
   return (
     <div className="px-24 py-8">
       <StructuredTextField
-        data={
-          data.documentationPage.content.value as StructuredText<Record, Record>
-        }
+        data={data.documentationPage.content}
         customNodeRules={[
           renderNodeRule(isHeading, ({ children, key }) => {
             return (

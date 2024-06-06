@@ -1,10 +1,8 @@
 'use client';
 
+import type { Section } from '@/utils/types';
 import Highlighter from '@/components/Common/Highlighter';
-import type { QuestionRecord } from '@/graphql/types/graphql';
-import type { Record, StructuredText } from 'datocms-structured-text-utils';
 import { motion } from 'framer-motion';
-import type { Maybe } from 'graphql/jsutils/Maybe';
 import { useState } from 'react';
 import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
@@ -48,12 +46,10 @@ const openIcon = (
 );
 
 type Props = {
-  title: Maybe<string>;
-  subtitle: Maybe<string>;
-  questions: Array<QuestionRecord>;
+  section: Section<'FaqSectionRecord'>;
 };
 
-const FAQAccordion = ({ title, subtitle, questions }: Props) => {
+const FAQAccordion = ({ section: { title, subtitle, questions } }: Props) => {
   const [openQuestions, setOpenQuestions] = useState<string[]>([]);
 
   function toggleQuestion(id: string) {
@@ -112,9 +108,7 @@ const FAQAccordion = ({ title, subtitle, questions }: Props) => {
                   }`}
                 >
                   <StructuredTextField
-                    data={
-                      question.answer.value as StructuredText<Record, Record>
-                    }
+                    data={question.answer}
                     renderNode={Highlighter}
                   />
                 </motion.div>

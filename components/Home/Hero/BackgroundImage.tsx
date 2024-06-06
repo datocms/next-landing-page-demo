@@ -1,26 +1,28 @@
-import type { ButtonRecord, FileField } from '@/graphql/types/graphql';
-import type { Maybe } from 'graphql/jsutils/Maybe';
+import type { Section } from '@/utils/types';
+import { getFragmentData } from '@/graphql/types';
+import { DatoImage_ResponsiveImageFragmentDoc } from '@/graphql/types/graphql';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
-  heroTitle: string;
-  heroSubtitle: Maybe<string>;
-  buttons: ButtonRecord[];
-  image: Maybe<FileField> | undefined;
+  section: Section<'HeroSectionRecord'>;
 };
 
 const BackgroundImageHero = ({
-  heroTitle,
-  heroSubtitle,
-  buttons,
-  image,
+  section: { heroTitle, heroSubtitle, buttons, heroImage: heroImageFragment },
 }: Props) => {
+  const heroResponsiveImage = heroImageFragment
+    ? getFragmentData(
+        DatoImage_ResponsiveImageFragmentDoc,
+        heroImageFragment.responsiveImage,
+      )
+    : null;
+
   return (
     <div
       className="mt-20 h-[48rem] w-full bg-cover bg-center object-cover"
       style={{
         backgroundSize: 'cover',
-        backgroundImage: `url('${image?.responsiveImage?.src}')`,
+        backgroundImage: `url('${heroResponsiveImage?.src}')`,
       }}
     >
       <div className="flex h-full w-full flex-col items-center justify-center bg-gray-900/30 px-8 lg:px-32">

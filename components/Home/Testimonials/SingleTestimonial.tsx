@@ -1,7 +1,7 @@
+import type { Section } from '@/utils/types';
+import DatoImage from '@/components/Common/DatoImage';
 import Highlighter from '@/components/Common/Highlighter';
 import type { TestimonialRecord } from '@/graphql/types/graphql';
-import type { Record, StructuredText } from 'datocms-structured-text-utils';
-import { Image as DatoImage } from 'react-datocms';
 import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 const starIcon = (
   <svg width="18" height="16" viewBox="0 0 18 16" className="fill-current">
@@ -10,7 +10,7 @@ const starIcon = (
 );
 
 type Props = {
-  testimonial: TestimonialRecord;
+  testimonial: Section<'ReviewSectionRecord'>['reviews'][number];
 };
 
 const SingleTestimonial = ({ testimonial }: Props) => {
@@ -31,15 +31,12 @@ const SingleTestimonial = ({ testimonial }: Props) => {
       <div className="flex h-full flex-col items-center justify-center rounded-md bg-white p-8 shadow-one dark:bg-[#1D2144] lg:items-start lg:px-5 xl:px-8">
         <div className="mb-5 flex items-center space-x-1">{ratingIcons}</div>
         <div className="mb-8 h-36 border-b border-body-color border-opacity-10 pb-8 text-base leading-relaxed text-body-color dark:border-white dark:border-opacity-10 dark:text-white">
-          <StructuredTextField
-            data={review.value as StructuredText<Record, Record>}
-            renderNode={Highlighter}
-          />
+          <StructuredTextField data={review} renderNode={Highlighter} />
         </div>
         <div className="flex w-96 items-center px-16 md:w-full md:px-4 lg:px-0">
           <div className="relative mr-4 h-[50px] w-full max-w-[50px] overflow-hidden rounded-full">
             <DatoImage
-              data={reviewerPicture.responsiveImage}
+              fragment={reviewerPicture.responsiveImage}
               className="h-full w-full object-contain"
               layout="fill"
               objectFit="cover"

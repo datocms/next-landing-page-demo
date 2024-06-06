@@ -10,7 +10,7 @@ query CommonLayout($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
       ... on MenuItemRecord {
         id
         title
-        _modelApiKey
+        __typename
         page {
           slug
         }
@@ -18,12 +18,12 @@ query CommonLayout($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
       ... on MenuDropdownRecord {
         id
         title
-        _modelApiKey
+        __typename
         items {
           ... on MenuItemRecord {
             id
             title
-            _modelApiKey
+            __typename
             page {
               slug
             }
@@ -62,14 +62,4 @@ query CommonLayout($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
   _site {
     locales
   }
-}
-
-fragment DatoImage_responsiveImage on ResponsiveImage {
-  src
-  srcSet
-  base64
-  width
-  height
-  alt
-  title
 }

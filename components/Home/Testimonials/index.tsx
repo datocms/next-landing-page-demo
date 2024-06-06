@@ -1,3 +1,4 @@
+import type { Section } from '@/utils/types';
 import { primaryColor } from '@/app/i18n/settings';
 import SectionTitle from '@/components/Common/SectionTitle';
 import SingleTestimonial from '@/components/Home/Testimonials/SingleTestimonial';
@@ -5,12 +6,16 @@ import type { TestimonialRecord } from '@/graphql/types/graphql';
 import type { Maybe } from 'graphql/jsutils/Maybe';
 
 type Props = {
-  reviews: TestimonialRecord[];
-  header: string;
-  subheader: Maybe<string>;
+  section: Section<'ReviewSectionRecord'>;
 };
 
-const Testimonials = ({ reviews, header, subheader }: Props) => {
+const Testimonials = ({
+  section: {
+    reviews,
+    reviewSectionHeader: header,
+    reviewSectionSubheader: subheader,
+  },
+}: Props) => {
   return (
     <section className="relative z-10 bg-primary/[.03] py-16 text-center md:py-20 lg:py-28 lg:text-start">
       <div className="container">

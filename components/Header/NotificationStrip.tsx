@@ -1,5 +1,6 @@
 import Highlighter from '@/components/Common/Highlighter';
 import type {
+  CommonLayoutQuery,
   LayoutModelNotificationField,
   SiteLocale,
 } from '@/graphql/types/graphql';
@@ -18,7 +19,7 @@ import {
 } from 'react-datocms/structured-text';
 
 type Props = {
-  notification: LayoutModelNotificationField;
+  notification: NonNullable<CommonLayoutQuery['layout']>['notification'];
   globalPageProps: GlobalPageProps;
   setNotificationStrip: React.Dispatch<SetStateAction<boolean>>;
 };
@@ -32,7 +33,7 @@ const NotificationStrip = ({
     <div className="bg-primary px-4 py-3 text-white">
       <div className="text-center text-sm font-medium">
         <StructuredTextField
-          data={notification.value as StructuredText<Record, Record>}
+          data={notification}
           renderNode={Highlighter}
           customNodeRules={[
             renderNodeRule(isLink, ({ node, children, key }) => {

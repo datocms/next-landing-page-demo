@@ -14,7 +14,7 @@ query DocumentationPage(
       tag
     }
     title
-    _modelApiKey
+    __typename
     id
     content {
       value

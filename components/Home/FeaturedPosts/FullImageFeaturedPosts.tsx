@@ -1,24 +1,25 @@
-import type { PostRecord } from '@/graphql/types/graphql';
+import type { Section } from '@/utils/types';
+import DatoImage from '@/components/Common/DatoImage';
+import { getFragmentData } from '@/graphql/types';
+import { SingleBlogFragmentDoc } from '@/graphql/types/graphql';
 import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import transformDate from '@/utils/transformDate';
-import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
-import { Image as DatoImage } from 'react-datocms';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
-type BlogProps = {
-  blogData: PostRecord[];
-  blogHeader: string;
-  blogSubheader: Maybe<string>;
+type Props = {
+  section: Section<'FeaturedPostsSectionRecord'>;
   globalPageProps: GlobalPageProps;
 };
 
 const FullImageFeaturedPosts = ({
-  blogData,
-  blogHeader,
-  blogSubheader,
+  section: {
+    featuredPosts: blogData,
+    featuredPostsHeader: blogHeader,
+    featuredPostsSubheader: blogSubheader,
+  },
   globalPageProps,
-}: BlogProps) => {
+}: Props) => {
   return (
     <div className="bg-white py-6 sm:py-8 lg:py-12">
       <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
@@ -33,7 +34,8 @@ const FullImageFeaturedPosts = ({
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-3 xl:gap-8">
-          {blogData.map((post) => {
+          {blogData.map((postFragment) => {
+            const post = getFragmentData(SingleBlogFragmentDoc, postFragment);
             return (
               <Link
                 key={post.id}
@@ -46,7 +48,7 @@ const FullImageFeaturedPosts = ({
                       layout="fill"
                       objectFit="cover"
                       objectPosition="50% 20%"
-                      data={post.seoTags?.image?.responsiveImage}
+                      fragment={post.seoTags?.image?.responsiveImage}
                     />
                   )}
                 </div>

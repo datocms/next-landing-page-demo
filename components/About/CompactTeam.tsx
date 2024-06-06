@@ -1,26 +1,17 @@
-import {
-  type AuthorRecord,
-  ResponsiveImage,
-  type SiteLocale,
-} from '@/graphql/types/graphql';
-import { buildUrl } from '@/utils/globalPageProps';
+import type { Section } from '@/utils/types';
+import DatoImage from '@/components/Common/DatoImage';
 import type { GlobalPageProps } from '@/utils/globalPageProps';
-import type { Maybe } from 'graphql/jsutils/Maybe';
+import { buildUrl } from '@/utils/globalPageProps';
 import Link from 'next/link';
-import { Image as DatoImage } from 'react-datocms';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
-  header: Maybe<string>;
-  subheader: Maybe<string>;
-  members: Array<AuthorRecord>;
+  section: Section<'TeamSectionRecord'>;
   globalPageProps: GlobalPageProps;
 };
 
 const CompactTeam = ({
-  header,
-  subheader,
-  members,
+  section: { title: header, subtitle: subheader, showcasedMembers: members },
   globalPageProps,
 }: Props) => {
   return (
@@ -47,7 +38,7 @@ const CompactTeam = ({
                     layout="fill"
                     objectFit="cover"
                     objectPosition="50% 20%"
-                    data={member.picture.responsiveImage}
+                    fragment={member.picture.responsiveImage}
                   />
                 </div>
 

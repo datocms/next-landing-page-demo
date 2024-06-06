@@ -1,17 +1,13 @@
+import type { Section } from '@/utils/types';
 import Highlighter from '@/components/Common/Highlighter';
-import type { QuestionRecord } from '@/graphql/types/graphql';
-import type { Record, StructuredText } from 'datocms-structured-text-utils';
-import type { Maybe } from 'graphql/jsutils/Maybe';
 import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
-  title: Maybe<string>;
-  subtitle: Maybe<string>;
-  questions: Array<QuestionRecord>;
+  section: Section<'FaqSectionRecord'>;
 };
 
-const FAQGrid = ({ title, subtitle, questions }: Props) => {
+const FAQGrid = ({ section: { title, subtitle, questions } }: Props) => {
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6 py-12">
@@ -50,9 +46,7 @@ const FAQGrid = ({ title, subtitle, questions }: Props) => {
 
                   <div className="mt-2 text-sm text-gray-500 dark:text-gray-300">
                     <StructuredTextField
-                      data={
-                        question.answer.value as StructuredText<Record, Record>
-                      }
+                      data={question.answer}
                       renderNode={Highlighter}
                     />
                   </div>

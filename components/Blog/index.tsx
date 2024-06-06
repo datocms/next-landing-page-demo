@@ -1,22 +1,21 @@
+import type { Section } from '@/utils/types';
 import SingleBlog from '@/components/Blog/SingleBlog';
 import SectionTitle from '@/components/Common/SectionTitle';
-import type { PostRecord, SiteLocale } from '@/graphql/types/graphql';
 import type { GlobalPageProps } from '@/utils/globalPageProps';
-import type { Maybe } from 'graphql/jsutils/Maybe';
 
-type BlogProps = {
-  blogData: PostRecord[];
-  blogHeader: string;
-  blogSubheader: Maybe<string>;
+type Props = {
+  section: Section<'FeaturedPostsSectionRecord'>;
   globalPageProps: GlobalPageProps;
 };
 
 const Blog = ({
-  blogData,
-  blogHeader,
-  blogSubheader,
+  section: {
+    featuredPosts: blogData,
+    featuredPostsHeader: blogHeader,
+    featuredPostsSubheader: blogSubheader,
+  },
   globalPageProps,
-}: BlogProps) => {
+}: Props) => {
   return (
     <section
       id="blog"

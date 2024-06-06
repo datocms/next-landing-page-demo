@@ -1,19 +1,16 @@
 'use client';
 
+import type { Section } from '@/utils/types';
 import { primaryColor } from '@/app/i18n/settings';
-import type { ButtonRecord } from '@/graphql/types/graphql';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
-  heroTitle: string;
-  heroSubtitle: Maybe<string>;
-  buttons: ButtonRecord[];
+  section: Section<'HeroSectionRecord'>;
 };
 
-const Hero = ({ heroTitle, heroSubtitle, buttons }: Props) => {
+const Hero = ({ section: { heroTitle, heroSubtitle, buttons } }: Props) => {
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '500%']);
 

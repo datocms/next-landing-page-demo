@@ -5,7 +5,7 @@ query DocumentationSidebar {
       subtitle
       slug
       id
-      _modelApiKey
+      __typename
       content {
         value
       }
@@ -14,7 +14,7 @@ query DocumentationSidebar {
         subtitle
         slug
         id
-        _modelApiKey
+        __typename
         content {
           value
         }
@@ -23,7 +23,7 @@ query DocumentationSidebar {
           subtitle
           slug
           id
-          _modelApiKey
+          __typename
           content {
             value
           }
@@ -32,7 +32,7 @@ query DocumentationSidebar {
             subtitle
             slug
             id
-            _modelApiKey
+            __typename
             content {
               value
             }
@@ -44,7 +44,7 @@ query DocumentationSidebar {
     subtitle
     slug
     id
-    _modelApiKey
+    __typename
   }
   documentationHome {
     footerText

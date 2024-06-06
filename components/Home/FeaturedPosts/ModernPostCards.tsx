@@ -1,24 +1,25 @@
-import type { PostRecord } from '@/graphql/types/graphql';
+import type { Section } from '@/utils/types';
+import DatoImage from '@/components/Common/DatoImage';
+import { getFragmentData } from '@/graphql/types';
+import { SingleBlogFragmentDoc } from '@/graphql/types/graphql';
 import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import transformDate from '@/utils/transformDate';
-import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
-import { Image as DatoImage } from 'react-datocms';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
-type BlogProps = {
-  blogData: PostRecord[];
-  blogHeader: string;
-  blogSubheader: Maybe<string>;
+type Props = {
+  section: Section<'FeaturedPostsSectionRecord'>;
   globalPageProps: GlobalPageProps;
 };
 
 const ModernPostCards = ({
-  blogData,
-  blogHeader,
-  blogSubheader,
+  section: {
+    featuredPosts: blogData,
+    featuredPostsHeader: blogHeader,
+    featuredPostsSubheader: blogSubheader,
+  },
   globalPageProps,
-}: BlogProps) => {
+}: Props) => {
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6 py-10">
@@ -33,7 +34,9 @@ const ModernPostCards = ({
         </div>
 
         <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
-          {blogData.map((post) => {
+          {blogData.map((postFragment) => {
+            const post = getFragmentData(SingleBlogFragmentDoc, postFragment);
+
             return (
               <div key={post.id}>
                 <div className="relative z-10 h-96 w-full overflow-hidden rounded-md object-cover">
@@ -42,7 +45,7 @@ const ModernPostCards = ({
                       layout="fill"
                       objectFit="cover"
                       objectPosition="50% 20%"
-                      data={post.seoTags?.image?.responsiveImage}
+                      fragment={post.seoTags?.image?.responsiveImage}
                     />
                   )}
                 </div>

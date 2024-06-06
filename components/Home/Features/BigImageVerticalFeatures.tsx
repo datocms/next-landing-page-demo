@@ -1,18 +1,14 @@
-import type { FeatureRecord } from '@/graphql/types/graphql';
-import type { Maybe } from 'graphql/jsutils/Maybe';
-import { Image as DatoImage } from 'react-datocms';
+import type { Section } from '@/utils/types';
+
+import DatoImage from '@/components/Common/DatoImage';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
-  features: FeatureRecord[];
-  featuresHeader: string;
-  featuresSubheader: Maybe<string>;
+  section: Section<'FeatureListSectionRecord'>;
 };
 
 const BigImageVerticalFeatures = ({
-  features,
-  featuresHeader,
-  featuresSubheader,
+  section: { feature: features, featuresHeader, featuresSubheader },
 }: Props) => {
   return (
     <div className="bg-white py-6 sm:py-8 lg:py-12">
@@ -41,7 +37,7 @@ const BigImageVerticalFeatures = ({
                       layout="fill"
                       objectFit="cover"
                       objectPosition="50% 50%"
-                      data={feature.featureIcon.responsiveImage}
+                      fragment={feature.featureIcon.responsiveImage}
                     />
                   </div>
                 </div>

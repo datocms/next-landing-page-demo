@@ -28,12 +28,7 @@ const Content: ContentPage<PageProps, Query> = ({ data, params }) => {
             <div>
               <div>
                 <StructuredTextField
-                  data={
-                    data.legalPage.content.value as StructuredText<
-                      Record,
-                      Record
-                    >
-                  }
+                  data={data.legalPage.content}
                   renderNode={Highlighter}
                   customNodeRules={[
                     renderNodeRule(isHeading, ({ children, key }) => {

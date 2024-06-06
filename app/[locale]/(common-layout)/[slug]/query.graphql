@@ -12,7 +12,7 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
     sections {
       ... on AboutIntroRecord {
         id
-        _modelApiKey
+        __typename
         preHeader
         header
         subheader
@@ -28,7 +28,7 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
       }
       ... on ChangelogSectionRecord {
         id
-        _modelApiKey
+        __typename
         subtitle
         title
         featuredVersions {
@@ -36,11 +36,11 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
           versionName
           slug
           id
-          _modelApiKey
+          __typename
         }
       }
       ... on StatsSectionRecord {
-        _modelApiKey
+        __typename
         id
         title
         subtitle
@@ -54,7 +54,7 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
         }
       }
       ... on TeamSectionRecord {
-        _modelApiKey
+        __typename
         id
         displayOptions
         title
@@ -73,7 +73,7 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
         }
       }
       ... on FaqSectionRecord {
-        _modelApiKey
+        __typename
         displayOptions
         id
         title
@@ -93,7 +93,7 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
           primary
           url
         }
-        _modelApiKey
+        __typename
         id
         heroSubtitle
         heroTitle
@@ -105,7 +105,7 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
         }
       }
       ... on VideoSectionRecord {
-        _modelApiKey
+        __typename
         id
         videoHeader
         videoSubheader
@@ -121,7 +121,7 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
         }
       }
       ... on DetailSectionRecord {
-        _modelApiKey
+        __typename
         id
         details {
           value
@@ -134,7 +134,7 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
         }
       }
       ... on ReviewSectionRecord {
-        _modelApiKey
+        __typename
         id
         reviewSectionHeader
         reviewSectionSubheader
@@ -144,8 +144,6 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
           rating
           review {
             value
-            links
-            blocks
           }
           reviewerName
           reviewerPicture {
@@ -157,7 +155,7 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
         }
       }
       ... on PricingSectionRecord {
-        _modelApiKey
+        __typename
         id
         pricingSectionHeader
         pricingSectionSubheader
@@ -175,11 +173,11 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
         }
       }
       ... on BrandSectionRecord {
-        _modelApiKey
+        __typename
         id
         displayOptions
         brand {
-          _modelApiKey
+          __typename
           brandName
           brandUrl
           id
@@ -189,47 +187,24 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
         }
       }
       ... on FeaturedPostsSectionRecord {
-        _modelApiKey
+        __typename
         id
         featuredPostsHeader
         featuredPostsSubheader
         displayOptions
         featuredPosts {
-          _publishedAt
-          slug
           id
-          title
-          tags {
-            tag
-          }
-          seoTags {
-            description
-            image {
-              responsiveImage {
-                ...DatoImage_responsiveImage
-              }
-            }
-          }
-          author {
-            name
-            bio
-            slug
-            picture {
-              responsiveImage(imgixParams: { w: "64", h: "64", fit: crop }) {
-                ...DatoImage_responsiveImage
-              }
-            }
-          }
+          ...SingleBlog
         }
       }
       ... on FeatureListSectionRecord {
-        _modelApiKey
+        __typename
         id
         featuresHeader
         featuresSubheader
         displayOption
         feature {
-          _modelApiKey
+          __typename
           id
           featureTitle
           featureDescription
@@ -242,17 +217,17 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
       }
       ... on AllPostsSectionRecord {
         id
-        _modelApiKey
+        __typename
       }
       ... on RedirectSectionRecord {
         id
-        _modelApiKey
+        __typename
         slugToRedirectTo
       }
     }
     id
     label
-    _modelApiKey
+    __typename
   }
   allPosts(
     filter: { title: { isBlank: "false" } }
@@ -261,43 +236,10 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
     locale: $locale
     fallbackLocales: $fallbackLocale
   ) {
-    _publishedAt
-    slug
     id
-    title
-    tags {
-      tag
-    }
-    seoTags {
-      description
-      image {
-        responsiveImage {
-          ...DatoImage_responsiveImage
-        }
-      }
-    }
-    author {
-      name
-      slug
-      bio
-      picture {
-        responsiveImage(imgixParams: { w: "64", h: "64", fit: crop }) {
-          ...DatoImage_responsiveImage
-        }
-      }
-    }
+    ...SingleBlog
   }
   _allPostsMeta(locale: $locale, filter: { title: { isBlank: "false" } }) {
     count
   }
-}
-
-fragment DatoImage_responsiveImage on ResponsiveImage {
-  src
-  srcSet
-  base64
-  width
-  height
-  alt
-  title
 }

@@ -1,22 +1,23 @@
 'use client';
-import type { PostRecord } from '@/graphql/types/graphql';
+import type { Section } from '@/utils/types';
+import DatoImage from '@/components/Common/DatoImage';
+import { getFragmentData } from '@/graphql/types';
+import { SingleBlogFragmentDoc } from '@/graphql/types/graphql';
 import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
-import type { Maybe } from 'graphql/jsutils/Maybe';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Image as DatoImage } from 'react-datocms';
 
 type Props = {
-  blogData: PostRecord[];
-  blogHeader: string;
-  blogSubheader: Maybe<string>;
+  section: Section<'FeaturedPostsSectionRecord'>;
   globalPageProps: GlobalPageProps;
 };
 
 const CarouselFeaturedPosts = ({
-  blogData,
-  blogHeader,
-  blogSubheader,
+  section: {
+    featuredPosts: blogData,
+    featuredPostsHeader: blogHeader,
+    featuredPostsSubheader: blogSubheader,
+  },
   globalPageProps,
 }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -31,7 +32,10 @@ const CarouselFeaturedPosts = ({
     );
   };
 
-  const currentReview = blogData[currentIndex];
+  const currentReview = getFragmentData(
+    SingleBlogFragmentDoc,
+    blogData[currentIndex],
+  );
 
   return (
     <section className="bg-white dark:bg-gray-900">
@@ -47,7 +51,7 @@ const CarouselFeaturedPosts = ({
                 layout="fill"
                 objectFit="cover"
                 objectPosition="50% 20%"
-                data={currentReview.seoTags?.image?.responsiveImage}
+                fragment={currentReview.seoTags?.image?.responsiveImage}
               />
             </div>
           )}
@@ -81,7 +85,7 @@ const CarouselFeaturedPosts = ({
                   layout="fill"
                   objectFit="cover"
                   objectPosition="50% 20%"
-                  data={currentReview.author.picture.responsiveImage}
+                  fragment={currentReview.author.picture.responsiveImage}
                 />
               </div>
               <div className="mx-4">

@@ -7,11 +7,11 @@ query DocumentationHomePage {
     }
     title
     subheader
-    _modelApiKey
+    __typename
     id
     featuredPages {
       id
-      _modelApiKey
+      __typename
       title
       subtitle
       slug

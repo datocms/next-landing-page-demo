@@ -1,18 +1,23 @@
+import type { Section } from '@/utils/types';
+import DatoImage from '@/components/Common/DatoImage';
 import Highlighter from '@/components/Common/Highlighter';
 import type { TestimonialRecord } from '@/graphql/types/graphql';
 import type { Record, StructuredText } from 'datocms-structured-text-utils';
 import type { Maybe } from 'graphql/jsutils/Maybe';
 import { useState } from 'react';
-import { Image as DatoImage } from 'react-datocms';
 import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 
 type Props = {
-  reviews: TestimonialRecord[];
-  header: string;
-  subheader: Maybe<string>;
+  section: Section<'ReviewSectionRecord'>;
 };
 
-const MinimalReviewCards = ({ reviews, header, subheader }: Props) => {
+const MinimalReviewCards = ({
+  section: {
+    reviews,
+    reviewSectionHeader: header,
+    reviewSectionSubheader: subheader,
+  },
+}: Props) => {
   return (
     <div className="bg-white py-16 sm:py-8 lg:py-12">
       <div className="mx-auto max-w-screen-xl px-4 md:px-8">
@@ -29,7 +34,7 @@ const MinimalReviewCards = ({ reviews, header, subheader }: Props) => {
               >
                 <div className="max-w-md text-center text-white lg:text-lg">
                   <StructuredTextField
-                    data={review.review.value as StructuredText<Record, Record>}
+                    data={review.review}
                     renderNode={Highlighter}
                   />
                 </div>
@@ -40,7 +45,7 @@ const MinimalReviewCards = ({ reviews, header, subheader }: Props) => {
                       layout="fill"
                       objectFit="cover"
                       objectPosition="80% 20%"
-                      data={review.reviewerPicture.responsiveImage}
+                      fragment={review.reviewerPicture.responsiveImage}
                     />
                   </div>
 
