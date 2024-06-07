@@ -5,9 +5,9 @@ import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import type { Metadata } from 'next';
 import { draftMode } from 'next/headers';
 import {
+  toNextMetadata,
   type SeoOrFaviconTag,
   type TitleMetaLinkTag,
-  toNextMetadata,
 } from 'react-datocms/seo';
 import type { BuildVariablesFn } from './types';
 
@@ -25,7 +25,7 @@ export function generateMetadataFn<
   return async function generateMetadata(
     pageProps: PageProps,
   ): Promise<Metadata> {
-    const fallbackLocale = await getFallbackLocale();
+    const fallbackLocale = await getFallbackLocale(pageProps.params.apiToken);
     const { isEnabled: isDraft } = draftMode();
 
     const variables =
@@ -34,7 +34,12 @@ export function generateMetadataFn<
         fallbackLocale,
       }) || ({} as TVariables);
 
-    const data = await queryDatoCMS(options.query, variables, isDraft);
+    const data = await queryDatoCMS(
+      pageProps.params.apiToken,
+      options.query,
+      variables,
+      isDraft,
+    );
 
     const tags = await options.generate(data);
 

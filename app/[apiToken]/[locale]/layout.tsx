@@ -11,15 +11,20 @@ type Params = GlobalPageProps & {
   children: React.ReactNode;
 };
 
-export async function generateMetadata() {
+export async function generateMetadata({ params }: Params) {
   const { isEnabled: isDraft } = draftMode();
-  const data = await queryDatoCMS(LayoutDocument, {}, isDraft);
+  const data = await queryDatoCMS(params.apiToken, LayoutDocument, {}, isDraft);
   return toNextMetadata(data._site.faviconMetaTags);
 }
 
 export default async function RootLayout({ children, ...pageProps }: Params) {
   const { isEnabled: isDraft } = draftMode();
-  const data = await queryDatoCMS(LayoutDocument, {}, isDraft);
+  const data = await queryDatoCMS(
+    pageProps.params.apiToken,
+    LayoutDocument,
+    {},
+    isDraft,
+  );
 
   return (
     <>
