@@ -7,14 +7,6 @@ query DocumentationHomePage {
     }
     title
     subheader
-    __typename
-    id
-    featuredPages {
-      id
-      __typename
-      title
-      subtitle
-      slug
-    }
+    ...FeaturedDocumentationPages
   }
 }

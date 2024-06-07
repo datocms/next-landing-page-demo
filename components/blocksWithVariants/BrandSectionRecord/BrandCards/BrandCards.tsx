@@ -1,0 +1,40 @@
+import { type FragmentType, getFragmentData } from '@/graphql/types';
+import { BrandSectionFragmentDoc } from '@/graphql/types/graphql';
+import Image from 'next/image';
+
+type Props = {
+  fragment: FragmentType<typeof BrandSectionFragmentDoc>;
+};
+
+const BrandCards = ({ fragment }: Props) => {
+  const { brand: brandShowcase } = getFragmentData(
+    BrandSectionFragmentDoc,
+    fragment,
+  );
+  return (
+    <div className="bg-white py-6 lg:py-8">
+      <div className="mx-auto max-w-screen-2xl px-4 md:px-8">
+        <div className="mx-4 grid grid-cols-1 gap-4 rounded-lg md:grid-cols-3 lg:mx-12">
+          {brandShowcase.map((brand) => {
+            return (
+              <div
+                key={brand.id}
+                className="relative mx-8 flex h-16 items-center justify-center rounded-lg bg-primary/20 p-16 text-gray-400 sm:h-32 md:mx-0"
+              >
+                <Image
+                  className="w-6/12 md:w-9/12"
+                  src={brand.brandLogo.url}
+                  alt="Logo"
+                  width={300}
+                  height={300}
+                />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default BrandCards;

@@ -1,6 +1,6 @@
 import type { SiteLocale } from '@/graphql/types/graphql';
 import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
-import { buildClient } from '@datocms/cma-client-node';
+import { type SimpleSchemaTypes, buildClient } from '@datocms/cma-client-node';
 import got from 'got';
 import { JSDOM } from 'jsdom';
 import { cookies, draftMode } from 'next/headers';
@@ -15,17 +15,20 @@ const websiteBaseUrl = (
 ) as string;
 
 const findSlugAndPermalink = async (
-  item: any,
+  item: SimpleSchemaTypes.Item,
   itemTypeApiKey: string,
   globalPageProps: GlobalPageProps,
-) => {
+): Promise<[string, string] | [null, null]> => {
   switch (itemTypeApiKey) {
     case 'page':
       if (item.slug === 'home')
-        return [item.slug, buildUrl(globalPageProps, '/')]; //special case for default home page
-      return [item.slug, buildUrl(globalPageProps, `/${item.slug}`)];
+        return [item.slug as string, buildUrl(globalPageProps, '/')]; //special case for default home page
+      return [item.slug as string, buildUrl(globalPageProps, `/${item.slug}`)];
     case 'post':
-      return [item.slug, buildUrl(globalPageProps, `/posts/${item.slug}`)];
+      return [
+        item.slug as string,
+        buildUrl(globalPageProps, `/posts/${item.slug}`),
+      ];
     default:
       return [null, null];
   }

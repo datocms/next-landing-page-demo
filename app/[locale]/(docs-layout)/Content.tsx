@@ -1,4 +1,4 @@
-import DocumentationSidebarItem from '@/components/Documentation/DocumentationSidebarItem';
+import DocumentationSidebarItem from '@/components/DocumentationSidebarItem';
 import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
 import type { DocumentationPageRecord } from '@/graphql/types/graphql';
 import '@/styles/global.css';

@@ -1,13 +1,6 @@
-import Highlighter from '@/components/Common/Highlighter';
+import Highlighter from '@/components/Highlighter';
 import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
-import type { LegalQuery } from '@/graphql/types/graphql';
-import type { GlobalPageProps } from '@/utils/globalPageProps';
-import {
-  type Record,
-  type StructuredText,
-  isHeading,
-  isParagraph,
-} from 'datocms-structured-text-utils';
+import { isHeading, isParagraph } from 'datocms-structured-text-utils';
 import { notFound } from 'next/navigation';
 import {
   StructuredText as StructuredTextField,

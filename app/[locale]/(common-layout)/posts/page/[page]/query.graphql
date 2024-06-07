@@ -12,7 +12,7 @@ query Posts(
     skip: $skip
   ) {
     id
-    ...SingleBlog
+    ...PostExcerpt
   }
   _allPostsMeta(locale: $locale, filter: { title: { isBlank: "false" } }) {
     count

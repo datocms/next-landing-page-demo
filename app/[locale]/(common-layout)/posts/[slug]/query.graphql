@@ -17,7 +17,7 @@ query Post($slug: String, $locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
       slug
       picture {
         responsiveImage(imgixParams: { w: "64", h: "64", fit: crop }) {
-        ...DatoImage_responsiveImage
+          ...DatoImage_responsiveImage
         }
       }
     }
@@ -29,10 +29,12 @@ query Post($slug: String, $locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
     content {
       value
       links {
+        ... on RecordInterface {
+          id
+          __typename
+        }
         _publishedAt
-        __typename
         slug
-        id
         title
         tags {
           tag
@@ -56,9 +58,11 @@ query Post($slug: String, $locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
         }
       }
       blocks {
-        ... on ImageBlockRecord {
+        ... on RecordInterface {
           id
           __typename
+        }
+        ... on ImageBlockRecord {
           image {
             id
             responsiveImage {
@@ -67,32 +71,13 @@ query Post($slug: String, $locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
           }
         }
         ... on AppCtaRecord {
-          id
-          __typename
-          text
-          title
-          googlePlayUrl
-          appstoreUrl
+          ...CtaAppBlock
         }
         ... on NewsletterSubscriptionRecord {
-          id
-          __typename
-          buttonLabel
-          subtitle
-          title
+          ...NewsletterSubscription
         }
         ... on CtaButtonWithImageRecord {
-          id
-          __typename
-          title
-          subtitle
-          image {
-            id
-            responsiveImage {
-              ...DatoImage_responsiveImage
-            }
-          }
-          buttonLabel
+          ...CtaButtonWithImage
         }
       }
     }

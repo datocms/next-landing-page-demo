@@ -1,0 +1,12 @@
+fragment BrandSection on BrandSectionRecord {
+  displayOptions
+  brand {
+    __typename
+    brandName
+    brandUrl
+    id
+    brandLogo {
+      url
+    }
+  }
+}

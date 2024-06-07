@@ -1,0 +1,17 @@
+fragment TeamSection on TeamSectionRecord {
+  displayOptions
+  title
+  subtitle
+  showcasedMembers {
+    name
+    id
+    slug
+    bio
+    description
+    picture {
+      responsiveImage {
+        ...DatoImage_responsiveImage
+      }
+    }
+  }
+}

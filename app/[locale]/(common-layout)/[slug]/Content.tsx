@@ -1,41 +1,41 @@
-import AboutIntro from '@/components/About/AboutIntro';
-import CompactTeam from '@/components/About/CompactTeam';
-import ExpandedTeam from '@/components/About/ExpandedTeam';
-import FAQAccordion from '@/components/About/FAQAccordion';
-import FAQGrid from '@/components/About/FAQGrid';
-import StatsSection from '@/components/About/StatsSection';
-import Blog from '@/components/Blog';
-import PostGridRenderer from '@/components/Blog/PostGridRenderer';
-import Changelog from '@/components/Changelog';
-import Brands from '@/components/Home/Brands';
-import BrandCards from '@/components/Home/Brands/BrandCards';
-import DetailSection from '@/components/Home/Detail/DetailSection';
-import CarouselFeaturedPosts from '@/components/Home/FeaturedPosts/CarouselFeaturedPosts';
-import FullImageFeaturedPosts from '@/components/Home/FeaturedPosts/FullImageFeaturedPosts';
-import MinimalistFeaturedPostsGrid from '@/components/Home/FeaturedPosts/MinimalistFeaturedPostsGrid';
-import ModernPostCards from '@/components/Home/FeaturedPosts/ModernPostCards';
-import Features from '@/components/Home/Features';
-import BigImageHorizontalFeatures from '@/components/Home/Features/BigImageHorizontalFeatures';
-import BigImageVerticalFeatures from '@/components/Home/Features/BigImageVerticalFeatures';
-import FeatureCards from '@/components/Home/Features/FeatureCards';
-import MinimalCardsFeature from '@/components/Home/Features/MinimalCardsFeature';
-import Hero from '@/components/Home/Hero';
-import BackgroundImageHero from '@/components/Home/Hero/BackgroundImage';
-import GradientHero from '@/components/Home/Hero/GradientHero';
-import RightImageHero from '@/components/Home/Hero/RightImageHero';
-import SplitImage from '@/components/Home/Hero/SplitImage';
-import Pricing from '@/components/Home/Pricing';
-import FeatureListSelector from '@/components/Home/Pricing/FeatureListSelector';
-import GradientCards from '@/components/Home/Pricing/GradientCards';
-import Minimal from '@/components/Home/Pricing/Minimal';
-import SmallCards from '@/components/Home/Pricing/SmallCards';
-import Testimonials from '@/components/Home/Testimonials';
-import Carousel from '@/components/Home/Testimonials/Carousel';
-import MinimalCarousel from '@/components/Home/Testimonials/MinimalCarousel';
-import MinimalReviewCards from '@/components/Home/Testimonials/MinimalReviewCards';
-import ModernCarousel from '@/components/Home/Testimonials/ModernCarousel';
-import Video from '@/components/Home/Video';
 import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
+import AboutIntro from '@/components/blocksWithVariants/AboutIntroRecord/AboutIntro';
+import PostGridRenderer from '@/components/blocksWithVariants/AllPostsSectionRecord/PostGridRenderer';
+import BrandCards from '@/components/blocksWithVariants/BrandSectionRecord/BrandCards';
+import Brands from '@/components/blocksWithVariants/BrandSectionRecord/Brands';
+import Changelog from '@/components/blocksWithVariants/ChangelogSectionRecord/Changelog';
+import DetailSection from '@/components/blocksWithVariants/DetailSectionRecord/DetailSection';
+import FAQAccordion from '@/components/blocksWithVariants/FaqSectionRecord/FAQAccordion';
+import FAQGrid from '@/components/blocksWithVariants/FaqSectionRecord/FAQGrid';
+import BigImageHorizontalFeatures from '@/components/blocksWithVariants/FeatureListSectionRecord/BigImageHorizontalFeatures';
+import BigImageVerticalFeatures from '@/components/blocksWithVariants/FeatureListSectionRecord/BigImageVerticalFeatures';
+import FeatureCards from '@/components/blocksWithVariants/FeatureListSectionRecord/FeatureCards';
+import Features from '@/components/blocksWithVariants/FeatureListSectionRecord/Features';
+import MinimalCardsFeature from '@/components/blocksWithVariants/FeatureListSectionRecord/MinimalCardsFeature';
+import Blog from '@/components/blocksWithVariants/FeaturedPostsSectionRecord/Blog';
+import CarouselFeaturedPosts from '@/components/blocksWithVariants/FeaturedPostsSectionRecord/CarouselFeaturedPosts';
+import FullImageFeaturedPosts from '@/components/blocksWithVariants/FeaturedPostsSectionRecord/FullImageFeaturedPosts';
+import MinimalistFeaturedPostsGrid from '@/components/blocksWithVariants/FeaturedPostsSectionRecord/MinimalistFeaturedPostsGrid';
+import ModernPostCards from '@/components/blocksWithVariants/FeaturedPostsSectionRecord/ModernPostCards';
+import BackgroundImageHero from '@/components/blocksWithVariants/HeroSectionRecord/BackgroundImage';
+import GradientHero from '@/components/blocksWithVariants/HeroSectionRecord/GradientHero';
+import Hero from '@/components/blocksWithVariants/HeroSectionRecord/Hero';
+import RightImageHero from '@/components/blocksWithVariants/HeroSectionRecord/RightImageHero';
+import SplitImage from '@/components/blocksWithVariants/HeroSectionRecord/SplitImage';
+import FeatureListSelector from '@/components/blocksWithVariants/PricingSectionRecord/FeatureListSelector';
+import GradientCards from '@/components/blocksWithVariants/PricingSectionRecord/GradientCards';
+import Minimal from '@/components/blocksWithVariants/PricingSectionRecord/Minimal';
+import Pricing from '@/components/blocksWithVariants/PricingSectionRecord/Pricing';
+import SmallCards from '@/components/blocksWithVariants/PricingSectionRecord/SmallCards';
+import Carousel from '@/components/blocksWithVariants/ReviewSectionRecord/Carousel';
+import MinimalCarousel from '@/components/blocksWithVariants/ReviewSectionRecord/MinimalCarousel';
+import MinimalReviewCards from '@/components/blocksWithVariants/ReviewSectionRecord/MinimalReviewCards';
+import ModernCarousel from '@/components/blocksWithVariants/ReviewSectionRecord/ModernCarousel';
+import Testimonials from '@/components/blocksWithVariants/ReviewSectionRecord/Testimonials';
+import StatsSection from '@/components/blocksWithVariants/StatsSectionRecord/StatsSection';
+import CompactTeam from '@/components/blocksWithVariants/TeamSectionRecord/CompactTeam';
+import ExpandedTeam from '@/components/blocksWithVariants/TeamSectionRecord/ExpandedTeam';
+import Video from '@/components/blocksWithVariants/VideoSectionRecord/Video';
 import { buildUrl } from '@/utils/globalPageProps';
 import { notFound, redirect } from 'next/navigation';
 import type { PageProps, Query } from './meta';
@@ -54,80 +54,80 @@ const Content: ContentPage<PageProps, Query> = ({
         switch (section.__typename) {
           case 'ChangelogSectionRecord': {
             return (
-              <Changelog section={section} globalPageProps={globalPageProps} />
+              <Changelog fragment={section} globalPageProps={globalPageProps} />
             );
           }
           case 'HeroSectionRecord': {
             switch (section.displayOptions) {
               case 'gradient':
-                return <GradientHero section={section} />;
+                return <GradientHero fragment={section} />;
               case 'right_image':
-                return <RightImageHero section={section} />;
+                return <RightImageHero fragment={section} />;
               case 'background_image':
-                return <BackgroundImageHero section={section} />;
+                return <BackgroundImageHero fragment={section} />;
               case 'split_image':
-                return <SplitImage section={section} />;
+                return <SplitImage fragment={section} />;
               default:
-                return <Hero section={section} />;
+                return <Hero fragment={section} />;
             }
           }
 
           case 'FeatureListSectionRecord': {
             switch (section.displayOption) {
               case 'card_minimal':
-                return <MinimalCardsFeature section={section} />;
+                return <MinimalCardsFeature fragment={section} />;
               case 'grid':
-                return <Features section={section} />;
+                return <Features fragment={section} />;
               case 'big_image_horizontal':
-                return <BigImageHorizontalFeatures section={section} />;
+                return <BigImageHorizontalFeatures fragment={section} />;
               case 'big_image_vertical':
-                return <BigImageVerticalFeatures section={section} />;
+                return <BigImageVerticalFeatures fragment={section} />;
               default:
-                return <FeatureCards section={section} />;
+                return <FeatureCards fragment={section} />;
             }
           }
 
           case 'VideoSectionRecord': {
-            return <Video section={section} />;
+            return <Video fragment={section} />;
           }
           case 'BrandSectionRecord': {
             switch (section.displayOptions) {
               case 'brand_cards':
-                return <BrandCards section={section} />;
+                return <BrandCards fragment={section} />;
               default:
-                return <Brands section={section} />;
+                return <Brands fragment={section} />;
             }
           }
           case 'DetailSectionRecord': {
-            return <DetailSection section={section} />;
+            return <DetailSection fragment={section} />;
           }
           case 'ReviewSectionRecord': {
             switch (section.displayOptions) {
               case 'card_carrousel':
-                return <Carousel section={section} />;
+                return <Carousel fragment={section} />;
               case 'modern_carrousel':
-                return <ModernCarousel section={section} />;
+                return <ModernCarousel fragment={section} />;
               case 'minimal_carrousel':
-                return <MinimalCarousel section={section} />;
+                return <MinimalCarousel fragment={section} />;
               case 'minimal_cards':
-                return <MinimalReviewCards section={section} />;
+                return <MinimalReviewCards fragment={section} />;
               default:
-                return <Testimonials section={section} />;
+                return <Testimonials fragment={section} />;
             }
           }
 
           case 'PricingSectionRecord': {
             switch (section.displayOption) {
               case 'cards_gradient':
-                return <GradientCards section={section} />;
+                return <GradientCards fragment={section} />;
               case 'minimal':
-                return <Minimal section={section} />;
+                return <Minimal fragment={section} />;
               case 'feature_list':
-                return <FeatureListSelector section={section} />;
+                return <FeatureListSelector fragment={section} />;
               case 'mini_cards':
-                return <SmallCards section={section} />;
+                return <SmallCards fragment={section} />;
               default:
-                return <Pricing section={section} />;
+                return <Pricing fragment={section} />;
             }
           }
 
@@ -137,33 +137,33 @@ const Content: ContentPage<PageProps, Query> = ({
                 return (
                   <ModernPostCards
                     globalPageProps={globalPageProps}
-                    section={section}
+                    fragment={section}
                   />
                 );
               case 'carrousel':
                 return (
                   <CarouselFeaturedPosts
                     globalPageProps={globalPageProps}
-                    section={section}
+                    fragment={section}
                   />
                 );
               case 'minimalist_grid':
                 return (
                   <MinimalistFeaturedPostsGrid
                     globalPageProps={globalPageProps}
-                    section={section}
+                    fragment={section}
                   />
                 );
               case 'full_image_card':
                 return (
                   <FullImageFeaturedPosts
                     globalPageProps={globalPageProps}
-                    section={section}
+                    fragment={section}
                   />
                 );
               default:
                 return (
-                  <Blog globalPageProps={globalPageProps} section={section} />
+                  <Blog globalPageProps={globalPageProps} fragment={section} />
                 );
             }
           }
@@ -172,29 +172,29 @@ const Content: ContentPage<PageProps, Query> = ({
             if (section.displayOptions === 'compact')
               return (
                 <CompactTeam
-                  section={section}
+                  fragment={section}
                   globalPageProps={globalPageProps}
                 />
               );
             return (
               <ExpandedTeam
-                section={section}
+                fragment={section}
                 globalPageProps={globalPageProps}
               />
             );
           }
           case 'FaqSectionRecord': {
             if (section.displayOptions === 'accordion') {
-              return <FAQAccordion section={section} />;
+              return <FAQAccordion fragment={section} />;
             }
 
-            return <FAQGrid section={section} />;
+            return <FAQGrid fragment={section} />;
           }
           case 'StatsSectionRecord': {
-            return <StatsSection section={section} />;
+            return <StatsSection fragment={section} />;
           }
           case 'AboutIntroRecord': {
-            return <AboutIntro section={section} />;
+            return <AboutIntro fragment={section} />;
           }
           case 'AllPostsSectionRecord': {
             return (

@@ -1,0 +1,11 @@
+fragment DetailSection on DetailSectionRecord {
+  details {
+    value
+  }
+  imagePosition
+  image {
+    responsiveImage {
+      ...DatoImage_responsiveImage
+    }
+  }
+}

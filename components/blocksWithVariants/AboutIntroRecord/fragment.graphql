@@ -1,0 +1,14 @@
+fragment AboutIntro on AboutIntroRecord {
+  preHeader
+  header
+  subheader
+  introductionText {
+    value
+  }
+  images {
+    id
+    responsiveImage {
+      ...DatoImage_responsiveImage
+    }
+  }
+}

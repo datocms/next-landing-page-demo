@@ -1,4 +1,3 @@
-import { generateMetadataFn } from '@/components/WithRealTimeUpdates/generateMetadataFn';
 import { generateWrapper } from '@/components/WithRealTimeUpdates/generateWrapper';
 import type { BuildVariablesFn } from '@/components/WithRealTimeUpdates/types';
 import Content from './Content';

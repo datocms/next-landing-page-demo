@@ -1,0 +1,27 @@
+fragment PostExcerpt on PostRecord {
+  _publishedAt
+  slug
+  id
+  title
+  tags {
+    tag
+  }
+  seoTags {
+    description
+    image {
+      responsiveImage {
+        ...DatoImage_responsiveImage
+      }
+    }
+  }
+  author {
+    name
+    bio
+    slug
+    picture {
+      responsiveImage(imgixParams: { w: "64", h: "64", fit: crop }) {
+        ...DatoImage_responsiveImage
+      }
+    }
+  }
+}

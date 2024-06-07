@@ -1,0 +1,12 @@
+fragment FeaturedDocumentationPages on DocumentationHomeRecord {
+  featuredPages {
+    id
+    ...FeaturedDocumentationPagesPreviewCard
+  }
+}
+
+fragment FeaturedDocumentationPagesPreviewCard on DocumentationPageRecord {
+  title
+  subtitle
+  slug
+}

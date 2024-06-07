@@ -1,0 +1,14 @@
+fragment VideoSection on VideoSectionRecord {
+  videoHeader
+  videoSubheader
+  video {
+    providerUid
+    provider
+    thumbnailUrl
+  }
+  videoThumbnail {
+    responsiveImage {
+      ...DatoImage_responsiveImage
+    }
+  }
+}

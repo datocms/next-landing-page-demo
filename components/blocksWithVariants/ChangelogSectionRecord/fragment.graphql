@@ -1,0 +1,11 @@
+fragment ChangelogSection on ChangelogSectionRecord {
+  subtitle
+  title
+  featuredVersions {
+    timeOfRelease
+    versionName
+    slug
+    id
+    __typename
+  }
+}

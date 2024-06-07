@@ -1,7 +1,6 @@
-import SingleBlog from '@/components/Blog/SingleBlog';
-import DatoImage from '@/components/Common/DatoImage';
+import DatoImage from '@/components/DatoImage';
+import PostExcerpt from '@/components/PostExcerpt';
 import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
-import type { PostRecord } from '@/graphql/types/graphql';
 import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import type { PageProps, Query } from './meta';
@@ -49,7 +48,7 @@ const Content: ContentPage<PageProps, Query> = ({
               key={post.id}
               className="mb-10 w-full px-4 md:w-2/3 lg:w-1/2 xl:w-1/3"
             >
-              <SingleBlog blog={post} globalPageProps={globalPageProps} />
+              <PostExcerpt fragment={post} globalPageProps={globalPageProps} />
             </div>
           ))}
         </div>

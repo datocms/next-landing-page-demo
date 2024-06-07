@@ -10,218 +10,58 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
       tag
     }
     sections {
-      ... on AboutIntroRecord {
+      ... on RecordInterface {
         id
         __typename
-        preHeader
-        header
-        subheader
-        introductionText {
-          value
-        }
-        images {
-          id
-          responsiveImage {
-            ...DatoImage_responsiveImage
-          }
-        }
+      }
+      ... on AboutIntroRecord {
+        ...AboutIntro
       }
       ... on ChangelogSectionRecord {
-        id
-        __typename
-        subtitle
-        title
-        featuredVersions {
-          timeOfRelease
-          versionName
-          slug
-          id
-          __typename
-        }
+        ...ChangelogSection
       }
       ... on StatsSectionRecord {
-        __typename
-        id
-        title
-        subtitle
-        statistic {
-          id
-          label
-          quantity
-          icon {
-            url
-          }
-        }
+        ...StatsSection
       }
       ... on TeamSectionRecord {
-        __typename
-        id
         displayOptions
-        title
-        subtitle
-        showcasedMembers {
-          name
-          id
-          slug
-          bio
-          description
-          picture {
-            responsiveImage {
-              ...DatoImage_responsiveImage
-            }
-          }
-        }
+        ...TeamSection
       }
       ... on FaqSectionRecord {
-        __typename
         displayOptions
-        id
-        title
-        subtitle
-        questions {
-          question
-          id
-          answer {
-            value
-          }
-        }
+        ...FaqSection
       }
       ... on HeroSectionRecord {
-        buttons {
-          id
-          label
-          primary
-          url
-        }
-        __typename
-        id
-        heroSubtitle
-        heroTitle
         displayOptions
-        heroImage {
-          responsiveImage {
-            ...DatoImage_responsiveImage
-          }
-        }
+        ...HeroSection
       }
       ... on VideoSectionRecord {
-        __typename
-        id
-        videoHeader
-        videoSubheader
-        video {
-          providerUid
-          provider
-          thumbnailUrl
-        }
-        videoThumbnail {
-          responsiveImage {
-            ...DatoImage_responsiveImage
-          }
-        }
+        ...VideoSection
       }
       ... on DetailSectionRecord {
-        __typename
-        id
-        details {
-          value
-        }
-        imagePosition
-        image {
-          responsiveImage {
-            ...DatoImage_responsiveImage
-          }
-        }
+        ...DetailSection
       }
       ... on ReviewSectionRecord {
-        __typename
-        id
-        reviewSectionHeader
-        reviewSectionSubheader
         displayOptions
-        reviews {
-          id
-          rating
-          review {
-            value
-          }
-          reviewerName
-          reviewerPicture {
-            responsiveImage {
-              ...DatoImage_responsiveImage
-            }
-          }
-          reviewerTitle
-        }
+        ...ReviewSection
       }
       ... on PricingSectionRecord {
-        __typename
-        id
-        pricingSectionHeader
-        pricingSectionSubheader
         displayOption
-        plans {
-          id
-          yearlyPrice
-          monthlyPrice
-          tierName
-          tierDescription {
-            value
-          }
-          slug
-          planFeatures
-        }
+        ...PricingSection
       }
       ... on BrandSectionRecord {
-        __typename
-        id
         displayOptions
-        brand {
-          __typename
-          brandName
-          brandUrl
-          id
-          brandLogo {
-            url
-          }
-        }
+        ...BrandSection
       }
       ... on FeaturedPostsSectionRecord {
-        __typename
-        id
-        featuredPostsHeader
-        featuredPostsSubheader
         displayOptions
-        featuredPosts {
-          id
-          ...SingleBlog
-        }
+        ...FeaturedPostsSection
       }
       ... on FeatureListSectionRecord {
-        __typename
-        id
-        featuresHeader
-        featuresSubheader
         displayOption
-        feature {
-          __typename
-          id
-          featureTitle
-          featureDescription
-          featureIcon {
-            responsiveImage {
-              ...DatoImage_responsiveImage
-            }
-          }
-        }
-      }
-      ... on AllPostsSectionRecord {
-        id
-        __typename
+        ...FeatureListSection
       }
       ... on RedirectSectionRecord {
-        id
-        __typename
         slugToRedirectTo
       }
     }
@@ -237,7 +77,7 @@ query Page($locale: SiteLocale, $fallbackLocale: [SiteLocale!], $slug: String) {
     fallbackLocales: $fallbackLocale
   ) {
     id
-    ...SingleBlog
+    ...PostExcerpt
   }
   _allPostsMeta(locale: $locale, filter: { title: { isBlank: "false" } }) {
     count

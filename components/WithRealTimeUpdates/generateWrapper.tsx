@@ -1,5 +1,5 @@
 import { getFallbackLocale } from '@/app/i18n/settings';
-import type { SiteLocale } from '@/graphql/types/graphql';
+import { SiteLocale } from '@/graphql/types/graphql';
 import type { GlobalPageProps } from '@/utils/globalPageProps';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';

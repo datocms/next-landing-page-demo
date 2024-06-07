@@ -1,12 +1,9 @@
 'use client';
 
-import QuoteBlock from '@/components/Blog/Post/StructuredTextBlocks/QuoteBlock';
-import Highlighter from '@/components/Common/Highlighter';
+import Highlighter from '@/components/Highlighter';
+import QuoteBlock from '@/components/QuoteBlock';
 import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
-import type { DocumentationPageQuery } from '@/graphql/types/graphql';
 import {
-  type Record,
-  type StructuredText,
   isBlockquote,
   isCode,
   isHeading,
@@ -64,7 +61,7 @@ const Content: ContentPage<PageProps, Query> = ({ data, params }) => {
             );
           }),
           renderNodeRule(isBlockquote, ({ children, key }) => {
-            return <QuoteBlock text={children} />;
+            return <QuoteBlock key={key}>{children}</QuoteBlock>;
           }),
           renderNodeRule(isCode, ({ node, key }) => {
             return (

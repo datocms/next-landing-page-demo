@@ -1,0 +1,24 @@
+fragment ReviewSection on ReviewSectionRecord {
+  reviewSectionHeader
+  reviewSectionSubheader
+  displayOptions
+  reviews {
+    id
+    ...Testimonial
+  }
+}
+
+fragment Testimonial on TestimonialRecord {
+  id
+  rating
+  review {
+    value
+  }
+  reviewerName
+  reviewerPicture {
+    responsiveImage {
+      ...DatoImage_responsiveImage
+    }
+  }
+  reviewerTitle
+}

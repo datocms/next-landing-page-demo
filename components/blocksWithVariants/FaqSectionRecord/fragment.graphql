@@ -1,0 +1,12 @@
+fragment FaqSection on FaqSectionRecord {
+  displayOptions
+  title
+  subtitle
+  questions {
+    question
+    id
+    answer {
+      value
+    }
+  }
+}

@@ -1,0 +1,16 @@
+fragment FeatureListSection on FeatureListSectionRecord {
+  featuresHeader
+  featuresSubheader
+  displayOption
+  feature {
+    __typename
+    id
+    featureTitle
+    featureDescription
+    featureIcon {
+      responsiveImage {
+        ...DatoImage_responsiveImage
+      }
+    }
+  }
+}

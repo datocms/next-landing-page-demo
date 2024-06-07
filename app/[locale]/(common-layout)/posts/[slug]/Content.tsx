@@ -1,21 +1,14 @@
-import SharePost from '@/components/Blog/Post/SharePost';
-import CTAAppBlock from '@/components/Blog/Post/StructuredTextBlocks/CTAAppBlock';
-import CTABlock from '@/components/Blog/Post/StructuredTextBlocks/CTABlock';
-import NewsletterCTABlock from '@/components/Blog/Post/StructuredTextBlocks/NewsletterCTABlock';
-import QuoteBlock from '@/components/Blog/Post/StructuredTextBlocks/QuoteBlock';
-import TagButton from '@/components/Blog/TagButton';
-import DateIcon from '@/components/Blog/svgs/DateIcon';
-import DatoImage from '@/components/Common/DatoImage';
-import Highlighter from '@/components/Common/Highlighter';
+import QuoteBlock from '@/components/QuoteBlock';
+import SharePost from '@/components/SharePost';
+import CTAAppBlock from '@/components/blocksWithVariants/AppCtaRecord/CTAAppBlock';
+import CTABlock from '@/components/blocksWithVariants/CtaButtonWithImageRecord/CTABlock';
+import NewsletterCTABlock from '@/components/blocksWithVariants/NewsletterSubscriptionRecord/NewsletterCTABlock';
+import TagButton from '@/components/blocksWithVariants/TagButton';
+
+import DatoImage from '@/components/DatoImage';
+import Highlighter from '@/components/Highlighter';
 import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
-import type {
-  AppCtaRecord,
-  CtaButtonWithImageRecord,
-  ImageBlockRecord,
-  NewsletterSubscriptionRecord,
-  PostRecord,
-  ResponsiveImage,
-} from '@/graphql/types/graphql';
+import DateIcon from '@/components/svgs/DateIcon';
 import { buildUrl } from '@/utils/globalPageProps';
 import transformDate from '@/utils/transformDate';
 import {
@@ -95,16 +88,15 @@ const Content: ContentPage<PageProps, Query> = ({
               </div>
               <div>
                 <StructuredText
-                  data={data.post.content as any}
+                  data={data.post.content}
                   renderNode={Highlighter}
-                  renderBlock={({ record }: any) => {
+                  renderBlock={({ record }) => {
                     switch (record.__typename) {
                       case 'ImageBlockRecord': {
-                        const ImageBlockRecord = record as ImageBlockRecord;
                         return (
                           <div className="relative mb-16 mt-16 overflow-hidden rounded-md shadow-md sm:h-[300px] md:h-[400px]">
                             <DatoImage
-                              data={ImageBlockRecord.image.responsiveImage}
+                              fragment={record.image.responsiveImage}
                               layout="fill"
                               objectFit="cover"
                               objectPosition="50% 50%"
@@ -113,40 +105,13 @@ const Content: ContentPage<PageProps, Query> = ({
                         );
                       }
                       case 'NewsletterSubscriptionRecord': {
-                        const NewsletterSubscriptionRecord =
-                          record as NewsletterSubscriptionRecord;
-                        return (
-                          <NewsletterCTABlock
-                            title={NewsletterSubscriptionRecord.title}
-                            subtitle={NewsletterSubscriptionRecord.subtitle}
-                            buttonLabel={
-                              NewsletterSubscriptionRecord.buttonLabel
-                            }
-                          />
-                        );
+                        return <NewsletterCTABlock fragment={record} />;
                       }
                       case 'CtaButtonWithImageRecord': {
-                        const CtaButtonWithImageRecord =
-                          record as CtaButtonWithImageRecord;
-                        return (
-                          <CTABlock
-                            title={CtaButtonWithImageRecord.title}
-                            subtitle={CtaButtonWithImageRecord.subtitle}
-                            buttonLabel={CtaButtonWithImageRecord.buttonLabel}
-                            image={CtaButtonWithImageRecord.image}
-                          />
-                        );
+                        return <CTABlock fragment={record} />;
                       }
                       case 'AppCtaRecord': {
-                        const appCtaRecord = record as AppCtaRecord;
-                        return (
-                          <CTAAppBlock
-                            title={appCtaRecord.title}
-                            text={appCtaRecord.text}
-                            googleURL={appCtaRecord.googlePlayUrl}
-                            appleURL={appCtaRecord.appstoreUrl}
-                          />
-                        );
+                        return <CTAAppBlock fragment={record} />;
                       }
                       default:
                         return null;
@@ -178,17 +143,16 @@ const Content: ContentPage<PageProps, Query> = ({
                   renderInlineRecord={({ record }) => {
                     switch (record.__typename) {
                       case 'PostRecord': {
-                        const PostRecord = record as PostRecord;
                         return (
                           <Link
-                            key={PostRecord.id}
+                            key={record.id}
                             href={buildUrl(
                               globalPageProps,
                               `/posts/${record.slug}`,
                             )}
                             className="underline"
                           >
-                            {PostRecord.title}
+                            {record.title}
                           </Link>
                         );
                       }
@@ -219,10 +183,13 @@ const Content: ContentPage<PageProps, Query> = ({
                     }),
                     renderNodeRule(isLink, ({ node, children, key }) => {
                       const attributeObject =
-                        node.meta?.reduce((acc: any, { id, value }) => {
-                          acc[id] = value;
-                          return acc;
-                        }, {}) || {};
+                        node.meta?.reduce(
+                          (acc, { id, value }) => {
+                            acc[id] = value;
+                            return acc;
+                          },
+                          {} as Record<string, string>,
+                        ) || {};
 
                       return (
                         <a
@@ -236,7 +203,7 @@ const Content: ContentPage<PageProps, Query> = ({
                       );
                     }),
                     renderNodeRule(isBlockquote, ({ children, key }) => {
-                      return <QuoteBlock text={children} />;
+                      return <QuoteBlock key={key}>{children}</QuoteBlock>;
                     }),
                   ]}
                 />

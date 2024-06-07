@@ -1,5 +1,5 @@
 import { primaryColor } from '@/app/i18n/settings';
-import SvgRenderer from '@/components/Common/SvgRenderer';
+import SvgRenderer from '@/components/SvgRenderer';
 import type {
   CommonLayoutQuery,
   LegalPageRecord,

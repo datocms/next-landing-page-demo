@@ -1,4 +1,4 @@
-import CustomColor from '@/components/Common/CustomColor';
+import CustomColor from '@/components/CustomColor';
 import ScrollToTop from '@/components/ScrollToTop';
 import { LayoutDocument } from '@/graphql/types/graphql';
 import type { GlobalPageProps } from '@/utils/globalPageProps';

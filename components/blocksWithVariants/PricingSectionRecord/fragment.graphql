@@ -1,0 +1,16 @@
+fragment PricingSection on PricingSectionRecord {
+  pricingSectionHeader
+  pricingSectionSubheader
+  displayOption
+  plans {
+    id
+    yearlyPrice
+    monthlyPrice
+    tierName
+    tierDescription {
+      value
+    }
+    slug
+    planFeatures
+  }
+}

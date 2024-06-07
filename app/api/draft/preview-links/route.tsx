@@ -1,4 +1,3 @@
-import type { SiteLocale } from '@/graphql/types/graphql';
 import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import type { SchemaTypes } from '@datocms/cma-client-node';
 import type { NextRequest } from 'next/server';

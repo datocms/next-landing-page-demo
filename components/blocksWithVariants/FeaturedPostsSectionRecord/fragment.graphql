@@ -1,0 +1,9 @@
+fragment FeaturedPostsSection on FeaturedPostsSectionRecord {
+  featuredPostsHeader
+  featuredPostsSubheader
+  displayOptions
+  featuredPosts {
+    id
+    ...PostExcerpt
+  }
+}

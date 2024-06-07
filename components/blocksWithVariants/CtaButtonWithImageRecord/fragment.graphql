@@ -1,0 +1,11 @@
+fragment CtaButtonWithImage on CtaButtonWithImageRecord {
+  title
+  subtitle
+  image {
+    id
+    responsiveImage {
+      ...DatoImage_responsiveImage
+    }
+  }
+  buttonLabel
+}

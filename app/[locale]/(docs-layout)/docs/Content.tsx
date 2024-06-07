@@ -1,4 +1,4 @@
-import FeaturedSection from '@/components/Documentation/FeaturedSection';
+import FeaturedSection from '@/components/FeaturedDocumentationPages';
 import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
 import type { DocumentationPageRecord } from '@/graphql/types/graphql';
 import { Search } from 'lucide-react';
@@ -47,9 +47,7 @@ const Content: ContentPage<PageProps, Query> = ({
         </div>
       </section>
       <FeaturedSection
-        featuredSections={
-          data.documentationHome.featuredPages as DocumentationPageRecord[]
-        }
+        fragment={data.documentationHome}
         globalPageProps={globalPageProps}
       />
     </article>

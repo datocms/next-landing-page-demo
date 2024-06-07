@@ -1,0 +1,16 @@
+fragment HeroSection on HeroSectionRecord {
+  buttons {
+    id
+    label
+    primary
+    url
+  }
+  heroSubtitle
+  heroTitle
+  displayOptions
+  heroImage {
+    responsiveImage {
+      ...DatoImage_responsiveImage
+    }
+  }
+}

@@ -27,7 +27,7 @@ query Author(
       skip: $skip
     ) {
       id
-      ...SingleBlog
+      ...PostExcerpt
     }
     _allReferencingPostsMeta(
       locale: $locale

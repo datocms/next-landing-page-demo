@@ -1,0 +1,12 @@
+fragment StatsSection on StatsSectionRecord {
+  title
+  subtitle
+  statistic {
+    id
+    label
+    quantity
+    icon {
+      url
+    }
+  }
+}
