@@ -36,7 +36,7 @@ export function generateMetadataFn<
 
     const data = await queryDatoCMS(options.query, variables, isDraft);
 
-    const tags = await options.generate(data);
+    const tags = options.generate(data);
 
     return tags ? toNextMetadata(tags) : {};
   };
