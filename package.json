@@ -33,7 +33,7 @@
     "next": "^14.2.2",
     "next-themes": "^0.2.1",
     "react": "^18.2.0",
-    "react-datocms": "^6.0.5",
+    "react-datocms": "^6.0.6",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.0.3",
     "react-markdown": "^8.0.7",

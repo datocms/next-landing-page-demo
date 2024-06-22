@@ -30,7 +30,10 @@ async function installWebPreviewsPlugin(client: Client, baseUrl: string) {
       frontends: [
         {
           name: 'Production',
-          previewWebhook: `${baseUrl}/api/draft/preview-links?token=${secretToken}`,
+          previewWebhook: new URL(
+            `/api/draft/preview-links?token=${secretToken}`,
+            baseUrl,
+          ).toString(),
         },
       ],
       startOpen: true,
@@ -45,7 +48,10 @@ async function installSEOAnalysisPlugin(client: Client, baseUrl: string) {
 
   await client.plugins.update(seoPlugin.id, {
     parameters: {
-      htmlGeneratorUrl: `${baseUrl}/api/seoAnalysis?token=${secretToken}`,
+      htmlGeneratorUrl: new URL(
+        `/api/seoAnalysis?token=${secretToken}`,
+        baseUrl,
+      ).toString(),
       autoApplyToFieldsWithApiKey: 'seo_analysis',
       setSeoReadabilityAnalysisFieldExtensionId: true,
     },
@@ -55,7 +61,10 @@ async function installSEOAnalysisPlugin(client: Client, baseUrl: string) {
 async function createCacheInvalidationWebhook(client: Client, baseUrl: string) {
   await client.webhooks.create({
     name: '🔄 Cache Revalidation',
-    url: `${baseUrl}/api/revalidateCache?token=${secretToken}`,
+    url: new URL(
+      `/api/revalidateCache?token=${secretToken}`,
+      baseUrl,
+    ).toString(),
     custom_payload: null,
     headers: {},
     events: [
@@ -87,12 +96,7 @@ export async function POST(request: Request) {
   const body = await request.json();
 
   const client = buildClient({ apiToken: body.datocmsApiToken });
-
-  const baseUrl = (
-    process.env.VERCEL_BRANCH_URL
-      ? `https://${process.env.VERCEL_BRANCH_URL}`
-      : process.env.URL
-  ) as string;
+  const baseUrl = body.frontendUrl as string;
 
   try {
     await Promise.all([
