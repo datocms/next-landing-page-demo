@@ -71,7 +71,9 @@ Your blog should be up and running on [http://localhost:3000](http://localhost:3
 It's strongly suggested to install the [GraphQL: Language Feature Support](https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql) extension, to get autocomplete suggestions, validation against schema, and many more niceties when working with your GraphQL queries.
 
 <!--datocms-autoinclude-footer start-->
------------------
+
+---
+
 # What is DatoCMS?
 <a href="https://www.datocms.com/"><img src="https://www.datocms.com/images/full_logo.svg" height="60"></a>
 
@@ -93,5 +95,4 @@ Trusted by over 25,000 enterprise businesses, agency partners, and individuals a
 - [datocms/plugins](https://github.com/datocms/plugins): Example plugins we've made that extend the editor/admin dashboard
 - [DatoCMS Starters](https://www.datocms.com/marketplace/starters) has examples for various Javascript frontend frameworks
 
-Or see [all our public repos](https://github.com/orgs/datocms/repositories?q=&type=public&language=&sort=stargazers)
-<!--datocms-autoinclude-footer end-->
+Or see [all our public repos](https://github.com/orgs/datocms/repositories?q=&type=public&language=&sort=stargazers)<!--datocms-autoinclude-footer end-->
