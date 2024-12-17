@@ -12,7 +12,6 @@ export default async function RootLayout({
 }: Params) {
   return (
     <html lang={locale}>
-      <meta content="width=device-width, initial-scale=1" name="viewport" />
       <body className={'tracking-tight antialiased'}>{children}</body>
     </html>
   );
