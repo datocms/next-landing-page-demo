@@ -11,7 +11,7 @@ import {
 async function findBestLocaleForVisitor(
   request: Request,
   locales: SiteLocale[],
-) {
+): Promise<SiteLocale> {
   const headers = new Headers(request.headers);
   const acceptLanguage = headers.get('accept-language');
   if (acceptLanguage) {
@@ -20,8 +20,11 @@ async function findBestLocaleForVisitor(
 
   const headersObject = Object.fromEntries(headers.entries());
   const languages = new Negotiator({ headers: headersObject }).languages();
+  const reformattedLocales = locales.map(locale => locale.replaceAll('_', '-'));
+  const detectedLocale = match(languages, reformattedLocales, reformattedLocales[0]);
+  const detectedLocaleAsSiteLocale = detectedLocale.replaceAll('-', '_') as SiteLocale;
 
-  return match(languages, locales, locales[0]) as SiteLocale;
+  return detectedLocaleAsSiteLocale;
 }
 
 function buildUrl(locale: SiteLocale, path: string) {
