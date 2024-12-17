@@ -1,4 +1,4 @@
-import { getFallbackLocale } from '@/app/i18n/settings';
+import getAvailableLocales, { getFallbackLocale } from '@/app/i18n/settings';
 import type { GlobalPageProps } from '@/utils/globalPageProps';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
@@ -10,6 +10,7 @@ import {
   toNextMetadata,
 } from 'react-datocms/seo';
 import type { BuildVariablesFn } from './types';
+import {notFound} from "next/navigation";
 
 export function generateMetadataFn<
   PageProps extends GlobalPageProps,
@@ -25,6 +26,13 @@ export function generateMetadataFn<
   return async function generateMetadata(
     pageProps: PageProps,
   ): Promise<Metadata> {
+
+    const allLocales = await getAvailableLocales();
+
+    if (!allLocales.includes(pageProps?.params?.locale)) {
+      notFound();
+    }
+
     const fallbackLocale = await getFallbackLocale();
     const { isEnabled: isDraft } = draftMode();
 
