@@ -4,13 +4,13 @@ import queryDatoCMS from '@/utils/queryDatoCMS';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import type { Metadata } from 'next';
 import { draftMode } from 'next/headers';
+import { notFound } from 'next/navigation';
 import {
   type SeoOrFaviconTag,
   type TitleMetaLinkTag,
   toNextMetadata,
 } from 'react-datocms/seo';
 import type { BuildVariablesFn } from './types';
-import {notFound} from "next/navigation";
 
 export function generateMetadataFn<
   PageProps extends GlobalPageProps,
@@ -26,7 +26,6 @@ export function generateMetadataFn<
   return async function generateMetadata(
     pageProps: PageProps,
   ): Promise<Metadata> {
-
     const allLocales = await getAvailableLocales();
 
     if (!allLocales.includes(pageProps?.params?.locale)) {
