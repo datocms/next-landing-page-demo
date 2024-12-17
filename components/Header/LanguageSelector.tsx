@@ -2,7 +2,6 @@
 import type { SiteLocale } from '@/graphql/types/graphql';
 import { buildUrl } from '@/utils/globalPageProps';
 import type { GlobalPageProps } from '@/utils/globalPageProps';
-import { getLangNameFromCode } from 'language-name-map';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
@@ -11,6 +10,11 @@ type Props = {
   globalPageProps: GlobalPageProps;
   languages: SiteLocale[];
 };
+
+const localeToLanguageName = (locale: SiteLocale): string => {
+    const normalizedLocale = locale.replaceAll('_', '-')
+    return new Intl.DisplayNames([normalizedLocale], {type: "language"}).of(normalizedLocale) ?? normalizedLocale
+}
 
 const LanguageSelector = ({ globalPageProps, languages }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +42,7 @@ const LanguageSelector = ({ globalPageProps, languages }: Props) => {
           type="button"
           className="inline-flex cursor-pointer items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-gray-800"
         >
-          {getLangNameFromCode(currentLocale)?.name || currentLocale}
+          🌐 {localeToLanguageName(currentLocale)}
         </button>
       </div>
 
@@ -60,7 +64,7 @@ const LanguageSelector = ({ globalPageProps, languages }: Props) => {
                 role="menuitem"
               >
                 <div className="inline-flex">
-                  {getLangNameFromCode(locale)?.name || currentLocale}
+                    {localeToLanguageName(locale)}
                 </div>
               </Link>
             </div>
