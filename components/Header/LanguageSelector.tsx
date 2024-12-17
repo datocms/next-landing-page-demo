@@ -12,9 +12,13 @@ type Props = {
 };
 
 const localeToLanguageName = (locale: SiteLocale): string => {
-    const normalizedLocale = locale.replaceAll('_', '-')
-    return new Intl.DisplayNames([normalizedLocale], {type: "language"}).of(normalizedLocale) ?? normalizedLocale
-}
+  const normalizedLocale = locale.replaceAll('_', '-');
+  return (
+    new Intl.DisplayNames([normalizedLocale], { type: 'language' }).of(
+      normalizedLocale,
+    ) ?? normalizedLocale
+  );
+};
 
 const LanguageSelector = ({ globalPageProps, languages }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -64,7 +68,7 @@ const LanguageSelector = ({ globalPageProps, languages }: Props) => {
                 role="menuitem"
               >
                 <div className="inline-flex">
-                    {localeToLanguageName(locale)}
+                  {localeToLanguageName(locale)}
                 </div>
               </Link>
             </div>

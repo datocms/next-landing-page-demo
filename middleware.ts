@@ -20,9 +20,18 @@ async function findBestLocaleForVisitor(
 
   const headersObject = Object.fromEntries(headers.entries());
   const languages = new Negotiator({ headers: headersObject }).languages();
-  const reformattedLocales = locales.map(locale => locale.replaceAll('_', '-'));
-  const detectedLocale = match(languages, reformattedLocales, reformattedLocales[0]);
-  const detectedLocaleAsSiteLocale = detectedLocale.replaceAll('-', '_') as SiteLocale;
+  const reformattedLocales = locales.map((locale) =>
+    locale.replaceAll('_', '-'),
+  );
+  const detectedLocale = match(
+    languages,
+    reformattedLocales,
+    reformattedLocales[0],
+  );
+  const detectedLocaleAsSiteLocale = detectedLocale.replaceAll(
+    '-',
+    '_',
+  ) as SiteLocale;
 
   return detectedLocaleAsSiteLocale;
 }
