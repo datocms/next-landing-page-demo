@@ -1,9 +1,11 @@
+import getAvailableLocales from '@/app/i18n/settings';
 import CustomColor from '@/components/CustomColor';
 import ScrollToTop from '@/components/ScrollToTop';
 import { LayoutDocument } from '@/graphql/types/graphql';
 import type { GlobalPageProps } from '@/utils/globalPageProps';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
+import { notFound } from 'next/navigation';
 import 'node_modules/react-modal-video/css/modal-video.css';
 import { toNextMetadata } from 'react-datocms/seo';
 
@@ -17,8 +19,15 @@ export async function generateMetadata() {
   return toNextMetadata(data._site.faviconMetaTags);
 }
 
-export default async function RootLayout({ children, ...pageProps }: Params) {
+export default async function RootLayout({ children, params }: Params) {
   const { isEnabled: isDraft } = draftMode();
+  const allLocales: string[] = await getAvailableLocales();
+
+  // Only try to match against valid locales for this site, not any random string
+  if (!allLocales.includes(params.locale)) {
+    notFound();
+  }
+
   const data = await queryDatoCMS(LayoutDocument, {}, isDraft);
 
   return (
@@ -29,7 +38,7 @@ export default async function RootLayout({ children, ...pageProps }: Params) {
         b={data.layout?.mainColor.blue || 108}
       />
       {children}
-      <ScrollToTop globalPageProps={pageProps} isDraft={isDraft} />
+      <ScrollToTop globalPageProps={{ params }} isDraft={isDraft} />
     </>
   );
 }

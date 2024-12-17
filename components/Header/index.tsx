@@ -118,6 +118,7 @@ const Header = ({ globalPageProps, data }: Props) => {
                     width={140}
                     height={30}
                     className="w-full dark:hidden"
+                    priority
                   />
                 )}
               </Link>

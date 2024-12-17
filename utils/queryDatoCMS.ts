@@ -43,7 +43,7 @@ export default async function queryDatoCMS<
     | { errors: unknown[] };
 
   if ('errors' in body) {
-    throw new Error(`Invalid GraphQL request: ${body.errors}`);
+    throw new Error(`Invalid GraphQL request: ${JSON.stringify(body.errors)}`);
   }
 
   return body.data;

@@ -1,9 +1,10 @@
-import { getFallbackLocale } from '@/app/i18n/settings';
+import getAvailableLocales, { getFallbackLocale } from '@/app/i18n/settings';
 import type { GlobalPageProps } from '@/utils/globalPageProps';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import type { Metadata } from 'next';
 import { draftMode } from 'next/headers';
+import { notFound } from 'next/navigation';
 import {
   type SeoOrFaviconTag,
   type TitleMetaLinkTag,
@@ -25,6 +26,12 @@ export function generateMetadataFn<
   return async function generateMetadata(
     pageProps: PageProps,
   ): Promise<Metadata> {
+    const allLocales = await getAvailableLocales();
+
+    if (!allLocales.includes(pageProps?.params?.locale)) {
+      notFound();
+    }
+
     const fallbackLocale = await getFallbackLocale();
     const { isEnabled: isDraft } = draftMode();
 

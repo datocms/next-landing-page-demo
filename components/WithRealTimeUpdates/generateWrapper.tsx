@@ -1,9 +1,10 @@
-import { getFallbackLocale } from '@/app/i18n/settings';
+import getAvailableLocales, { getFallbackLocale } from '@/app/i18n/settings';
 import { SiteLocale } from '@/graphql/types/graphql';
 import type { GlobalPageProps } from '@/utils/globalPageProps';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { draftMode } from 'next/headers';
+import { notFound } from 'next/navigation';
 import type {
   BuildVariablesFn,
   ContentPage,
@@ -21,6 +22,11 @@ export function generateWrapper<
   realtimeComponent: RealtimeUpdatesPage<PageProps, TResult, TVariables>;
 }) {
   return async function Page(unsanitizedPageProps: PageProps) {
+    const allLocales = await getAvailableLocales();
+    if (!allLocales.includes(unsanitizedPageProps?.params?.locale)) {
+      notFound();
+    }
+
     const fallbackLocale = await getFallbackLocale();
     const { isEnabled: isDraft } = draftMode();
 
