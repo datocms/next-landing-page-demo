@@ -20,6 +20,10 @@ export async function GET(request: Request) {
     path: '/',
     secure: true,
     sameSite: 'none',
+    // Given that this route can also be accessed within the iframe of the Web Previews plugin,
+    // it is important to bypass the restrictions for third-party cookies by setting the
+    // `partitioned: true` option (https://developers.google.com/privacy-sandbox/3pcd)
+    partitioned: true,
   });
 
   redirect(url);
