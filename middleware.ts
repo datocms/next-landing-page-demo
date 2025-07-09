@@ -19,10 +19,10 @@ async function findBestLocaleForVisitor(
   }
 
   const headersObject = Object.fromEntries(headers.entries());
-  const languages = new Negotiator({ headers: headersObject }).languages();
   const reformattedLocales = locales.map((locale) =>
     locale.replaceAll('_', '-'),
   );
+  const languages = new Negotiator({ headers: headersObject }).languages(reformattedLocales);
   const detectedLocale = match(
     languages,
     reformattedLocales,
