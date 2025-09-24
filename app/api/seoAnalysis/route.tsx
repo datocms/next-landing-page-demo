@@ -7,9 +7,9 @@ import { cookies, draftMode } from 'next/headers';
 import type { NextRequest } from 'next/server';
 
 const websiteBaseUrl = (
-  process.env.VERCEL_BRANCH_URL
+  process.env.VERCEL_PROJECT_PRODUCTION_URL
     ? // Vercel auto-populates this environment variable
-      `https://${process.env.VERCEL_BRANCH_URL}`
+      `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
     : // Netlify auto-populates this environment variable
       process.env.URL
 ) as string;
