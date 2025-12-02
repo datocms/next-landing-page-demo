@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=20.9.0"
+    "node": "20.x"
   },
   "scripts": {
     "dev": "next dev",
@@ -43,7 +43,7 @@
     "react-i18next": "^13.0.3",
     "react-markdown": "^10.0.0",
     "react-modal-video": "^2.0.0",
-    "react-syntax-highlighter": "^15.5.0"
+    "react-syntax-highlighter": "^16.1.0"
   },
   "devDependencies": {
     "@biomejs/biome": "1.6.4",
