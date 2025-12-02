@@ -5,7 +5,7 @@ import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { PricingSectionFragmentDoc } from '@/graphql/types/graphql';
 import { useState } from 'react';
 import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import ReactMarkdown from 'react-markdown';
 
 type Props = {
   fragment: FragmentType<typeof PricingSectionFragmentDoc>;

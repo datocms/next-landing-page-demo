@@ -1,9 +1,9 @@
-import type { GlobalPageProps } from '@/utils/globalPageProps';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { useQuerySubscription } from 'react-datocms/use-query-subscription';
 
 export default function WithRealTimeUpdates<
-  PageProps extends GlobalPageProps,
+  PageProps extends ResolvedGlobalPageProps,
   TResult = unknown,
   TVariables = Record<string, unknown>,
 >({

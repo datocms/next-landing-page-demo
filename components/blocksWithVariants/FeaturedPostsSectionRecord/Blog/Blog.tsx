@@ -2,11 +2,11 @@ import PostExcerpt from '@/components/PostExcerpt';
 import SectionTitle from '@/components/SectionTitle';
 import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { FeaturedPostsSectionFragmentDoc } from '@/graphql/types/graphql';
-import type { GlobalPageProps } from '@/utils/globalPageProps';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 
 type Props = {
   fragment: FragmentType<typeof FeaturedPostsSectionFragmentDoc>;
-  globalPageProps: GlobalPageProps;
+  globalPageProps: ResolvedGlobalPageProps;
 };
 
 const Blog = ({ fragment, globalPageProps }: Props) => {

@@ -1,5 +1,6 @@
 import getAvailableLocales, { getFallbackLocale } from '@/app/i18n/settings';
-import type { GlobalPageProps } from '@/utils/globalPageProps';
+import type { SiteLocale } from '@/graphql/types/graphql';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import type { Metadata } from 'next';
@@ -12,8 +13,14 @@ import {
 } from 'react-datocms/seo';
 import type { BuildVariablesFn } from './types';
 
+// Input props from Next.js with Promise-based params (string-based locale)
+type AsyncPageProps = {
+  params: Promise<{ locale: string; [key: string]: string | number }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
+
 export function generateMetadataFn<
-  PageProps extends GlobalPageProps,
+  PageProps extends ResolvedGlobalPageProps,
   TResult = unknown,
   TVariables = Record<string, unknown>,
 >(options: {
@@ -24,16 +31,32 @@ export function generateMetadataFn<
   ) => TitleMetaLinkTag[] | SeoOrFaviconTag[] | undefined;
 }) {
   return async function generateMetadata(
-    pageProps: PageProps,
+    asyncPageProps: AsyncPageProps,
   ): Promise<Metadata> {
+    // Await the params to get resolved values
+    const rawParams = await asyncPageProps.params;
+    
     const allLocales = await getAvailableLocales();
 
-    if (!allLocales.includes(pageProps?.params?.locale)) {
+    if (!allLocales.includes(rawParams.locale as SiteLocale)) {
       notFound();
     }
 
+    // Convert string locale to SiteLocale type (validated above)
+    const resolvedParams = {
+      ...rawParams,
+      locale: rawParams.locale as SiteLocale,
+    };
+
     const fallbackLocale = await getFallbackLocale();
-    const { isEnabled: isDraft } = draftMode();
+    const { isEnabled: isDraft } = await draftMode();
+
+    // Build resolved page props
+    const { params, searchParams, ...restProps } = asyncPageProps;
+    const pageProps = {
+      ...restProps,
+      params: resolvedParams,
+    } as unknown as PageProps;
 
     const variables =
       options.buildVariables?.({

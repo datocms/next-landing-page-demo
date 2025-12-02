@@ -1,11 +1,11 @@
 import PageIndicatorList from '@/components/PageIndicatorList';
 import PostExcerpt from '@/components/PostExcerpt';
 import type { PageQuery } from '@/graphql/types/graphql';
-import type { GlobalPageProps } from '@/utils/globalPageProps';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 
 type Props = {
   data: PageQuery;
-  globalPageProps: GlobalPageProps;
+  globalPageProps: ResolvedGlobalPageProps;
 };
 
 const PostGridRenderer = ({ data, globalPageProps }: Props) => {

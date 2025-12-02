@@ -1,6 +1,6 @@
 import getAvailableLocales, { getFallbackLocale } from '@/app/i18n/settings';
-import { SiteLocale } from '@/graphql/types/graphql';
-import type { GlobalPageProps } from '@/utils/globalPageProps';
+import type { SiteLocale } from '@/graphql/types/graphql';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { draftMode } from 'next/headers';
@@ -11,8 +11,15 @@ import type {
   RealtimeUpdatesPage,
 } from './types';
 
+// Input props from Next.js with Promise-based params (string-based locale)
+type AsyncPageProps = {
+  params: Promise<{ locale: string; [key: string]: string | number }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+  children?: React.ReactNode;
+};
+
 export function generateWrapper<
-  PageProps extends GlobalPageProps,
+  PageProps extends ResolvedGlobalPageProps,
   TResult = unknown,
   TVariables = Record<string, unknown>,
 >(options: {
@@ -21,19 +28,30 @@ export function generateWrapper<
   contentComponent: ContentPage<PageProps, TResult>;
   realtimeComponent: RealtimeUpdatesPage<PageProps, TResult, TVariables>;
 }) {
-  return async function Page(unsanitizedPageProps: PageProps) {
+  return async function Page(asyncPageProps: AsyncPageProps) {
+    // Await the params to get resolved values
+    const rawParams = await asyncPageProps.params;
+    
     const allLocales = await getAvailableLocales();
-    if (!allLocales.includes(unsanitizedPageProps?.params?.locale)) {
+    if (!allLocales.includes(rawParams.locale as SiteLocale)) {
       notFound();
     }
 
+    // Convert string locale to SiteLocale type (validated above)
+    const resolvedParams = {
+      ...rawParams,
+      locale: rawParams.locale as SiteLocale,
+    };
+
     const fallbackLocale = await getFallbackLocale();
-    const { isEnabled: isDraft } = draftMode();
+    const { isEnabled: isDraft } = await draftMode();
 
-    const { searchParams, ...pagePropsWithoutSearchParams } =
-      unsanitizedPageProps as PageProps & { searchParams: unknown };
-
-    const pageProps = pagePropsWithoutSearchParams as unknown as PageProps;
+    // Build resolved page props (without searchParams)
+    const { params, searchParams, ...restProps } = asyncPageProps;
+    const pageProps = {
+      ...restProps,
+      params: resolvedParams,
+    } as unknown as PageProps;
 
     const variables =
       options.buildVariables?.({

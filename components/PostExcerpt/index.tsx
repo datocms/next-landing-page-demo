@@ -1,13 +1,13 @@
 import DatoImage from '@/components/DatoImage';
 import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { PostExcerptFragmentDoc } from '@/graphql/types/graphql';
-import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
+import { type ResolvedGlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import transformDate from '@/utils/transformDate';
 import Link from 'next/link';
 
 type Props = {
   fragment: FragmentType<typeof PostExcerptFragmentDoc>;
-  globalPageProps: GlobalPageProps;
+  globalPageProps: ResolvedGlobalPageProps;
 };
 
 const PostExcerpt = ({ fragment, globalPageProps }: Props) => {

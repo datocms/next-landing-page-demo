@@ -1,6 +1,6 @@
 'use client';
 import type { DocumentationPageRecord } from '@/graphql/types/graphql';
-import type { GlobalPageProps } from '@/utils/globalPageProps';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import { buildUrl } from '@/utils/globalPageProps';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { Maybe } from 'graphql/jsutils/Maybe';
@@ -9,7 +9,7 @@ import { usePathname } from 'next/navigation';
 
 type Props = {
   page: DocumentationPageRecord;
-  globalPageProps: GlobalPageProps;
+  globalPageProps: ResolvedGlobalPageProps;
 };
 
 function findChildBySlug(

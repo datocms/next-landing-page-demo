@@ -9,7 +9,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   try {
-    revalidateTag('datocms');
+    // In Next.js 16, revalidateTag can optionally take a cacheLife profile
+    // For immediate invalidation (webhook use case), we use the default behavior
+    await revalidateTag('datocms', 'default');
   } catch (error) {
     return NextResponse.json({
       status: 500,

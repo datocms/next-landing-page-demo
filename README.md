@@ -8,11 +8,26 @@
 
 <!--datocms-autoinclude-header end-->
 
-# A Company Website Demo using Next.js 14 and DatoCMS
+# A Company Website Demo using Next.js 16 and DatoCMS
 
-This example showcases a TypeScript Next.js 14 website with App Router (app) — using [DatoCMS](https://www.datocms.com/) as the data source.
+This example showcases a TypeScript Next.js 16 website with App Router (app) — using [DatoCMS](https://www.datocms.com/) as the data source.
 
-It uses GraphQL CodeGen to type all of the requests comming from Dato automatically: [See how it works here](https://www.datocms.com/blog/how-to-generate-typescript-types-from-graphql)
+## Next.js 16 Features
+
+This demo takes advantage of the latest Next.js 16 features.
+
+It uses GraphQL CodeGen to type all of the requests coming from DatoCMS automatically: [See how it works here](https://www.datocms.com/blog/how-to-generate-typescript-types-from-graphql)
+
+## DatoCMS Integration
+
+This project uses the official [`@datocms/cda-client`](https://github.com/datocms/cda-client) package for querying the DatoCMS Content Delivery API. This lightweight TypeScript client provides:
+
+- Full TypeScript support with `TypedDocumentNode`
+- Automatic retry on rate limits
+- Support for draft content previews
+- Seamless integration with Next.js caching
+
+Additionally, [`react-datocms`](https://github.com/datocms/react-datocms) is used for real-time updates, responsive images, and SEO metadata handling.
 
 ## Demo
 
@@ -62,8 +77,8 @@ CACHE_INVALIDATION_SECRET_TOKEN=superSecretToken
 #### Run your project locally
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 Your blog should be up and running on [http://localhost:3000](http://localhost:3000)!

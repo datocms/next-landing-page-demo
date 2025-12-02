@@ -94,7 +94,7 @@ const Content: ContentPage<PageProps, Query> = ({
                     switch (record.__typename) {
                       case 'ImageBlockRecord': {
                         return (
-                          <div className="relative mb-16 mt-16 overflow-hidden rounded-md shadow-md sm:h-[300px] md:h-[400px]">
+                          <div key={record.id} className="relative mb-16 mt-16 overflow-hidden rounded-md shadow-md sm:h-[300px] md:h-[400px]">
                             <DatoImage
                               fragment={record.image.responsiveImage}
                               layout="fill"
@@ -105,13 +105,13 @@ const Content: ContentPage<PageProps, Query> = ({
                         );
                       }
                       case 'NewsletterSubscriptionRecord': {
-                        return <NewsletterCTABlock fragment={record} />;
+                        return <NewsletterCTABlock key={record.id} fragment={record} />;
                       }
                       case 'CtaButtonWithImageRecord': {
-                        return <CTABlock fragment={record} />;
+                        return <CTABlock key={record.id} fragment={record} />;
                       }
                       case 'AppCtaRecord': {
-                        return <CTAAppBlock fragment={record} />;
+                        return <CTAAppBlock key={record.id} fragment={record} />;
                       }
                       default:
                         return null;
@@ -126,6 +126,7 @@ const Content: ContentPage<PageProps, Query> = ({
                       case 'PostRecord':
                         return (
                           <Link
+                            key={record.id}
                             {...transformedMeta}
                             href={buildUrl(
                               globalPageProps,

@@ -1,6 +1,6 @@
 import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { NewsletterSubscriptionFragmentDoc } from '@/graphql/types/graphql';
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import ReactMarkdown from 'react-markdown';
 
 type Params = {
   fragment: FragmentType<typeof NewsletterSubscriptionFragmentDoc>;

@@ -1,4 +1,4 @@
-import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
+import { type ResolvedGlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import type { SchemaTypes } from '@datocms/cma-client-node';
 import type { NextRequest } from 'next/server';
 
@@ -15,7 +15,7 @@ const websiteBaseUrl = (
 const generatePreviewUrl = (
   item: SchemaTypes.Item,
   itemType: SchemaTypes.ItemType,
-  globalPageProps: GlobalPageProps,
+  globalPageProps: ResolvedGlobalPageProps,
 ) => {
   switch (itemType.attributes.api_key) {
     case 'page':

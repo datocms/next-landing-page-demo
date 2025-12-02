@@ -1,6 +1,6 @@
 import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { PricingSectionFragmentDoc } from '@/graphql/types/graphql';
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import ReactMarkdown from 'react-markdown';
 
 type Props = {
   fragment: FragmentType<typeof PricingSectionFragmentDoc>;

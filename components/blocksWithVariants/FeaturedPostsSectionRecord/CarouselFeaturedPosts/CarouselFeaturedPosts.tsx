@@ -5,13 +5,13 @@ import {
   FeaturedPostsSectionFragmentDoc,
   PostExcerptFragmentDoc,
 } from '@/graphql/types/graphql';
-import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
+import { type ResolvedGlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import Link from 'next/link';
 import { useState } from 'react';
 
 type Props = {
   fragment: FragmentType<typeof FeaturedPostsSectionFragmentDoc>;
-  globalPageProps: GlobalPageProps;
+  globalPageProps: ResolvedGlobalPageProps;
 };
 
 const CarouselFeaturedPosts = ({ fragment, globalPageProps }: Props) => {

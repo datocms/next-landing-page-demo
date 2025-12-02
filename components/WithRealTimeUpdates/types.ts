@@ -1,9 +1,10 @@
 import type { SiteLocale } from '@/graphql/types/graphql';
-import type { GlobalPageProps } from '@/utils/globalPageProps';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 
+// BuildVariablesFn works with resolved params (after awaiting)
 export type BuildVariablesFn<
-  PageProps extends GlobalPageProps,
+  PageProps extends ResolvedGlobalPageProps,
   TVariables = Record<string, unknown>,
 > = (
   context: PageProps & {
@@ -12,7 +13,7 @@ export type BuildVariablesFn<
 ) => TVariables;
 
 export type RealtimeUpdatesPage<
-  PageProps extends GlobalPageProps,
+  PageProps extends ResolvedGlobalPageProps,
   TResult = unknown,
   TVariables = Record<string, unknown>,
 > = (props: {
@@ -25,7 +26,7 @@ export type RealtimeUpdatesPage<
 }) => React.ReactNode;
 
 export type ContentPage<
-  PageProps extends GlobalPageProps,
+  PageProps extends ResolvedGlobalPageProps,
   TResult = unknown,
 > = (
   props: PageProps & {

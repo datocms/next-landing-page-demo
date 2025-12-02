@@ -4,7 +4,7 @@ import type {
   CommonLayoutQuery,
   LegalPageRecord,
 } from '@/graphql/types/graphql';
-import type { GlobalPageProps } from '@/utils/globalPageProps';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import { buildUrl } from '@/utils/globalPageProps';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -12,7 +12,7 @@ import ReactMarkdown from 'react-markdown';
 
 type Props = {
   data: CommonLayoutQuery;
-  globalPageProps: GlobalPageProps;
+  globalPageProps: ResolvedGlobalPageProps;
 };
 
 const Footer = ({ data, globalPageProps }: Props) => {

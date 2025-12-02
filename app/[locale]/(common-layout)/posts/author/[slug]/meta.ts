@@ -3,9 +3,9 @@ import {
   type AuthorQuery,
   type AuthorQueryVariables,
 } from '@/graphql/types/graphql';
-import type { GlobalPageProps } from '@/utils/globalPageProps';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 
-export type PageProps = GlobalPageProps & {
+export type PageProps = ResolvedGlobalPageProps & {
   params: {
     slug: string;
   };

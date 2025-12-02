@@ -1,13 +1,13 @@
 'use client';
 import AuthenticationModal from '@/components/Header/AuthenticationModal';
 import SuccessPopUp from '@/components/Header/SuccessPopUp';
-import type { GlobalPageProps } from '@/utils/globalPageProps';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 type Props = {
-  globalPageProps: GlobalPageProps;
+  globalPageProps: ResolvedGlobalPageProps;
   isDraft: boolean;
 };
 

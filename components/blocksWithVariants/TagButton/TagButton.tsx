@@ -1,9 +1,9 @@
-import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
+import { type ResolvedGlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import Link from 'next/link';
 
 type Props = {
   tag: string;
-  globalPageProps: GlobalPageProps;
+  globalPageProps: ResolvedGlobalPageProps;
   slug: string;
 };
 

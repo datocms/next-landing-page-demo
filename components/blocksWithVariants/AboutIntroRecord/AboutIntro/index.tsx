@@ -9,7 +9,7 @@ import {
   StructuredText as StructuredTextField,
   renderNodeRule,
 } from 'react-datocms';
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import ReactMarkdown from 'react-markdown';
 import DatoImage from '../../../DatoImage';
 
 type Props = {

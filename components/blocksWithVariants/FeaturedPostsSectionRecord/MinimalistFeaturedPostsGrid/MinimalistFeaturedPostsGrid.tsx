@@ -4,13 +4,13 @@ import {
   FeaturedPostsSectionFragmentDoc,
   PostExcerptFragmentDoc,
 } from '@/graphql/types/graphql';
-import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
+import { type ResolvedGlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import transformDate from '@/utils/transformDate';
 import Link from 'next/link';
 
 type Props = {
   fragment: FragmentType<typeof FeaturedPostsSectionFragmentDoc>;
-  globalPageProps: GlobalPageProps;
+  globalPageProps: ResolvedGlobalPageProps;
 };
 
 const MinimalistFeaturedPostsGrid = ({ fragment, globalPageProps }: Props) => {

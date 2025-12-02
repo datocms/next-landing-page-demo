@@ -1,9 +1,9 @@
-import type { GlobalPageProps } from '@/utils/globalPageProps';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import WithRealTimeUpdates from '.';
 import type { ContentPage, RealtimeUpdatesPage } from './types';
 
 export function generateRealtimeComponent<
-  PageProps extends GlobalPageProps,
+  PageProps extends ResolvedGlobalPageProps,
   TResult = unknown,
   TVariables = Record<string, unknown>,
 >({

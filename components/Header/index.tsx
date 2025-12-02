@@ -3,7 +3,7 @@
 import LanguageSelector from '@/components/Header/LanguageSelector';
 import NotificationStrip from '@/components/Header/NotificationStrip';
 import type { CommonLayoutQuery } from '@/graphql/types/graphql';
-import type { GlobalPageProps } from '@/utils/globalPageProps';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import { buildUrl } from '@/utils/globalPageProps';
 import { isEmptyDocument } from 'datocms-structured-text-utils';
 import Image from 'next/image';
@@ -19,7 +19,7 @@ type Menu = {
 };
 
 type Props = {
-  globalPageProps: GlobalPageProps;
+  globalPageProps: ResolvedGlobalPageProps;
   data: CommonLayoutQuery;
 };
 

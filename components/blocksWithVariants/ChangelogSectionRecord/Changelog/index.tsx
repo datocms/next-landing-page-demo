@@ -1,12 +1,12 @@
 import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { ChangelogSectionFragmentDoc } from '@/graphql/types/graphql';
-import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
+import { type ResolvedGlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import Link from 'next/link';
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import ReactMarkdown from 'react-markdown';
 
 type Props = {
   fragment: FragmentType<typeof ChangelogSectionFragmentDoc>;
-  globalPageProps: GlobalPageProps;
+  globalPageProps: ResolvedGlobalPageProps;
 };
 
 const Changelog = ({ fragment, globalPageProps }: Props) => {

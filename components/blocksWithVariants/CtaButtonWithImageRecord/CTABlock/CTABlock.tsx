@@ -4,7 +4,7 @@ import {
   CtaButtonWithImageFragmentDoc,
   ImageFileField,
 } from '@/graphql/types/graphql';
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import ReactMarkdown from 'react-markdown';
 
 type Props = {
   fragment: FragmentType<typeof CtaButtonWithImageFragmentDoc>;

@@ -1,5 +1,5 @@
 import type { SiteLocale } from '@/graphql/types/graphql';
-import { type GlobalPageProps, buildUrl } from '@/utils/globalPageProps';
+import { type ResolvedGlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import { type SimpleSchemaTypes, buildClient } from '@datocms/cma-client-node';
 import got from 'got';
 import { JSDOM } from 'jsdom';
@@ -17,7 +17,7 @@ const websiteBaseUrl = (
 const findSlugAndPermalink = async (
   item: SimpleSchemaTypes.Item,
   itemTypeApiKey: string,
-  globalPageProps: GlobalPageProps,
+  globalPageProps: ResolvedGlobalPageProps,
 ): Promise<[string, string] | [null, null]> => {
   switch (itemTypeApiKey) {
     case 'page':
@@ -94,15 +94,17 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  draftMode().enable();
+  const draft = await draftMode();
+  draft.enable();
 
+  const cookieStore = await cookies();
   const { body } = await got(new URL(permalink, websiteBaseUrl).toString(), {
     headers: {
-      cookie: cookies().toString(),
+      cookie: cookieStore.toString(),
     },
   });
 
-  draftMode().disable();
+  draft.disable();
 
   const { document } = new JSDOM(body).window;
   const contentEl = document.querySelector('body');

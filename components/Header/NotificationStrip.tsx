@@ -5,7 +5,7 @@ import type {
   SiteLocale,
 } from '@/graphql/types/graphql';
 import { buildUrl } from '@/utils/globalPageProps';
-import type { GlobalPageProps } from '@/utils/globalPageProps';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import {
   type Record,
   type StructuredText,
@@ -20,7 +20,7 @@ import {
 
 type Props = {
   notification: NonNullable<CommonLayoutQuery['layout']>['notification'];
-  globalPageProps: GlobalPageProps;
+  globalPageProps: ResolvedGlobalPageProps;
   setNotificationStrip: React.Dispatch<SetStateAction<boolean>>;
 };
 

@@ -5,7 +5,7 @@ import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { HeroSectionFragmentDoc } from '@/graphql/types/graphql';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import ReactMarkdown from 'react-markdown';
 
 type Props = {
   fragment: FragmentType<typeof HeroSectionFragmentDoc>;

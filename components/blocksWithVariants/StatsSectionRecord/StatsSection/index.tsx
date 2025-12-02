@@ -1,7 +1,7 @@
 import SvgRenderer from '@/components/SvgRenderer';
 import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { StatsSectionFragmentDoc } from '@/graphql/types/graphql';
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import ReactMarkdown from 'react-markdown';
 
 function formatNumber(num: number) {
   if (num >= 1000000) {

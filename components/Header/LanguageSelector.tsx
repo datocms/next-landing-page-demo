@@ -1,13 +1,13 @@
 'use client';
 import type { SiteLocale } from '@/graphql/types/graphql';
 import { buildUrl } from '@/utils/globalPageProps';
-import type { GlobalPageProps } from '@/utils/globalPageProps';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
 
 type Props = {
-  globalPageProps: GlobalPageProps;
+  globalPageProps: ResolvedGlobalPageProps;
   languages: SiteLocale[];
 };
 

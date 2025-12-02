@@ -2,7 +2,7 @@
 
 import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { FeaturedDocumentationPagesFragmentDoc } from '@/graphql/types/graphql';
-import type { GlobalPageProps } from '@/utils/globalPageProps';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import { AnimatePresence, motion } from 'framer-motion';
 import PreviewCard from './PreviewCard';
 
@@ -14,7 +14,7 @@ const variants = {
 
 type Props = {
   fragment: FragmentType<typeof FeaturedDocumentationPagesFragmentDoc>;
-  globalPageProps: GlobalPageProps;
+  globalPageProps: ResolvedGlobalPageProps;
 };
 
 const FeaturedDocumentationPages = ({ fragment, globalPageProps }: Props) => {

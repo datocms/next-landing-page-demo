@@ -1,11 +1,11 @@
 import { SiteLocale } from '@/graphql/types/graphql';
 import { buildUrl } from '@/utils/globalPageProps';
-import type { GlobalPageProps } from '@/utils/globalPageProps';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 
 type Props = {
   page: number;
   postCount: number;
-  globalPageProps: GlobalPageProps;
+  globalPageProps: ResolvedGlobalPageProps;
 };
 
 const PageIndicatorList = ({ page, postCount, globalPageProps }: Props) => {
@@ -13,7 +13,7 @@ const PageIndicatorList = ({ page, postCount, globalPageProps }: Props) => {
 
   for (let i = 0; i * 9 < postCount; i++) {
     listOfPages.push(
-      <li className="mx-1">
+      <li key={i} className="mx-1">
         <a
           href={
             i === 0

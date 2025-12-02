@@ -3,10 +3,6 @@ import { match } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
 import { type NextRequest, NextResponse } from 'next/server';
 import type { SiteLocale } from './graphql/types/graphql';
-import {
-  type GlobalPageProps,
-  buildUrl as buildUrlForPage,
-} from './utils/globalPageProps';
 
 async function findBestLocaleForVisitor(
   request: Request,
@@ -37,16 +33,10 @@ async function findBestLocaleForVisitor(
 }
 
 function buildUrl(locale: SiteLocale, path: string) {
-  const simulatedPageProps: GlobalPageProps = {
-    params: {
-      locale,
-    },
-  };
-
-  return buildUrlForPage(simulatedPageProps, path);
+  return `/${locale}${path || ''}`;
 }
 
-export async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const locales = await getAvailableLocales();
@@ -80,3 +70,4 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: ['/((?!.*\\.|_next|api\\/).*)'],
 };
+

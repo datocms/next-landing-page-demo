@@ -65,7 +65,7 @@ const Content: ContentPage<PageProps, Query> = ({ data, params }) => {
           }),
           renderNodeRule(isCode, ({ node, key }) => {
             return (
-              <div className="py-4">
+              <div key={key} className="py-4">
                 <SyntaxHighlighter
                   wrapLines={true}
                   showLineNumbers={true}

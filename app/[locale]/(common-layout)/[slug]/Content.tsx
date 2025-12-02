@@ -54,80 +54,80 @@ const Content: ContentPage<PageProps, Query> = ({
         switch (section.__typename) {
           case 'ChangelogSectionRecord': {
             return (
-              <Changelog fragment={section} globalPageProps={globalPageProps} />
+              <Changelog key={section.id} fragment={section} globalPageProps={globalPageProps} />
             );
           }
           case 'HeroSectionRecord': {
             switch (section.displayOptions) {
               case 'gradient':
-                return <GradientHero fragment={section} />;
+                return <GradientHero key={section.id} fragment={section} />;
               case 'right_image':
-                return <RightImageHero fragment={section} />;
+                return <RightImageHero key={section.id} fragment={section} />;
               case 'background_image':
-                return <BackgroundImageHero fragment={section} />;
+                return <BackgroundImageHero key={section.id} fragment={section} />;
               case 'split_image':
-                return <SplitImage fragment={section} />;
+                return <SplitImage key={section.id} fragment={section} />;
               default:
-                return <Hero fragment={section} />;
+                return <Hero key={section.id} fragment={section} />;
             }
           }
 
           case 'FeatureListSectionRecord': {
             switch (section.displayOption) {
               case 'card_minimal':
-                return <MinimalCardsFeature fragment={section} />;
+                return <MinimalCardsFeature key={section.id} fragment={section} />;
               case 'grid':
-                return <Features fragment={section} />;
+                return <Features key={section.id} fragment={section} />;
               case 'big_image_horizontal':
-                return <BigImageHorizontalFeatures fragment={section} />;
+                return <BigImageHorizontalFeatures key={section.id} fragment={section} />;
               case 'big_image_vertical':
-                return <BigImageVerticalFeatures fragment={section} />;
+                return <BigImageVerticalFeatures key={section.id} fragment={section} />;
               default:
-                return <FeatureCards fragment={section} />;
+                return <FeatureCards key={section.id} fragment={section} />;
             }
           }
 
           case 'VideoSectionRecord': {
-            return <Video fragment={section} />;
+            return <Video key={section.id} fragment={section} />;
           }
           case 'BrandSectionRecord': {
             switch (section.displayOptions) {
               case 'brand_cards':
-                return <BrandCards fragment={section} />;
+                return <BrandCards key={section.id} fragment={section} />;
               default:
-                return <Brands fragment={section} />;
+                return <Brands key={section.id} fragment={section} />;
             }
           }
           case 'DetailSectionRecord': {
-            return <DetailSection fragment={section} />;
+            return <DetailSection key={section.id} fragment={section} />;
           }
           case 'ReviewSectionRecord': {
             switch (section.displayOptions) {
               case 'card_carrousel':
-                return <Carousel fragment={section} />;
+                return <Carousel key={section.id} fragment={section} />;
               case 'modern_carrousel':
-                return <ModernCarousel fragment={section} />;
+                return <ModernCarousel key={section.id} fragment={section} />;
               case 'minimal_carrousel':
-                return <MinimalCarousel fragment={section} />;
+                return <MinimalCarousel key={section.id} fragment={section} />;
               case 'minimal_cards':
-                return <MinimalReviewCards fragment={section} />;
+                return <MinimalReviewCards key={section.id} fragment={section} />;
               default:
-                return <Testimonials fragment={section} />;
+                return <Testimonials key={section.id} fragment={section} />;
             }
           }
 
           case 'PricingSectionRecord': {
             switch (section.displayOption) {
               case 'cards_gradient':
-                return <GradientCards fragment={section} />;
+                return <GradientCards key={section.id} fragment={section} />;
               case 'minimal':
-                return <Minimal fragment={section} />;
+                return <Minimal key={section.id} fragment={section} />;
               case 'feature_list':
-                return <FeatureListSelector fragment={section} />;
+                return <FeatureListSelector key={section.id} fragment={section} />;
               case 'mini_cards':
-                return <SmallCards fragment={section} />;
+                return <SmallCards key={section.id} fragment={section} />;
               default:
-                return <Pricing fragment={section} />;
+                return <Pricing key={section.id} fragment={section} />;
             }
           }
 
@@ -136,6 +136,7 @@ const Content: ContentPage<PageProps, Query> = ({
               case 'modern_cards':
                 return (
                   <ModernPostCards
+                    key={section.id}
                     globalPageProps={globalPageProps}
                     fragment={section}
                   />
@@ -143,6 +144,7 @@ const Content: ContentPage<PageProps, Query> = ({
               case 'carrousel':
                 return (
                   <CarouselFeaturedPosts
+                    key={section.id}
                     globalPageProps={globalPageProps}
                     fragment={section}
                   />
@@ -150,6 +152,7 @@ const Content: ContentPage<PageProps, Query> = ({
               case 'minimalist_grid':
                 return (
                   <MinimalistFeaturedPostsGrid
+                    key={section.id}
                     globalPageProps={globalPageProps}
                     fragment={section}
                   />
@@ -157,13 +160,14 @@ const Content: ContentPage<PageProps, Query> = ({
               case 'full_image_card':
                 return (
                   <FullImageFeaturedPosts
+                    key={section.id}
                     globalPageProps={globalPageProps}
                     fragment={section}
                   />
                 );
               default:
                 return (
-                  <Blog globalPageProps={globalPageProps} fragment={section} />
+                  <Blog key={section.id} globalPageProps={globalPageProps} fragment={section} />
                 );
             }
           }
@@ -172,12 +176,14 @@ const Content: ContentPage<PageProps, Query> = ({
             if (section.displayOptions === 'compact')
               return (
                 <CompactTeam
+                  key={section.id}
                   fragment={section}
                   globalPageProps={globalPageProps}
                 />
               );
             return (
               <ExpandedTeam
+                key={section.id}
                 fragment={section}
                 globalPageProps={globalPageProps}
               />
@@ -185,20 +191,20 @@ const Content: ContentPage<PageProps, Query> = ({
           }
           case 'FaqSectionRecord': {
             if (section.displayOptions === 'accordion') {
-              return <FAQAccordion fragment={section} />;
+              return <FAQAccordion key={section.id} fragment={section} />;
             }
 
-            return <FAQGrid fragment={section} />;
+            return <FAQGrid key={section.id} fragment={section} />;
           }
           case 'StatsSectionRecord': {
-            return <StatsSection fragment={section} />;
+            return <StatsSection key={section.id} fragment={section} />;
           }
           case 'AboutIntroRecord': {
-            return <AboutIntro fragment={section} />;
+            return <AboutIntro key={section.id} fragment={section} />;
           }
           case 'AllPostsSectionRecord': {
             return (
-              <PostGridRenderer data={data} globalPageProps={globalPageProps} />
+              <PostGridRenderer key={section.id} data={data} globalPageProps={globalPageProps} />
             );
           }
           case 'RedirectSectionRecord': {
