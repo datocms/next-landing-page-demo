@@ -7,7 +7,7 @@ import DatoImage from '@/components/DatoImage';
 import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { VideoSectionFragmentDoc } from '@/graphql/types/graphql';
 import Image from 'next/image';
-import ModalVideo from 'react-modal-video';
+import VideoModal from '@/components/VideoModal';
 
 type Props = {
   fragment: FragmentType<typeof VideoSectionFragmentDoc>;
@@ -61,7 +61,7 @@ const Video = ({ fragment }: Props) => {
         </div>
       </div>
 
-      <ModalVideo
+      <VideoModal
         isOpen={isOpen}
         videoId={video.providerUid}
         onClose={() => setOpen(false)}

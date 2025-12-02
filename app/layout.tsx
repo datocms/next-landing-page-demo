@@ -1,5 +1,4 @@
 import '@/styles/global.css';
-import 'node_modules/react-modal-video/css/modal-video.css';
 
 type Params = {
   children: React.ReactNode;

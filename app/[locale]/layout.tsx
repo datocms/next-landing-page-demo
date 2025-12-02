@@ -6,7 +6,6 @@ import type { GlobalPageProps } from '@/utils/globalPageProps';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
-import 'node_modules/react-modal-video/css/modal-video.css';
 import { toNextMetadata } from 'react-datocms/seo';
 
 type Params = GlobalPageProps & {
