@@ -23,9 +23,10 @@ export const localeToLanguageName = (locale: SiteLocale): string => {
 const LanguageSelector = ({ globalPageProps, languages }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const currentLocale = globalPageProps.params.locale;
+  const apiToken = globalPageProps.params.apiToken;
   const pathname = usePathname();
   const pathnameWithoutPrefix = pathname.replace(
-    new RegExp(`^\\/${currentLocale}`),
+    new RegExp(`^\\/${apiToken}\\/${currentLocale}`),
     '',
   );
 
@@ -63,7 +64,7 @@ const LanguageSelector = ({ globalPageProps, languages }: Props) => {
               className="inline-flex w-full cursor-pointer items-end justify-start rounded-lg text-sm font-medium text-gray-900 hover:bg-gray-100"
             >
               <Link
-                href={buildUrl({ params: { locale } }, pathnameWithoutPrefix)}
+                href={buildUrl({ params: { ...globalPageProps.params, locale } }, pathnameWithoutPrefix)}
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white w-full text-center"
                 role="menuitem"
               >

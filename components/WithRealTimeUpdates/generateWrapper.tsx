@@ -13,7 +13,11 @@ import type {
 
 // Input props from Next.js with Promise-based params (string-based locale)
 type AsyncPageProps = {
-  params: Promise<{ locale: string; [key: string]: string | number }>;
+  params: Promise<{
+    locale: string;
+    apiToken: string;
+    [key: string]: string | number;
+  }>;
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
   children?: React.ReactNode;
 };
@@ -21,7 +25,7 @@ type AsyncPageProps = {
 export function generateWrapper<
   PageProps extends ResolvedGlobalPageProps,
   TResult = unknown,
-  TVariables = Record<string, unknown>,
+  TVariables = Record<string, unknown>
 >(options: {
   query: TypedDocumentNode<TResult, TVariables>;
   buildVariables?: BuildVariablesFn<PageProps, TVariables>;
@@ -31,8 +35,8 @@ export function generateWrapper<
   return async function Page(asyncPageProps: AsyncPageProps) {
     // Await the params to get resolved values
     const rawParams = await asyncPageProps.params;
-    
-    const allLocales = await getAvailableLocales();
+
+    const allLocales = await getAvailableLocales(rawParams.apiToken);
     if (!allLocales.includes(rawParams.locale as SiteLocale)) {
       notFound();
     }
@@ -43,7 +47,7 @@ export function generateWrapper<
       locale: rawParams.locale as SiteLocale,
     };
 
-    const fallbackLocale = await getFallbackLocale();
+    const fallbackLocale = await getFallbackLocale(rawParams.apiToken);
     const { isEnabled: isDraft } = await draftMode();
 
     // Build resolved page props (without searchParams)
@@ -59,13 +63,18 @@ export function generateWrapper<
         fallbackLocale,
       }) || ({} as TVariables);
 
-    const data = await queryDatoCMS(options.query, variables, isDraft);
+    const data = await queryDatoCMS(
+      pageProps.params.apiToken,
+      options.query,
+      variables,
+      isDraft
+    );
 
     const { realtimeComponent: RealTime, contentComponent: Content } = options;
 
     return isDraft ? (
       <RealTime
-        token={process.env.DATOCMS_READONLY_API_TOKEN || ''}
+        token={pageProps.params.apiToken}
         query={options.query}
         variables={variables}
         initialData={data}
