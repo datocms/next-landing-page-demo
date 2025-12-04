@@ -2,7 +2,7 @@ import type { SiteLocale } from '@/graphql/types/graphql';
 import { type ResolvedGlobalPageProps, buildUrl } from '@/utils/globalPageProps';
 import { type SimpleSchemaTypes, buildClient } from '@datocms/cma-client-node';
 import got from 'got';
-import { JSDOM } from 'jsdom';
+import { parseHTML } from 'linkedom';
 import { cookies, draftMode } from 'next/headers';
 import type { NextRequest } from 'next/server';
 
@@ -106,7 +106,7 @@ export async function GET(req: NextRequest) {
 
   draft.disable();
 
-  const { document } = new JSDOM(body).window;
+  const { document } = parseHTML(body);
   const contentEl = document.querySelector('body');
   if (!contentEl)
     return new Response('No content found', { status: 422, headers });
