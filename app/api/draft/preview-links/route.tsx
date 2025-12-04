@@ -1,4 +1,7 @@
-import { type ResolvedGlobalPageProps, buildUrl } from '@/utils/globalPageProps';
+import {
+  type ResolvedGlobalPageProps,
+  buildUrl,
+} from '@/utils/globalPageProps';
 import type { SchemaTypes } from '@datocms/cma-client-node';
 import type { NextRequest } from 'next/server';
 
@@ -15,7 +18,7 @@ const websiteBaseUrl = (
 const generatePreviewUrl = (
   item: SchemaTypes.Item,
   itemType: SchemaTypes.ItemType,
-  globalPageProps: ResolvedGlobalPageProps,
+  globalPageProps: ResolvedGlobalPageProps
 ) => {
   switch (itemType.attributes.api_key) {
     case 'page':
@@ -82,20 +85,20 @@ export async function POST(request: NextRequest) {
 
   const previewLinks = [];
 
-  // If status is not draft, it means that it has a published version!
-  if (item.meta.status !== 'draft')
-    // Generate a URL that first exits from Next.js Draft Mode, and then redirects to the desired URL.
-    previewLinks.push({
-      label: 'Published version',
-      url: `${websiteBaseUrl}/api/draft/disable?url=${url}`,
-    });
-
   // If status is not published, it means that it has a current version that's different from the published one!
   if (item.meta.status !== 'published')
     // Generate a URL that initially enters Next.js Draft Mode, and then redirects to the desired URL
     previewLinks.push({
       label: 'Draft version',
       url: `${websiteBaseUrl}/api/draft/enable?url=${url}&token=${token}`,
+    });
+
+  // If status is not draft, it means that it has a published version!
+  if (item.meta.status !== 'draft')
+    // Generate a URL that first exits from Next.js Draft Mode, and then redirects to the desired URL.
+    previewLinks.push({
+      label: 'Published version',
+      url: `${websiteBaseUrl}/api/draft/disable?url=${url}`,
     });
 
   return Response.json({ previewLinks }, responseDefaults);
