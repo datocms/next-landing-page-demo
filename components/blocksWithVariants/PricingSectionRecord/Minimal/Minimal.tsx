@@ -1,10 +1,9 @@
 'use client';
 
-import Highlighter from '@/components/Highlighter';
+import DatoStructuredText from '@/components/DatoStructuredText';
 import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { PricingSectionFragmentDoc } from '@/graphql/types/graphql';
 import { useState } from 'react';
-import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 import ReactMarkdown from 'react-markdown';
 
 type Props = {
@@ -77,10 +76,7 @@ const Minimal = ({ fragment }: Props) => {
             </h4>
 
             <div className="mt-4 h-24 text-gray-300">
-              <StructuredTextField
-                data={planInEvidence.tierDescription}
-                renderNode={Highlighter}
-              />
+              <DatoStructuredText data={planInEvidence.tierDescription} />
             </div>
 
             <div className="mt-8 h-80 space-y-8">
@@ -131,10 +127,7 @@ const Minimal = ({ fragment }: Props) => {
                 </h4>
 
                 <div className="mt-4 h-24 text-gray-500 dark:text-gray-300">
-                  <StructuredTextField
-                    data={plan.tierDescription}
-                    renderNode={Highlighter}
-                  />
+                  <DatoStructuredText data={plan.tierDescription} />
                 </div>
 
                 <div className="mt-8 h-80 space-y-8">

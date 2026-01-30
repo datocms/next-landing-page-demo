@@ -1,14 +1,11 @@
 'use client';
 
-import Highlighter from '@/components/Highlighter';
+import DatoStructuredText from '@/components/DatoStructuredText';
 import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { AboutIntroFragmentDoc } from '@/graphql/types/graphql';
 import { isHeading, isParagraph } from 'datocms-structured-text-utils';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import {
-  StructuredText as StructuredTextField,
-  renderNodeRule,
-} from 'react-datocms';
+import { renderNodeRule } from 'react-datocms/structured-text';
 import ReactMarkdown from 'react-markdown';
 import DatoImage from '../../../DatoImage';
 
@@ -125,7 +122,7 @@ const AboutIntro = ({ fragment }: Props) => {
           className="z-0 flex flex-col justify-center"
         >
           {introduction && (
-            <StructuredTextField
+            <DatoStructuredText
               data={introduction}
               customNodeRules={[
                 renderNodeRule(isHeading, ({ children, key }) => {
@@ -146,7 +143,6 @@ const AboutIntro = ({ fragment }: Props) => {
                   );
                 }),
               ]}
-              renderNode={Highlighter}
             />
           )}
         </motion.div>

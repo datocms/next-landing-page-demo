@@ -1,6 +1,6 @@
 'use client';
 
-import Highlighter from '@/components/Highlighter';
+import DatoStructuredText from '@/components/DatoStructuredText';
 import QuoteBlock from '@/components/QuoteBlock';
 import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
 import {
@@ -12,10 +12,7 @@ import {
 } from 'datocms-structured-text-utils';
 import { notFound } from 'next/navigation';
 import type { CSSProperties } from 'react';
-import {
-  StructuredText as StructuredTextField,
-  renderNodeRule,
-} from 'react-datocms/structured-text';
+import { renderNodeRule } from 'react-datocms/structured-text';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import type { PageProps, Query } from './meta';
@@ -27,7 +24,7 @@ const Content: ContentPage<PageProps, Query> = ({ data, params }) => {
 
   return (
     <div className="px-24 py-8">
-      <StructuredTextField
+      <DatoStructuredText
         data={data.documentationPage.content}
         customNodeRules={[
           renderNodeRule(isHeading, ({ children, key }) => {
@@ -87,7 +84,6 @@ const Content: ContentPage<PageProps, Query> = ({ data, params }) => {
             );
           }),
         ]}
-        renderNode={Highlighter}
       />
     </div>
   );

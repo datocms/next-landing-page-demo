@@ -1,8 +1,7 @@
 import DatoImage from '@/components/DatoImage';
-import Highlighter from '@/components/Highlighter';
+import DatoStructuredText from '@/components/DatoStructuredText';
 import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { TestimonialFragmentDoc } from '@/graphql/types/graphql';
-import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 
 const starIcon = (
   <svg width="18" height="16" viewBox="0 0 18 16" className="fill-current">
@@ -32,7 +31,7 @@ const Testimonial = ({ fragment }: Props) => {
       <div className="flex h-full flex-col items-center justify-center rounded-md bg-white p-8 shadow-one dark:bg-[#1D2144] lg:items-start lg:px-5 xl:px-8">
         <div className="mb-5 flex items-center space-x-1">{ratingIcons}</div>
         <div className="mb-8 h-36 border-b border-body-color border-opacity-10 pb-8 text-base leading-relaxed text-body-color dark:border-white dark:border-opacity-10 dark:text-white">
-          <StructuredTextField data={review} renderNode={Highlighter} />
+          <DatoStructuredText data={review} />
         </div>
         <div className="flex w-96 items-center px-16 md:w-full md:px-4 lg:px-0">
           <div className="relative mr-4 h-[50px] w-full max-w-[50px] overflow-hidden rounded-full">

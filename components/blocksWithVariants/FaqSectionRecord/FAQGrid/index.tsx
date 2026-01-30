@@ -1,7 +1,6 @@
-import Highlighter from '@/components/Highlighter';
+import DatoStructuredText from '@/components/DatoStructuredText';
 import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { FaqSectionFragmentDoc } from '@/graphql/types/graphql';
-import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 import ReactMarkdown from 'react-markdown';
 
 type Props = {
@@ -50,10 +49,7 @@ const FAQGrid = ({ fragment }: Props) => {
                   </h1>
 
                   <div className="mt-2 text-sm text-gray-500 dark:text-gray-300">
-                    <StructuredTextField
-                      data={question.answer}
-                      renderNode={Highlighter}
-                    />
+                    <DatoStructuredText data={question.answer} />
                   </div>
                 </div>
               </div>

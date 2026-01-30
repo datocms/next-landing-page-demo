@@ -1,11 +1,8 @@
-import Highlighter from '@/components/Highlighter';
+import DatoStructuredText from '@/components/DatoStructuredText';
 import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
 import { isHeading, isParagraph } from 'datocms-structured-text-utils';
 import { notFound } from 'next/navigation';
-import {
-  StructuredText as StructuredTextField,
-  renderNodeRule,
-} from 'react-datocms';
+import { renderNodeRule } from 'react-datocms/structured-text';
 import type { PageProps, Query } from './meta';
 
 const Content: ContentPage<PageProps, Query> = ({ data, params }) => {
@@ -20,9 +17,8 @@ const Content: ContentPage<PageProps, Query> = ({ data, params }) => {
           <div className="w-full px-4 lg:w-8/12">
             <div>
               <div>
-                <StructuredTextField
+                <DatoStructuredText
                   data={data.legalPage.content}
-                  renderNode={Highlighter}
                   customNodeRules={[
                     renderNodeRule(isHeading, ({ children, key }) => {
                       return (

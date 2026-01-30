@@ -1,13 +1,12 @@
 'use client';
 
 import { primaryColor } from '@/app/i18n/settings';
-import Highlighter from '@/components/Highlighter';
+import DatoStructuredText from '@/components/DatoStructuredText';
 import SectionTitle from '@/components/SectionTitle';
 import OfferList from '@/components/blocksWithVariants/PricingSectionRecord/OfferList';
 import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { PricingSectionFragmentDoc } from '@/graphql/types/graphql';
 import { useState } from 'react';
-import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 
 type Props = {
   fragment: FragmentType<typeof PricingSectionFragmentDoc>;
@@ -91,10 +90,7 @@ const Pricing = ({ fragment }: Props) => {
                     </h4>
                   </div>
                   <div className="mb-7 h-20 text-base text-body-color">
-                    <StructuredTextField
-                      data={subtitle}
-                      renderNode={Highlighter}
-                    />
+                    <DatoStructuredText data={subtitle} />
                   </div>
                   <div className="mb-8 border-b border-body-color border-opacity-10 pb-8 dark:border-white dark:border-opacity-10">
                     <button
