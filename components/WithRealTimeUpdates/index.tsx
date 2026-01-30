@@ -30,7 +30,7 @@ export default function WithRealTimeUpdates<
     variables,
     token,
     initialData,
-    preview: true,
+    includeDrafts: true,
   });
 
   if (!data) return null;

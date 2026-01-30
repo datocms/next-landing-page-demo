@@ -1,4 +1,5 @@
 import getAvailableLocales from '@/app/i18n/settings';
+import ContentLink from '@/components/ContentLink';
 import CustomColor from '@/components/CustomColor';
 import ScrollToTop from '@/components/ScrollToTop';
 import { LayoutDocument, type SiteLocale } from '@/graphql/types/graphql';
@@ -42,6 +43,7 @@ export default async function RootLayout({ children, params }: Params) {
         g={data.layout?.mainColor.green || 247}
         b={data.layout?.mainColor.blue || 108}
       />
+      {isDraft && <ContentLink />}
       {children}
       <ScrollToTop globalPageProps={{ params: resolvedParams }} isDraft={isDraft} />
     </>
