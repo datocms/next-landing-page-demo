@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
 
   const token = searchParams.get('token');
-  const url = searchParams.get('url');
+  const redirectPath = searchParams.get('redirect');
 
   if (token !== process.env.DRAFT_SECRET_TOKEN)
     return new Response('Invalid token', { status: 401 });
@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
   const draft = await draftMode();
   draft.enable();
 
-  if (!url) return new Response('Draft mode is enabled');
+  if (!redirectPath) return new Response('Draft mode is enabled');
 
   // By performing a redirect(), we would lose the __prerender_bypass cookie just
   // set by draftMode().enable(), so we would effectively not enter into Next.js's draft mode!
@@ -37,5 +37,5 @@ export async function GET(request: NextRequest) {
     partitioned: true,
   });
 
-  redirect(url);
+  redirect(redirectPath);
 }

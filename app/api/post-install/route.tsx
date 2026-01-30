@@ -34,6 +34,10 @@ async function installWebPreviewsPlugin(client: Client, baseUrl: string) {
             `/api/draft/preview-links?token=${secretToken}`,
             baseUrl,
           ).toString(),
+          customDraftModeUrl: new URL(
+            `/api/draft/enable?token=${secretToken}`,
+            baseUrl,
+          ).toString(),
         },
       ],
       startOpen: true,
