@@ -1,18 +1,29 @@
 import Highlighter from '@/components/Highlighter';
-import type { ReactElement } from 'react';
+import { cloneElement, type ReactElement } from 'react';
 import {
   StructuredText,
   type StructuredTextPropTypes,
   type CdaStructuredTextRecord,
 } from 'react-datocms/structured-text';
 
-function wrapWithBoundary(result: ReactElement | null): ReactElement | null {
+function wrapBlockWithBoundary(
+  result: ReactElement | null,
+): ReactElement | null {
   if (!result) return null;
   return (
     <div data-datocms-content-link-boundary key={result.key}>
       {result}
     </div>
   );
+}
+
+function addBoundaryAttribute(
+  result: ReactElement | null,
+): ReactElement | null {
+  if (!result) return null;
+  return cloneElement(result, {
+    'data-datocms-content-link-boundary': true,
+  });
 }
 
 export default function DatoStructuredText<
@@ -37,19 +48,15 @@ export default function DatoStructuredText<
         renderNode={renderNode ?? Highlighter}
         renderBlock={
           renderBlock
-            ? (ctx) => wrapWithBoundary(renderBlock(ctx))
+            ? (ctx) => wrapBlockWithBoundary(renderBlock(ctx))
             : undefined
         }
         renderInlineRecord={
           renderInlineRecord
-            ? (ctx) => wrapWithBoundary(renderInlineRecord(ctx))
+            ? (ctx) => addBoundaryAttribute(renderInlineRecord(ctx))
             : undefined
         }
-        renderLinkToRecord={
-          renderLinkToRecord
-            ? (ctx) => wrapWithBoundary(renderLinkToRecord(ctx))
-            : undefined
-        }
+        renderLinkToRecord={renderLinkToRecord}
       />
     </div>
   );
