@@ -34,3 +34,7 @@
     @apply opacity-100;
   }
 }
+
+[data-datocms-contains-stega] {
+  letter-spacing: 0 !important;
+}

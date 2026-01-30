@@ -13,6 +13,7 @@ export default function WithRealTimeUpdates<
   variables,
   children,
   pageProps,
+  baseEditingUrl,
 }: {
   initialData: TResult;
   variables: TVariables;
@@ -24,6 +25,7 @@ export default function WithRealTimeUpdates<
   ) => React.ReactNode;
   pageProps: PageProps;
   token: string;
+  baseEditingUrl: string;
 }) {
   const { data } = useQuerySubscription({
     query,
@@ -31,6 +33,8 @@ export default function WithRealTimeUpdates<
     token,
     initialData,
     includeDrafts: true,
+    contentLink: 'v1',
+    baseEditingUrl,
   });
 
   if (!data) return null;
