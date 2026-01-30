@@ -6,6 +6,15 @@ import {
   type CdaStructuredTextRecord,
 } from 'react-datocms/structured-text';
 
+function wrapWithBoundary(result: ReactElement | null): ReactElement | null {
+  if (!result) return null;
+  return (
+    <div data-datocms-content-link-boundary key={result.key}>
+      {result}
+    </div>
+  );
+}
+
 export default function DatoStructuredText<
   BlockRecord extends CdaStructuredTextRecord = CdaStructuredTextRecord,
   LinkRecord extends CdaStructuredTextRecord = CdaStructuredTextRecord,
@@ -13,7 +22,13 @@ export default function DatoStructuredText<
 >(
   props: StructuredTextPropTypes<BlockRecord, LinkRecord, InlineBlockRecord>,
 ) {
-  const { renderBlock, renderNode, ...rest } = props;
+  const {
+    renderBlock,
+    renderInlineRecord,
+    renderLinkToRecord,
+    renderNode,
+    ...rest
+  } = props;
 
   return (
     <div data-datocms-content-link-group>
@@ -22,15 +37,17 @@ export default function DatoStructuredText<
         renderNode={renderNode ?? Highlighter}
         renderBlock={
           renderBlock
-            ? (ctx) => {
-                const result: ReactElement | null = renderBlock(ctx);
-                if (!result) return null;
-                return (
-                  <div data-datocms-content-link-boundary key={result.key}>
-                    {result}
-                  </div>
-                );
-              }
+            ? (ctx) => wrapWithBoundary(renderBlock(ctx))
+            : undefined
+        }
+        renderInlineRecord={
+          renderInlineRecord
+            ? (ctx) => wrapWithBoundary(renderInlineRecord(ctx))
+            : undefined
+        }
+        renderLinkToRecord={
+          renderLinkToRecord
+            ? (ctx) => wrapWithBoundary(renderLinkToRecord(ctx))
             : undefined
         }
       />
