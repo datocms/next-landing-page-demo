@@ -39,6 +39,7 @@ import Video from '@/components/blocksWithVariants/VideoSectionRecord/Video';
 import { buildUrl } from '@/utils/globalPageProps';
 import { notFound, redirect } from 'next/navigation';
 import type { PageProps, Query } from './meta';
+import { stripStega } from '@datocms/content-link';
 
 const Content: ContentPage<PageProps, Query> = ({
   data,
@@ -54,7 +55,11 @@ const Content: ContentPage<PageProps, Query> = ({
         switch (section.__typename) {
           case 'ChangelogSectionRecord': {
             return (
-              <Changelog key={section.id} fragment={section} globalPageProps={globalPageProps} />
+              <Changelog
+                key={section.id}
+                fragment={section}
+                globalPageProps={globalPageProps}
+              />
             );
           }
           case 'HeroSectionRecord': {
@@ -64,7 +69,9 @@ const Content: ContentPage<PageProps, Query> = ({
               case 'right_image':
                 return <RightImageHero key={section.id} fragment={section} />;
               case 'background_image':
-                return <BackgroundImageHero key={section.id} fragment={section} />;
+                return (
+                  <BackgroundImageHero key={section.id} fragment={section} />
+                );
               case 'split_image':
                 return <SplitImage key={section.id} fragment={section} />;
               default:
@@ -75,13 +82,25 @@ const Content: ContentPage<PageProps, Query> = ({
           case 'FeatureListSectionRecord': {
             switch (section.displayOption) {
               case 'card_minimal':
-                return <MinimalCardsFeature key={section.id} fragment={section} />;
+                return (
+                  <MinimalCardsFeature key={section.id} fragment={section} />
+                );
               case 'grid':
                 return <Features key={section.id} fragment={section} />;
               case 'big_image_horizontal':
-                return <BigImageHorizontalFeatures key={section.id} fragment={section} />;
+                return (
+                  <BigImageHorizontalFeatures
+                    key={section.id}
+                    fragment={section}
+                  />
+                );
               case 'big_image_vertical':
-                return <BigImageVerticalFeatures key={section.id} fragment={section} />;
+                return (
+                  <BigImageVerticalFeatures
+                    key={section.id}
+                    fragment={section}
+                  />
+                );
               default:
                 return <FeatureCards key={section.id} fragment={section} />;
             }
@@ -110,7 +129,9 @@ const Content: ContentPage<PageProps, Query> = ({
               case 'minimal_carrousel':
                 return <MinimalCarousel key={section.id} fragment={section} />;
               case 'minimal_cards':
-                return <MinimalReviewCards key={section.id} fragment={section} />;
+                return (
+                  <MinimalReviewCards key={section.id} fragment={section} />
+                );
               default:
                 return <Testimonials key={section.id} fragment={section} />;
             }
@@ -123,7 +144,9 @@ const Content: ContentPage<PageProps, Query> = ({
               case 'minimal':
                 return <Minimal key={section.id} fragment={section} />;
               case 'feature_list':
-                return <FeatureListSelector key={section.id} fragment={section} />;
+                return (
+                  <FeatureListSelector key={section.id} fragment={section} />
+                );
               case 'mini_cards':
                 return <SmallCards key={section.id} fragment={section} />;
               default:
@@ -167,7 +190,11 @@ const Content: ContentPage<PageProps, Query> = ({
                 );
               default:
                 return (
-                  <Blog key={section.id} globalPageProps={globalPageProps} fragment={section} />
+                  <Blog
+                    key={section.id}
+                    globalPageProps={globalPageProps}
+                    fragment={section}
+                  />
                 );
             }
           }
@@ -204,7 +231,11 @@ const Content: ContentPage<PageProps, Query> = ({
           }
           case 'AllPostsSectionRecord': {
             return (
-              <PostGridRenderer key={section.id} data={data} globalPageProps={globalPageProps} />
+              <PostGridRenderer
+                key={section.id}
+                data={data}
+                globalPageProps={globalPageProps}
+              />
             );
           }
           case 'RedirectSectionRecord': {
@@ -212,7 +243,7 @@ const Content: ContentPage<PageProps, Query> = ({
             redirect(
               buildUrl(
                 globalPageProps,
-                `/${redirectSectionRecord.slugToRedirectTo}`,
+                `/${stripStega(redirectSectionRecord.slugToRedirectTo)}`,
               ),
             );
             return null;

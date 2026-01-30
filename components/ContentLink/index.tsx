@@ -11,6 +11,7 @@ export default function ContentLink() {
     <DatoContentLink
       onNavigateTo={(path) => router.push(path)}
       currentPath={pathname}
+      enableClickToEdit
     />
   );
 }

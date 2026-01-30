@@ -6,33 +6,20 @@ import {
   type CdaStructuredTextRecord,
 } from 'react-datocms/structured-text';
 
-function wrapBlockWithBoundary(
-  result: ReactElement | null,
-): ReactElement | null {
-  if (!result) return null;
-  return (
-    <div data-datocms-content-link-boundary key={result.key}>
-      {result}
-    </div>
-  );
-}
-
 function addBoundaryAttribute(
   result: ReactElement | null,
 ): ReactElement | null {
   if (!result) return null;
   return cloneElement(result, {
     'data-datocms-content-link-boundary': true,
-  });
+  } as Record<string, unknown>);
 }
 
 export default function DatoStructuredText<
   BlockRecord extends CdaStructuredTextRecord = CdaStructuredTextRecord,
   LinkRecord extends CdaStructuredTextRecord = CdaStructuredTextRecord,
   InlineBlockRecord extends CdaStructuredTextRecord = CdaStructuredTextRecord,
->(
-  props: StructuredTextPropTypes<BlockRecord, LinkRecord, InlineBlockRecord>,
-) {
+>(props: StructuredTextPropTypes<BlockRecord, LinkRecord, InlineBlockRecord>) {
   const {
     renderBlock,
     renderInlineRecord,
@@ -48,7 +35,7 @@ export default function DatoStructuredText<
         renderNode={renderNode ?? Highlighter}
         renderBlock={
           renderBlock
-            ? (ctx) => wrapBlockWithBoundary(renderBlock(ctx))
+            ? (ctx) => addBoundaryAttribute(renderBlock(ctx))
             : undefined
         }
         renderInlineRecord={
