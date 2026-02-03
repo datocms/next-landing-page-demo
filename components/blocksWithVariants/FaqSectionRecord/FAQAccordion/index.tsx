@@ -1,11 +1,10 @@
 'use client';
 
-import Highlighter from '@/components/Highlighter';
+import DatoStructuredText from '@/components/DatoStructuredText';
 import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { FaqSectionFragmentDoc } from '@/graphql/types/graphql';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 import ReactMarkdown from 'react-markdown';
 
 const closeIcon = (
@@ -112,10 +111,7 @@ const FAQAccordion = ({ fragment }: Props) => {
                     isOpen ? '' : ' hidden'
                   }`}
                 >
-                  <StructuredTextField
-                    data={question.answer}
-                    renderNode={Highlighter}
-                  />
+                  <DatoStructuredText data={question.answer} />
                 </motion.div>
               </motion.div>
             );

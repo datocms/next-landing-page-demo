@@ -6,7 +6,7 @@ import NewsletterCTABlock from '@/components/blocksWithVariants/NewsletterSubscr
 import TagButton from '@/components/blocksWithVariants/TagButton';
 
 import DatoImage from '@/components/DatoImage';
-import Highlighter from '@/components/Highlighter';
+import DatoStructuredText from '@/components/DatoStructuredText';
 import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
 import DateIcon from '@/components/svgs/DateIcon';
 import { buildUrl } from '@/utils/globalPageProps';
@@ -19,7 +19,7 @@ import {
 } from 'datocms-structured-text-utils';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { StructuredText, renderNodeRule } from 'react-datocms';
+import { renderNodeRule } from 'react-datocms/structured-text';
 import type { PageProps, Query } from './meta';
 
 const Content: ContentPage<PageProps, Query> = ({
@@ -87,9 +87,8 @@ const Content: ContentPage<PageProps, Query> = ({
                 </div>
               </div>
               <div>
-                <StructuredText
+                <DatoStructuredText
                   data={data.post.content}
-                  renderNode={Highlighter}
                   renderBlock={({ record }) => {
                     switch (record.__typename) {
                       case 'ImageBlockRecord': {

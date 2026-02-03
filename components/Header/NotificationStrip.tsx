@@ -1,4 +1,4 @@
-import Highlighter from '@/components/Highlighter';
+import DatoStructuredText from '@/components/DatoStructuredText';
 import type {
   CommonLayoutQuery,
   LayoutModelNotificationField,
@@ -13,10 +13,7 @@ import {
 } from 'datocms-structured-text-utils';
 import Link from 'next/link';
 import type { SetStateAction } from 'react';
-import {
-  StructuredText as StructuredTextField,
-  renderNodeRule,
-} from 'react-datocms/structured-text';
+import { renderNodeRule } from 'react-datocms/structured-text';
 
 type Props = {
   notification: NonNullable<CommonLayoutQuery['layout']>['notification'];
@@ -32,9 +29,8 @@ const NotificationStrip = ({
   return (
     <div className="bg-primary px-4 py-3 text-white">
       <div className="text-center text-sm font-medium">
-        <StructuredTextField
+        <DatoStructuredText
           data={notification}
-          renderNode={Highlighter}
           customNodeRules={[
             renderNodeRule(isLink, ({ node, children, key }) => {
               return (

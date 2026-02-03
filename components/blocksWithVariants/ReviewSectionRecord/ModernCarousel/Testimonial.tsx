@@ -1,8 +1,7 @@
 import DatoImage from '@/components/DatoImage';
-import Highlighter from '@/components/Highlighter';
+import DatoStructuredText from '@/components/DatoStructuredText';
 import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { TestimonialFragmentDoc } from '@/graphql/types/graphql';
-import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 
 type Props = {
   fragment: FragmentType<typeof TestimonialFragmentDoc>;
@@ -25,7 +24,7 @@ const Testimonial = ({ fragment }: Props) => {
 
       <div className="mt-8 lg:mt-0 lg:px-10">
         <div className="mt-6 max-w-lg text-gray-500 dark:text-gray-400">
-          <StructuredTextField data={review} renderNode={Highlighter} />
+          <DatoStructuredText data={review} />
         </div>
 
         <h3 className="mt-6 text-lg font-medium text-primary">

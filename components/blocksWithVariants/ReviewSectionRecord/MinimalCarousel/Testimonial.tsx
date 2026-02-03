@@ -1,9 +1,7 @@
 import DatoImage from '@/components/DatoImage';
-import Highlighter from '@/components/Highlighter';
+import DatoStructuredText from '@/components/DatoStructuredText';
 import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { TestimonialFragmentDoc } from '@/graphql/types/graphql';
-import { ReactNode } from 'react';
-import { StructuredText as StructuredTextField } from 'react-datocms/structured-text';
 
 type Props = {
   fragment: FragmentType<typeof TestimonialFragmentDoc>;
@@ -45,7 +43,7 @@ const Testimonial = ({ fragment, onPrev, onNext }: Props) => {
           </svg>
         </button>
         <div className="flex items-center text-center text-gray-500 lg:mx-8">
-          <StructuredTextField data={review} renderNode={Highlighter} />
+          <DatoStructuredText data={review} />
         </div>
         <button
           type="button"

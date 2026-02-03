@@ -31,7 +31,7 @@ export function generateWrapper<
   return async function Page(asyncPageProps: AsyncPageProps) {
     // Await the params to get resolved values
     const rawParams = await asyncPageProps.params;
-    
+
     const allLocales = await getAvailableLocales();
     if (!allLocales.includes(rawParams.locale as SiteLocale)) {
       notFound();
@@ -65,7 +65,8 @@ export function generateWrapper<
 
     return isDraft ? (
       <RealTime
-        token={process.env.DATOCMS_READONLY_API_TOKEN || ''}
+        token={process.env.DATOCMS_READONLY_API_TOKEN!}
+        baseEditingUrl={process.env.DATOCMS_BASE_EDITING_URL!}
         query={options.query}
         variables={variables}
         initialData={data}

@@ -22,6 +22,7 @@ export type RealtimeUpdatesPage<
   variables: TVariables;
   query: TypedDocumentNode<TResult, TVariables>;
   token: string;
+  baseEditingUrl: string;
   children?: React.ReactNode;
 }) => React.ReactNode;
 

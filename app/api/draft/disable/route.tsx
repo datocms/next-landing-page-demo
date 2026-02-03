@@ -4,12 +4,12 @@ import { redirect } from 'next/navigation';
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
-  const url = searchParams.get('url');
+  const redirectPath = searchParams.get('redirect');
 
   const draft = await draftMode();
   draft.disable();
 
-  if (!url) return new Response('Draft mode is disabled');
+  if (!redirectPath) return new Response('Draft mode is disabled');
 
   //to avoid losing the cookie on redirect in the iFrame
   const cookieStore = await cookies();
@@ -27,5 +27,5 @@ export async function GET(request: Request) {
     partitioned: true,
   });
 
-  redirect(url);
+  redirect(redirectPath);
 }

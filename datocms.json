@@ -21,6 +21,9 @@
     "CACHE_INVALIDATION_SECRET_TOKEN": {
       "type": "string",
       "value": "superSecretToken"
+    },
+    "DATOCMS_BASE_EDITING_URL": {
+      "type": "datocmsProjectUrl"
     }
   },
   "buildCommand": "npm run build",

@@ -13,6 +13,12 @@ export default async function queryDatoCMS<
     token: process.env.DATOCMS_READONLY_API_TOKEN!,
     excludeInvalid: true,
     includeDrafts: isDraft,
+    ...(isDraft
+      ? {
+          contentLink: 'v1' as const,
+          baseEditingUrl: process.env.DATOCMS_BASE_EDITING_URL,
+        }
+      : {}),
     variables,
     requestInitOptions: {
       cache: 'force-cache',

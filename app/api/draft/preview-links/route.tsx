@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
     // Generate a URL that initially enters Next.js Draft Mode, and then redirects to the desired URL
     previewLinks.push({
       label: 'Draft version',
-      url: `${websiteBaseUrl}/api/draft/enable?url=${url}&token=${token}`,
+      url: `${websiteBaseUrl}/api/draft/enable?token=${token}&redirect=${url}`,
     });
 
   // If status is not draft, it means that it has a published version!
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
     // Generate a URL that first exits from Next.js Draft Mode, and then redirects to the desired URL.
     previewLinks.push({
       label: 'Published version',
-      url: `${websiteBaseUrl}/api/draft/disable?url=${url}`,
+      url: `${websiteBaseUrl}/api/draft/disable?redirect=${url}`,
     });
 
   return Response.json({ previewLinks }, responseDefaults);

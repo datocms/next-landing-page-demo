@@ -1,12 +1,9 @@
-import Highlighter from '@/components/Highlighter';
+import DatoStructuredText from '@/components/DatoStructuredText';
 import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
 import transformDate from '@/utils/transformDate';
 import { isHeading, isParagraph } from 'datocms-structured-text-utils';
 import { notFound } from 'next/navigation';
-import {
-  StructuredText as StructuredTextField,
-  renderNodeRule,
-} from 'react-datocms/structured-text';
+import { renderNodeRule } from 'react-datocms/structured-text';
 import type { PageProps, Query } from './meta';
 
 const Content: ContentPage<PageProps, Query> = ({ data, params }) => {
@@ -28,7 +25,7 @@ const Content: ContentPage<PageProps, Query> = ({ data, params }) => {
               </span>
             </div>
             <div className="prose prose-md md:flex-grow">
-              <StructuredTextField
+              <DatoStructuredText
                 data={data.changeLog.content}
                 customNodeRules={[
                   renderNodeRule(isHeading, ({ children, key }) => {
@@ -49,7 +46,6 @@ const Content: ContentPage<PageProps, Query> = ({ data, params }) => {
                     );
                   }),
                 ]}
-                renderNode={Highlighter}
               />
             </div>
           </div>
