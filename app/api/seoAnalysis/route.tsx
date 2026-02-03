@@ -56,11 +56,13 @@ export async function GET(req: NextRequest) {
   const locale = searchParams.get('locale');
   const sandboxEnvironmentId = searchParams.get('sandboxEnvironmentId');
   const token = searchParams.get('token');
+  const datocmsApiToken = searchParams.get('datocmsApiToken');
 
   if (token !== process.env.SEO_SECRET_TOKEN)
     return new Response('Invalid token!', { status: 401, headers });
 
   if (
+    !datocmsApiToken ||
     !itemId ||
     !itemTypeApiKey ||
     !itemTypeId ||
@@ -74,14 +76,14 @@ export async function GET(req: NextRequest) {
   }
 
   const client = buildClient({
-    apiToken: process.env.DATOCMS_READONLY_API_TOKEN || '',
+    apiToken: datocmsApiToken,
     environment: sandboxEnvironmentId,
   });
 
   const item = await client.items.find(itemId);
 
   const [slug, permalink] = await findSlugAndPermalink(item, itemTypeApiKey, {
-    params: { locale: locale as SiteLocale },
+    params: { locale: locale as SiteLocale, apiToken: datocmsApiToken },
   });
 
   if (!permalink) {

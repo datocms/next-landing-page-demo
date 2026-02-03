@@ -3,14 +3,15 @@ import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
 
 export default async function queryDatoCMS<
   TResult = unknown,
-  TVariables = Record<string, unknown>,
+  TVariables = Record<string, unknown>
 >(
+  apiToken: string,
   document: TypedDocumentNode<TResult, TVariables>,
   variables?: TVariables,
-  isDraft?: boolean,
+  isDraft?: boolean
 ): Promise<TResult> {
   return executeQuery(document, {
-    token: process.env.DATOCMS_READONLY_API_TOKEN!,
+    token: apiToken,
     excludeInvalid: true,
     includeDrafts: isDraft,
     ...(isDraft

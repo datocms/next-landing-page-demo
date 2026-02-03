@@ -16,6 +16,8 @@
     "start": "next start",
     "lint": "next lint",
     "format": "biome check . --apply-unsafe --diagnostic-level=error && biome format --diagnostic-level=error --write .",
+    "beforeRebase": "mv 'app/[apiToken]/[locale]' 'app/[locale]'",
+    "afterRebase": "mv 'app/[locale]/' 'app/[apiToken]/[locale]'",
     "generate-ts-types": "graphql-codegen --config graphql.config.ts"
   },
   "dependencies": {
