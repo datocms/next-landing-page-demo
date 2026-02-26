@@ -41,6 +41,8 @@ import { notFound, redirect } from 'next/navigation';
 import type { PageProps, Query } from './meta';
 import { stripStega } from '@datocms/content-link';
 
+const normalizeDisplayOption = (value?: string) => stripStega(value || '');
+
 const Content: ContentPage<PageProps, Query> = ({
   data,
   ...globalPageProps
@@ -63,7 +65,7 @@ const Content: ContentPage<PageProps, Query> = ({
             );
           }
           case 'HeroSectionRecord': {
-            switch (section.displayOptions) {
+            switch (normalizeDisplayOption(section.displayOptions)) {
               case 'gradient':
                 return <GradientHero key={section.id} fragment={section} />;
               case 'right_image':
@@ -80,7 +82,7 @@ const Content: ContentPage<PageProps, Query> = ({
           }
 
           case 'FeatureListSectionRecord': {
-            switch (section.displayOption) {
+            switch (normalizeDisplayOption(section.displayOption)) {
               case 'card_minimal':
                 return (
                   <MinimalCardsFeature key={section.id} fragment={section} />
@@ -110,7 +112,7 @@ const Content: ContentPage<PageProps, Query> = ({
             return <Video key={section.id} fragment={section} />;
           }
           case 'BrandSectionRecord': {
-            switch (section.displayOptions) {
+            switch (normalizeDisplayOption(section.displayOptions)) {
               case 'brand_cards':
                 return <BrandCards key={section.id} fragment={section} />;
               default:
@@ -121,7 +123,7 @@ const Content: ContentPage<PageProps, Query> = ({
             return <DetailSection key={section.id} fragment={section} />;
           }
           case 'ReviewSectionRecord': {
-            switch (section.displayOptions) {
+            switch (normalizeDisplayOption(section.displayOptions)) {
               case 'card_carrousel':
                 return <Carousel key={section.id} fragment={section} />;
               case 'modern_carrousel':
@@ -138,7 +140,7 @@ const Content: ContentPage<PageProps, Query> = ({
           }
 
           case 'PricingSectionRecord': {
-            switch (section.displayOption) {
+            switch (normalizeDisplayOption(section.displayOption)) {
               case 'cards_gradient':
                 return <GradientCards key={section.id} fragment={section} />;
               case 'minimal':
@@ -155,7 +157,7 @@ const Content: ContentPage<PageProps, Query> = ({
           }
 
           case 'FeaturedPostsSectionRecord': {
-            switch (section.displayOptions) {
+            switch (normalizeDisplayOption(section.displayOptions)) {
               case 'modern_cards':
                 return (
                   <ModernPostCards
@@ -165,6 +167,14 @@ const Content: ContentPage<PageProps, Query> = ({
                   />
                 );
               case 'carrousel':
+                return (
+                  <CarouselFeaturedPosts
+                    key={section.id}
+                    globalPageProps={globalPageProps}
+                    fragment={section}
+                  />
+                );
+              case 'carousel':
                 return (
                   <CarouselFeaturedPosts
                     key={section.id}
@@ -200,7 +210,7 @@ const Content: ContentPage<PageProps, Query> = ({
           }
 
           case 'TeamSectionRecord': {
-            if (section.displayOptions === 'compact')
+            if (normalizeDisplayOption(section.displayOptions) === 'compact')
               return (
                 <CompactTeam
                   key={section.id}
@@ -217,7 +227,7 @@ const Content: ContentPage<PageProps, Query> = ({
             );
           }
           case 'FaqSectionRecord': {
-            if (section.displayOptions === 'accordion') {
+            if (normalizeDisplayOption(section.displayOptions) === 'accordion') {
               return <FAQAccordion key={section.id} fragment={section} />;
             }
 
