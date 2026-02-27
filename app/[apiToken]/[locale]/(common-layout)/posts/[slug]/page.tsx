@@ -3,7 +3,7 @@ import { generateWrapper } from '@/components/WithRealTimeUpdates/generateWrappe
 import type { BuildVariablesFn } from '@/components/WithRealTimeUpdates/types';
 import Content from './Content';
 import RealTime from './RealTime';
-import { type PageProps, type Query, type Variables, query } from './meta';
+import { query, type PageProps, type Query, type Variables } from './meta';
 
 const buildVariables: BuildVariablesFn<PageProps, Variables> = ({
   params,
@@ -18,17 +18,13 @@ export const generateMetadata = generateMetadataFn<PageProps, Query, Variables>(
   {
     query,
     buildVariables,
-    generate: (data) => data.documentationPage?.seo,
+    generate: (data) => data.post?.seo,
   },
 );
 
 const Page = generateWrapper<PageProps, Query, Variables>({
   query,
-  buildVariables: ({ params, fallbackLocale }) => ({
-    locale: params.locale,
-    fallbackLocale: [fallbackLocale],
-    slug: params.slug,
-  }),
+  buildVariables,
   contentComponent: Content,
   realtimeComponent: RealTime,
 });

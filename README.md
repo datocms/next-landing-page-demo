@@ -1,116 +1,115 @@
-<!--datocms-autoinclude-header start-->
+# Company Website Demo — explicit API token variant
 
-<a href="https://www.datocms.com/"><img src="https://www.datocms.com/images/full_logo.svg" height="60"></a>
+This branch is a variant of the `main` branch of this repo. On `main`, the site reads its DatoCMS API tokens from environment variables. On this branch, the token is the first segment of every URL:
 
-👉 [Visit the DatoCMS homepage](https://www.datocms.com) or see [What is DatoCMS?](#what-is-datocms)
+```
+https://<your-deployment>/<datocms-api-token>/<locale>/<path>
+```
 
----
+This lets a single deployment serve content from any DatoCMS project that has the same schema. Just change the token in the URL.
 
-<!--datocms-autoinclude-header end-->
+> [!WARNING]
+> The token ends up in browser history, server logs, and referrer headers. Only use a **read-only API token** that you are happy to expose.
 
-# A Company Website Demo using Next.js 16 and DatoCMS
+## Used by try.datocms.com
 
-This example showcases a TypeScript Next.js 16 website with App Router (app) — using [DatoCMS](https://www.datocms.com/) as the data source.
+This branch is the frontend of the [try.datocms.com](https://try.datocms.com) experience. That service lives in the private `datocms/try.datocms.com` repo.
 
-## Next.js 16 Features
+The `try-datocms-frontend` Vercel project, in the DatoCMS team, deploys this branch to `https://try-datocms-frontend.vercel.app`. When a visitor opens try.datocms.com, a Cloudflare Worker does the following:
 
-This demo takes advantage of the latest Next.js 16 features.
+1. It creates a throwaway DatoCMS project from the starter template.
+2. It creates the "Demo website" API token. The token reads content (drafts included) with both APIs. Its role can also manage shared filters: only such a role can read the admin domain that Content Link needs.
+3. It installs the Web Previews plugin:
+   - The preview webhook is `/api/draft/preview-links?datocmsApiToken=<Demo website token>`. The shared secret goes in the `Authorization: Bearer …` header.
+   - The Visual Editing draft-mode URL is `/api/draft/enable?token=…`. A browser opens it, so the secret stays in the query string.
+   - The Visual Editing initial path is `/<Demo website token>/en/`.
+4. It installs the SEO/Readability Analysis plugin. Its HTML generator URL is `/api/seoAnalysis?datocmsApiToken=<Demo website token>`, with the same `Authorization` header.
+5. It sends the visitor into the new project.
 
-It uses GraphQL CodeGen to type all of the requests coming from DatoCMS automatically: [See how it works here](https://www.datocms.com/blog/how-to-generate-typescript-types-from-graphql)
+Every throwaway project uses this same deployment, so nothing gets deployed per visitor. The token in the URL decides which content the site shows.
 
-## DatoCMS Integration
+Because of this, **treat changes on this branch as changes to try.datocms.com**:
 
-This project uses the official [`@datocms/cda-client`](https://github.com/datocms/cda-client) package for querying the DatoCMS Content Delivery API. This lightweight TypeScript client provides:
+- Keep the URL shape `/<token>/<locale>/…` stable.
+- Keep the `datocmsApiToken` query parameter on both webhooks.
+- Keep the shared secret check compatible with what the Worker sends. The secret lives in `src/worker/routes/createProject.ts` in that repo. It must match `DRAFT_SECRET_TOKEN` and `SEO_SECRET_TOKEN` on the Vercel project.
+- Deploy both sides together when you change this contract.
 
-- Full TypeScript support with `TypedDocumentNode`
-- Automatic retry on rate limits
-- Support for draft content previews
-- Seamless integration with Next.js caching
+## What changes compared to `main`
 
-Additionally, [`react-datocms`](https://github.com/datocms/react-datocms) is used for real-time updates, responsive images, and SEO metadata handling.
+- All routes live under `app/[apiToken]/[locale]/` instead of `app/[locale]/`.
+- `proxy.ts` reads the token from the path and uses it to fetch the available locales. It then redirects to `/<token>/<locale>/home` when needed.
+- `queryDatoCMS()`, `getAvailableLocales()` and `getFallbackLocale()` take the token as their first argument.
+- In draft mode, the real-time updates use the token from the URL.
+- Content Link gets the admin URL of each project from the token (see `utils/getBaseEditingUrl.ts`). The Next.js Data Cache keeps it for one day.
+- `buildUrl()` in `utils/globalPageProps.ts` puts the token in front of every internal link.
+- The Web Previews and SEO Analysis webhooks expect a `datocmsApiToken` query parameter. The shared secret still travels in the `Authorization: Bearer …` header.
+- `generateStaticParams()` is gone from the page and post routes, because the token is only known at request time.
+- The one-click deploy setup is gone: `datocms.json` and `app/api/post-install` are deleted.
 
-## Demo
-
-Have a look at the end result live:
-
-### [https://company-website-demo-preview.vercel.app/](https://company-website-demo-preview.vercel.app/)
-
-## How to use
-
-### Quick start
-
-1. [Create an account on DatoCMS](https://datocms.com).
-
-2. Make sure that you have set up the [Github integration on Vercel](https://vercel.com/docs/git/vercel-for-github).
-
-3. Let DatoCMS set everything up for you clicking this button below:
-
-[![Deploy with DatoCMS](https://dashboard.datocms.com/deploy/button.svg)](https://dashboard.datocms.com/deploy?repo=marcelofinamorvieira%2Fsaas-starter%3Amain)
-
-### Local setup
-
-Once the setup of the project and repo is done, clone the repo locally.
-
-#### Set up environment variables
-
-In your DatoCMS' project, go to the **Settings** menu at the top and click **API tokens**.
-
-Create three DatoCMS API tokens: `CDA Only (Published)`, `CDA Only (Draft)`, and `CMA Only (Read)`.
-
-Next, copy the `.env.example` file in this directory to `.env` (which will be ignored by Git):
+## Local setup
 
 ```bash
 cp .env.example .env
+npm install
+npm run dev
 ```
 
-and set `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `DATOCMS_DRAFT_CONTENT_CDA_TOKEN`, and `DATOCMS_CMA_TOKEN` with the matching token values.
+Fill in `.env`:
 
-Then set the three secret tokens that guard the endpoints used for Web Previews, SEO Previews and cache invalidation. Generate a different, cryptographically-secure random string for each of them (`openssl rand -hex 32` is a good way to do it) — never reuse the same value across projects:
+| Variable | Purpose |
+| --- | --- |
+| `URL` | Public base URL, used to build preview links |
+| `DRAFT_SECRET_TOKEN` | Secret for `/api/draft/enable` and the Web Previews webhook |
+| `SEO_SECRET_TOKEN` | Secret for the SEO Analysis webhook |
+| `CACHE_INVALIDATION_SECRET_TOKEN` | Secret for the cache revalidation webhook |
+| `DATOCMS_BASE_EDITING_URL` | Optional. Admin URL for Content Link when the token cannot read the project, for example a Content Delivery API-only token. Without it, Content Link is off for such tokens |
 
-```
-URL=http://localhost:3000
-SEO_SECRET_TOKEN=<random string>
-DRAFT_SECRET_TOKEN=<random string>
-CACHE_INVALIDATION_SECRET_TOKEN=<random string>
-```
+Then open `http://localhost:3000/<datocms-api-token>`.
 
-> If you deployed this demo with the "Deploy with DatoCMS" button, these three secrets were generated randomly for you and shown on the last step of the setup wizard. If you no longer have them, set new ones from your hosting provider's environment variable settings.
+### Plugins and webhooks
 
-#### Run your project locally
+There is no post-install step. For try.datocms.com projects, the Worker configures the plugins (see above). For any other project, you must configure these by hand:
+
+- **Web Previews:** set the preview webhook to `<URL>/api/draft/preview-links?datocmsApiToken=<token>`, and add the header `Authorization: Bearer <DRAFT_SECRET_TOKEN>`.
+- **SEO/Readability Analysis:** set the HTML generator URL to `<URL>/api/seoAnalysis?datocmsApiToken=<token>`, and add the header `Authorization: Bearer <SEO_SECRET_TOKEN>`. The SEO route uses this token with the Content Management API, so it needs read access to records.
+- **Cache revalidation webhook:** point it to `<URL>/api/revalidateCache`, with the header `Authorization: Bearer <CACHE_INVALIDATION_SECRET_TOKEN>`.
+
+## Keeping this branch in sync with `main`
+
+This branch is always **a single commit** on top of `main`. The commit moves `app/[locale]` to `app/[apiToken]/[locale]`. If you rebase that move as it is, git reports a conflict for every route file that changed on `main`.
+
+To avoid that, move the routes back before the rebase and move them again after it. The two npm scripts do this for you:
 
 ```bash
-pnpm install
-pnpm dev
+git switch explicit-api-token
+
+# 1. Move the routes back to app/[locale] and fold that into the commit
+npm run beforeRebase
+git add -A
+git commit --amend --no-edit
+
+# 2. Rebase. Now only real content changes can conflict.
+git rebase main
+# ...fix the conflicts, then `git add` the files you fixed (do not continue yet)
+
+# 3. Move the routes back under app/[apiToken] and finish the rebase
+npm run afterRebase
+git add -A
+git rebase --continue
+
+# 4. Publish the rewritten branch
+git push --force-with-lease origin explicit-api-token
 ```
 
-Your blog should be up and running on [http://localhost:3000](http://localhost:3000)!
+When you resolve conflicts:
 
-## VS Code
+- **Environment tokens:** if `main` reads a DatoCMS token from `process.env`, replace it with the token from the route params or from the `datocmsApiToken` query parameter.
+- **Deleted files:** `main` can change `datocms.json` or `app/api/post-install`. Keep these files deleted with `git rm`.
+- **New helpers and routes:** check them for new `queryDatoCMS()` calls or URLs built by hand. Such calls must pass the token, and such URLs must go through `buildUrl()`.
+- **Type check:** run `npx tsc --noEmit` before `git rebase --continue`. You can ignore errors from `.next/`, because they come from old generated route paths.
 
-It's strongly suggested to install the [GraphQL: Language Feature Support](https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql) extension, to get autocomplete suggestions, validation against schema, and many more niceties when working with your GraphQL queries.
+## Known gaps
 
-<!--datocms-autoinclude-footer start-->
-
----
-
-# What is DatoCMS?
-
-<a href="https://www.datocms.com/"><img src="https://www.datocms.com/images/full_logo.svg" height="60" alt="DatoCMS - The Headless CMS for the Modern Web"></a>
-
-[DatoCMS](https://www.datocms.com/) is Headless CMS for the modern web. Trusted by 25,000+ businesses, agencies, and individuals, it gives your team one place to manage content and ship it to any website, app, or device via API.
-
-**New here?** Start with [Create free account](https://dashboard.datocms.com/signup) and the [Documentation](https://www.datocms.com/docs). Stuck? Ask the [Community](https://community.datocms.com/). Curious what's new? [Product Updates](https://www.datocms.com/product-updates).
-
-**Building with AI:** [Agent Skills](https://www.datocms.com/docs/agent-skills) turn coding assistants (Claude Code, Cursor) into expert DatoCMS developers, with full read/write via the auto-installed CLI. No local terminal? Use the [MCP Server](https://www.datocms.com/docs/mcp-server) instead.
-
-**Talking to DatoCMS from code:**
-- [Content Delivery API](https://www.datocms.com/docs/content-delivery-api) (CDA) — the fast, read-only GraphQL API your website/app uses to **fetch** published content.
-- [Content Management API](https://www.datocms.com/docs/content-management-api) (CMA) — the REST API for **creating and updating** content, models, and project settings (think scripts, migrations, integrations).
-- [CLI](https://www.datocms.com/docs/scripting-migrations/installing-the-cli) — terminal tool for schema migrations and importing from Contentful/WordPress.
-
-**Framework guides:** end-to-end recipes for fetching content, rendering Structured Text, optimizing images/video, handling SEO, and setting up live preview with visual editing in [Next.js](https://www.datocms.com/docs/next-js), [Nuxt](https://www.datocms.com/docs/nuxt), [Svelte](https://www.datocms.com/docs/svelte), and [Astro](https://www.datocms.com/docs/astro).
-
-**Want a head start?** Browse our [starter projects](https://www.datocms.com/marketplace/starters) — ready-to-deploy example sites for popular frameworks.
-
-
-<!--datocms-autoinclude-footer end-->
+- `proxy.ts` redirects to `/no-api-token` when the URL has no token, but no page exists for that path yet.
+- `utils/cachedQueryDatoCMS.ts` and `graphql.config.ts` still read `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`. No page uses the cached helper. For type generation, set the variable to any token for a project with the same schema.

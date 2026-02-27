@@ -25,7 +25,7 @@ export default function WithRealTimeUpdates<
   ) => React.ReactNode;
   pageProps: PageProps;
   token: string;
-  baseEditingUrl: string;
+  baseEditingUrl?: string;
 }) {
   const { data } = useQuerySubscription({
     query,
@@ -33,8 +33,8 @@ export default function WithRealTimeUpdates<
     token,
     initialData,
     includeDrafts: true,
-    contentLink: 'v1',
-    baseEditingUrl,
+    // Content Link needs the admin URL. Without it, the API returns an error.
+    ...(baseEditingUrl ? { contentLink: 'v1' as const, baseEditingUrl } : {}),
   });
 
   if (!data) return null;

@@ -64,10 +64,17 @@ export async function OPTIONS(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  // The token is sent by the plugin as a request header (see /api/post-install)
+  // The plugin sends the token in a request header
   const token = request.headers.get('authorization')?.replace(/^Bearer /, '');
 
-  if (!token || token !== process.env.DRAFT_SECRET_TOKEN)
+  const { searchParams } = new URL(request.url);
+  const datocmsApiToken = searchParams.get('datocmsApiToken');
+
+  if (
+    !token ||
+    token !== process.env.DRAFT_SECRET_TOKEN ||
+    !datocmsApiToken
+  )
     return new Response('Invalid token', { ...responseDefaults, status: 401 });
 
   // The Web Previews plugin sends the record and model for which the user wants a preview,
@@ -75,7 +82,9 @@ export async function POST(request: NextRequest) {
   const { item, itemType, locale } = await request.json();
 
   // We can use this info to generate the frontend URL associated
-  const url = generatePreviewUrl(item, itemType, { params: { locale } });
+  const url = generatePreviewUrl(item, itemType, {
+    params: { locale, apiToken: datocmsApiToken },
+  });
 
   // If we don't have an URL for the record, simply return an empty array
   if (!url) {

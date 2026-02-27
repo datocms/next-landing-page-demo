@@ -1,5 +1,6 @@
 import getAvailableLocales, { getFallbackLocale } from '@/app/i18n/settings';
 import type { SiteLocale } from '@/graphql/types/graphql';
+import getBaseEditingUrl from '@/utils/getBaseEditingUrl';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import queryDatoCMS from '@/utils/queryDatoCMS';
 import type { TypedDocumentNode } from '@graphql-typed-document-node/core';
@@ -13,7 +14,11 @@ import type {
 
 // Input props from Next.js with Promise-based params (string-based locale)
 type AsyncPageProps = {
-  params: Promise<{ locale: string; [key: string]: string | number }>;
+  params: Promise<{
+    locale: string;
+    apiToken: string;
+    [key: string]: string | number;
+  }>;
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
   children?: React.ReactNode;
 };
@@ -32,7 +37,7 @@ export function generateWrapper<
     // Await the params to get resolved values
     const rawParams = await asyncPageProps.params;
 
-    const allLocales = await getAvailableLocales();
+    const allLocales = await getAvailableLocales(rawParams.apiToken);
     if (!allLocales.includes(rawParams.locale as SiteLocale)) {
       notFound();
     }
@@ -43,7 +48,7 @@ export function generateWrapper<
       locale: rawParams.locale as SiteLocale,
     };
 
-    const fallbackLocale = await getFallbackLocale();
+    const fallbackLocale = await getFallbackLocale(rawParams.apiToken);
     const { isEnabled: isDraft } = await draftMode();
 
     // Build resolved page props (without searchParams)
@@ -59,14 +64,19 @@ export function generateWrapper<
         fallbackLocale,
       }) || ({} as TVariables);
 
-    const data = await queryDatoCMS(options.query, variables, isDraft);
+    const data = await queryDatoCMS(
+      pageProps.params.apiToken,
+      options.query,
+      variables,
+      isDraft,
+    );
 
     const { realtimeComponent: RealTime, contentComponent: Content } = options;
 
     return isDraft ? (
       <RealTime
-        token={process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!}
-        baseEditingUrl={process.env.DATOCMS_BASE_EDITING_URL!}
+        token={pageProps.params.apiToken}
+        baseEditingUrl={await getBaseEditingUrl(pageProps.params.apiToken)}
         query={options.query}
         variables={variables}
         initialData={data}

@@ -55,8 +55,9 @@ export async function GET(req: NextRequest) {
   const itemTypeApiKey = searchParams.get('itemTypeApiKey');
   const locale = searchParams.get('locale');
   const sandboxEnvironmentId = searchParams.get('sandboxEnvironmentId');
+  const datocmsApiToken = searchParams.get('datocmsApiToken');
 
-  // The token is sent by the plugin as a request header (see /api/post-install)
+  // The plugin sends the token in a request header
   const token = req.headers.get('authorization')?.replace(/^Bearer /, '');
 
   if (!token || token !== process.env.SEO_SECRET_TOKEN)
@@ -64,6 +65,7 @@ export async function GET(req: NextRequest) {
 
   try {
     if (
+      !datocmsApiToken ||
       !itemId ||
       !itemTypeApiKey ||
       !itemTypeId ||
@@ -77,14 +79,14 @@ export async function GET(req: NextRequest) {
     }
 
     const client = buildClient({
-      apiToken: process.env.DATOCMS_CMA_TOKEN || '',
+      apiToken: datocmsApiToken,
       environment: sandboxEnvironmentId,
     });
 
     const item = await client.items.find(itemId);
 
     const [slug, permalink] = await findSlugAndPermalink(item, itemTypeApiKey, {
-      params: { locale: locale as SiteLocale },
+      params: { locale: locale as SiteLocale, apiToken: datocmsApiToken },
     });
 
     if (!permalink) {

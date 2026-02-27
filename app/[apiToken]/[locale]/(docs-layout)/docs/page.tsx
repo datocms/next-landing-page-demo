@@ -2,7 +2,7 @@ import { generateMetadataFn } from '@/components/WithRealTimeUpdates/generateMet
 import { generateWrapper } from '@/components/WithRealTimeUpdates/generateWrapper';
 import Content from './Content';
 import RealTime from './RealTime';
-import { type PageProps, type Query, type Variables, query } from './meta';
+import { query, type PageProps, type Query, type Variables } from './meta';
 
 export const generateMetadata = generateMetadataFn<PageProps, Query, Variables>(
   {
