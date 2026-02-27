@@ -3,10 +3,14 @@ import { match } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
 import { type NextRequest, NextResponse } from 'next/server';
 import type { SiteLocale } from './graphql/types/graphql';
+import {
+  ResolvedGlobalPageProps,
+  buildUrl as buildUrlForPage,
+} from './utils/globalPageProps';
 
 async function findBestLocaleForVisitor(
   request: Request,
-  locales: SiteLocale[],
+  locales: SiteLocale[]
 ): Promise<SiteLocale> {
   const headers = new Headers(request.headers);
   const acceptLanguage = headers.get('accept-language');
@@ -16,33 +20,53 @@ async function findBestLocaleForVisitor(
 
   const headersObject = Object.fromEntries(headers.entries());
   const reformattedLocales = locales.map((locale) =>
-    locale.replaceAll('_', '-'),
+    locale.replaceAll('_', '-')
   );
-  const languages = new Negotiator({ headers: headersObject }).languages(reformattedLocales);
+  const languages = new Negotiator({ headers: headersObject }).languages(
+    reformattedLocales
+  );
   const detectedLocale = match(
     languages,
     reformattedLocales,
-    reformattedLocales[0],
+    reformattedLocales[0]
   );
   const detectedLocaleAsSiteLocale = detectedLocale.replaceAll(
     '-',
-    '_',
+    '_'
   ) as SiteLocale;
 
   return detectedLocaleAsSiteLocale;
 }
 
-function buildUrl(locale: SiteLocale, path: string) {
-  return `/${locale}${path || ''}`;
+function buildUrl(apiToken: string, locale: SiteLocale, path: string) {
+  const simulatedPageProps: ResolvedGlobalPageProps = {
+    params: {
+      locale,
+      apiToken,
+    },
+  };
+
+  return buildUrlForPage(simulatedPageProps, path);
 }
 
 export default async function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname: pathnameWithApiToken } = request.nextUrl;
 
-  const locales = await getAvailableLocales();
+  const apiToken = pathnameWithApiToken.match(/^\/([^\/$]+)/)?.[1];
+
+  if (!apiToken) {
+    return NextResponse.redirect(new URL('/no-api-token', request.url));
+  }
+
+  const pathname = pathnameWithApiToken.replace(
+    new RegExp(`^/${apiToken}`),
+    ''
+  );
+
+  const locales = await getAvailableLocales(apiToken);
 
   const localeInPathname = locales.find((locale) =>
-    pathname.match(new RegExp(`^/${locale}($|/)`)),
+    pathname.match(new RegExp(`^/${locale}($|/)`))
   );
 
   const normalizedLocale =
@@ -58,19 +82,16 @@ export default async function proxy(request: NextRequest) {
       : '/home';
 
   const normalizedPathname = buildUrl(
+    apiToken,
     normalizedLocale,
-    normalizedPathnameWithoutLocale,
+    normalizedPathnameWithoutLocale
   );
 
-  if (pathname !== normalizedPathname) {
+  if (pathnameWithApiToken !== normalizedPathname) {
     return NextResponse.redirect(new URL(normalizedPathname, request.url));
   }
 }
 
 export const config = {
-  matcher: ['/((?!.*\\.|_next|api\\/).*)'],
+  matcher: ['/((?!.*\\.|_next|api\\/|no-api-token).*)'],
 };
-
-
-
-

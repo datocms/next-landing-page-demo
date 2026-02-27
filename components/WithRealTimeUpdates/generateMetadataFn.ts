@@ -7,36 +7,40 @@ import type { Metadata } from 'next';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import {
+  toNextMetadata,
   type SeoOrFaviconTag,
   type TitleMetaLinkTag,
-  toNextMetadata,
 } from 'react-datocms/seo';
 import type { BuildVariablesFn } from './types';
 
 // Input props from Next.js with Promise-based params (string-based locale)
 type AsyncPageProps = {
-  params: Promise<{ locale: string; [key: string]: string | number }>;
+  params: Promise<{
+    locale: string;
+    apiToken: string;
+    [key: string]: string | number;
+  }>;
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export function generateMetadataFn<
   PageProps extends ResolvedGlobalPageProps,
   TResult = unknown,
-  TVariables = Record<string, unknown>,
+  TVariables = Record<string, unknown>
 >(options: {
   query: TypedDocumentNode<TResult, TVariables>;
   buildVariables?: BuildVariablesFn<PageProps, TVariables>;
   generate: (
-    data: TResult,
+    data: TResult
   ) => TitleMetaLinkTag[] | SeoOrFaviconTag[] | undefined;
 }) {
   return async function generateMetadata(
-    asyncPageProps: AsyncPageProps,
+    asyncPageProps: AsyncPageProps
   ): Promise<Metadata> {
     // Await the params to get resolved values
     const rawParams = await asyncPageProps.params;
-    
-    const allLocales = await getAvailableLocales();
+
+    const allLocales = await getAvailableLocales(rawParams.apiToken);
 
     if (!allLocales.includes(rawParams.locale as SiteLocale)) {
       notFound();
@@ -48,7 +52,7 @@ export function generateMetadataFn<
       locale: rawParams.locale as SiteLocale,
     };
 
-    const fallbackLocale = await getFallbackLocale();
+    const fallbackLocale = await getFallbackLocale(rawParams.apiToken);
     const { isEnabled: isDraft } = await draftMode();
 
     // Build resolved page props
@@ -64,7 +68,12 @@ export function generateMetadataFn<
         fallbackLocale,
       }) || ({} as TVariables);
 
-    const data = await queryDatoCMS(options.query, variables, isDraft);
+    const data = await queryDatoCMS(
+      pageProps.params.apiToken,
+      options.query,
+      variables,
+      isDraft
+    );
 
     const tags = options.generate(data);
 

@@ -3,11 +3,13 @@ import type { SiteLocale } from '@/graphql/types/graphql';
 // Base params type from Next.js (string-based)
 export type BaseParams = {
   locale: string;
+  apiToken: string;
 };
 
 // Resolved params type with validated SiteLocale (after awaiting and validating)
 export type ResolvedParams = {
   locale: SiteLocale;
+  apiToken: string;
 };
 
 // Page props with Promise-based params (Next.js 16+)
@@ -22,6 +24,11 @@ export type ResolvedGlobalPageProps = {
   params: ResolvedParams;
 };
 
-export function buildUrl(globalPageProps: ResolvedGlobalPageProps, path?: string) {
-  return `/${globalPageProps.params.locale}${path || ''}`;
+export function buildUrl(
+  globalPageProps: ResolvedGlobalPageProps,
+  path?: string
+) {
+  return `/${globalPageProps.params.apiToken}/${globalPageProps.params.locale}${
+    path || ''
+  }`;
 }

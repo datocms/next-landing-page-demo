@@ -67,8 +67,9 @@ export async function POST(request: NextRequest) {
   const { searchParams } = new URL(request.url);
 
   const token = searchParams.get('token');
+  const datocmsApiToken = searchParams.get('datocmsApiToken');
 
-  if (token !== process.env.DRAFT_SECRET_TOKEN)
+  if (token !== process.env.DRAFT_SECRET_TOKEN || !datocmsApiToken)
     return new Response('Invalid token', { ...responseDefaults, status: 401 });
 
   // The Web Previews plugin sends the record and model for which the user wants a preview,
@@ -76,7 +77,9 @@ export async function POST(request: NextRequest) {
   const { item, itemType, locale } = await request.json();
 
   // We can use this info to generate the frontend URL associated
-  const url = generatePreviewUrl(item, itemType, { params: { locale } });
+  const url = generatePreviewUrl(item, itemType, {
+    params: { locale, apiToken: datocmsApiToken },
+  });
 
   // If we don't have an URL for the record, simply return an empty array
   if (!url) {
