@@ -1,0 +1,6 @@
+interface:
+  display_name: "Landing Page Demo Docs"
+  short_description: "Adjust documentation pages"
+  default_prompt: "Use $landing-page-demo-docs to add or adjust documentation pages, sidebar structure, or docs home content in this starter."
+policy:
+  allow_implicit_invocation: true

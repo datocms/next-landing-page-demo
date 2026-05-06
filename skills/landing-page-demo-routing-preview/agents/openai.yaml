@@ -1,0 +1,6 @@
+interface:
+  display_name: "Landing Page Demo Routing Preview"
+  short_description: "Adjust routes and previews"
+  default_prompt: "Use $landing-page-demo-routing-preview to add or fix record-backed routes, preview links, metadata, or SEO-analysis mapping in this starter."
+policy:
+  allow_implicit_invocation: true

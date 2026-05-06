@@ -1,0 +1,6 @@
+interface:
+  display_name: "Landing Page Demo Content Records"
+  short_description: "Adjust site content records"
+  default_prompt: "Use $landing-page-demo-content-records to add or adjust posts, authors, tags, testimonials, pricing tiers, changelog entries, or legal pages in this starter."
+policy:
+  allow_implicit_invocation: true

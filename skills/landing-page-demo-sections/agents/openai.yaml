@@ -1,0 +1,6 @@
+interface:
+  display_name: "Landing Page Demo Sections"
+  short_description: "Adjust landing page sections"
+  default_prompt: "Use $landing-page-demo-sections to add or adjust a page body section in this starter."
+policy:
+  allow_implicit_invocation: true
