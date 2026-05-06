@@ -1,0 +1,6 @@
+interface:
+  display_name: "Landing Page Demo Layout"
+  short_description: "Adjust shared site layout"
+  default_prompt: "Use $landing-page-demo-layout to change the header, footer, navigation, logo, notification bar, or theme color in this starter."
+policy:
+  allow_implicit_invocation: true
