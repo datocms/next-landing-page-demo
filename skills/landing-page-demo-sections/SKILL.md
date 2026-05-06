@@ -3,10 +3,12 @@ name: landing-page-demo-sections
 description: >-
   Use for regular marketing page section work in the DatoCMS landing page demo
   starter, especially requests to add, remove, reorder, restyle, or wire page
-  sections on Page.records through Page.sections. Covers Hero, Feature List,
-  Brands, Video, Detail, Testimonials, Pricing, Featured Posts, Team, FAQ,
-  Stats, About Intro, All Posts, Redirect, and Changelog section blocks plus
-  their display variants. Handles app/[locale]/(common-layout)/[slug]/query.graphql,
+  sections on Page.records through Page.sections. Trigger on natural requests
+  such as changing hero variants like split image, right image, background image,
+  or gradient, moving a section on a page, or showing a changelog teaser. Covers
+  Hero, Feature List, Brands, Video, Detail, Testimonials, Pricing, Featured
+  Posts, Team, FAQ, Stats, About Intro, All Posts, Redirect, and Changelog
+  section blocks plus their display variants. Handles app/[locale]/(common-layout)/[slug]/query.graphql,
   app/[locale]/(common-layout)/[slug]/Content.tsx, and
   components/blocksWithVariants/** fragments/renderers. Do not use for shared
   header/footer/navigation/theme layout, docs pages/sidebar, existing content

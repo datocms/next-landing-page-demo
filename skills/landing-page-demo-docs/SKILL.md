@@ -3,8 +3,8 @@ name: landing-page-demo-docs
 description: >-
   Use for documentation-area work in the DatoCMS landing page demo starter:
   documentation home, documentation pages, docs tree structure, docs sidebar,
-  highlighted docs pages, docs page Structured Text rendering, docs metadata,
-  and /docs routes. Handles Documentation Home, Documentation Page,
+  highlighted docs pages, docs home footer text, docs page Structured Text
+  rendering, docs metadata, and /docs routes. Handles Documentation Home, Documentation Page,
   app/[locale]/(docs-layout)/**, components/DocumentationSidebarItem/**,
   components/FeaturedDocumentationPages/**, components/DatoStructuredText/**,
   QuoteBlock, and docs code/quote rendering. Do not use for regular marketing
