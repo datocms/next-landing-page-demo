@@ -6,7 +6,7 @@ const config: IGraphQLConfig = {
     {
       'https://graphql.datocms.com': {
         headers: {
-          Authorization: `Bearer ${process.env.DATOCMS_READONLY_API_TOKEN}`,
+          Authorization: `Bearer ${process.env.DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN}`,
           'X-Exclude-Invalid': 'true',
         },
       },

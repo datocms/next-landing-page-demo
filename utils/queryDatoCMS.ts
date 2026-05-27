@@ -10,7 +10,9 @@ export default async function queryDatoCMS<
   isDraft?: boolean,
 ): Promise<TResult> {
   return executeQuery(document, {
-    token: process.env.DATOCMS_READONLY_API_TOKEN!,
+    token: isDraft
+      ? process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!
+      : process.env.DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN!,
     excludeInvalid: true,
     includeDrafts: isDraft,
     ...(isDraft

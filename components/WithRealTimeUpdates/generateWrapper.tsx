@@ -65,7 +65,7 @@ export function generateWrapper<
 
     return isDraft ? (
       <RealTime
-        token={process.env.DATOCMS_READONLY_API_TOKEN!}
+        token={process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!}
         baseEditingUrl={process.env.DATOCMS_BASE_EDITING_URL!}
         query={options.query}
         variables={variables}

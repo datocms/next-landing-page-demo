@@ -6,10 +6,6 @@
   "datocmsProjectId": "105705",
   "deploymentType": "static",
   "environmentVariables": {
-    "DATOCMS_READONLY_API_TOKEN": {
-      "type": "datocmsAccessToken",
-      "tokenName": "Read-only API token"
-    },
     "SEO_SECRET_TOKEN": {
       "type": "string",
       "value": "superSecretToken"
@@ -24,6 +20,18 @@
     },
     "DATOCMS_BASE_EDITING_URL": {
       "type": "datocmsProjectUrl"
+    },
+    "DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN": {
+      "type": "datocmsAccessToken",
+      "tokenName": "CDA Only (Published)"
+    },
+    "DATOCMS_DRAFT_CONTENT_CDA_TOKEN": {
+      "type": "datocmsAccessToken",
+      "tokenName": "CDA Only (Draft)"
+    },
+    "DATOCMS_CMA_TOKEN": {
+      "type": "datocmsAccessToken",
+      "tokenName": "CMA Only (Read)"
     }
   },
   "buildCommand": "npm run build",

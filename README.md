@@ -55,15 +55,15 @@ Once the setup of the project and repo is done, clone the repo locally.
 
 In your DatoCMS' project, go to the **Settings** menu at the top and click **API tokens**.
 
-Then click **Read-only API token** and copy the token.
+Create three DatoCMS API tokens: `CDA Only (Published)`, `CDA Only (Draft)`, and `CMA Only (Read)`.
 
 Next, copy the `.env.example` file in this directory to `.env` (which will be ignored by Git):
 
 ```bash
-cp .env.local.sample .env.local
+cp .env.example .env
 ```
 
-and set the `DATOCMS_READONLY_API_TOKEN` variable as the API token you just copied.
+and set `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `DATOCMS_DRAFT_CONTENT_CDA_TOKEN`, and `DATOCMS_CMA_TOKEN` with the matching token values.
 
 Also then set a secret token that is being used for WebPreviews, SEO Previews and Cache invalidation:
 

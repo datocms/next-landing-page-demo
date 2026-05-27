@@ -23,7 +23,7 @@ export async function cachedQueryDatoCMS<
   variables?: TVariables,
 ): Promise<TResult> {
   return executeQuery(document, {
-    token: process.env.DATOCMS_READONLY_API_TOKEN!,
+    token: process.env.DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN!,
     excludeInvalid: true,
     variables,
   });

@@ -74,7 +74,7 @@ export async function GET(req: NextRequest) {
   }
 
   const client = buildClient({
-    apiToken: process.env.DATOCMS_READONLY_API_TOKEN || '',
+    apiToken: process.env.DATOCMS_CMA_TOKEN || '',
     environment: sandboxEnvironmentId,
   });
 
