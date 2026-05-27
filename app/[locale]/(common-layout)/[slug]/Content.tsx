@@ -41,6 +41,15 @@ import { notFound, redirect } from 'next/navigation';
 import type { PageProps, Query } from './meta';
 import { stripStega } from '@datocms/content-link';
 
+/**
+ * DatoCMS Content Link can add invisible editing markers to text fields.
+ * Keep those markers when rendering copy, but strip them before using a value
+ * in code paths that need an exact string: switch cases, equality checks, URL
+ * construction, metadata, third-party payloads, or similar logic.
+ *
+ * Without this cleanup, a value that looks like "gradient" may not match the
+ * "gradient" case below, and generated paths can include hidden characters.
+ */
 const normalizeDisplayOption = (value?: string) => stripStega(value || '');
 
 const Content: ContentPage<PageProps, Query> = ({
