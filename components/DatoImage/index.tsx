@@ -1,6 +1,6 @@
 import { type FragmentType, getFragmentData } from '@/graphql/types';
 import { DatoImage_ResponsiveImageFragmentDoc } from '@/graphql/types/graphql';
-import { type ImagePropTypes, Image as ReactDatocmsImage } from 'react-datocms';
+import { type ImagePropTypes, Image as ReactDatocmsImage } from 'react-datocms/image';
 
 type Props =
   | ImagePropTypes
