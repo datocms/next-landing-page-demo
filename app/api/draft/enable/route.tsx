@@ -1,9 +1,11 @@
 import { cookies, draftMode } from 'next/headers';
 import { redirect } from 'next/navigation';
 import type { NextRequest } from 'next/server';
+import isSafeRedirectUrl from '@/utils/isSafeRedirectUrl';
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
+  const requestUrl = new URL(request.url);
+  const { searchParams } = requestUrl;
 
   const token = searchParams.get('token');
   const redirectPath = searchParams.get('redirect');
@@ -15,6 +17,9 @@ export async function GET(request: NextRequest) {
   draft.enable();
 
   if (!redirectPath) return new Response('Draft mode is enabled');
+
+  if (!isSafeRedirectUrl(redirectPath, requestUrl))
+    return new Response('URL must be relative!', { status: 422 });
 
   // By performing a redirect(), we would lose the __prerender_bypass cookie just
   // set by draftMode().enable(), so we would effectively not enter into Next.js's draft mode!
