@@ -64,11 +64,10 @@ export async function OPTIONS(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
+  // The token is sent by the plugin as a request header (see /api/post-install)
+  const token = request.headers.get('authorization')?.replace(/^Bearer /, '');
 
-  const token = searchParams.get('token');
-
-  if (token !== process.env.DRAFT_SECRET_TOKEN)
+  if (!token || token !== process.env.DRAFT_SECRET_TOKEN)
     return new Response('Invalid token', { ...responseDefaults, status: 401 });
 
   // The Web Previews plugin sends the record and model for which the user wants a preview,
@@ -90,6 +89,7 @@ export async function POST(request: NextRequest) {
     // Generate a URL that initially enters Next.js Draft Mode, and then redirects to the desired URL
     previewLinks.push({
       label: 'Draft version',
+      // Opened by a browser, where we cannot set headers
       url: `${websiteBaseUrl}/api/draft/enable?token=${token}&redirect=${url}`,
     });
 

@@ -2,10 +2,11 @@ import { revalidateTag } from 'next/cache';
 import { type NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const token = req.nextUrl.searchParams.get('token');
+  // The token is sent by the webhook as a request header (see /api/post-install)
+  const token = req.headers.get('authorization')?.replace(/^Bearer /, '');
 
-  if (token !== process.env.CACHE_INVALIDATION_SECRET_TOKEN) {
-    return NextResponse.json({ status: 401, body: { error: 'Invalid Token' } });
+  if (!token || token !== process.env.CACHE_INVALIDATION_SECRET_TOKEN) {
+    return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
   }
 
   try {
@@ -13,11 +14,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // For immediate invalidation (webhook use case), we use the default behavior
     await revalidateTag('datocms', 'default');
   } catch (error) {
-    return NextResponse.json({
-      status: 500,
-      body: { message: 'Failed to clear the cache', error },
-    });
+    console.error(error);
+
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
+    );
   }
 
-  return NextResponse.json({ status: 200, body: { status: 'Cache Cleared' } });
+  return NextResponse.json({ status: 'Cache Cleared' });
 }
