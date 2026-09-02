@@ -7,16 +7,16 @@
   "deploymentType": "static",
   "environmentVariables": {
     "SEO_SECRET_TOKEN": {
-      "type": "string",
-      "value": "superSecretToken"
+      "type": "secret"
     },
     "DRAFT_SECRET_TOKEN": {
-      "type": "string",
-      "value": "superSecretToken"
+      "type": "secret",
+      "format": "readable",
+      "label": "Draft content password",
+      "description": "You'll need it to browse draft content from the website."
     },
     "CACHE_INVALIDATION_SECRET_TOKEN": {
-      "type": "string",
-      "value": "superSecretToken"
+      "type": "secret"
     },
     "DATOCMS_BASE_EDITING_URL": {
       "type": "datocmsProjectUrl"

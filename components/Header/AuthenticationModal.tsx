@@ -16,7 +16,7 @@ const AuthenticationModal = ({
   refresh,
   triggerSuccessToast,
 }: Props) => {
-  const [inputValue, setInputValue] = useState('superSecretToken');
+  const [inputValue, setInputValue] = useState('');
   const [hasError, setHasError] = useState(false);
 
   async function enableDraft(e: FormEvent<HTMLFormElement>) {
@@ -65,8 +65,8 @@ const AuthenticationModal = ({
         <p className="font-medium sm:text-lg">Authenticate First!</p>
       </div>
       <p className="mt-4 text-gray-500">
-        Please insert the password to access the content drafts (default:{' '}
-        <code>superSecretToken</code>):
+        Please insert the password to access the content drafts (the value of
+        the <code>DRAFT_SECRET_TOKEN</code> environment variable):
       </p>
       <div>
         <input

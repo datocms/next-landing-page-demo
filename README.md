@@ -65,14 +65,16 @@ cp .env.example .env
 
 and set `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `DATOCMS_DRAFT_CONTENT_CDA_TOKEN`, and `DATOCMS_CMA_TOKEN` with the matching token values.
 
-Also then set a secret token that is being used for WebPreviews, SEO Previews and Cache invalidation:
+Then set the three secret tokens that guard the endpoints used for Web Previews, SEO Previews and cache invalidation. Generate a different, cryptographically-secure random string for each of them (`openssl rand -hex 32` is a good way to do it) — never reuse the same value across projects:
 
 ```
 URL=http://localhost:3000
-SEO_SECRET_TOKEN=superSecretToken
-DRAFT_SECRET_TOKEN=superSecretToken
-CACHE_INVALIDATION_SECRET_TOKEN=superSecretToken
+SEO_SECRET_TOKEN=<random string>
+DRAFT_SECRET_TOKEN=<random string>
+CACHE_INVALIDATION_SECRET_TOKEN=<random string>
 ```
+
+> If you deployed this demo with the "Deploy with DatoCMS" button, these three secrets were generated randomly for you and shown on the last step of the setup wizard. If you no longer have them, set new ones from your hosting provider's environment variable settings.
 
 #### Run your project locally
 
