@@ -10,9 +10,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   try {
-    // In Next.js 16, revalidateTag can optionally take a cacheLife profile
-    // For immediate invalidation (webhook use case), we use the default behavior
-    await revalidateTag('datocms', 'default');
+    /*
+     * `{ expire: 0 }` expires the cached entries right away, so the first
+     * request after a publish renders fresh content: an editor who checks
+     * their change also warms the cache for everyone else. With a profile like
+     * 'max' or 'default', that first request only starts a background refresh
+     * and still gets the old page.
+     */
+    revalidateTag('datocms', { expire: 0 });
   } catch (error) {
     console.error(error);
 
