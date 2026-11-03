@@ -77,7 +77,7 @@ const CompactPlanCard = ({
           type="button"
           className="btn btn-secondary btn-sm max-sm:w-full"
         >
-          {uiString(locale, 'choosePlan')}
+          {plan.ctaLabel || uiString(locale, 'choosePlan')}
         </button>
       </div>
     </article>

@@ -6,7 +6,9 @@ export const AboutIntroFragment = graphql(
     fragment AboutIntroFragment on AboutIntroRecord {
       preHeader
       header
-      subheader
+      subheader {
+        value
+      }
       introductionText {
         value
       }

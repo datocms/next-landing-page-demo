@@ -5,7 +5,9 @@ export const VideoSectionFragment = graphql(
   /* GraphQL */ `
     fragment VideoSectionFragment on VideoSectionRecord {
       videoHeader
-      videoSubheader
+      videoSubheader {
+        value
+      }
       video {
         providerUid
         provider

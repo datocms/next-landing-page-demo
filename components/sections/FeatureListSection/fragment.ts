@@ -5,13 +5,17 @@ export const FeatureListSectionFragment = graphql(
   /* GraphQL */ `
     fragment FeatureListSectionFragment on FeatureListSectionRecord {
       featuresHeader
-      featuresSubheader
+      featuresSubheader {
+        value
+      }
       displayOption
       feature {
         __typename
         id
         featureTitle
-        featureDescription
+        featureDescription {
+          value
+        }
         featureIcon {
           responsiveImage {
             ...ResponsiveImageFragment

@@ -5,7 +5,9 @@ export const CtaButtonWithImageFragment = graphql(
   /* GraphQL */ `
     fragment CtaButtonWithImageFragment on CtaButtonWithImageRecord {
       title
-      subtitle
+      subtitle {
+        value
+      }
       image {
         id
         responsiveImage {

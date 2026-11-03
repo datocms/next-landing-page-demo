@@ -1,8 +1,9 @@
 import { stripStega } from '@datocms/content-link';
 import { type ComponentPropsWithoutRef, type ReactNode, useId } from 'react';
-import ReactMarkdown from 'react-markdown';
+import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
+import { hasStructuredText } from '@/utils/structuredText';
 import AppStoreGlyph from './AppStoreGlyph';
 import { AppCtaFragment } from './fragment';
 import GooglePlayGlyph from './GooglePlayGlyph';
@@ -66,9 +67,9 @@ const AppCtaBlock = ({ fragment, locale, className = '', ...rest }: Props) => {
           </p>
         )}
 
-        {text && (
+        {hasStructuredText(text) && (
           <div className="mt-2.5 text-body text-ink-2 [&_a]:text-ink [&_a]:underline [&_a]:decoration-accent-solid/45 [&_a]:underline-offset-[3px] [&_p+p]:mt-3 [&_strong]:font-medium [&_strong]:text-ink">
-            <ReactMarkdown>{text}</ReactMarkdown>
+            <DatoStructuredText data={text} />
           </div>
         )}
 

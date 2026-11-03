@@ -1,8 +1,9 @@
 import { type ComponentPropsWithoutRef, useId } from 'react';
-import ReactMarkdown from 'react-markdown';
 import DatoImage from '@/components/datocms/DatoImage';
+import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import { PresencePill } from '@/components/ui/Ornaments';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
+import { hasStructuredText } from '@/utils/structuredText';
 import { CtaButtonWithImageFragment } from './fragment';
 
 type Props = {
@@ -59,9 +60,9 @@ const CtaButtonWithImageBlock = ({
           </p>
         )}
 
-        {subtitle && (
+        {hasStructuredText(subtitle) && (
           <div className="mt-2 text-body text-ink-2 [&_a]:text-ink [&_a]:underline [&_a]:decoration-accent-solid/45 [&_a]:underline-offset-[3px] [&_p+p]:mt-2 [&_strong]:font-medium [&_strong]:text-ink">
-            <ReactMarkdown>{subtitle}</ReactMarkdown>
+            <DatoStructuredText data={subtitle} />
           </div>
         )}
 

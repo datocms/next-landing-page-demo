@@ -2,12 +2,13 @@ import { stripStega } from '@datocms/content-link';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { CSSProperties, ReactNode } from 'react';
-import ReactMarkdown from 'react-markdown';
 import type { Query as CommonLayoutQuery } from '@/app/[locale]/(common-layout)/meta';
+import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import { buildUrl } from '@/utils/globalPageProps';
+import { hasStructuredText } from '@/utils/structuredText';
 import FooterLanguages from './FooterLanguages';
 import FooterPageLink from './FooterPageLink';
 
@@ -89,14 +90,14 @@ const Footer = ({ data, globalPageProps }: Props) => {
                 />
               </Link>
             )}
-            {layout?.footerSubtitle && (
+            {hasStructuredText(layout?.footerSubtitle) && (
               <div
                 className={cn(
                   'max-w-[32ch] text-[14.5px]/[1.55] text-ink-2 [&_a]:text-ink [&_a]:underline [&_a]:decoration-ink/35 [&_a]:underline-offset-[3px] [&_p+p]:mt-2',
                   layout.footerLogo && 'mt-3.5',
                 )}
               >
-                <ReactMarkdown>{layout.footerSubtitle}</ReactMarkdown>
+                <DatoStructuredText data={layout.footerSubtitle} />
               </div>
             )}
           </div>

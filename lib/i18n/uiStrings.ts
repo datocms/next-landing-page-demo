@@ -171,6 +171,11 @@ const en = {
   perYearShort: '/yr',
   perYearSpoken: 'per year',
   plan: 'Plan',
+  // Plan comparison table: the column head of feature names, and what screen readers say for a check or a dash
+  comparePlans: 'Compare plans',
+  feature: 'Feature',
+  included: 'Included',
+  excluded: 'Not included',
 
   // App download block in posts
   getOnAppStore: 'Get it on the App Store',
@@ -322,6 +327,11 @@ const it: Dictionary = {
   perYearShort: '/anno',
   perYearSpoken: "all'anno",
   plan: 'Piano',
+  // Plan comparison table: the column head of feature names, and what screen readers say for a check or a dash
+  comparePlans: 'Confronta i piani',
+  feature: 'Funzionalità',
+  included: 'Incluso',
+  excluded: 'Non incluso',
 
   // App download block in posts
   getOnAppStore: 'Scarica su App Store',
@@ -473,6 +483,11 @@ const de: Dictionary = {
   perYearShort: '/Jahr',
   perYearSpoken: 'pro Jahr',
   plan: 'Tarif',
+  // Plan comparison table: the column head of feature names, and what screen readers say for a check or a dash
+  comparePlans: 'Pläne vergleichen',
+  feature: 'Funktion',
+  included: 'Enthalten',
+  excluded: 'Nicht enthalten',
 
   // App download block in posts
   getOnAppStore: 'Laden im App Store',
@@ -624,6 +639,11 @@ const fr: Dictionary = {
   perYearShort: '/an',
   perYearSpoken: 'par an',
   plan: 'Forfait',
+  // Plan comparison table: the column head of feature names, and what screen readers say for a check or a dash
+  comparePlans: 'Comparer les offres',
+  feature: 'Fonctionnalité',
+  included: 'Inclus',
+  excluded: 'Non inclus',
 
   // App download block in posts
   getOnAppStore: "Télécharger dans l'App Store",
@@ -775,6 +795,11 @@ const es: Dictionary = {
   perYearShort: '/año',
   perYearSpoken: 'al año',
   plan: 'Plan',
+  // Plan comparison table: the column head of feature names, and what screen readers say for a check or a dash
+  comparePlans: 'Compara los planes',
+  feature: 'Función',
+  included: 'Incluido',
+  excluded: 'No incluido',
 
   // App download block in posts
   getOnAppStore: 'Descárgalo en el App Store',

@@ -9,6 +9,7 @@ import FaqSection from '@/components/sections/FaqSection';
 import FeaturedPostsSection from '@/components/sections/FeaturedPostsSection';
 import FeatureListSection from '@/components/sections/FeatureListSection';
 import HeroSection from '@/components/sections/HeroSection';
+import PricingComparisonSection from '@/components/sections/PricingComparisonSection';
 import PricingSection from '@/components/sections/PricingSection';
 import ReviewSection from '@/components/sections/ReviewSection';
 import StatsSection from '@/components/sections/StatsSection';
@@ -65,6 +66,15 @@ const Content: ContentPage<PageProps, Query> = ({
       case 'PricingSectionRecord':
         return (
           <PricingSection
+            key={key}
+            fragment={section}
+            locale={locale}
+            as={as}
+          />
+        );
+      case 'PricingComparisonSectionRecord':
+        return (
+          <PricingComparisonSection
             key={key}
             fragment={section}
             locale={locale}

@@ -1,9 +1,13 @@
 import type { CSSProperties } from 'react';
-import ReactMarkdown from 'react-markdown';
+import DatoStructuredText from '@/components/datocms/DatoStructuredText';
+import {
+  hasStructuredText,
+  type StructuredTextField,
+} from '@/utils/structuredText';
 
 type Props = {
-  /** The CMS subtitle, in Markdown. Nothing renders without one */
-  text: string | null | undefined;
+  /** The CMS subtitle, in Structured Text. Nothing renders without one */
+  text: StructuredTextField | null | undefined;
   /** Type, colour, measure and margins */
   className: string;
 };
@@ -14,7 +18,7 @@ type Props = {
  * users only).
  */
 const HeroSubtitle = ({ text, className }: Props) => {
-  if (!text) return null;
+  if (!hasStructuredText(text)) return null;
 
   return (
     <div
@@ -22,7 +26,7 @@ const HeroSubtitle = ({ text, className }: Props) => {
       style={{ '--d': 1 } as CSSProperties}
       className={className}
     >
-      <ReactMarkdown>{text}</ReactMarkdown>
+      <DatoStructuredText data={text} />
     </div>
   );
 };

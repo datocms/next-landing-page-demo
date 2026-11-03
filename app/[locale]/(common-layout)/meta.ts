@@ -48,7 +48,9 @@ export const query = graphql(
         notification {
           value
         }
-        footerSubtitle
+        footerSubtitle {
+          value
+        }
         footerLogo {
           url
           height

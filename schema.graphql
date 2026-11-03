@@ -5,6 +5,13 @@ type AboutIntroModelIntroductionTextField {
   value: JsonField!
 }
 
+type AboutIntroModelSubheaderField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
 """Block of type 💁 About Intro (about_intro)"""
 type AboutIntroRecord implements RecordInterface {
   _createdAt: DateTime!
@@ -30,10 +37,7 @@ type AboutIntroRecord implements RecordInterface {
   images: [ImageFileField!]!
   introductionText: AboutIntroModelIntroductionTextField
   preHeader: String
-  subheader(
-    """Process content as markdown"""
-    markdown: Boolean
-  ): String
+  subheader: AboutIntroModelSubheaderField
 }
 
 """Block of type 📚 All Posts Section (all_posts_section)"""
@@ -59,6 +63,13 @@ type AllPostsSectionRecord implements RecordInterface {
   id: ItemId!
 }
 
+type AppCtaModelTextField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
 """Block of type 📲 CTA App Download (app_cta)"""
 type AppCtaRecord implements RecordInterface {
   _createdAt: DateTime!
@@ -82,11 +93,20 @@ type AppCtaRecord implements RecordInterface {
   appstoreUrl: String
   googlePlayUrl: String
   id: ItemId!
-  text(
-    """Process content as markdown"""
-    markdown: Boolean
-  ): String
+  text: AppCtaModelTextField
   title: String!
+}
+
+type AuthorModelDescriptionField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+type AuthorModelDescriptionFieldNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: AuthorModelDescriptionField!
 }
 
 input AuthorModelFilter {
@@ -100,11 +120,11 @@ input AuthorModelFilter {
   _updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   _locales: LocalesFilter
+  areaOfInterest: StringFilter
   bio: StringFilter
-  description: TextFilter
+  description: StructuredTextFilter
   name: StringFilter
   picture: FileFilter
-  areaOfInterest: StringFilter
   slug: SlugFilter
   OR: [AuthorModelFilter]
   AND: [AuthorModelFilter]
@@ -129,12 +149,12 @@ enum AuthorModelOrderBy {
   _updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
+  areaOfInterest_ASC
+  areaOfInterest_DESC
   bio_ASC
   bio_DESC
   name_ASC
   name_DESC
-  areaOfInterest_ASC
-  areaOfInterest_DESC
 }
 
 """Record of type ✍️ Author (author)"""
@@ -152,14 +172,11 @@ type AuthorRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
   _allDescriptionLocales(
-    """Process content as markdown"""
-    markdown: Boolean
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): [StringNonNullMultiLocaleField!]
+  ): [AuthorModelDescriptionFieldNonNullMultiLocaleField!]
   _allNameLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -264,9 +281,6 @@ type AuthorRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): String!
   description(
-    """Process content as markdown"""
-    markdown: Boolean
-
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
@@ -274,7 +288,7 @@ type AuthorRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): String!
+  ): AuthorModelDescriptionField!
   id: ItemId!
   name(
     """The locale to use to fetch the field's content"""
@@ -392,10 +406,10 @@ input ChangeLogModelFilter {
   _status: StatusFilter
   _updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  versionName: StringFilter
-  timeOfRelease: DateTimeFilter
   content: StructuredTextFilter
   slug: SlugFilter
+  timeOfRelease: DateTimeFilter
+  versionName: StringFilter
   OR: [ChangeLogModelFilter]
   AND: [ChangeLogModelFilter]
 }
@@ -419,10 +433,10 @@ enum ChangeLogModelOrderBy {
   _updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
-  versionName_ASC
-  versionName_DESC
   timeOfRelease_ASC
   timeOfRelease_DESC
+  versionName_ASC
+  versionName_DESC
 }
 
 """Record of type 🧪 Changelog entry (change_log)"""
@@ -452,6 +466,13 @@ type ChangeLogRecord implements RecordInterface {
   versionName: String!
 }
 
+type ChangelogSectionModelSubtitleField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
 """Block of type 📝 Changelog Section (changelog_section)"""
 type ChangelogSectionRecord implements RecordInterface {
   _createdAt: DateTime!
@@ -474,10 +495,7 @@ type ChangelogSectionRecord implements RecordInterface {
   _updatedAt: DateTime!
   featuredVersions: [ChangeLogRecord!]!
   id: ItemId!
-  subtitle(
-    """Process content as markdown"""
-    markdown: Boolean
-  ): String
+  subtitle: ChangelogSectionModelSubtitleField
   title: String!
 }
 
@@ -547,6 +565,13 @@ input CreatedAtFilter {
   exists: BooleanType
 }
 
+type CtaButtonWithImageModelSubtitleField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
 """Block of type 📸 CTA Button with image (cta_button_with_image)"""
 type CtaButtonWithImageRecord implements RecordInterface {
   _createdAt: DateTime!
@@ -570,10 +595,7 @@ type CtaButtonWithImageRecord implements RecordInterface {
   buttonLabel: String!
   id: ItemId!
   image: ImageFileField!
-  subtitle(
-    """Process content as markdown"""
-    markdown: Boolean
-  ): String!
+  subtitle: CtaButtonWithImageModelSubtitleField!
   title: String!
 }
 
@@ -700,11 +722,11 @@ input DocumentationPageModelFilter {
   _status: StatusFilter
   _updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  title: StringFilter
-  seoMeta: SeoFilter
-  subtitle: StringFilter
   content: StructuredTextFilter
+  seoMeta: SeoFilter
   slug: SlugFilter
+  subtitle: StringFilter
+  title: StringFilter
   OR: [DocumentationPageModelFilter]
   AND: [DocumentationPageModelFilter]
 }
@@ -730,10 +752,10 @@ enum DocumentationPageModelOrderBy {
   _updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
-  title_ASC
-  title_DESC
   subtitle_ASC
   subtitle_DESC
+  title_ASC
+  title_DESC
 }
 
 """Record of type 📖 Documentation Page (documentation_page)"""
@@ -767,6 +789,13 @@ type DocumentationPageRecord implements RecordInterface {
   title: String!
 }
 
+type FaqSectionModelSubtitleField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
 """Block of type ❓ FAQ Section (faq_section)"""
 type FaqSectionRecord implements RecordInterface {
   _createdAt: DateTime!
@@ -790,10 +819,7 @@ type FaqSectionRecord implements RecordInterface {
   displayOptions: String!
   id: ItemId!
   questions: [QuestionRecord!]!
-  subtitle(
-    """Process content as markdown"""
-    markdown: Boolean
-  ): String
+  subtitle: FaqSectionModelSubtitleField
   title: String!
 }
 
@@ -801,6 +827,13 @@ enum FaviconType {
   icon
   appleTouchIcon
   msApplication
+}
+
+type FeatureListSectionModelFeaturesSubheaderField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
 }
 
 """Block of type 📋 Feature list section (feature_list_section)"""
@@ -826,11 +859,15 @@ type FeatureListSectionRecord implements RecordInterface {
   displayOption: String!
   feature: [FeatureRecord!]!
   featuresHeader: String!
-  featuresSubheader(
-    """Process content as markdown"""
-    markdown: Boolean
-  ): String
+  featuresSubheader: FeatureListSectionModelFeaturesSubheaderField
   id: ItemId!
+}
+
+type FeatureModelFeatureDescriptionField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
 }
 
 """Block of type ⭐ Feature (feature)"""
@@ -853,13 +890,17 @@ type FeatureRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  featureDescription(
-    """Process content as markdown"""
-    markdown: Boolean
-  ): String!
+  featureDescription: FeatureModelFeatureDescriptionField!
   featureIcon: ImageFileField!
   featureTitle: String!
   id: ItemId!
+}
+
+type FeaturedPostsSectionModelFeaturedPostsSubheaderField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
 }
 
 """Block of type 📰 Featured posts section (featured_posts_section)"""
@@ -885,10 +926,7 @@ type FeaturedPostsSectionRecord implements RecordInterface {
   displayOptions: String!
   featuredPosts: [PostRecord!]!
   featuredPostsHeader: String!
-  featuredPostsSubheader(
-    """Process content as markdown"""
-    markdown: Boolean
-  ): String
+  featuredPostsSubheader: FeaturedPostsSectionModelFeaturedPostsSubheaderField
   id: ItemId!
 }
 
@@ -1159,6 +1197,13 @@ type GlobalSeoField {
   twitterAccount: String
 }
 
+type HeroSectionModelHeroSubtitleField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
 """Block of type 🚀 Hero section (hero_section)"""
 type HeroSectionRecord implements RecordInterface {
   _createdAt: DateTime!
@@ -1182,10 +1227,7 @@ type HeroSectionRecord implements RecordInterface {
   buttons: [ButtonRecord!]!
   displayOptions: String!
   heroImage: FileField
-  heroSubtitle(
-    """Process content as markdown"""
-    markdown: Boolean
-  ): String
+  heroSubtitle: HeroSectionModelHeroSubtitleField
   heroTitle: String!
   id: ItemId!
 }
@@ -3421,6 +3463,18 @@ input JsonFilter {
   exists: BooleanType
 }
 
+type LayoutModelFooterSubtitleField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+type LayoutModelFooterSubtitleFieldMultiLocaleField {
+  locale: SiteLocale
+  value: LayoutModelFooterSubtitleField
+}
+
 union LayoutModelMenuField = MenuDropdownRecord | MenuItemRecord
 
 type LayoutModelNotificationField {
@@ -3433,14 +3487,11 @@ type LayoutModelNotificationField {
 """Record of type 🧩 Layout (layout)"""
 type LayoutRecord implements RecordInterface {
   _allFooterSubtitleLocales(
-    """Process content as markdown"""
-    markdown: Boolean
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): [StringMultiLocaleField!]
+  ): [LayoutModelFooterSubtitleFieldMultiLocaleField!]
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -3463,9 +3514,6 @@ type LayoutRecord implements RecordInterface {
   footerLinks: [LegalPageRecord!]!
   footerLogo: FileField
   footerSubtitle(
-    """Process content as markdown"""
-    markdown: Boolean
-
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
@@ -3473,7 +3521,7 @@ type LayoutRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): String
+  ): LayoutModelFooterSubtitleField
   id: ItemId!
   logo: FileField!
   mainColor: ColorField!
@@ -3505,9 +3553,9 @@ input LegalPageModelFilter {
   _updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   _locales: LocalesFilter
-  title: StringFilter
   content: StructuredTextFilter
   slug: SlugFilter
+  title: StringFilter
   OR: [LegalPageModelFilter]
   AND: [LegalPageModelFilter]
 }
@@ -3756,6 +3804,13 @@ enum MuxThumbnailRotation {
   ROTATE_270
 }
 
+type NewsletterSubscriptionModelSubtitleField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
 """Block of type 📬 CTA Newsletter Subscription (newsletter_subscription)"""
 type NewsletterSubscriptionRecord implements RecordInterface {
   _createdAt: DateTime!
@@ -3778,10 +3833,7 @@ type NewsletterSubscriptionRecord implements RecordInterface {
   _updatedAt: DateTime!
   buttonLabel: String!
   id: ItemId!
-  subtitle(
-    """Process content as markdown"""
-    markdown: Boolean
-  ): String!
+  subtitle: NewsletterSubscriptionModelSubtitleField!
   title: String!
 }
 
@@ -3812,8 +3864,8 @@ input PageModelFilter {
   _isValid: BooleanFilter
   _locales: LocalesFilter
   label: StringFilter
-  seoMeta: SeoFilter
   seoAnalysis: JsonFilter
+  seoMeta: SeoFilter
   slug: SlugFilter
   OR: [PageModelFilter]
   AND: [PageModelFilter]
@@ -3842,7 +3894,7 @@ enum PageModelOrderBy {
   label_DESC
 }
 
-union PageModelSectionsField = AboutIntroRecord | AllPostsSectionRecord | BrandSectionRecord | ChangelogSectionRecord | DetailSectionRecord | FaqSectionRecord | FeatureListSectionRecord | FeaturedPostsSectionRecord | HeroSectionRecord | PricingSectionRecord | RedirectSectionRecord | ReviewSectionRecord | StatsSectionRecord | TeamSectionRecord | VideoSectionRecord
+union PageModelSectionsField = AboutIntroRecord | AllPostsSectionRecord | BrandSectionRecord | ChangelogSectionRecord | DetailSectionRecord | FaqSectionRecord | FeatureListSectionRecord | FeaturedPostsSectionRecord | HeroSectionRecord | PricingComparisonSectionRecord | PricingSectionRecord | RedirectSectionRecord | ReviewSectionRecord | StatsSectionRecord | TeamSectionRecord | VideoSectionRecord
 
 type PageModelSectionsFieldListListNonNullMultiLocaleField {
   locale: SiteLocale
@@ -3917,6 +3969,37 @@ input ParentFilter {
   exists: BooleanType
 }
 
+"""Block of type Plan limit (plan_limit)"""
+type PlanLimitRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  group: String!
+  id: ItemId!
+  label: String!
+  value: String
+}
+
+type PlanLimitRecordListListNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: [PlanLimitRecord!]!
+}
+
 """Specifies how to filter by position (sorted and tree-like collections)"""
 input PositionFilter {
   """
@@ -3980,12 +4063,12 @@ input PostModelFilter {
   _isValid: BooleanFilter
   _locales: LocalesFilter
   author: LinkFilter
-  seoTags: SeoFilter
+  content: StructuredTextFilter
   seoAnalysis: JsonFilter
+  seoTags: SeoFilter
   slug: SlugFilter
   tags: LinksFilter
   title: StringFilter
-  content: StructuredTextFilter
   OR: [PostModelFilter]
   AND: [PostModelFilter]
 }
@@ -4086,6 +4169,46 @@ type PostRecord implements RecordInterface {
   ): String!
 }
 
+type PricingComparisonSectionModelComparisonSubheaderField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+"""Block of type Pricing comparison section (pricing_comparison_section)"""
+type PricingComparisonSectionRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  comparisonHeader: String
+  comparisonSubheader: PricingComparisonSectionModelComparisonSubheaderField
+  id: ItemId!
+  plans: [PricingTierRecord!]!
+}
+
+type PricingSectionModelPricingSectionSubheaderField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
 """Block of type 💰 Pricing section (pricing_section)"""
 type PricingSectionRecord implements RecordInterface {
   _createdAt: DateTime!
@@ -4110,10 +4233,7 @@ type PricingSectionRecord implements RecordInterface {
   id: ItemId!
   plans: [PricingTierRecord!]!
   pricingSectionHeader: String!
-  pricingSectionSubheader(
-    """Process content as markdown"""
-    markdown: Boolean
-  ): String
+  pricingSectionSubheader: PricingSectionModelPricingSectionSubheaderField
 }
 
 input PricingTierModelFilter {
@@ -4127,12 +4247,15 @@ input PricingTierModelFilter {
   _updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   _locales: LocalesFilter
+  ctaLabel: StringFilter
+  highlightLabel: StringFilter
   monthlyPrice: IntegerFilter
-  tierName: StringFilter
-  tierDescription: StructuredTextFilter
-  yearlyPrice: FloatFilter
   planFeatures: StringFilter
+  priceNote: StringFilter
   slug: SlugFilter
+  tierDescription: StructuredTextFilter
+  tierName: StringFilter
+  yearlyPrice: FloatFilter
   OR: [PricingTierModelFilter]
   AND: [PricingTierModelFilter]
 }
@@ -4156,14 +4279,20 @@ enum PricingTierModelOrderBy {
   _updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
+  ctaLabel_ASC
+  ctaLabel_DESC
+  highlightLabel_ASC
+  highlightLabel_DESC
   monthlyPrice_ASC
   monthlyPrice_DESC
+  planFeatures_ASC
+  planFeatures_DESC
+  priceNote_ASC
+  priceNote_DESC
   tierName_ASC
   tierName_DESC
   yearlyPrice_ASC
   yearlyPrice_DESC
-  planFeatures_ASC
-  planFeatures_DESC
 }
 
 type PricingTierModelTierDescriptionField {
@@ -4180,6 +4309,30 @@ type PricingTierModelTierDescriptionFieldNonNullMultiLocaleField {
 
 """Record of type 💰 Pricing Tier (pricing_tier)"""
 type PricingTierRecord implements RecordInterface {
+  _allCtaLabelLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
+  _allHighlightLabelLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
+  _allPlanLimitsLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [PlanLimitRecordListListNonNullMultiLocaleField!]
+  _allPriceNoteLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
   _allTierDescriptionLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -4205,9 +4358,45 @@ type PricingTierRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
+  ctaLabel(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+  highlightLabel(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
   id: ItemId!
   monthlyPrice: IntType!
   planFeatures: String!
+  planLimits(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [PlanLimitRecord!]!
+  priceNote(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
   slug: String!
   tierDescription(
     """The locale to use to fetch the field's content"""
@@ -4802,6 +4991,13 @@ type ResponsiveImage {
   width: IntType!
 }
 
+type ReviewSectionModelReviewSectionSubheaderField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
 """Block of type 💬 Testimonials Section (review_section)"""
 type ReviewSectionRecord implements RecordInterface {
   _createdAt: DateTime!
@@ -4825,10 +5021,7 @@ type ReviewSectionRecord implements RecordInterface {
   displayOptions: String!
   id: ItemId!
   reviewSectionHeader: String!
-  reviewSectionSubheader(
-    """Process content as markdown"""
-    markdown: Boolean
-  ): String
+  reviewSectionSubheader: ReviewSectionModelReviewSectionSubheaderField
   reviews: [TestimonialRecord!]!
 }
 
@@ -4947,6 +5140,13 @@ type StatisticRecord implements RecordInterface {
   quantity: IntType!
 }
 
+type StatsSectionModelSubtitleField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
 """Block of type 📈 Stats Section (stats_section)"""
 type StatsSectionRecord implements RecordInterface {
   _createdAt: DateTime!
@@ -4969,10 +5169,7 @@ type StatsSectionRecord implements RecordInterface {
   _updatedAt: DateTime!
   id: ItemId!
   statistic: [StatisticRecord!]!
-  subtitle(
-    """Process content as markdown"""
-    markdown: Boolean
-  ): String
+  subtitle: StatsSectionModelSubtitleField
   title: String!
 }
 
@@ -5083,8 +5280,8 @@ input TagModelFilter {
   _status: StatusFilter
   _updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  tag: StringFilter
   slug: SlugFilter
+  tag: StringFilter
   OR: [TagModelFilter]
   AND: [TagModelFilter]
 }
@@ -5181,6 +5378,13 @@ type TagRecord implements RecordInterface {
   ): String!
 }
 
+type TeamSectionModelSubtitleField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
 """Block of type 👥 Team Section (team_section)"""
 type TeamSectionRecord implements RecordInterface {
   _createdAt: DateTime!
@@ -5204,10 +5408,7 @@ type TeamSectionRecord implements RecordInterface {
   displayOptions: String!
   id: ItemId!
   showcasedMembers: [AuthorRecord!]!
-  subtitle(
-    """Process content as markdown"""
-    markdown: Boolean
-  ): String
+  subtitle: TeamSectionModelSubtitleField
   title: String!
 }
 
@@ -5222,10 +5423,10 @@ input TestimonialModelFilter {
   _updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   _locales: LocalesFilter
-  reviewerPicture: FileFilter
-  reviewerName: StringFilter
   rating: IntegerFilter
   review: StructuredTextFilter
+  reviewerName: StringFilter
+  reviewerPicture: FileFilter
   reviewerTitle: StringFilter
   OR: [TestimonialModelFilter]
   AND: [TestimonialModelFilter]
@@ -5250,10 +5451,10 @@ enum TestimonialModelOrderBy {
   _updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
-  reviewerName_ASC
-  reviewerName_DESC
   rating_ASC
   rating_DESC
+  reviewerName_ASC
+  reviewerName_DESC
   reviewerTitle_ASC
   reviewerTitle_DESC
 }
@@ -5311,30 +5512,6 @@ type TestimonialRecord implements RecordInterface {
   reviewerName: String!
   reviewerPicture: ImageFileField!
   reviewerTitle: String
-}
-
-"""Specifies how to filter text fields"""
-input TextFilter {
-  """Filter records based on a regular expression"""
-  matches: StringMatchesFilter
-
-  """Exclude records based on a regular expression"""
-  notMatches: StringMatchesFilter
-
-  """
-  Filter records with the specified field set as blank (null or empty string)
-  """
-  isBlank: BooleanType
-
-  """
-  Filter records with the specified field present (neither null, nor empty string)
-  """
-  isPresent: BooleanType
-
-  """
-  Filter records with the specified field defined (i.e. with any value) or not [DEPRECATED]
-  """
-  exists: BooleanType
 }
 
 """Specifies how to filter by upload type"""
@@ -5907,6 +6084,13 @@ enum VideoMp4Res {
   high
 }
 
+type VideoSectionModelVideoSubheaderField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
 """Block of type 📹 Video Section (video_section)"""
 type VideoSectionRecord implements RecordInterface {
   _createdAt: DateTime!
@@ -5930,10 +6114,7 @@ type VideoSectionRecord implements RecordInterface {
   id: ItemId!
   video: VideoField!
   videoHeader: String!
-  videoSubheader(
-    """Process content as markdown"""
-    markdown: Boolean
-  ): String
+  videoSubheader: VideoSectionModelVideoSubheaderField
   videoThumbnail: ImageFileField!
 }
 

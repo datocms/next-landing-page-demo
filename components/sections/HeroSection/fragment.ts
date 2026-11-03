@@ -10,7 +10,9 @@ export const HeroSectionFragment = graphql(
         primary
         url
       }
-      heroSubtitle
+      heroSubtitle {
+        value
+      }
       heroTitle
       displayOptions
       heroImage {

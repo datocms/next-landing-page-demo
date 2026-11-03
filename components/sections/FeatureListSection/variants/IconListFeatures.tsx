@@ -1,10 +1,11 @@
 import { useId } from 'react';
-import ReactMarkdown from 'react-markdown';
+import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import FeatureIcon from '@/components/sections/FeatureListSection/FeatureIcon';
 import { FeatureListSectionFragment } from '@/components/sections/FeatureListSection/fragment';
 import SectionTitle from '@/components/ui/SectionTitle';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
+import { hasStructuredText } from '@/utils/structuredText';
 import { toneClass } from '@/utils/tones';
 
 type Props = {
@@ -71,11 +72,9 @@ const IconListFeatures = ({ fragment, as = 'h2' }: Props) => {
                   <ItemHeading className="text-h3">
                     {feature.featureTitle}
                   </ItemHeading>
-                  {feature.featureDescription && (
+                  {hasStructuredText(feature.featureDescription) && (
                     <div className="mt-1.5 max-w-[46ch] text-[15px] leading-[1.6] text-ink-2 [&_p+p]:mt-2">
-                      <ReactMarkdown>
-                        {feature.featureDescription}
-                      </ReactMarkdown>
+                      <DatoStructuredText data={feature.featureDescription} />
                     </div>
                   )}
                 </div>

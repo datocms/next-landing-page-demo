@@ -1,6 +1,6 @@
 import { stripStega } from '@datocms/content-link';
 import { useId } from 'react';
-import ReactMarkdown from 'react-markdown';
+import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import FeatureIcon from '@/components/sections/FeatureListSection/FeatureIcon';
 import { FeatureListSectionFragment } from '@/components/sections/FeatureListSection/fragment';
 import { MINI_UIS } from '@/components/ui/Ornaments';
@@ -12,6 +12,7 @@ import {
 } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
+import { hasStructuredText } from '@/utils/structuredText';
 import { toneClass } from '@/utils/tones';
 import GalleryScroller from './GalleryScroller';
 
@@ -60,9 +61,9 @@ const FeatureCard = ({
             {feature.featureTitle}
           </ItemHeading>
         </div>
-        {feature.featureDescription && (
+        {hasStructuredText(feature.featureDescription) && (
           <div className="mt-2 text-[15px] leading-[1.55] text-ink-2 [&_p+p]:mt-2">
-            <ReactMarkdown>{feature.featureDescription}</ReactMarkdown>
+            <DatoStructuredText data={feature.featureDescription} />
           </div>
         )}
       </div>

@@ -5,7 +5,9 @@ export const FeaturedPostsSectionFragment = graphql(
   /* GraphQL */ `
     fragment FeaturedPostsSectionFragment on FeaturedPostsSectionRecord {
       featuredPostsHeader
-      featuredPostsSubheader
+      featuredPostsSubheader {
+        value
+      }
       displayOptions
       featuredPosts {
         id

@@ -6,7 +6,7 @@ import { PricingSectionFragment } from '@/components/sections/PricingSection/fra
 import PlanFeature from '@/components/sections/PricingSection/PlanFeature';
 import Price from '@/components/sections/PricingSection/Price';
 import {
-  featuredPlanIndex,
+  highlightedPlanIndex,
   planFeatureRows,
 } from '@/components/sections/PricingSection/plans';
 import SectionTitle from '@/components/ui/SectionTitle';
@@ -42,7 +42,7 @@ const PlanTable = ({ fragment, locale, as = 'h2' }: Props) => {
   const PlanHeading = as === 'h1' ? 'h2' : 'h3';
   const count = plans.length;
   const asColumns = count <= 4;
-  const featured = featuredPlanIndex(count);
+  const featured = highlightedPlanIndex(plans);
   const featureRows = planFeatureRows(plans);
   const headingId = `${uid}-pricing`;
 
@@ -114,7 +114,7 @@ const PlanTable = ({ fragment, locale, as = 'h2' }: Props) => {
                       isFeatured ? 'btn-ink' : 'btn-secondary',
                     )}
                   >
-                    {uiString(locale, 'choosePlan')}
+                    {plan.ctaLabel || uiString(locale, 'choosePlan')}
                   </button>
                 </div>
 

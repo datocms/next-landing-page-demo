@@ -1,8 +1,9 @@
 import { useId } from 'react';
-import ReactMarkdown from 'react-markdown';
+import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
 import { splitHeading } from '@/utils/headings';
+import { hasStructuredText } from '@/utils/structuredText';
 import { AboutIntroFragment } from './fragment';
 import Introduction from './Introduction';
 import keepHyphenatedWordsTogether from './keepHyphenatedWordsTogether';
@@ -73,12 +74,12 @@ const AboutIntro = ({ fragment, as: Heading = 'h2' }: Props) => {
                 )}
               </Heading>
             )}
-            {subheader && (
+            {hasStructuredText(subheader) && (
               <div
                 data-hero-rise={leadsPage ? '' : undefined}
                 className="section-lead mt-4 [--d:0] [--lead-max:456px] md:mt-[18px]"
               >
-                <ReactMarkdown>{subheader}</ReactMarkdown>
+                <DatoStructuredText data={subheader} />
               </div>
             )}
           </div>

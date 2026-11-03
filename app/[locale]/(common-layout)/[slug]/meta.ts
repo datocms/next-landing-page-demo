@@ -7,6 +7,7 @@ import { FaqSectionFragment } from '@/components/sections/FaqSection/fragment';
 import { FeaturedPostsSectionFragment } from '@/components/sections/FeaturedPostsSection/fragment';
 import { FeatureListSectionFragment } from '@/components/sections/FeatureListSection/fragment';
 import { HeroSectionFragment } from '@/components/sections/HeroSection/fragment';
+import { PricingComparisonSectionFragment } from '@/components/sections/PricingComparisonSection/fragment';
 import { PricingSectionFragment } from '@/components/sections/PricingSection/fragment';
 import { ReviewSectionFragment } from '@/components/sections/ReviewSection/fragment';
 import { StatsSectionFragment } from '@/components/sections/StatsSection/fragment';
@@ -57,6 +58,7 @@ export const query = graphql(
           ...DetailSectionFragment
           ...ReviewSectionFragment
           ...PricingSectionFragment
+          ...PricingComparisonSectionFragment
           ...BrandSectionFragment
           ...FeaturedPostsSectionFragment
           ...FeatureListSectionFragment
@@ -95,6 +97,7 @@ export const query = graphql(
     DetailSectionFragment,
     ReviewSectionFragment,
     PricingSectionFragment,
+    PricingComparisonSectionFragment,
     BrandSectionFragment,
     FeaturedPostsSectionFragment,
     FeatureListSectionFragment,

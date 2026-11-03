@@ -33,7 +33,9 @@ export const query = graphql(
           }
         }
         bio
-        description
+        description {
+          value
+        }
         _allReferencingPosts(
           filter: { title: { isBlank: "false" } }
           orderBy: _createdAt_DESC

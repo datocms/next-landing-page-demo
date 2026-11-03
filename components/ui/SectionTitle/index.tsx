@@ -1,14 +1,20 @@
 import { stripStega } from '@datocms/content-link';
 import type { ReactNode } from 'react';
-import ReactMarkdown from 'react-markdown';
+import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import { cn } from '@/utils/cn';
 import { twoToneHeading } from '@/utils/headings';
+import {
+  hasStructuredText,
+  type StructuredTextField,
+  structuredTextToPlainParagraph,
+  structuredTextToPlainText,
+} from '@/utils/structuredText';
 import HeadingText from './HeadingText';
 
 type Props = {
   title?: string | null;
-  /** Markdown lead copy shown under the title */
-  paragraph?: string | null;
+  /** Structured Text lead copy shown under the title */
+  paragraph?: StructuredTextField | null;
   /**
    * left (default); center for short statements; split puts a short lead beside the title from lg.
    * A split lead longer than SPLIT_LEAD_MAX characters falls back to left, under the title
@@ -45,9 +51,9 @@ const GAP_CLASS = {
 const SPLIT_LEAD_MAX = 100;
 
 /**
- * The header of a page section: title, Markdown lead and optional controls,
- * left-aligned, centred or split in two columns. A short title and a
- * one-sentence lead merge into a single two-tone heading.
+ * The header of a page section: title, Structured Text lead and optional
+ * controls, left-aligned, centred or split in two columns. A short title and a
+ * one-sentence, unformatted lead merge into a single two-tone heading.
  */
 const SectionTitle = ({
   title,
@@ -62,20 +68,24 @@ const SectionTitle = ({
   className,
   children,
 }: Props) => {
-  if (!title && !paragraph && !children && !aside) {
+  const hasLead = hasStructuredText(paragraph);
+  if (!title && !hasLead && !children && !aside) {
     return null;
   }
 
   const resolvedAlign =
     align === 'split' &&
-    paragraph &&
-    stripStega(paragraph).trim().length > SPLIT_LEAD_MAX
+    hasLead &&
+    stripStega(structuredTextToPlainText(paragraph)).trim().length >
+      SPLIT_LEAD_MAX
       ? 'left'
       : align;
   const isPageTitle = Heading === 'h1' && h1Size === 'page';
+  // Only a single unformatted paragraph can be set inline in the heading
+  const plainLead = structuredTextToPlainParagraph(paragraph);
   const merged =
     title && !isPageTitle && twoTone === 'auto'
-      ? twoToneHeading(title, paragraph)
+      ? twoToneHeading(title, plainLead)
       : null;
   const headerClass = cn('reveal', GAP_CLASS[gap], className);
 
@@ -95,7 +105,7 @@ const SectionTitle = ({
     >
       <HeadingText
         title={title}
-        lead={paragraph}
+        lead={plainLead}
         isPageTitle={isPageTitle}
         merged={merged}
       />
@@ -103,7 +113,7 @@ const SectionTitle = ({
   ) : null;
 
   const lead =
-    paragraph && !merged ? (
+    hasStructuredText(paragraph) && !merged ? (
       <div
         className={cn(
           'section-lead',
@@ -111,7 +121,7 @@ const SectionTitle = ({
           resolvedAlign === 'center' && 'text-balance [&_p]:text-balance',
         )}
       >
-        <ReactMarkdown>{paragraph}</ReactMarkdown>
+        <DatoStructuredText data={paragraph} />
       </div>
     ) : null;
 

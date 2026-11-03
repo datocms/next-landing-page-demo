@@ -3,7 +3,9 @@ import { graphql } from '@/lib/datocms/graphql';
 export const PricingSectionFragment = graphql(/* GraphQL */ `
   fragment PricingSectionFragment on PricingSectionRecord {
     pricingSectionHeader
-    pricingSectionSubheader
+    pricingSectionSubheader {
+      value
+    }
     displayOption
     plans {
       id
@@ -15,6 +17,9 @@ export const PricingSectionFragment = graphql(/* GraphQL */ `
       }
       slug
       planFeatures
+      highlightLabel
+      ctaLabel
+      priceNote
     }
   }
 `);

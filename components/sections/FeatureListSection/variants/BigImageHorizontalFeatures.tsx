@@ -1,10 +1,11 @@
 import { useId } from 'react';
-import ReactMarkdown from 'react-markdown';
+import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import FeatureMedia from '@/components/sections/FeatureListSection/FeatureMedia';
 import { FeatureListSectionFragment } from '@/components/sections/FeatureListSection/fragment';
 import SectionTitle from '@/components/ui/SectionTitle';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
+import { hasStructuredText } from '@/utils/structuredText';
 import { toneClass } from '@/utils/tones';
 
 type Props = {
@@ -68,11 +69,9 @@ const BigImageHorizontalFeatures = ({ fragment, as = 'h2' }: Props) => {
                   <ItemHeading className="mt-3 text-h3 max-sm:mt-1.5 max-sm:text-h4">
                     {feature.featureTitle}
                   </ItemHeading>
-                  {feature.featureDescription && (
+                  {hasStructuredText(feature.featureDescription) && (
                     <div className="mt-2 text-[15px] leading-[1.55] text-ink-2 max-sm:mt-1 [&_p+p]:mt-2">
-                      <ReactMarkdown>
-                        {feature.featureDescription}
-                      </ReactMarkdown>
+                      <DatoStructuredText data={feature.featureDescription} />
                     </div>
                   )}
                 </div>

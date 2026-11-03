@@ -127,7 +127,7 @@ const BestValueCards = ({ fragment, locale, as = 'h2' }: Props) => {
                     type="button"
                     className="btn btn-primary mt-6 w-full max-md:h-12"
                   >
-                    {uiString(locale, 'choosePlan')}
+                    {bestPlan.ctaLabel || uiString(locale, 'choosePlan')}
                   </button>
                 </div>
               </div>

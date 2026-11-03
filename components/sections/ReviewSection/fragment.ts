@@ -25,7 +25,9 @@ export const ReviewSectionFragment = graphql(
   /* GraphQL */ `
     fragment ReviewSectionFragment on ReviewSectionRecord {
       reviewSectionHeader
-      reviewSectionSubheader
+      reviewSectionSubheader {
+        value
+      }
       displayOptions
       reviews {
         id

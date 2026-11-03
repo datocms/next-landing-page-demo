@@ -2,7 +2,7 @@ import { stripStega } from '@datocms/content-link';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { type CSSProperties, useId } from 'react';
-import ReactMarkdown from 'react-markdown';
+import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import SectionTitle from '@/components/ui/SectionTitle';
 import TwoTone from '@/components/ui/SectionTitle/TwoTone';
 import {
@@ -17,6 +17,7 @@ import {
   buildUrl,
   type ResolvedGlobalPageProps,
 } from '@/utils/globalPageProps';
+import { hasStructuredText } from '@/utils/structuredText';
 import { toneClass } from '@/utils/tones';
 import { ChangelogSectionFragment } from './fragment';
 
@@ -89,9 +90,9 @@ const ChangelogSection = ({ fragment, globalPageProps, as = 'h2' }: Props) => {
                   <TwoTone text={title} lineBreak="always" />
                 </h1>
               )}
-              {subtitle && (
+              {hasStructuredText(subtitle) && (
                 <div className="section-lead mt-4 [--lead-max:40ch]">
-                  <ReactMarkdown>{subtitle}</ReactMarkdown>
+                  <DatoStructuredText data={subtitle} />
                 </div>
               )}
             </header>

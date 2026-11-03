@@ -4,7 +4,9 @@ export const FaqSectionFragment = graphql(/* GraphQL */ `
   fragment FaqSectionFragment on FaqSectionRecord {
     displayOptions
     title
-    subtitle
+    subtitle {
+      value
+    }
     questions {
       question
       id

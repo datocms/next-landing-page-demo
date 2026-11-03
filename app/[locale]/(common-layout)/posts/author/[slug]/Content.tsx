@@ -1,13 +1,14 @@
 import { notFound } from 'next/navigation';
-import ReactMarkdown from 'react-markdown';
 import DatoImage from '@/components/datocms/DatoImage';
 import type { ResponsiveImageFragment } from '@/components/datocms/DatoImage/fragment';
+import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import PostExcerpt, { postCardLayout } from '@/components/posts/PostExcerpt';
 import PostsPageHeader from '@/components/posts/PostsPageHeader';
 import type { FragmentOf } from '@/lib/datocms/graphql';
 import type { ContentPage } from '@/lib/datocms/realtime/types';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
+import { hasStructuredText } from '@/utils/structuredText';
 import { TONES, toneIndex } from '@/utils/tones';
 import type { PageProps, Query } from './meta';
 
@@ -69,9 +70,9 @@ const Content: ContentPage<PageProps, Query> = ({
         {author.bio && (
           <p className="mt-3 text-lead text-ink-2">{author.bio}</p>
         )}
-        {author.description && (
+        {hasStructuredText(author.description) && (
           <div className="prose prose-sm mt-4 max-w-[62ch]">
-            <ReactMarkdown>{author.description}</ReactMarkdown>
+            <DatoStructuredText data={author.description} />
           </div>
         )}
       </PostsPageHeader>

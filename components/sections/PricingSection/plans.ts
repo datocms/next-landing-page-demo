@@ -72,6 +72,16 @@ export const featuredPlanIndex = (count: number) => {
   return Math.floor((count - 1) / 2);
 };
 
+/** The highlighted plan: the first one with a highlight label in the CMS, else the middle one */
+export const highlightedPlanIndex = (
+  plans: { highlightLabel?: string | null }[],
+) => {
+  const labelled = plans.findIndex((plan) =>
+    stripStega(plan.highlightLabel ?? '').trim(),
+  );
+  return labelled === -1 ? featuredPlanIndex(plans.length) : labelled;
+};
+
 /** Plan tones deepen left to right: three plans give tone-1, tone-3 and tone-5 */
 export const planTone = (index: number, count: number): Tone =>
   toneRamp(index, count, 1, 5);

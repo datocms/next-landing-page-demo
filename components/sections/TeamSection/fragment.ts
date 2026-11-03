@@ -6,13 +6,17 @@ export const TeamSectionFragment = graphql(
     fragment TeamSectionFragment on TeamSectionRecord {
       displayOptions
       title
-      subtitle
+      subtitle {
+        value
+      }
       showcasedMembers {
         name
         id
         slug
         bio
-        description
+        description {
+          value
+        }
         picture {
           responsiveImage {
             ...ResponsiveImageFragment

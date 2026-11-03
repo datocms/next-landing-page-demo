@@ -94,7 +94,7 @@ const FeatureListSelector = ({ fragment, locale, as = 'h2' }: Props) => {
             type="button"
             className="btn btn-primary mt-6 px-6 max-md:h-12 max-md:w-full"
           >
-            {uiString(locale, 'choosePlan')}
+            {plan.ctaLabel || uiString(locale, 'choosePlan')}
           </button>
         </div>
 

@@ -11,6 +11,10 @@ import {
   type ResolvedGlobalPageProps,
 } from '@/utils/globalPageProps';
 import initialsOf from '@/utils/initialsOf';
+import {
+  hasStructuredText,
+  structuredTextToPlainText,
+} from '@/utils/structuredText';
 import { toneClass } from '@/utils/tones';
 
 type Props = {
@@ -100,9 +104,9 @@ const PortraitGrid = ({ fragment, globalPageProps, as = 'h2' }: Props) => {
                 {member.bio && (
                   <p className="mt-0.5 text-caption text-ink-3">{member.bio}</p>
                 )}
-                {member.description && (
+                {hasStructuredText(member.description) && (
                   <p className="mt-2 text-[14px]/[1.55] text-pretty text-ink-2 max-md:line-clamp-3 md:mx-auto md:mt-3 md:max-w-[38ch] md:text-[14.5px]/[1.55]">
-                    {member.description}
+                    {structuredTextToPlainText(member.description)}
                   </p>
                 )}
               </div>

@@ -7,7 +7,7 @@ import PlanDot from '@/components/sections/PricingSection/PlanDot';
 import PlanFeature from '@/components/sections/PricingSection/PlanFeature';
 import Price from '@/components/sections/PricingSection/Price';
 import {
-  featuredPlanIndex,
+  highlightedPlanIndex,
   planFeatureRows,
   planTone,
 } from '@/components/sections/PricingSection/plans';
@@ -55,7 +55,7 @@ const PlanCards = ({ fragment, locale, as = 'h2' }: Props) => {
   const PlanHeading = as === 'h1' ? 'h2' : 'h3';
   const count = plans.length;
   const oneRow = count <= 4;
-  const featured = featuredPlanIndex(count);
+  const featured = highlightedPlanIndex(plans);
   const featureRows = planFeatureRows(plans);
   const headingId = `${uid}-pricing`;
 
@@ -112,18 +112,30 @@ const PlanCards = ({ fragment, locale, as = 'h2' }: Props) => {
                     >
                       {plan.tierName}
                     </PlanHeading>
+                    {isFeatured && plan.highlightLabel && (
+                      <span className="badge badge-accent ms-auto h-7 px-3 text-[12.5px]">
+                        {plan.highlightLabel}
+                      </span>
+                    )}
                   </div>
                   <div className="mt-2 text-body text-ink-2 leading-[1.55] lg:min-h-[4.65em] [&_p+p]:mt-2">
                     <DatoStructuredText data={plan.tierDescription} />
                   </div>
                 </div>
 
-                <Price
-                  className="mt-5 sm:max-lg:col-start-1"
-                  monthly={plan.monthlyPrice}
-                  yearly={plan.yearlyPrice}
-                  locale={locale}
-                />
+                {/* One element, so the subgrid keeps one row for the price */}
+                <div className="mt-5 sm:max-lg:col-start-1">
+                  <Price
+                    monthly={plan.monthlyPrice}
+                    yearly={plan.yearlyPrice}
+                    locale={locale}
+                  />
+                  {plan.priceNote && (
+                    <p className="mt-2 text-small text-ink-3">
+                      {plan.priceNote}
+                    </p>
+                  )}
+                </div>
 
                 <button
                   type="button"
@@ -132,7 +144,7 @@ const PlanCards = ({ fragment, locale, as = 'h2' }: Props) => {
                     isFeatured ? 'btn-primary' : 'btn-secondary',
                   )}
                 >
-                  {uiString(locale, 'startFreeTrial')}
+                  {plan.ctaLabel || uiString(locale, 'startFreeTrial')}
                 </button>
 
                 {features.length > 0 ? (
