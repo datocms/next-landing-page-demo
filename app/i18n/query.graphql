@@ -1,5 +1,0 @@
-query Locales {
-  _site {
-    locales
-  }
-}

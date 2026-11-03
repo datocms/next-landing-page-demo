@@ -34,6 +34,13 @@ Before schema or content operations:
 - Changelog entries: `change_log` records feed `changelog_section` blocks and `/changelog/[slug]`.
 - Legal pages: `legal_page` records feed `/legal/[slug]` and `layout.footer_links`.
 
+## Rendering these records
+
+- Posts index, tag and author pages open with `components/posts/PostsPageHeader` (label pill, h1, meta line); post cards are `components/posts/PostExcerpt`. Post bodies are rendered by `PostBody.tsx` in the post route, and the blocks they embed live in `components/blocks/`. Their styles that utilities can't express live in `styles/sections/posts.css`.
+- Legal pages build their "On this page" rail with `components/ui/TableOfContents.tsx` and derive heading ids with `utils/headingOutline.ts`. Legal, changelog and docs share `styles/sections/long-form.css` and the `.prose` styles in `styles/components/prose.css`.
+- Follow the styling rules in the `landing-page-demo-sections` skill: tokens and primitives only, no raw colors, everything derived from `--color-primary`.
+- Interface copy that has no CMS field ("Latest posts", "Posts by {name}", "{n} posts", "Page {page} of {total}", the empty tag state) comes from `uiString(locale, key, vars?)` in `@/lib/i18n/uiStrings`; add new keys to `en` first, then to every locale.
+
 ## Common workflows
 
 ### Add or edit an existing content record
@@ -51,7 +58,7 @@ Before schema or content operations:
 1. Confirm the request changes an existing content surface, not a new section type or new route.
 2. Update the closest existing query, fragment, or component.
 3. Preserve current pagination and locale-aware links.
-4. Regenerate GraphQL types after query changes.
+4. Query types are inferred by gql.tada; run `npm run generate-schema` only after DatoCMS schema changes.
 5. Verify the route and any section that consumes the record.
 
 ### Add a content record to an existing section or layout field
@@ -76,4 +83,4 @@ Before schema or content operations:
 - Published records appear in the intended route or section.
 - Draft/live preview keeps working for draft-enabled records.
 - Pagination still works for post listing changes.
-- GraphQL type generation and build pass after code changes.
+- `npm run lint` (including `gql.tada check`) and build pass after code changes.

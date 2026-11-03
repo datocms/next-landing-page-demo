@@ -1,57 +1,28 @@
-import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
-import AboutIntro from '@/components/blocksWithVariants/AboutIntroRecord/AboutIntro';
-import PostGridRenderer from '@/components/blocksWithVariants/AllPostsSectionRecord/PostGridRenderer';
-import BrandCards from '@/components/blocksWithVariants/BrandSectionRecord/BrandCards';
-import Brands from '@/components/blocksWithVariants/BrandSectionRecord/Brands';
-import Changelog from '@/components/blocksWithVariants/ChangelogSectionRecord/Changelog';
-import DetailSection from '@/components/blocksWithVariants/DetailSectionRecord/DetailSection';
-import FAQAccordion from '@/components/blocksWithVariants/FaqSectionRecord/FAQAccordion';
-import FAQGrid from '@/components/blocksWithVariants/FaqSectionRecord/FAQGrid';
-import BigImageHorizontalFeatures from '@/components/blocksWithVariants/FeatureListSectionRecord/BigImageHorizontalFeatures';
-import BigImageVerticalFeatures from '@/components/blocksWithVariants/FeatureListSectionRecord/BigImageVerticalFeatures';
-import FeatureCards from '@/components/blocksWithVariants/FeatureListSectionRecord/FeatureCards';
-import Features from '@/components/blocksWithVariants/FeatureListSectionRecord/Features';
-import MinimalCardsFeature from '@/components/blocksWithVariants/FeatureListSectionRecord/MinimalCardsFeature';
-import Blog from '@/components/blocksWithVariants/FeaturedPostsSectionRecord/Blog';
-import CarouselFeaturedPosts from '@/components/blocksWithVariants/FeaturedPostsSectionRecord/CarouselFeaturedPosts';
-import FullImageFeaturedPosts from '@/components/blocksWithVariants/FeaturedPostsSectionRecord/FullImageFeaturedPosts';
-import MinimalistFeaturedPostsGrid from '@/components/blocksWithVariants/FeaturedPostsSectionRecord/MinimalistFeaturedPostsGrid';
-import ModernPostCards from '@/components/blocksWithVariants/FeaturedPostsSectionRecord/ModernPostCards';
-import BackgroundImageHero from '@/components/blocksWithVariants/HeroSectionRecord/BackgroundImage';
-import GradientHero from '@/components/blocksWithVariants/HeroSectionRecord/GradientHero';
-import Hero from '@/components/blocksWithVariants/HeroSectionRecord/Hero';
-import RightImageHero from '@/components/blocksWithVariants/HeroSectionRecord/RightImageHero';
-import SplitImage from '@/components/blocksWithVariants/HeroSectionRecord/SplitImage';
-import FeatureListSelector from '@/components/blocksWithVariants/PricingSectionRecord/FeatureListSelector';
-import GradientCards from '@/components/blocksWithVariants/PricingSectionRecord/GradientCards';
-import Minimal from '@/components/blocksWithVariants/PricingSectionRecord/Minimal';
-import Pricing from '@/components/blocksWithVariants/PricingSectionRecord/Pricing';
-import SmallCards from '@/components/blocksWithVariants/PricingSectionRecord/SmallCards';
-import Carousel from '@/components/blocksWithVariants/ReviewSectionRecord/Carousel';
-import MinimalCarousel from '@/components/blocksWithVariants/ReviewSectionRecord/MinimalCarousel';
-import MinimalReviewCards from '@/components/blocksWithVariants/ReviewSectionRecord/MinimalReviewCards';
-import ModernCarousel from '@/components/blocksWithVariants/ReviewSectionRecord/ModernCarousel';
-import Testimonials from '@/components/blocksWithVariants/ReviewSectionRecord/Testimonials';
-import StatsSection from '@/components/blocksWithVariants/StatsSectionRecord/StatsSection';
-import CompactTeam from '@/components/blocksWithVariants/TeamSectionRecord/CompactTeam';
-import ExpandedTeam from '@/components/blocksWithVariants/TeamSectionRecord/ExpandedTeam';
-import Video from '@/components/blocksWithVariants/VideoSectionRecord/Video';
-import { buildUrl } from '@/utils/globalPageProps';
-import { notFound, redirect } from 'next/navigation';
-import type { PageProps, Query } from './meta';
 import { stripStega } from '@datocms/content-link';
+import { notFound, redirect } from 'next/navigation';
+import AboutIntro from '@/components/sections/AboutIntro';
+import AllPostsSection from '@/components/sections/AllPostsSection';
+import BrandSection from '@/components/sections/BrandSection';
+import ChangelogSection from '@/components/sections/ChangelogSection';
+import DetailSection from '@/components/sections/DetailSection';
+import FaqSection from '@/components/sections/FaqSection';
+import FeaturedPostsSection from '@/components/sections/FeaturedPostsSection';
+import FeatureListSection from '@/components/sections/FeatureListSection';
+import HeroSection from '@/components/sections/HeroSection';
+import PricingSection from '@/components/sections/PricingSection';
+import ReviewSection from '@/components/sections/ReviewSection';
+import StatsSection from '@/components/sections/StatsSection';
+import TeamSection from '@/components/sections/TeamSection';
+import VideoSection from '@/components/sections/VideoSection';
+import type { ContentPage } from '@/lib/datocms/realtime/types';
+import { buildUrl } from '@/utils/globalPageProps';
+import type { PageProps, Query } from './meta';
 
 /**
- * DatoCMS Content Link can add invisible editing markers to text fields.
- * Keep those markers when rendering copy, but strip them before using a value
- * in code paths that need an exact string: switch cases, equality checks, URL
- * construction, metadata, third-party payloads, or similar logic.
- *
- * Without this cleanup, a value that looks like "gradient" may not match the
- * "gradient" case below, and generated paths can include hidden characters.
+ * A page is a stack of section blocks (the Page model's "Sections" field).
+ * Each block type has its own component in components/sections/, which also
+ * picks the block's layout from its display option field.
  */
-const normalizeDisplayOption = (value?: string) => stripStega(value || '');
-
 const Content: ContentPage<PageProps, Query> = ({
   data,
   ...globalPageProps
@@ -60,219 +31,97 @@ const Content: ContentPage<PageProps, Query> = ({
     notFound();
   }
 
-  return (
-    <>
-      {data.page.sections.map((section) => {
-        switch (section.__typename) {
-          case 'ChangelogSectionRecord': {
-            return (
-              <Changelog
-                key={section.id}
-                fragment={section}
-                globalPageProps={globalPageProps}
-              />
-            );
-          }
-          case 'HeroSectionRecord': {
-            switch (normalizeDisplayOption(section.displayOptions)) {
-              case 'gradient':
-                return <GradientHero key={section.id} fragment={section} />;
-              case 'right_image':
-                return <RightImageHero key={section.id} fragment={section} />;
-              case 'background_image':
-                return (
-                  <BackgroundImageHero key={section.id} fragment={section} />
-                );
-              case 'split_image':
-                return <SplitImage key={section.id} fragment={section} />;
-              default:
-                return <Hero key={section.id} fragment={section} />;
-            }
-          }
+  const { locale } = globalPageProps.params;
 
-          case 'FeatureListSectionRecord': {
-            switch (normalizeDisplayOption(section.displayOption)) {
-              case 'card_minimal':
-                return (
-                  <MinimalCardsFeature key={section.id} fragment={section} />
-                );
-              case 'grid':
-                return <Features key={section.id} fragment={section} />;
-              case 'big_image_horizontal':
-                return (
-                  <BigImageHorizontalFeatures
-                    key={section.id}
-                    fragment={section}
-                  />
-                );
-              case 'big_image_vertical':
-                return (
-                  <BigImageVerticalFeatures
-                    key={section.id}
-                    fragment={section}
-                  />
-                );
-              default:
-                return <FeatureCards key={section.id} fragment={section} />;
-            }
-          }
+  return data.page.sections.map((section, index) => {
+    // A section that opens a page without a hero carries the page's h1
+    const as = index === 0 ? 'h1' : 'h2';
+    const key = section.id;
 
-          case 'VideoSectionRecord': {
-            return <Video key={section.id} fragment={section} />;
-          }
-          case 'BrandSectionRecord': {
-            switch (normalizeDisplayOption(section.displayOptions)) {
-              case 'brand_cards':
-                return <BrandCards key={section.id} fragment={section} />;
-              default:
-                return <Brands key={section.id} fragment={section} />;
-            }
-          }
-          case 'DetailSectionRecord': {
-            return <DetailSection key={section.id} fragment={section} />;
-          }
-          case 'ReviewSectionRecord': {
-            switch (normalizeDisplayOption(section.displayOptions)) {
-              case 'card_carrousel':
-                return <Carousel key={section.id} fragment={section} />;
-              case 'modern_carrousel':
-                return <ModernCarousel key={section.id} fragment={section} />;
-              case 'minimal_carrousel':
-                return <MinimalCarousel key={section.id} fragment={section} />;
-              case 'minimal_cards':
-                return (
-                  <MinimalReviewCards key={section.id} fragment={section} />
-                );
-              default:
-                return <Testimonials key={section.id} fragment={section} />;
-            }
-          }
-
-          case 'PricingSectionRecord': {
-            switch (normalizeDisplayOption(section.displayOption)) {
-              case 'cards_gradient':
-                return <GradientCards key={section.id} fragment={section} />;
-              case 'minimal':
-                return <Minimal key={section.id} fragment={section} />;
-              case 'feature_list':
-                return (
-                  <FeatureListSelector key={section.id} fragment={section} />
-                );
-              case 'mini_cards':
-                return <SmallCards key={section.id} fragment={section} />;
-              default:
-                return <Pricing key={section.id} fragment={section} />;
-            }
-          }
-
-          case 'FeaturedPostsSectionRecord': {
-            switch (normalizeDisplayOption(section.displayOptions)) {
-              case 'modern_cards':
-                return (
-                  <ModernPostCards
-                    key={section.id}
-                    globalPageProps={globalPageProps}
-                    fragment={section}
-                  />
-                );
-              case 'carrousel':
-                return (
-                  <CarouselFeaturedPosts
-                    key={section.id}
-                    globalPageProps={globalPageProps}
-                    fragment={section}
-                  />
-                );
-              case 'carousel':
-                return (
-                  <CarouselFeaturedPosts
-                    key={section.id}
-                    globalPageProps={globalPageProps}
-                    fragment={section}
-                  />
-                );
-              case 'minimalist_grid':
-                return (
-                  <MinimalistFeaturedPostsGrid
-                    key={section.id}
-                    globalPageProps={globalPageProps}
-                    fragment={section}
-                  />
-                );
-              case 'full_image_card':
-                return (
-                  <FullImageFeaturedPosts
-                    key={section.id}
-                    globalPageProps={globalPageProps}
-                    fragment={section}
-                  />
-                );
-              default:
-                return (
-                  <Blog
-                    key={section.id}
-                    globalPageProps={globalPageProps}
-                    fragment={section}
-                  />
-                );
-            }
-          }
-
-          case 'TeamSectionRecord': {
-            if (normalizeDisplayOption(section.displayOptions) === 'compact')
-              return (
-                <CompactTeam
-                  key={section.id}
-                  fragment={section}
-                  globalPageProps={globalPageProps}
-                />
-              );
-            return (
-              <ExpandedTeam
-                key={section.id}
-                fragment={section}
-                globalPageProps={globalPageProps}
-              />
-            );
-          }
-          case 'FaqSectionRecord': {
-            if (normalizeDisplayOption(section.displayOptions) === 'accordion') {
-              return <FAQAccordion key={section.id} fragment={section} />;
-            }
-
-            return <FAQGrid key={section.id} fragment={section} />;
-          }
-          case 'StatsSectionRecord': {
-            return <StatsSection key={section.id} fragment={section} />;
-          }
-          case 'AboutIntroRecord': {
-            return <AboutIntro key={section.id} fragment={section} />;
-          }
-          case 'AllPostsSectionRecord': {
-            return (
-              <PostGridRenderer
-                key={section.id}
-                data={data}
-                globalPageProps={globalPageProps}
-              />
-            );
-          }
-          case 'RedirectSectionRecord': {
-            const redirectSectionRecord = section;
-            redirect(
-              buildUrl(
-                globalPageProps,
-                `/${stripStega(redirectSectionRecord.slugToRedirectTo)}`,
-              ),
-            );
-            return null;
-          }
-          default:
-            return null;
-        }
-      })}
-    </>
-  );
+    switch (section.__typename) {
+      case 'HeroSectionRecord':
+        return <HeroSection key={key} fragment={section} />;
+      case 'FeatureListSectionRecord':
+        return (
+          <FeatureListSection
+            key={key}
+            fragment={section}
+            locale={locale}
+            as={as}
+          />
+        );
+      case 'VideoSectionRecord':
+        return (
+          <VideoSection key={key} fragment={section} locale={locale} as={as} />
+        );
+      case 'BrandSectionRecord':
+        return <BrandSection key={key} fragment={section} locale={locale} />;
+      case 'DetailSectionRecord':
+        return <DetailSection key={key} fragment={section} as={as} />;
+      case 'ReviewSectionRecord':
+        return (
+          <ReviewSection key={key} fragment={section} locale={locale} as={as} />
+        );
+      case 'PricingSectionRecord':
+        return (
+          <PricingSection
+            key={key}
+            fragment={section}
+            locale={locale}
+            as={as}
+          />
+        );
+      case 'FeaturedPostsSectionRecord':
+        return (
+          <FeaturedPostsSection
+            key={key}
+            fragment={section}
+            globalPageProps={globalPageProps}
+            as={as}
+          />
+        );
+      case 'TeamSectionRecord':
+        return (
+          <TeamSection
+            key={key}
+            fragment={section}
+            globalPageProps={globalPageProps}
+            as={as}
+          />
+        );
+      case 'FaqSectionRecord':
+        return <FaqSection key={key} fragment={section} as={as} />;
+      case 'StatsSectionRecord':
+        return <StatsSection key={key} fragment={section} as={as} />;
+      case 'AboutIntroRecord':
+        return <AboutIntro key={key} fragment={section} as={as} />;
+      case 'ChangelogSectionRecord':
+        return (
+          <ChangelogSection
+            key={key}
+            fragment={section}
+            globalPageProps={globalPageProps}
+            as={as}
+          />
+        );
+      case 'AllPostsSectionRecord':
+        return (
+          <AllPostsSection
+            key={key}
+            data={data}
+            globalPageProps={globalPageProps}
+          />
+        );
+      case 'RedirectSectionRecord':
+        // A page made of a redirect block forwards to another page.
+        // stripStega: Content Link markers would end up in the URL
+        return redirect(
+          buildUrl(globalPageProps, `/${stripStega(section.slugToRedirectTo)}`),
+        );
+      default:
+        return null;
+    }
+  });
 };
 
 export default Content;

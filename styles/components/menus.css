@@ -1,0 +1,49 @@
+/* Dropdown menus (header navigation, language picker): the panel and its rows. */
+
+@layer components {
+  /* The panel fades and drops in each time it opens (@starting-style) */
+  .menu-panel {
+    z-index: 60;
+    min-width: 14.5rem;
+    padding: 8px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: var(--bg);
+    box-shadow: var(--card-shadow);
+    transform-origin: top;
+    transition:
+      opacity 0.2s var(--ease-out-quint),
+      translate 0.2s var(--ease-out-quint),
+      scale 0.2s var(--ease-out-quint),
+      display 0.2s allow-discrete;
+    @starting-style {
+      opacity: 0;
+      translate: 0 -4px;
+      scale: 0.98;
+    }
+  }
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 40px;
+    padding-inline: 12px;
+    border-radius: 12px;
+    font: 500 0.875rem / 1.2 var(--font-sans);
+    color: var(--ink);
+    text-decoration: none;
+    transition: background-color var(--duration-fast) var(--ease);
+    @media (hover: hover) {
+      &:hover {
+        background: var(--bg-2);
+      }
+    }
+    &[aria-current='page'],
+    &[aria-current='true'] {
+      background: var(--bg-2);
+    }
+    @media (pointer: coarse) {
+      min-height: 44px;
+    }
+  }
+}

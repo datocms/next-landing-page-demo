@@ -1,8 +1,9 @@
+import { TagFragment } from '@/lib/datocms/commonFragments';
 import {
-  ChangelogDocument,
-  type ChangelogQuery,
-  type ChangelogQueryVariables,
-} from '@/graphql/types/graphql';
+  graphql,
+  type ResultOf,
+  type VariablesOf,
+} from '@/lib/datocms/graphql';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 
 export type PageProps = ResolvedGlobalPageProps & {
@@ -11,7 +12,43 @@ export type PageProps = ResolvedGlobalPageProps & {
   };
 };
 
-export type Query = ChangelogQuery;
-export type Variables = ChangelogQueryVariables;
+export const query = graphql(
+  /* GraphQL */ `
+    query ChangelogQuery(
+      $slug: String
+      $locale: SiteLocale
+      $fallbackLocale: [SiteLocale!]
+    ) {
+      changeLog(
+        filter: { slug: { eq: $slug } }
+        locale: $locale
+        fallbackLocales: $fallbackLocale
+      ) {
+        seo: _seoMetaTags {
+          ...TagFragment
+        }
+        timeOfRelease
+        versionName
+        slug
+        content {
+          value
+        }
+      }
+      allChangeLogs(
+        orderBy: timeOfRelease_DESC
+        first: 100
+        locale: $locale
+        fallbackLocales: $fallbackLocale
+      ) {
+        id
+        versionName
+        slug
+        timeOfRelease
+      }
+    }
+  `,
+  [TagFragment],
+);
 
-export const query = ChangelogDocument;
+export type Query = ResultOf<typeof query>;
+export type Variables = VariablesOf<typeof query>;

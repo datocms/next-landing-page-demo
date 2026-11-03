@@ -1,7 +1,13 @@
-import { cookies, draftMode } from 'next/headers';
+import { draftMode } from 'next/headers';
 import { redirect } from 'next/navigation';
 import isSafeRedirectUrl from '@/utils/isSafeRedirectUrl';
+import partitionDraftModeCookie from '../partitionDraftModeCookie';
 
+/**
+ * Turns Draft Mode off, then redirects to `?redirect=` when there is one (a
+ * path on this site). Called by the "Published version" links from
+ * /api/draft/preview-links and by the site's Draft Mode toggle.
+ */
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const { searchParams } = requestUrl;
@@ -16,21 +22,7 @@ export async function GET(request: Request) {
   if (!isSafeRedirectUrl(redirectPath, requestUrl))
     return new Response('URL must be relative!', { status: 422 });
 
-  //to avoid losing the cookie on redirect in the iFrame
-  const cookieStore = await cookies();
-  const cookie = cookieStore.get('__prerender_bypass')!;
-  cookieStore.set({
-    name: '__prerender_bypass',
-    value: cookie?.value,
-    httpOnly: true,
-    path: '/',
-    secure: true,
-    sameSite: 'none',
-    // Given that this route can also be accessed within the iframe of the Web Previews plugin,
-    // it is important to bypass the restrictions for third-party cookies by setting the
-    // `partitioned: true` option (https://developers.google.com/privacy-sandbox/3pcd)
-    partitioned: true,
-  });
+  await partitionDraftModeCookie();
 
   redirect(redirectPath);
 }

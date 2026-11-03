@@ -1,0 +1,14 @@
+/* Blog posts (post cards, featured posts, the posts index, post pages). Holds the post
+   body's lead paragraph. Like every file here: only what utilities and the shared primitives
+   can't express, inside `@layer groups { … }` (see global.css). */
+
+@layer groups {
+  /* Article body (posts/[slug]): the first paragraph reads as the lead. DatoStructuredText wraps
+     its output in a content-link group div, so both shapes are matched. */
+  .post-article > p:first-child,
+  .post-article > [data-datocms-content-link-group] > p:first-child {
+    font-size: var(--text-lead);
+    line-height: 1.65;
+    color: var(--ink);
+  }
+}

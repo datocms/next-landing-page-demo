@@ -1,0 +1,257 @@
+/* Runtime design tokens on :root. Every colour derives from --color-primary, the accent
+   set in DatoCMS (components/layout/CustomColor.tsx writes it), so changing that one
+   value re-themes the whole site. */
+
+@layer base {
+  :root {
+    --accent: var(--color-primary);
+
+    /* Neutral warmth window, 0…1. It contains `h`: only ever substitute it inside oklch(from …).
+       1 for accent hues of about 20-120 (red-orange, orange, amber, yellow, olive), easing to 0
+       by about 355 and 145 (lime gets part of it). A low-lightness neutral in that range reads
+       as brown or olive, so there the chroma caps below drop to about .015: warm brands get a
+       warm graphite, while blues keep their navy tint and greens, purples and pinks their own */
+    --n-warm: clamp(0, (cos((h - 70) * 1deg) - 0.26) * 2.6, 1);
+
+    /* Neutrals (page, wells, text, lines), each tinted with the accent hue */
+    --bg: #fff;
+    --bg-2: oklch(
+      from var(--accent) 0.982 min(c * 0.04, 0.007 - 0.003 * var(--n-warm)) h
+    );
+    --surface: oklch(
+      from var(--accent) 0.962 min(c * 0.07, 0.013 - 0.006 * var(--n-warm)) h
+    );
+    --ink: oklch(
+      from var(--accent) 0.22 min(c * 0.2, 0.04 - 0.025 * var(--n-warm)) h
+    );
+    --ink-2: oklch(
+      from var(--accent) 0.47 min(c * 0.2, 0.035 - 0.02 * var(--n-warm)) h
+    );
+    --ink-3: oklch(
+      from var(--accent) 0.54 min(c * 0.15, 0.03 - 0.015 * var(--n-warm)) h
+    );
+    --line: oklch(
+      from var(--accent) 0.925 min(c * 0.07, 0.014 - 0.006 * var(--n-warm)) h
+    );
+    --line-strong: oklch(
+      from var(--accent) 0.64 min(c * 0.12, 0.025 - 0.01 * var(--n-warm)) h
+    );
+    --line-hover: color-mix(in oklch, var(--line) 50%, var(--line-strong));
+    --frame: oklch(
+      from var(--accent) 0.22 min(c, 0.04 - 0.025 * var(--n-warm)) h /
+      0.1
+    );
+    --photo-ring: oklch(
+      from var(--accent) 0.22 min(c, 0.04 - 0.025 * var(--n-warm)) h /
+      0.08
+    );
+    /* Placeholder bars in the mini UIs and mock windows (the sk utility, bg-sk-*) */
+    --sk: var(--surface);
+    --sk-2: color-mix(in oklch, var(--ink) 9%, var(--surface));
+    --sk-3: color-mix(in oklch, var(--ink) 18%, white);
+    /* An ink fill on hover (.btn-ink) */
+    --ink-hover: oklch(from var(--ink) calc(l + 0.08) c h);
+
+    /* Accent */
+    --accent-solid: oklch(from var(--accent) min(l, 0.52) min(c, 0.22) h);
+    --accent-text: oklch(from var(--accent-solid) 0.42 c h);
+    --accent-wash: color-mix(in oklch, var(--accent-solid) 10%, white);
+    --accent-ring: color-mix(in oklch, var(--accent-solid) 16%, transparent);
+    /* Primary fill: equals --accent-solid with a white label for every accent with L <= .72
+       (orange and pink included); a genuinely light brand colour (yellow, lime) keeps its own
+       colour with an ink label */
+    --accent-fill: oklch(
+      from var(--accent)
+        min(
+          calc(
+            min(l, 0.52) +
+            max(0, l - 0.52) *
+            clamp(0, (l - 0.72) * 1000, 1)
+          ),
+          0.9
+        )
+        min(c, 0.22) h
+    );
+    --on-accent: oklch(
+      from var(--accent) calc(0.165 + 0.835 * clamp(0, (0.72 - l) * 1000, 1)) 0
+        0
+    );
+    /* A 0.05 lightness sheen. Behind a white label (fill L <= .72) the ramp shifts down by half,
+       so its midpoint, where the label sits, is never lighter than the fill: >= 4.5:1 for green,
+       teal and cyan accents too. Light fills with an ink label keep the ramp above the fill */
+    --accent-fill-sheen: linear-gradient(
+      180deg,
+      oklch(
+        from var(--accent-fill)
+          calc(l + 0.05 - 0.025 * clamp(0, (0.72 - l) * 1000, 1)) c
+          calc(h - var(--g-dr) * 0.3)
+      ),
+      oklch(
+        from var(--accent-fill) calc(l - 0.025 * clamp(0, (0.72 - l) * 1000, 1))
+          c calc(h + var(--g-dr) * 0.3)
+      )
+    );
+    --accent-fill-hover: oklch(from var(--accent-fill) calc(l - 0.05) c h);
+    --accent-fill-hover-sheen: linear-gradient(
+      180deg,
+      oklch(from var(--accent-fill) calc(l - 0.01) c h),
+      oklch(from var(--accent-fill) calc(l - 0.06) c h)
+    );
+    --accent-fill-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.16),
+      0 1px 2px oklch(from var(--accent-fill) 0.3 c h / 0.25);
+
+    /* Gradient ramp: ten stops of the accent hue, light to deep. The hue drifts up to ±8° from
+       the light end to the deep end (--g-dr) so the ramp doesn't look flat. --g-dr contains `h`:
+       only ever substitute it inside oklch(from …) */
+    --g-dr: clamp(-8, -16 * cos((h - 40) * 1deg), 8);
+    --g-50: oklch(
+      from var(--accent) 0.975 min(c * 0.1, 0.018) calc(h - var(--g-dr))
+    );
+    --g-100: oklch(
+      from var(--accent) 0.95 min(c * 0.2, 0.036) calc(h - var(--g-dr))
+    );
+    --g-200: oklch(
+      from var(--accent) 0.905 min(c * 0.38, 0.072) calc(h - var(--g-dr) * 0.9)
+    );
+    --g-300: oklch(
+      from var(--accent) 0.835 min(c * 0.58, 0.115) calc(h - var(--g-dr) * 0.75)
+    );
+    --g-400: oklch(
+      from var(--accent) 0.745 min(c * 0.8, 0.155) calc(h - var(--g-dr) * 0.45)
+    );
+    --g-500: oklch(
+      from var(--accent) 0.655 min(c * 0.95, 0.19) calc(h - var(--g-dr) * 0.15)
+    );
+    --g-600: oklch(from var(--accent) 0.565 min(c, 0.21) h);
+    --g-700: oklch(
+      from var(--accent) 0.475 min(c * 0.95, 0.19) calc(h + var(--g-dr) * 0.35)
+    );
+    --g-800: oklch(
+      from var(--accent) 0.385 min(c * 0.8, 0.15) calc(h + var(--g-dr) * 0.7)
+    );
+    --g-900: oklch(
+      from var(--accent) 0.295 min(c * 0.6, 0.11) calc(h + var(--g-dr))
+    );
+    --grad-a: var(--g-300);
+    --grad-b: oklch(from var(--accent) clamp(0.5, l, 0.68) min(c, 0.21) h);
+    --grad-c: var(--g-800);
+    --grad: linear-gradient(
+      90deg,
+      var(--grad-a),
+      var(--grad-b) 50%,
+      var(--grad-c)
+    );
+    --grad-line: linear-gradient(
+      90deg,
+      var(--g-200),
+      var(--grad-b) 35%,
+      var(--grad-c) 68%,
+      var(--g-300)
+    );
+    --grad-ring: conic-gradient(
+      from 210deg,
+      var(--g-200),
+      var(--grad-b) 40%,
+      var(--grad-c) 75%,
+      var(--g-200)
+    );
+    --grad-border: linear-gradient(
+      135deg,
+      var(--grad-a),
+      var(--grad-b) 45%,
+      var(--grad-c)
+    );
+
+    /* Default tone (= tone-2) so dots and chips work without a tone class. --kn is the depth
+       (0…5), --s the tone colour, --s-hi its light end and --s-grad the two as a gradient;
+       --s-at is where zone-glow puts its light. The tone-N utilities override these */
+    --kn: 2;
+    --s-at: 0% 100%;
+    --s: color-mix(in oklch, var(--g-800) calc(var(--kn) * 20%), var(--g-500));
+    --s-hi: color-mix(
+      in oklch,
+      var(--g-600) calc(var(--kn) * 20%),
+      var(--g-300)
+    );
+    --s-ang: calc(120deg + var(--kn) * 30deg);
+    --s-grad: linear-gradient(var(--s-ang), var(--s-hi), var(--s));
+    --s-wash: var(--g-100);
+    --s-mark: var(--g-200);
+    --s-text: var(--g-800);
+
+    /* Shadows */
+    --shadow-xs: 0 1px 2px oklch(from var(--accent) 0.22 min(c, 0.04) h / 0.04);
+    --card-shadow:
+      0 0 0 1px oklch(from var(--accent) 0.22 min(c, 0.04) h / 0.06),
+      0 1px 2px oklch(from var(--accent) 0.22 min(c, 0.04) h / 0.05),
+      0 10px 24px -14px oklch(from var(--accent) 0.3 min(c, 0.08) h / 0.18);
+    --pop-shadow:
+      var(--card-shadow),
+      0 30px 60px -30px oklch(from var(--accent) 0.3 min(c, 0.08) h / 0.3);
+    --window-shadow:
+      0 1px 2px oklch(from var(--accent) 0.22 min(c, 0.04) h / 0.05),
+      0 32px 64px -40px oklch(from var(--accent) 0.3 min(c, 0.08) h / 0.28);
+    --window-shadow-sm:
+      0 1px 2px oklch(from var(--accent) 0.22 min(c, 0.04) h / 0.05),
+      0 20px 40px -28px oklch(from var(--accent) 0.3 min(c, 0.08) h / 0.22);
+    --thumb-shadow:
+      0 1px 2px oklch(from var(--accent) 0.22 min(c, 0.04) h / 0.1),
+      0 0 0 1px oklch(from var(--accent) 0.22 min(c, 0.04) h / 0.05);
+    --feature-shadow: 0 10px 28px -18px
+      oklch(from var(--accent) 0.35 min(c, 0.12) h / 0.45);
+    --lift: drop-shadow(
+        0 1px 1.5px oklch(from var(--accent) 0.3 min(c, 0.08) h / 0.12)
+      )
+      drop-shadow(
+        0 6px 12px oklch(from var(--accent) 0.3 min(c, 0.08) h / 0.07)
+      );
+
+    /* Layout and motion */
+    --container: 1200px;
+    --pad: 40px;
+    --gutter: 24px;
+    --section: 80px;
+    --header-h: 64px;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration-fast: 150ms;
+    --duration-base: 200ms;
+    --duration-slow: 250ms;
+    --duration-ui: 300ms;
+  }
+
+  /* Breakpoint steps: tighter padding and smaller type below 1200, 1024 and 768 */
+  @media (width < 75rem) {
+    :root {
+      --text-h1: 2.875rem;
+    }
+  }
+  @media (width < 64rem) {
+    :root {
+      --pad: 32px;
+      --header-h: 60px;
+      --text-title: 2.5rem;
+      --text-quote: 1.375rem;
+    }
+  }
+  @media (width < 48rem) {
+    :root {
+      --pad: 20px;
+      --gutter: 16px;
+      --section: 64px;
+      /* Fluid on phones: 36px at 390 and up, about 33px at 360, so a two-tone H1's first
+         half ("Elevate Your Business") keeps its own line */
+      --text-h1: clamp(1.875rem, 9.2vw, 2.25rem);
+      --text-h1--line-height: 1.08;
+      --text-h1--letter-spacing: -0.03em;
+      --text-title: 2rem;
+      --text-h2: 1.625rem;
+      --text-h2--line-height: 1.2;
+      --text-quote: 1.25rem;
+      --text-h3-lg: 1.125rem;
+      --text-lead: 1rem;
+      --text-stat: 2rem;
+      --text-price: 2rem;
+    }
+  }
+}

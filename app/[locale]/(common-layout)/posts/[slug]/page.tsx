@@ -1,20 +1,32 @@
-import getAvailableLocales from '@/app/i18n/settings';
-import { generateMetadataFn } from '@/components/WithRealTimeUpdates/generateMetadataFn';
-import { generateWrapper } from '@/components/WithRealTimeUpdates/generateWrapper';
-import type { BuildVariablesFn } from '@/components/WithRealTimeUpdates/types';
-import { PostStaticParamsDocument } from '@/graphql/types/graphql';
-import queryDatoCMS from '@/utils/queryDatoCMS';
+import { executeQuery } from '@/lib/datocms/executeQuery';
+import { generateMetadataFn } from '@/lib/datocms/generateMetadataFn';
+import { graphql } from '@/lib/datocms/graphql';
+import { generatePageComponent } from '@/lib/datocms/realtime/generatePageComponent';
+import type { BuildVariablesFn } from '@/lib/datocms/routeContext';
+import { getAvailableLocales } from '@/lib/i18n/locales';
 import Content from './Content';
+import { type PageProps, type Query, query, type Variables } from './meta';
 import RealTime from './RealTime';
-import { type PageProps, type Query, type Variables, query } from './meta';
+
+const staticParamsQuery = graphql(/* GraphQL */ `
+  query PostStaticParamsQuery {
+    allPosts(
+      filter: { title: { isBlank: "false" } }
+      orderBy: _createdAt_DESC
+      first: 9
+    ) {
+      slug
+    }
+  }
+`);
 
 export async function generateStaticParams() {
   const locales = await getAvailableLocales();
-  const { allPosts } = await queryDatoCMS(PostStaticParamsDocument);
+  const { allPosts } = await executeQuery(staticParamsQuery);
 
-  return allPosts.flatMap((page) =>
+  return allPosts.flatMap((post) =>
     locales.map((locale): PageProps['params'] => ({
-      slug: page.slug,
+      slug: post.slug,
       locale,
     })),
   );
@@ -37,7 +49,7 @@ export const generateMetadata = generateMetadataFn<PageProps, Query, Variables>(
   },
 );
 
-const Page = generateWrapper<PageProps, Query, Variables>({
+const Page = generatePageComponent<PageProps, Query, Variables>({
   query,
   buildVariables,
   contentComponent: Content,

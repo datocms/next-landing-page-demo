@@ -1,0 +1,104 @@
+/* Element defaults: typography, focus rings, selection, the <mark> highlighter, the
+   reduced-motion reset and a Draft Mode fix for Content Link text. */
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--line);
+  }
+  html {
+    color-scheme: light;
+    background-color: var(--bg);
+    color: var(--ink-2);
+    scroll-padding-top: calc(var(--header-h) + 16px);
+    -webkit-text-size-adjust: 100%;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+      interpolate-size: allow-keywords;
+    }
+  }
+  body {
+    background-color: var(--bg);
+    color: var(--ink-2);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* A long CMS word or URL breaks instead of pushing the page sideways */
+    overflow-wrap: break-word;
+  }
+  :where(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--font-display);
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  :where(p, li, figcaption, blockquote, dd, summary) {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background-color: var(--g-200);
+    color: var(--ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent-solid);
+    outline-offset: 2px;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--ink-3);
+  }
+  button:not(:disabled),
+  [role='button']:not(:disabled),
+  summary {
+    cursor: pointer;
+  }
+  hr {
+    border: 0;
+    border-top: 1px solid var(--line);
+  }
+  /* Highlighter: an accent band on the lower 42% of the line, static by default. The sweep-in
+     comes from the mark-sweep utility and is built into .prose mark */
+  mark {
+    color: inherit;
+    background:
+      linear-gradient(90deg, var(--g-200), var(--g-100)) no-repeat 0 100% / 100%
+      42%;
+    padding-inline: 1px;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  /* Reduced-motion reset. !important inside @layer base beats every normal declaration in later
+     layers. Biome needs one suppression comment directly above each declaration. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after,
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      /* biome-ignore lint/complexity/noImportantStyles: reduced-motion reset must beat every component */
+      animation-duration: 0s !important;
+      /* biome-ignore lint/complexity/noImportantStyles: reduced-motion reset must beat every component */
+      animation-delay: 0s !important;
+      /* biome-ignore lint/complexity/noImportantStyles: reduced-motion reset must beat every component */
+      transition-duration: 0s !important;
+      /* biome-ignore lint/complexity/noImportantStyles: reduced-motion reset must beat every component */
+      transition-delay: 0s !important;
+      /* biome-ignore lint/complexity/noImportantStyles: reduced-motion reset must beat every component */
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Draft Mode: elements whose text carries Content Link's invisible stega markers */
+[data-datocms-contains-stega] {
+  /* biome-ignore lint/complexity/noImportantStyles: stega-encoded strings must keep their exact letter-spacing */
+  letter-spacing: 0 !important;
+}

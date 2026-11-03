@@ -1,0 +1,150 @@
+/* Tailwind theme: the design tokens Tailwind turns into utilities (colours, fonts, text
+   sizes, radii). Colours point at the runtime tokens in tokens.css, which all derive from
+   the CMS accent colour. */
+
+/* ---------- Theme: static values (every value is emitted, even when only used via var()) ---------- */
+
+@theme static {
+  /* Colours: Tailwind's palette is cleared, so only these and the @theme inline ones exist */
+  --color-*: initial;
+  --color-white: #fff;
+  --color-black: #000;
+  /* Default only: components/layout/CustomColor.tsx writes the project's main colour on :root */
+  --color-primary: #4a6cf7;
+  --color-success: oklch(0.5 0.13 150);
+  --color-danger: oklch(0.52 0.19 27);
+
+  /* Layout: xl is the 1200px page container; container-* give max-w-page, -reading, -docs */
+  --breakpoint-xl: 75rem;
+
+  --container-page: 75rem;
+  --container-reading: 42.5rem;
+  --container-docs: 46rem;
+
+  /* Radii, named after what they round */
+  --radius-pill: 999px;
+  --radius-well: 1.5rem;
+  --radius-card: 1.25rem;
+  --radius-photo: 1.25rem;
+  --radius-row: 1.125rem;
+  --radius-zone: 1rem;
+  --radius-window: 0.875rem;
+  --radius-tile: 0.75rem;
+  --radius-panel: 0.625rem;
+
+  /* Shadows come from the shadow-* utilities in utilities.css */
+  --shadow-*: initial;
+
+  /* Type: desktop values; tokens.css steps them down at each breakpoint */
+  --text-h1: 3.25rem;
+  --text-h1--line-height: 1.04;
+  --text-h1--letter-spacing: -0.035em;
+  --text-h1--font-weight: 400;
+  --text-title: 2.75rem;
+  --text-title--line-height: 1.08;
+  --text-title--letter-spacing: -0.03em;
+  --text-title--font-weight: 400;
+  --text-h2: 2rem;
+  --text-h2--line-height: 1.15;
+  --text-h2--letter-spacing: -0.025em;
+  --text-h2--font-weight: 400;
+  --text-quote: 1.5rem;
+  --text-quote--line-height: 1.35;
+  --text-quote--letter-spacing: -0.015em;
+  --text-quote--font-weight: 400;
+  --text-h3-lg: 1.25rem;
+  --text-h3-lg--line-height: 1.25;
+  --text-h3-lg--letter-spacing: -0.015em;
+  --text-h3-lg--font-weight: 500;
+  --text-h3: 1.0625rem;
+  --text-h3--line-height: 1.3;
+  --text-h3--letter-spacing: -0.01em;
+  --text-h3--font-weight: 500;
+  --text-h4: 1rem;
+  --text-h4--line-height: 1.4;
+  --text-h4--letter-spacing: -0.01em;
+  --text-h4--font-weight: 500;
+  --text-lead: 1.0625rem;
+  --text-lead--line-height: 1.55;
+  --text-lead--letter-spacing: -0.005em;
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.6;
+  --text-ui: 0.90625rem;
+  --text-ui--line-height: 1.2;
+  --text-ui--font-weight: 500;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
+  --text-meta: 0.84375rem;
+  --text-meta--line-height: 1.4;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.45;
+  --text-mono: 0.75rem;
+  --text-mono--line-height: 1.2;
+  --text-label: 0.6875rem;
+  --text-label--line-height: 1;
+  --text-label--letter-spacing: 0.05em;
+  --text-stat: 2.75rem;
+  --text-stat--line-height: 1;
+  --text-stat--letter-spacing: -0.03em;
+  --text-stat--font-weight: 400;
+  --text-price: 2.25rem;
+  --text-price--line-height: 1;
+  --text-price--letter-spacing: -0.03em;
+  --text-price--font-weight: 400;
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Small physical things only (a toggle thumb, an icon): settles with a 2.7% overshoot */
+  --ease-spring: linear(0, 0.415, 0.847, 1.008, 1.027, 1.013, 1.003, 1, 1);
+
+  --animate-fade-in: fade-in 0.15s var(--ease-standard) both;
+}
+
+/* ---------- Theme: Tailwind names mapped onto runtime variables ---------- */
+
+@theme inline {
+  --font-display:
+    var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono:
+    var(--font-spline-mono), ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --color-page: var(--bg);
+  --color-well: var(--bg-2);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-frame: var(--frame);
+  --color-sk: var(--sk);
+  --color-sk-2: var(--sk-2);
+  --color-sk-3: var(--sk-3);
+  --color-accent: var(--accent-solid);
+  --color-accent-solid: var(--accent-solid);
+  --color-accent-text: var(--accent-text);
+  --color-accent-wash: var(--accent-wash);
+  --color-accent-fill: var(--accent-fill);
+  --color-on-accent: var(--on-accent);
+  --color-g-50: var(--g-50);
+  --color-g-100: var(--g-100);
+  --color-g-200: var(--g-200);
+  --color-g-300: var(--g-300);
+  --color-g-400: var(--g-400);
+  --color-g-500: var(--g-500);
+  --color-g-600: var(--g-600);
+  --color-g-700: var(--g-700);
+  --color-g-800: var(--g-800);
+  --color-g-900: var(--g-900);
+  --color-grad-a: var(--grad-a);
+  --color-grad-b: var(--grad-b);
+  --color-grad-c: var(--grad-c);
+  --color-tone: var(--s);
+  --color-tone-hi: var(--s-hi);
+  --color-tone-wash: var(--s-wash);
+  --color-tone-mark: var(--s-mark);
+  --color-tone-text: var(--s-text);
+}

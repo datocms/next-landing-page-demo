@@ -5,9 +5,9 @@ description: >-
   documentation home, documentation pages, docs tree structure, docs sidebar,
   highlighted docs pages, docs home footer text, docs page Structured Text
   rendering, docs metadata, and /docs routes. Handles Documentation Home, Documentation Page,
-  app/[locale]/(docs-layout)/**, components/DocumentationSidebarItem/**,
-  components/FeaturedDocumentationPages/**, components/DatoStructuredText/**,
-  QuoteBlock, and docs code/quote rendering. Do not use for regular marketing
+  app/[locale]/(docs-layout)/**, components/docs/**,
+  components/datocms/DatoStructuredText/**, components/ui/QuoteBlock.tsx,
+  components/ui/CodeBlock/**, and docs code/quote rendering. Do not use for regular marketing
   page sections, shared header/footer/layout, blog/pricing/testimonial/changelog
   content records, new non-docs routes, or generic DatoCMS schema work.
 ---
@@ -30,10 +30,13 @@ Before schema or content operations:
 - Docs page tree type: `documentation_page`.
 - Docs home route: `app/[locale]/(docs-layout)/docs/`.
 - Docs page route: `app/[locale]/(docs-layout)/docs/[slug]/`.
-- Docs shell query and sidebar: `app/[locale]/(docs-layout)/query.graphql`.
-- Sidebar renderer: `components/DocumentationSidebarItem/**`.
-- Featured docs cards: `components/FeaturedDocumentationPages/**`.
-- Structured Text renderer: `components/DatoStructuredText/**`, with docs-specific rules in the docs page `Content.tsx`.
+- Docs shell query and sidebar: `app/[locale]/(docs-layout)/meta.ts`.
+- Docs chrome: `app/[locale]/(docs-layout)/DocsShell.tsx` (`'use client'`), the top bar and the sticky sidebar rail from `lg`; the mobile drawer is `DocsNavDrawer.tsx` next to it. `Content.tsx` renders the logo and the sidebar tree and passes them in as nodes (never functions).
+- Sidebar renderer: `components/docs/DocumentationSidebarItem.tsx`.
+- Featured docs cards: `components/docs/FeaturedDocumentationPages/**`. The "On this page" rail of a docs page is `components/ui/TableOfContents.tsx`.
+- Structured Text renderer: `components/datocms/DatoStructuredText/**`, with docs-specific rules in the docs page `Content.tsx`. Long-form text is styled by `.prose` in `styles/components/prose.css`.
+- Docs, legal and changelog styles that utilities and primitives can't express: `styles/sections/long-form.css`, inside `@layer groups { … }`, with no colors or `:root` variables. The styling rules in the `landing-page-demo-sections` skill apply here too.
+- Interface copy that has no CMS field ("On this page", "Back to site", "Copy") comes from `uiString(locale, key)` in `@/lib/i18n/uiStrings`; add new keys to `en` first, then to every locale.
 
 ## Common workflows
 
@@ -60,7 +63,7 @@ Before schema or content operations:
 1. Inspect the existing docs content shape and route component before changing rendering.
 2. Update `DatoStructuredText` usage or docs-specific node rules only for the requested behavior.
 3. Preserve headings, paragraphs, lists, quotes, code blocks, and sidebar behavior.
-4. Regenerate GraphQL types after query changes.
+4. Query types are inferred by gql.tada; run `npm run generate-schema` only after DatoCMS schema changes.
 5. Verify a docs page with representative Structured Text.
 
 ## Guardrails
@@ -78,4 +81,4 @@ Before schema or content operations:
 - Docs page routes resolve by slug.
 - Structured Text still handles headings, paragraphs, lists, quotes, and code blocks.
 - Featured docs cards link to valid docs pages.
-- Metadata, GraphQL type generation, and build pass after code changes.
+- Metadata, `npm run lint` (including `gql.tada check`), and build pass after code changes.

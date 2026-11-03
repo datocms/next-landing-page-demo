@@ -1,0 +1,202 @@
+/* Prose: long-form text from Structured Text (posts, docs, legal pages, changelog entries, bios). */
+
+@layer components {
+  /* Every rule skips anything inside .not-prose (embedded blocks that bring their own styling) */
+  .prose {
+    color: var(--ink-2);
+    font-size: 1rem;
+    line-height: 1.75;
+    /* Block rhythm: one gap after each block */
+    &
+      :where(p, ul, ol, pre, blockquote, figure, table, .prose-block):not(
+        :where(.not-prose, .not-prose *)
+      ) {
+      margin-block: 0 1.25em;
+    }
+    /* Headings */
+    & :where(h1, h2):not(:where(.not-prose, .not-prose *)) {
+      margin-block: 2em 0.6em;
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      font-weight: 400;
+      color: var(--ink);
+      /* html scroll-padding already clears the sticky header (+16px); 8px more lands it 24px under */
+      scroll-margin-top: 8px;
+    }
+    & :where(h3):not(:where(.not-prose, .not-prose *)) {
+      margin-block: 1.75em 0.5em;
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+      font-weight: 500;
+      color: var(--ink);
+      /* Same anchor offset as h1 and h2 */
+      scroll-margin-top: 8px;
+    }
+    & :where(h4, h5, h6):not(:where(.not-prose, .not-prose *)) {
+      margin-block: 1.5em 0.4em;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      line-height: 1.45;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    /* Inline text and links */
+    & :where(strong):not(:where(.not-prose, .not-prose *)) {
+      font-weight: 600;
+      color: var(--ink);
+    }
+    /* Emphasis gets the real Funnel Sans italic, which app/layout.tsx loads on demand instead of
+       preloading. Display-font headings keep their own family */
+    & :where(em, i):not(:where(h1 *, h2 *, h3 *, .not-prose, .not-prose *)) {
+      font-family: var(--font-funnel-sans-italic), var(--font-sans);
+    }
+    /* Structured Text can hold empty paragraphs, which would leave a blank gap. Live regions
+       (a form's empty error line) stay rendered so their announcements still work */
+    & :where(p:empty):not(:where(.not-prose, .not-prose *, [aria-live])) {
+      display: none;
+    }
+    & :where(a):not(:where(.not-prose, .not-prose *)) {
+      color: var(--accent-text);
+      text-decoration: underline 1px;
+      text-underline-offset: 3px;
+      text-decoration-color: color-mix(
+        in oklch,
+        var(--accent-solid) 40%,
+        transparent
+      );
+      transition: text-decoration-color var(--duration-fast) var(--ease);
+      /* A pasted URL as the link text breaks anywhere, and doesn't widen its column */
+      overflow-wrap: anywhere;
+      &:hover {
+        text-decoration-color: var(--accent-solid);
+      }
+    }
+    /* Lists */
+    & :where(ul):not(:where(.not-prose, .not-prose *)) {
+      list-style: disc;
+      padding-inline-start: 1.25em;
+    }
+    & :where(ol):not(:where(.not-prose, .not-prose *)) {
+      list-style: decimal;
+      padding-inline-start: 1.5em;
+    }
+    & :where(li):not(:where(.not-prose, .not-prose *)) {
+      margin-block: 0.375em;
+      padding-inline-start: 0.25em;
+    }
+    /* Nested lists: their own marker per level, and the item rhythm instead of the paragraph gap */
+    & :where(ul ul):not(:where(.not-prose, .not-prose *)) {
+      list-style: circle;
+    }
+    & :where(ul ul ul):not(:where(.not-prose, .not-prose *)) {
+      list-style: square;
+    }
+    & :where(ol ol):not(:where(.not-prose, .not-prose *)) {
+      list-style: lower-alpha;
+    }
+    & :where(li > ul, li > ol):not(:where(.not-prose, .not-prose *)) {
+      margin-block: 0.375em 0;
+    }
+    & :where(ul > li):not(:where(.not-prose, .not-prose *))::marker {
+      color: var(--g-400);
+    }
+    & :where(ol > li):not(:where(.not-prose, .not-prose *))::marker {
+      color: var(--ink-3);
+      font-family: var(--font-mono);
+      font-size: 0.875em;
+    }
+    & :where(li > p):not(:where(.not-prose, .not-prose *)) {
+      margin: 0;
+    }
+    /* Quotes and code */
+    & :where(blockquote):not(:where(.not-prose, .not-prose *)) {
+      padding-inline-start: 1.25em;
+      border-inline-start: 2px solid var(--g-300);
+      color: var(--ink);
+    }
+    & :where(code):not(:where(pre code)):not(:where(.not-prose, .not-prose *)) {
+      padding: 0.125em 0.375em;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--bg-2);
+      font-family: var(--font-mono);
+      font-size: 0.875em;
+      color: var(--ink);
+      overflow-wrap: anywhere;
+    }
+    & :where(pre):not(:where(.not-prose, .not-prose *)) {
+      overflow-x: auto;
+      padding: 16px 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-zone);
+      background: var(--bg-2);
+      font: 400 0.8125rem / 1.7 var(--font-mono);
+      color: var(--ink);
+    }
+    /* Rules, media, tables and embedded blocks */
+    & :where(hr):not(:where(.not-prose, .not-prose *)) {
+      margin-block: 2.5em;
+    }
+    & :where(img, video):not(:where(.not-prose, .not-prose *)) {
+      border-radius: var(--radius-zone);
+    }
+    & :where(figcaption):not(:where(.not-prose, .not-prose *)) {
+      margin-top: 0.75em;
+      font-size: var(--text-caption);
+      color: var(--ink-3);
+    }
+    & :where(table):not(:where(.not-prose, .not-prose *)) {
+      width: 100%;
+      font-size: var(--text-small);
+      border-collapse: collapse;
+    }
+    & :where(th, td):not(:where(.not-prose, .not-prose *)) {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: start;
+    }
+    & :where(th):not(:where(.not-prose, .not-prose *)) {
+      font-weight: 500;
+      color: var(--ink);
+      background: var(--bg-2);
+    }
+    & :where(.prose-block):not(:where(.not-prose *)) {
+      margin-block: 2.5em;
+    }
+    /* DatoStructuredText wraps its output in a content-link group div */
+    & > :first-child,
+    & > [data-datocms-content-link-group] > :first-child {
+      margin-top: 0;
+    }
+    & > :last-child,
+    & > [data-datocms-content-link-group] > :last-child {
+      margin-bottom: 0;
+    }
+  }
+  /* Sizes */
+  .prose-sm {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+  .prose-lg {
+    font-size: 1rem;
+    line-height: 1.75;
+    @media (width >= 48rem) {
+      font-size: 1.0625rem;
+    }
+  }
+  /* The <mark> highlighter sweeps in as it scrolls into view */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .prose mark {
+        animation: mark-sweep linear both;
+        animation-timeline: view();
+        animation-range: entry 20% cover 35%;
+      }
+    }
+  }
+}

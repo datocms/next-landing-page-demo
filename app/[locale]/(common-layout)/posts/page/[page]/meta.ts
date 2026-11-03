@@ -1,8 +1,9 @@
+import { PostExcerptFragment } from '@/components/posts/PostExcerpt/fragment';
 import {
-  PostsDocument,
-  type PostsQuery,
-  type PostsQueryVariables,
-} from '@/graphql/types/graphql';
+  graphql,
+  type ResultOf,
+  type VariablesOf,
+} from '@/lib/datocms/graphql';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 
 export type PageProps = ResolvedGlobalPageProps & {
@@ -11,7 +12,32 @@ export type PageProps = ResolvedGlobalPageProps & {
   };
 };
 
-export type Query = PostsQuery;
-export type Variables = PostsQueryVariables;
+export const query = graphql(
+  /* GraphQL */ `
+    query PostsQuery(
+      $locale: SiteLocale
+      $fallbackLocale: [SiteLocale!]
+      $first: IntType
+      $skip: IntType = "0"
+    ) {
+      allPosts(
+        filter: { title: { isBlank: "false" } }
+        orderBy: _createdAt_DESC
+        first: $first
+        locale: $locale
+        fallbackLocales: $fallbackLocale
+        skip: $skip
+      ) {
+        id
+        ...PostExcerptFragment
+      }
+      _allPostsMeta(locale: $locale, filter: { title: { isBlank: "false" } }) {
+        count
+      }
+    }
+  `,
+  [PostExcerptFragment],
+);
 
-export const query = PostsDocument;
+export type Query = ResultOf<typeof query>;
+export type Variables = VariablesOf<typeof query>;

@@ -1,0 +1,72 @@
+/* Native <details> disclosures, used by the FAQ accordion and the mobile menu. */
+
+@layer components {
+  /* .disclosure goes on the <details>: a flex summary without the native marker, a
+     .disclosure-icon (plus) or .disclosure-chevron that turns when open, and a height
+     animation where ::details-content is supported */
+  .disclosure {
+    & > summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      list-style: none;
+    }
+    & > summary::-webkit-details-marker {
+      display: none;
+    }
+    & .disclosure-icon {
+      flex: none;
+      transition: rotate var(--duration-ui) var(--ease-spring);
+    }
+    &[open] .disclosure-icon {
+      rotate: 45deg;
+    }
+    & .disclosure-chevron {
+      flex: none;
+      transition: rotate 0.2s var(--ease);
+    }
+    &[open] .disclosure-chevron {
+      rotate: 180deg;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      &::details-content {
+        block-size: 0;
+        overflow-y: clip;
+        transition:
+          block-size 0.25s var(--ease),
+          content-visibility 0.25s allow-discrete;
+      }
+      &[open]::details-content {
+        block-size: auto;
+      }
+      /* An animation, not @starting-style: Safari and Firefox keep closed content styled, so only
+         an animation plays there (where the height snaps open) */
+      &[open] > :not(summary) {
+        --rise: -4px;
+        animation: rise var(--duration-slow) var(--ease);
+      }
+    }
+  }
+  /* The FAQ row: a tinted pill that turns into a white bordered card when open */
+  .disclosure-pill {
+    border: 1px solid transparent;
+    border-radius: var(--radius-row);
+    background: var(--bg-2);
+    transition:
+      background-color 0.25s var(--ease),
+      border-color 0.25s var(--ease);
+    &[open] {
+      background: var(--bg);
+      border-color: var(--line);
+    }
+    & > summary {
+      min-height: 60px;
+      padding: 12px 16px 12px 20px;
+      border-radius: var(--radius-row);
+    }
+    & > summary:focus-visible {
+      outline-offset: -2px;
+    }
+  }
+}

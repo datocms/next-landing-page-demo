@@ -1,40 +1,46 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+/*
+ * The site stylesheet. Tailwind CSS 4 is configured in CSS: this file sets the
+ * cascade layer order and imports everything else.
+ *
+ * Design language: one CMS accent (--color-primary, written by
+ * components/layout/CustomColor.tsx) drives every colour: whites, tinted wells, a
+ * one-hue gradient ramp (--g-50 … --g-900) and six tone stops of that hue
+ * (tone-0 … tone-5). Light mode only.
+ */
+@layer theme, base, components, groups, utilities;
+@import 'tailwindcss';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Foundation: keyframes, Tailwind theme, runtime tokens, element defaults, custom utilities */
+@import './keyframes.css';
+@import './theme.css';
+@import './tokens.css';
+@import './base.css';
+@import './utilities.css';
 
-@layer base {
-  :root {
-    --color-primary: #4a6cf7;
-  }
-  body {
-    font-family: 'Inter', sans-serif;
-  }
-}
+/* Shared primitives (.btn, .card, .prose…) in @layer components */
+@import './components/buttons.css';
+@import './components/links-and-labels.css';
+@import './components/surfaces.css';
+@import './components/forms.css';
+@import './components/menus.css';
+@import './components/disclosure.css';
+@import './components/page-parts.css';
+@import './components/motion.css';
+@import './components/prose.css';
+@import './components/code.css';
 
-@layer components {
-  input[type='checkbox']:checked ~ label span svg {
-    @apply inline-flex;
-  }
+/* Rules for one area of the site that utilities and the primitives can't express.
+   Each file wraps its rules in `@layer groups { … }`, so they beat the primitives
+   without !important (and lose to utilities), declares no :root variables and takes
+   its colours from tokens.css. Add rules to the file for that area, or a new file here. */
+@import './sections/shell.css';
+@import './sections/heroes.css';
+@import './sections/features-brands.css';
+@import './sections/content-sections.css';
+@import './sections/posts.css';
+@import './sections/long-form.css';
 
-  .sticky .header-logo {
-    @apply py-5 lg:py-2;
-  }
-
-  .sticky .menu-scroll.active {
-    @apply opacity-70;
-  }
-
-  input#togglePlan:checked ~ .dot {
-    @apply translate-x-full;
-  }
-
-  input#checkboxLabel:checked ~ .box span {
-    @apply opacity-100;
-  }
-}
-
-[data-datocms-contains-stega] {
-  letter-spacing: 0 !important;
-}
+/* The skills' Markdown (also reachable through the .claude/skills symlinks) names
+   classes in prose; it must not generate CSS */
+@source not '../skills';
+@source not '../.claude';

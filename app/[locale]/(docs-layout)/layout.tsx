@@ -1,12 +1,23 @@
-import { generateWrapper } from '@/components/WithRealTimeUpdates/generateWrapper';
+import { generatePageComponent } from '@/lib/datocms/realtime/generatePageComponent';
+import type { BuildVariablesFn } from '@/lib/datocms/routeContext';
 import Content from './Content';
+import { type PageProps, type Query, query, type Variables } from './meta';
 import RealTime from './RealTime';
-import { type PageProps, type Query, type Variables, query } from './meta';
 
-const layout = generateWrapper<PageProps, Query, Variables>({
-  query,
-  contentComponent: Content,
-  realtimeComponent: RealTime,
+const buildVariables: BuildVariablesFn<PageProps, Variables> = ({
+  params,
+  fallbackLocale,
+}) => ({
+  locale: params.locale,
+  fallbackLocale: [fallbackLocale],
 });
 
-export default layout;
+const Layout = generatePageComponent<PageProps, Query, Variables>({
+  query,
+  buildVariables,
+  contentComponent: Content,
+  realtimeComponent: RealTime,
+  pageTransition: false,
+});
+
+export default Layout;

@@ -1,0 +1,152 @@
+/* Buttons: .btn, its sizes (sm, lg, icon) and its colours (primary, secondary, ink, ghost). */
+
+@layer components {
+  /* Base: a 44px pill; .btn-arrow / .btn-arrow-back icons nudge forward or back on hover */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 44px;
+    padding-inline: 20px;
+    border: 0;
+    border-radius: 9999px;
+    font-family: var(--font-sans);
+    font-size: var(--text-ui);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+    text-decoration: none;
+    user-select: none;
+    /* Never wider than its container, however long the CMS label (wrapping it is the caller's call) */
+    max-width: 100%;
+    min-width: 0;
+    transition:
+      background-color 0.2s var(--ease),
+      box-shadow 0.2s var(--ease),
+      color 0.2s var(--ease),
+      scale var(--duration-fast) var(--ease-out-quint);
+    @media (prefers-reduced-motion: no-preference) {
+      &:active:not(:disabled, [aria-disabled='true']) {
+        scale: 0.97;
+      }
+    }
+    & svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+    & .btn-arrow,
+    & .btn-arrow-back {
+      transition: translate 0.25s var(--ease);
+    }
+    @media (hover: hover) {
+      &:hover .btn-arrow {
+        translate: 3px 0;
+      }
+      &:hover .btn-arrow:dir(rtl) {
+        translate: -3px 0;
+      }
+      &:hover .btn-arrow-back {
+        translate: -3px 0;
+      }
+      &:hover .btn-arrow-back:dir(rtl) {
+        translate: 3px 0;
+      }
+    }
+    &:disabled,
+    &[aria-disabled='true'] {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+    /* An aria-disabled control keeps focus (a gallery arrow at the end of its track). Dimming the
+       whole button would fade its focus ring too, so the box stays opaque and only the content
+       dims: put a text label in an element (a span) when the button can become aria-disabled */
+    &[aria-disabled='true']:focus-visible {
+      opacity: 1;
+      & > :where(*) {
+        opacity: 0.45;
+      }
+    }
+  }
+  /* Sizes */
+  .btn-sm {
+    height: 36px;
+    padding-inline: 14px;
+    gap: 6px;
+    font-size: 0.84375rem;
+    & svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+  .btn-lg {
+    height: 48px;
+    padding-inline: 24px;
+    font-size: 0.9375rem;
+  }
+  .btn-icon {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    @media (width < 48rem) {
+      width: 44px;
+      height: 44px;
+    }
+  }
+  /* Touch screens: every size keeps a 44px target */
+  @media (pointer: coarse) {
+    .btn-sm {
+      height: 44px;
+    }
+    .btn-icon {
+      width: 44px;
+      height: 44px;
+    }
+  }
+  /* Colours */
+  .btn-primary {
+    background: var(--accent-fill) var(--accent-fill-sheen);
+    color: var(--on-accent);
+    box-shadow: var(--accent-fill-shadow);
+    @media (hover: hover) {
+      &:hover {
+        background: var(--accent-fill-hover) var(--accent-fill-hover-sheen);
+      }
+    }
+  }
+  .btn-secondary {
+    background: var(--bg);
+    color: var(--ink);
+    box-shadow:
+      inset 0 0 0 1px var(--line),
+      var(--shadow-xs);
+    @media (hover: hover) {
+      &:hover {
+        box-shadow:
+          inset 0 0 0 1px var(--line-strong),
+          var(--shadow-xs);
+      }
+    }
+  }
+  .btn-ink {
+    background: var(--ink);
+    color: #fff;
+    @media (hover: hover) {
+      &:hover {
+        background: var(--ink-hover);
+      }
+    }
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink-2);
+    @media (hover: hover) {
+      &:hover {
+        background: var(--bg-2);
+        color: var(--ink);
+      }
+    }
+  }
+}

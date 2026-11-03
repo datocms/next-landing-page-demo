@@ -1,8 +1,16 @@
-import { cookies, draftMode } from 'next/headers';
+import { draftMode } from 'next/headers';
 import { redirect } from 'next/navigation';
 import type { NextRequest } from 'next/server';
 import isSafeRedirectUrl from '@/utils/isSafeRedirectUrl';
+import partitionDraftModeCookie from '../partitionDraftModeCookie';
 
+/**
+ * Turns Draft Mode on, then redirects to `?redirect=` when there is one (a path
+ * on this site). The draft secret comes as `?token=`: most callers are links a
+ * browser opens, which can't carry a header (the "Draft version" links from
+ * /api/draft/preview-links, the Web Previews plugin's Visual Editing mode), and
+ * the site's Draft Mode password prompt sends it the same way.
+ */
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const { searchParams } = requestUrl;
@@ -21,26 +29,7 @@ export async function GET(request: NextRequest) {
   if (!isSafeRedirectUrl(redirectPath, requestUrl))
     return new Response('URL must be relative!', { status: 422 });
 
-  // By performing a redirect(), we would lose the __prerender_bypass cookie just
-  // set by draftMode().enable(), so we would effectively not enter into Next.js's draft mode!
-  //
-  // The solution is to read the cookie just set by draftMode().enable()...
-  const cookieStore = await cookies();
-  const cookie = cookieStore.get('__prerender_bypass')!;
-
-  // and reapply it before launching the redirect.
-  cookieStore.set({
-    name: '__prerender_bypass',
-    value: cookie?.value,
-    httpOnly: true,
-    path: '/',
-    secure: true,
-    sameSite: 'none',
-    // Given that this route can also be accessed within the iframe of the Web Previews plugin,
-    // it is important to bypass the restrictions for third-party cookies by setting the
-    // `partitioned: true` option (https://developers.google.com/privacy-sandbox/3pcd)
-    partitioned: true,
-  });
+  await partitionDraftModeCookie();
 
   redirect(redirectPath);
 }

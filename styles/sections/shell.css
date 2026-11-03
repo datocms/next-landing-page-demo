@@ -1,0 +1,20 @@
+/* Site shell (header, announcement strip, mobile menu, footer, 404 page). Holds the mobile
+   menu's row entrance. Like every file here: only what utilities and the shared primitives
+   can't express, inside `@layer groups { … }` (see global.css). */
+
+@layer groups {
+  /* Mobile menu: once the sheet's 180ms fade has made the card opaque, its rows settle in one
+     after another, and the language chips below them arrive with the last row. Browsers
+     without sibling-index() drop the declaration and show the rows at once */
+  @media (prefers-reduced-motion: no-preference) {
+    .sheet-rows > li,
+    .sheet-rows ~ * {
+      --rise: 6px;
+      animation: rise var(--duration-ui) var(--ease-out-quint)
+        calc(min(sibling-index() - 1, 6) * 15ms + 100ms) both;
+    }
+    .sheet-rows ~ * {
+      animation-delay: 190ms;
+    }
+  }
+}

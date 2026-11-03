@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
     ],
   },
   // Handle external packages that have dynamic requires
-  serverExternalPackages: ['@datocms/cma-client-node', 'got', 'keyv'],
+  serverExternalPackages: ['@datocms/cma-client-node', 'got'],
 };
 
 export default nextConfig;

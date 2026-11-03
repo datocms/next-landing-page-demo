@@ -1,16 +1,26 @@
-import getAvailableLocales from '@/app/i18n/settings';
-import { generateMetadataFn } from '@/components/WithRealTimeUpdates/generateMetadataFn';
-import { generateWrapper } from '@/components/WithRealTimeUpdates/generateWrapper';
-import type { BuildVariablesFn } from '@/components/WithRealTimeUpdates/types';
-import { PageStaticParamsDocument } from '@/graphql/types/graphql';
-import queryDatoCMS from '@/utils/queryDatoCMS';
+import { POSTS_PER_PAGE } from '@/components/posts/PaginationLinks';
+import { executeQuery } from '@/lib/datocms/executeQuery';
+import { generateMetadataFn } from '@/lib/datocms/generateMetadataFn';
+import { graphql } from '@/lib/datocms/graphql';
+import { generatePageComponent } from '@/lib/datocms/realtime/generatePageComponent';
+import type { BuildVariablesFn } from '@/lib/datocms/routeContext';
+import { getAvailableLocales } from '@/lib/i18n/locales';
 import Content from './Content';
+import { type PageProps, type Query, query, type Variables } from './meta';
 import RealTime from './RealTime';
-import { type PageProps, type Query, type Variables, query } from './meta';
 
+const staticParamsQuery = graphql(/* GraphQL */ `
+  query PageStaticParamsQuery {
+    allPages {
+      slug
+    }
+  }
+`);
+
+/** Prerenders every page in every locale at build time */
 export async function generateStaticParams() {
   const locales = await getAvailableLocales();
-  const { allPages } = await queryDatoCMS(PageStaticParamsDocument);
+  const { allPages } = await executeQuery(staticParamsQuery);
 
   return allPages.flatMap((page) =>
     locales.map((locale): PageProps['params'] => ({
@@ -27,6 +37,8 @@ const buildVariables: BuildVariablesFn<PageProps, Variables> = ({
   locale: params.locale,
   fallbackLocale: [fallbackLocale],
   slug: params.slug,
+  // The All posts block lists the first page of posts
+  postsPerPage: POSTS_PER_PAGE,
 });
 
 export const generateMetadata = generateMetadataFn<PageProps, Query, Variables>(
@@ -37,7 +49,7 @@ export const generateMetadata = generateMetadataFn<PageProps, Query, Variables>(
   },
 );
 
-const Page = generateWrapper<PageProps, Query, Variables>({
+const Page = generatePageComponent<PageProps, Query, Variables>({
   query,
   buildVariables,
   contentComponent: Content,

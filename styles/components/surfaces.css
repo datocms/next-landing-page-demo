@@ -1,0 +1,155 @@
+/* Surfaces: cards, wells, zones, cell grids, product windows, CMS photo frames and icon tiles. */
+
+@layer components {
+  /* Cards: .card is the white bordered box, .card-hover darkens its border on hover or focus,
+     .float is a borderless white card that floats on a well */
+  .card {
+    position: relative;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-xs);
+  }
+  .card-hover {
+    transition:
+      border-color 0.2s var(--ease),
+      box-shadow 0.2s var(--ease);
+    @media (hover: hover) {
+      &:hover {
+        border-color: var(--line-hover);
+      }
+    }
+    &:has(:focus-visible) {
+      border-color: var(--line-hover);
+    }
+  }
+  .float {
+    background: var(--bg);
+    box-shadow: var(--card-shadow);
+  }
+  /* Tinted canvases: .well is the large clipped section canvas, .zone a smaller panel */
+  .well {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--bg-2);
+    border-radius: var(--radius-well);
+    @media (width < 48rem) {
+      border-radius: 20px;
+    }
+  }
+  .zone {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-2);
+    border-radius: var(--radius-zone);
+  }
+  /* Hairline cell grid; tolerates partial rows (they stay white) */
+  .cells {
+    display: grid;
+    overflow: hidden;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    & > * {
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+      margin: -1px 0 0 -1px;
+      background: var(--bg);
+    }
+  }
+  /* Product windows: the frame, its title bar and the three dots */
+  .window {
+    overflow: hidden;
+    background: var(--bg);
+    border: 1px solid var(--frame);
+    border-radius: var(--radius-window);
+    box-shadow: var(--window-shadow);
+  }
+  .window-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 40px;
+    padding-inline: 14px;
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--line);
+  }
+  .window-dots {
+    display: flex;
+    gap: 6px;
+    & > i {
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+      background: color-mix(in oklch, var(--line-strong) 45%, transparent);
+    }
+  }
+  /* Thread port: an 8×52 bar on a window edge (size with utilities); glows once on load */
+  .port {
+    position: absolute;
+    z-index: 2;
+    background: var(--surface);
+    border-radius: 4px;
+    border: 1px solid color-mix(in oklch, var(--line-strong) 30%, var(--line));
+    @media (prefers-reduced-motion: no-preference) {
+      animation: port-glow 0.8s ease-out 1.7s both;
+    }
+  }
+  /* CMS photos: inset ink ring, gentle grade. Radius via rounded-* */
+  .photo {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    margin: 0;
+    border-radius: var(--radius-photo);
+    background: var(--surface);
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      border-radius: inherit;
+      box-shadow: inset 0 0 0 1px var(--photo-ring);
+      pointer-events: none;
+    }
+    & img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.95) contrast(1.03);
+    }
+  }
+  /* A white frame around a .photo */
+  .bezel {
+    padding: 8px;
+    border-radius: var(--radius-card);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    box-shadow: var(--card-shadow);
+    & > .photo {
+      border-radius: 14px;
+    }
+  }
+  /* A 40px tile holding an icon or a small logo */
+  .icon-tile {
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-tile);
+    background: var(--bg-2);
+    box-shadow: inset 0 0 0 1px var(--line);
+    color: var(--ink);
+    & svg {
+      width: 20px;
+      height: 20px;
+    }
+    & img {
+      object-fit: contain;
+      mix-blend-mode: multiply;
+    }
+  }
+}

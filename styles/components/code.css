@@ -1,0 +1,53 @@
+/* Code blocks (components/ui/CodeBlock): syntax colours and highlighted lines. */
+
+@layer components {
+  /* react-syntax-highlighter with useInlineStyles={false} renders bare hljs-* classes;
+     these give them colours from the tokens */
+  .code-block {
+    & .hljs-comment,
+    & .hljs-quote {
+      color: var(--ink-3);
+      font-style: italic;
+    }
+    & .hljs-keyword,
+    & .hljs-selector-tag,
+    & .hljs-built_in,
+    & .hljs-type,
+    & .hljs-meta {
+      color: var(--accent-text);
+    }
+    & .hljs-string,
+    & .hljs-regexp,
+    & .hljs-addition {
+      color: var(--color-success);
+    }
+    & .hljs-number,
+    & .hljs-literal,
+    & .hljs-symbol {
+      color: var(--g-700);
+    }
+    & .hljs-title,
+    & .hljs-section,
+    & .hljs-name {
+      color: var(--ink);
+      font-weight: 500;
+    }
+    & .hljs-attr,
+    & .hljs-attribute,
+    & .hljs-variable,
+    & .hljs-params {
+      color: var(--ink-2);
+    }
+    & .hljs-deletion {
+      color: var(--color-danger);
+    }
+    /* A line listed in CodeBlock's highlight prop; it bleeds into the 20px side padding */
+    & .is-highlighted {
+      display: block;
+      margin-inline: -20px;
+      padding-inline: 20px;
+      background: var(--accent-wash);
+      box-shadow: inset 2px 0 0 var(--accent-solid);
+    }
+  }
+}

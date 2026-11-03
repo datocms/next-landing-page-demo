@@ -5,12 +5,12 @@ description: >-
   adding or changing record-backed routes, static params, metadata, draft/live
   preview wrappers, Web Previews URL mapping, SEO-analysis route mapping, and
   route-aware cache/draft behavior. Covers app/[locale]/(common-layout)/**,
-  app/[locale]/(docs-layout)/**, components/WithRealTimeUpdates/**,
-  app/api/draft/preview-links/route.tsx, app/api/seoAnalysis/route.tsx, route
-  query.graphql/meta.ts/page.tsx/Content.tsx/RealTime.tsx files, and optional
-  staticParams.graphql files. Do not use for ordinary page section edits,
-  shared layout content, docs content edits, existing content record changes, or
-  generic Next.js routing outside this starter.
+  app/[locale]/(docs-layout)/**, lib/datocms/**,
+  app/api/draft/preview-links/route.tsx, app/api/seoAnalysis/route.tsx, and
+  route meta.ts/page.tsx/Content.tsx/RealTime.tsx files. Do not use for
+  ordinary page section edits, shared layout content, docs content edits,
+  existing content record changes, or generic Next.js routing outside this
+  starter.
 ---
 
 # Landing Page Demo Routing and Preview
@@ -29,12 +29,12 @@ Before schema or content operations:
 
 Record-backed route folders normally contain:
 
-- `query.graphql` for the route query.
-- `meta.ts` for generated document/type exports and page prop types.
-- `page.tsx` for variables, metadata, static params when needed, and `generateWrapper`.
+- `meta.ts` for the route query (a gql.tada `graphql()` document composed from component fragments), its `Query`/`Variables` types, and page prop types.
+- `page.tsx` for variables (`buildVariables`), metadata (`generateMetadataFn`), static params (with their own small query) when needed, and `generatePageComponent`.
 - `Content.tsx` for regular rendering.
-- `RealTime.tsx` for draft/live preview rendering.
-- `staticParams.graphql` for slug-backed collection routes when needed.
+- `RealTime.tsx` for draft/live preview rendering (`generateRealtimeComponent`).
+
+The generators live in `lib/datocms/`: `realtime/generatePageComponent.tsx` and `realtime/generateRealtimeComponent.tsx` render `Content` or `RealTime` depending on Draft Mode, `generateMetadataFn.ts` turns `_seoMetaTags` into metadata, `routeContext.ts` validates the locale and builds the query variables, and `executeQuery.ts` runs every query with caching under one tag that `/api/revalidateCache` invalidates.
 
 Existing route examples:
 
@@ -53,10 +53,10 @@ Existing route examples:
 1. Confirm the request needs a new route or route mapping, not only content or section edits.
 2. Inspect the DatoCMS schema type through MCP and confirm slug, localization, draft status, and SEO fields.
 3. Reuse the closest existing route pattern.
-4. Add route query, `meta.ts`, `page.tsx`, `Content.tsx`, and `RealTime.tsx`.
-5. Add `staticParams.graphql` and `generateStaticParams` for slug-backed collection routes.
-6. Add metadata support when the schema type has SEO fields.
-7. Regenerate GraphQL types.
+4. Add `meta.ts` with the route query, `page.tsx`, `Content.tsx`, and `RealTime.tsx`.
+5. Add a static params query and `generateStaticParams` in `page.tsx` for slug-backed collection routes.
+6. Add metadata support when the schema type has SEO fields (`seo: _seoMetaTags { ...TagFragment }`).
+7. Query types are inferred by gql.tada; run `npm run generate-schema` only after DatoCMS schema changes.
 8. Add preview-link mapping in `app/api/draft/preview-links/route.tsx`.
 9. Add SEO-analysis mapping in `app/api/seoAnalysis/route.tsx` only when the record should support it.
 10. Verify published route, draft preview URL, published preview URL, and metadata.
@@ -87,4 +87,4 @@ Existing route examples:
 - SEO-analysis mapping supports only the intended record types.
 - Metadata uses DatoCMS SEO fields when available.
 - Static params include locales where required.
-- GraphQL type generation and build pass after code changes.
+- `npm run lint` (including `gql.tada check`) and build pass after code changes.

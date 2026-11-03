@@ -16,7 +16,7 @@ This example showcases a TypeScript Next.js 16 website with App Router (app) —
 
 This demo takes advantage of the latest Next.js 16 features.
 
-It uses GraphQL CodeGen to type all of the requests coming from DatoCMS automatically: [See how it works here](https://www.datocms.com/blog/how-to-generate-typescript-types-from-graphql)
+Thanks to [gql.tada](https://gql-tada.0no.co/) every GraphQL query is fully typed: queries and fragments live next to the components that use them, and their types are inferred straight from your DatoCMS schema.
 
 ## DatoCMS Integration
 
@@ -28,6 +28,47 @@ This project uses the official [`@datocms/cda-client`](https://github.com/datocm
 - Seamless integration with Next.js caching
 
 Additionally, [`react-datocms`](https://github.com/datocms/react-datocms) is used for real-time updates, responsive images, and SEO metadata handling.
+
+## How the code is organized
+
+```
+app/                      Routes (Next.js App Router)
+  [locale]/               Every page lives under a locale: /en/…, /it/…
+    (common-layout)/      The marketing site: header and footer around each page
+      [slug]/             Pages built from section blocks
+      posts/  changelog/  legal/
+    (docs-layout)/        The documentation area, with its own sidebar shell
+  api/                    Endpoints for DatoCMS and Draft Mode: draft enable and
+                          disable, preview links, SEO analysis, cache
+                          invalidation, post-install setup
+components/
+  sections/               One folder per block of the Page model's "Sections" field
+  blocks/                 Blocks embedded in Structured Text (blog posts)
+  posts/  docs/           Pieces shared by the blog and the documentation routes
+  layout/                 Header, footer and the accent colour
+  datocms/                react-datocms wrappers (images, Structured Text,
+                          Content Link) and the Draft Mode toggle
+  ui/                     Shared building blocks: section titles, code blocks, ornaments
+lib/
+  datocms/                Data layer: executeQuery, gql.tada setup, page generators
+  i18n/                   The project's locales and the translated interface strings
+utils/                    Small helpers (class names, dates, colour tones)
+styles/                   Tailwind CSS 4 setup, design tokens and component styles
+skills/                   Agent skills that explain how to extend this demo
+```
+
+### How a page is rendered
+
+Every route backed by DatoCMS is made of the same four files:
+
+- `meta.ts` holds the route's GraphQL query. It is composed from the fragments that components declare next to themselves (`fragment.ts`), so each component asks for exactly the data it renders, and gql.tada infers every type from `schema.graphql`.
+- `page.tsx` wires the route with `generatePageComponent` and `generateMetadataFn` from `lib/datocms`: they validate the locale, run the query through `executeQuery` and turn the record's SEO fields into metadata.
+- `Content.tsx` renders the query result.
+- `RealTime.tsx` is the client version of `Content.tsx`, used in Draft Mode: it subscribes to DatoCMS's Real-time Updates API, so the page changes while editors type.
+
+Pages (`app/[locale]/(common-layout)/[slug]`) are a stack of section blocks. `Content.tsx` maps each block type to its folder in `components/sections` (the Redirect block is handled right in `Content.tsx`). Blocks with several layouts (the folders with a `variants/` directory) read their display option field in `index.tsx` and render the matching component from `variants/`. To add a layout: add the new value to that field's options in DatoCMS, add a component to `variants/`, and map the value to it in the block's `index.tsx`.
+
+Published content is cached in the Next.js Data Cache under one tag. When content changes, DatoCMS calls `/api/revalidateCache`, which invalidates it (see `lib/datocms/executeQuery.ts`). In Draft Mode, text fields carry Content Link markers: hold Alt/Option (or turn on Visual Editing in the Web Previews plugin) and click any text to open the matching field in DatoCMS.
 
 ## Demo
 
@@ -79,15 +120,23 @@ CACHE_INVALIDATION_SECRET_TOKEN=<random string>
 #### Run your project locally
 
 ```bash
-pnpm install
-pnpm dev
+npm install
+npm run dev
 ```
 
 Your blog should be up and running on [http://localhost:3000](http://localhost:3000)!
 
+#### Update the GraphQL schema
+
+Whenever you change your DatoCMS models, refresh the `schema.graphql` file that gql.tada uses to type your queries:
+
+```bash
+npm run generate-schema
+```
+
 ## VS Code
 
-It's strongly suggested to install the [GraphQL: Language Feature Support](https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql) extension, to get autocomplete suggestions, validation against schema, and many more niceties when working with your GraphQL queries.
+It is highly recommended to follow [these instructions](https://gql-tada.0no.co/get-started/installation#vscode-setup) for an optimal experience with Visual Studio Code, including features like diagnostics, auto-completions, and type hovers for GraphQL.
 
 <!--datocms-autoinclude-footer start-->
 

@@ -1,27 +1,14 @@
-import type { SiteLocale } from '@/graphql/types/graphql';
+import type { SiteLocale } from '@/lib/datocms/graphql';
 
-// Base params type from Next.js (string-based)
-export type BaseParams = {
-  locale: string;
-};
-
-// Resolved params type with validated SiteLocale (after awaiting and validating)
-export type ResolvedParams = {
-  locale: SiteLocale;
-};
-
-// Page props with Promise-based params (Next.js 16+)
-// Uses string-based params since that's what Next.js provides
-export type GlobalPageProps = {
-  params: Promise<BaseParams>;
-};
-
-// Helper type for resolved page props (used internally after awaiting params)
-// This uses the validated SiteLocale type
+/** Page props once the params are awaited and the locale is known to be one of the project's */
 export type ResolvedGlobalPageProps = {
-  params: ResolvedParams;
+  params: { locale: SiteLocale };
 };
 
-export function buildUrl(globalPageProps: ResolvedGlobalPageProps, path?: string) {
+/** A site path in the current locale: buildUrl(props, '/posts') is '/en/posts' */
+export function buildUrl(
+  globalPageProps: ResolvedGlobalPageProps,
+  path?: string,
+) {
   return `/${globalPageProps.params.locale}${path || ''}`;
 }

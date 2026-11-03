@@ -1,18 +1,23 @@
 import { revalidateTag } from 'next/cache';
 import { type NextRequest, NextResponse } from 'next/server';
+import { cacheTag } from '@/lib/datocms/executeQuery';
 
-export async function POST(req: NextRequest): Promise<NextResponse> {
+/**
+ * Called by the "🔄 Cache Revalidation" webhook (created by /api/post-install)
+ * whenever content, models or assets change in DatoCMS
+ */
+export async function POST(request: NextRequest): Promise<NextResponse> {
   // The token is sent by the webhook as a request header (see /api/post-install)
-  const token = req.headers.get('authorization')?.replace(/^Bearer /, '');
+  const token = request.headers.get('authorization')?.replace(/^Bearer /, '');
 
   if (!token || token !== process.env.CACHE_INVALIDATION_SECRET_TOKEN) {
     return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
   }
 
   try {
-    // In Next.js 16, revalidateTag can optionally take a cacheLife profile
-    // For immediate invalidation (webhook use case), we use the default behavior
-    await revalidateTag('datocms', 'default');
+    // Every DatoCMS request is cached under one tag (lib/datocms/executeQuery.ts),
+    // so this invalidates all of them
+    await revalidateTag(cacheTag, 'default');
   } catch (error) {
     console.error(error);
 

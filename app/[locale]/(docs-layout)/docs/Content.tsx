@@ -1,9 +1,18 @@
-import FeaturedSection from '@/components/FeaturedDocumentationPages';
-import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
-import type { DocumentationPageRecord } from '@/graphql/types/graphql';
-import { Search } from 'lucide-react';
+import { stripStega } from '@datocms/content-link';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import FeaturedDocumentationPages from '@/components/docs/FeaturedDocumentationPages';
+import {
+  FeaturedDocumentationPagesFragment,
+  PreviewCardFragment,
+} from '@/components/docs/FeaturedDocumentationPages/fragment';
+import { Threads } from '@/components/ui/Ornaments';
+import TwoTone from '@/components/ui/SectionTitle/TwoTone';
+import { readFragment } from '@/lib/datocms/graphql';
+import type { ContentPage } from '@/lib/datocms/realtime/types';
+import { uiString } from '@/lib/i18n/uiStrings';
+import { buildUrl } from '@/utils/globalPageProps';
 import type { PageProps, Query } from './meta';
 
 const Content: ContentPage<PageProps, Query> = ({
@@ -12,45 +21,78 @@ const Content: ContentPage<PageProps, Query> = ({
 }) => {
   if (!data.documentationHome) notFound();
 
-  const titleWords = data.documentationHome.title.split(/\s+/);
-  const lastWord = titleWords.pop();
+  const { title, subheader } = data.documentationHome;
+  const { locale } = globalPageProps.params;
+
+  const { featuredPages } = readFragment(
+    FeaturedDocumentationPagesFragment,
+    data.documentationHome,
+  );
+  // "Get started" opens the first featured page
+  const firstPage = featuredPages[0]
+    ? readFragment(PreviewCardFragment, featuredPages[0])
+    : null;
 
   return (
-    <article className="not-prose w-full max-w-none">
-      <section className="not-prose relative mx-auto max-w-6xl px-6 py-16">
-        <h1 className="2xl:px-30 mb-4 text-4xl font-black text-slate-900 dark:text-white md:text-6xl lg:mb-8 lg:text-center lg:leading-tight">
-          {titleWords.join(' ')}
-          <span className="text-primary opacity-90"> {lastWord}</span>
-        </h1>
-        <p className="font-bold text-slate-600 dark:text-slate-100 lg:text-center lg:text-lg">
-          {data.documentationHome.subheader}
-        </p>
-
-        <div className="mx-auto flex max-w-xl flex-col justify-center gap-2 py-8 md:flex-row">
-          <button
-            type="button"
-            // onClick={() => toggleCommand()}
-            className="hover:ring-primary-300 flex h-10 w-full flex-row items-center gap-2 truncate rounded-xl border border-slate-300 pl-4 pr-2 text-left text-sm text-slate-500 outline-none hover:ring-2 hover:ring-offset-2 hover:ring-offset-slate-50 dark:border-slate-700 dark:text-slate-100 dark:hover:ring-offset-slate-800"
+    <>
+      {/* The docs opener: a well with copy on the left and the plinth wave
+          drawing in on the right. The wave box starts 560px into the well and
+          fades in over its first 300px, so it only shows past the 640px title
+          column; below 1360 the well is too narrow for both and it is dropped */}
+      <section
+        aria-labelledby="docs-title"
+        className="px-(--pad) pt-10 lg:pt-12 xl:px-12"
+      >
+        <div className="well max-w-page px-5 py-8 md:px-10 md:py-12 lg:py-14 xl:px-12">
+          <Threads
+            shape="plinth"
+            draw="load"
+            className="top-6 left-auto hidden w-[calc(100%-560px)] [mask-image:linear-gradient(90deg,transparent_140px,#000_300px)] min-[85rem]:block rtl:right-auto rtl:left-0 rtl:-scale-x-100"
+          />
+          <p className="pill-label tone-2">
+            {uiString(locale, 'documentation')}
+          </p>
+          {/* One Visual Editing target for both halves of the split title */}
+          <h1
+            id="docs-title"
+            data-datocms-content-link-group
+            className="mt-5 max-w-[640px] text-title text-ink lg:max-xl:text-[2.5rem]"
           >
-            <Search size={16} className="flex-none" />
-            <span className="flex-1">Search Docs...</span>
-            <kbd className="rounded-xl border border-slate-300 bg-slate-100 px-2 py-1 text-xs text-slate-600 dark:border-slate-500 dark:bg-slate-700 dark:text-white">
-              CTRL + K
-            </kbd>
-          </button>
-          <Link
-            href=""
-            className="focus:ring-primary-400 dark:bg-primary-600 dark:hover:bg-primary-500 flex h-10 min-w-[6rem] flex-none items-center justify-center whitespace-nowrap rounded-xl bg-primary px-6 text-base font-medium text-white opacity-90 hover:bg-primary hover:bg-opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-50 dark:ring-offset-slate-800"
-          >
-            Get Started
-          </Link>
+            <TwoTone text={title} lineBreak="md" />
+          </h1>
+          {subheader && (
+            <p
+              data-hero-rise=""
+              className="section-lead mt-5 [--d:0] [--lead-max:34rem]"
+            >
+              {subheader}
+            </p>
+          )}
+          {firstPage && (
+            <Link
+              href={buildUrl(
+                globalPageProps,
+                `/docs/${stripStega(firstPage.slug)}`,
+              )}
+              data-hero-rise=""
+              className="btn btn-primary mt-7 [--d:1]"
+            >
+              {uiString(locale, 'getStarted')}
+              <ArrowRight
+                strokeWidth={1.75}
+                aria-hidden="true"
+                className="btn-arrow rtl:rotate-180"
+              />
+            </Link>
+          )}
         </div>
       </section>
-      <FeaturedSection
+
+      <FeaturedDocumentationPages
         fragment={data.documentationHome}
         globalPageProps={globalPageProps}
       />
-    </article>
+    </>
   );
 };
 

@@ -1,0 +1,114 @@
+/* Motion: scroll reveals, hover and press feedback, and the page fade between routes. */
+
+@layer components {
+  /* Content is visible by default: every from-state lives in a keyframe or @starting-style,
+     and only screens that allow motion get any of it */
+
+  /* A card's image zooms a little while the card (.group) is hovered */
+  .media-zoom {
+    transition: scale 0.6s var(--ease);
+  }
+  @media screen and (prefers-reduced-motion: no-preference) {
+    @media (hover: hover) {
+      .group:hover .media-zoom {
+        scale: 1.03;
+      }
+    }
+    /* Something that appears: a popover, the other price, a confirmation */
+    .pop-in {
+      transition:
+        opacity var(--duration-ui) var(--ease),
+        translate var(--duration-ui) var(--ease);
+      @starting-style {
+        opacity: 0;
+        translate: 0 8px;
+      }
+    }
+    .pop-icon {
+      transition: scale var(--duration-ui) var(--ease-spring);
+      @starting-style {
+        scale: 0.5;
+      }
+    }
+    /* Scroll reveals (Chromium, Safari 26): tied to the first 240px of scroll, so nothing runs at
+       rest (clock-triggered composited reveals keep Chromium's compositor ticking every frame) */
+    @supports (animation-timeline: view()) {
+      :is(.reveal, .reveal-stagger > *) {
+        animation: rise cubic-bezier(0.33, 1, 0.68, 1) both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 240px;
+      }
+    }
+    /* Chromium 146+: the draws play once, on the clock, as they enter (main-thread paints) */
+    @supports (timeline-trigger: --t view()) {
+      :is(.draw-in, .ring-progress) {
+        timeline-trigger: --in view() entry 40px exit 100%;
+      }
+      .draw-in path {
+        stroke-dasharray: 1;
+        animation: draw 0.8s var(--ease) both;
+        animation-delay: calc(sibling-index() * 90ms);
+        animation-trigger: --in play-forwards;
+      }
+      .ring-progress {
+        animation: ring-fill 0.9s var(--ease) 0.15s both;
+        animation-trigger: --in play-forwards;
+      }
+    }
+    /* A row of cards steps in: 0 / 24 / 48px of scroll. On a phone the list is one column and the
+       scroll sets the order. No sibling-index(): no steps */
+    @media (width >= 48rem) {
+      .reveal-stagger > * {
+        animation-range-start: entry calc(min(sibling-index() - 1, 2) * 24px);
+      }
+    }
+    /* The section holding the page's h1 opens the page: nothing in it reveals */
+    section:has(h1) :is(.reveal, .reveal-stagger > *) {
+      animation: none;
+    }
+  }
+
+  /* Route changes: the <ViewTransition enter="page-enter" exit="page-exit"> around each page
+     (lib/datocms/realtime/generatePageComponent.tsx) fades the content, the chrome stays put */
+  ::view-transition {
+    pointer-events: none;
+  }
+  /* Named chrome (announcement strip, header, Draft Mode control) stays on top and doesn't move.
+     The changelog rail does the same between two changelog entries, and fades with the page
+     when only one side has it (:only-child) */
+  ::view-transition-group(site-strip),
+  ::view-transition-group(site-header),
+  ::view-transition-group(draft-control),
+  ::view-transition-group(changelog-rail) {
+    z-index: 100;
+    animation: none;
+  }
+  ::view-transition-old(site-strip),
+  ::view-transition-old(site-header),
+  ::view-transition-old(draft-control),
+  ::view-transition-old(changelog-rail):not(:only-child) {
+    display: none;
+  }
+  ::view-transition-new(site-strip),
+  ::view-transition-new(site-header),
+  ::view-transition-new(draft-control),
+  ::view-transition-new(changelog-rail):not(:only-child) {
+    animation: none;
+  }
+  /* The mobile menu sheet or docs drawer, fading out above the chrome */
+  ::view-transition-group(site-sheet) {
+    z-index: 101;
+  }
+  /* Old content leaves where the visitor was looking (120ms); the new page arrives as it is
+     nearly gone. The exit plays fade-in in reverse, so its curve is ease-standard mirrored: a
+     forward ease-standard fade */
+  ::view-transition-old(.page-exit),
+  ::view-transition-old(changelog-rail):only-child {
+    animation: fade-in 0.12s cubic-bezier(0.8, 0, 0.6, 1) reverse both;
+  }
+  ::view-transition-new(.page-enter),
+  ::view-transition-new(changelog-rail):only-child {
+    --rise: 8px;
+    animation: rise 0.3s var(--ease) 80ms both;
+  }
+}

@@ -1,0 +1,51 @@
+/* Keyframes shared by every layer. They stay unlayered so components, utilities and
+   inline styles can all use them. */
+
+/* Rises into place; --rise sets the distance (a negative value drops in from above) */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise, 12px));
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+/* Draws an SVG stroke in; the path needs pathLength={1} and stroke-dasharray: 1 */
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+/* The highlighter band of <mark> sweeping in from the left */
+@keyframes mark-sweep {
+  from {
+    background-size: 0% 42%;
+  }
+}
+/* Fills a ring-progress from empty to its --p */
+@keyframes ring-fill {
+  from {
+    --p: 0%;
+  }
+}
+/* Registered so ring-progress can fill; same default as its var(--p, 100%) fallback */
+@property --p {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 100%;
+}
+/* The one-time glow of a thread .port */
+@keyframes port-glow {
+  0% {
+    box-shadow: 0 0 0 0 var(--accent-ring);
+  }
+  30% {
+    box-shadow: 0 0 0 4px var(--accent-ring);
+  }
+  100% {
+    box-shadow: 0 0 0 4px transparent;
+  }
+}
