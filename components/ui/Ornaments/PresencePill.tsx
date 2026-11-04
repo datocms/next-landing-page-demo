@@ -2,7 +2,7 @@ import { Check } from 'lucide-react';
 import { cn } from '@/utils/cn';
 
 type Props = {
-  /** md: hero (176×48, 156×44 below 768); sm: in-article image CTA (132×40) */
+  /** md: hero; sm: in-article image CTA */
   size?: 'md' | 'sm';
   /** Position (absolute left-… top-…, z-…), set by the caller */
   className?: string;

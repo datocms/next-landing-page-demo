@@ -1,11 +1,4 @@
-import { stripStega } from '@datocms/content-link';
-import {
-  isBlock,
-  isBlockquote,
-  isCode,
-  isHeading,
-  isLink,
-} from 'datocms-structured-text-utils';
+import { isBlock, isHeading, isLink } from 'datocms-structured-text-utils';
 import Link from 'next/link';
 import { renderNodeRule } from 'react-datocms/structured-text';
 import AppCtaBlock from '@/components/blocks/AppCta';
@@ -13,22 +6,17 @@ import CtaButtonWithImageBlock from '@/components/blocks/CtaButtonWithImage';
 import ImageBlock from '@/components/blocks/ImageBlock';
 import NewsletterSubscriptionBlock from '@/components/blocks/NewsletterSubscription';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
-import CodeBlock from '@/components/ui/CodeBlock';
-import QuoteBlock from '@/components/ui/QuoteBlock';
-import {
-  buildUrl,
-  type ResolvedGlobalPageProps,
-} from '@/utils/globalPageProps';
-import { rootNodes } from '@/utils/rootNodes';
+import { longFormNodeRules } from '@/components/datocms/DatoStructuredText/longFormNodeRules';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
+import { bodyHeadingTag } from '@/utils/headingLevel';
+import { postUrl } from '@/utils/routes';
+import { rootNodes } from '@/utils/structuredText';
 import type { Query } from './meta';
 
 type Props = {
   content: NonNullable<Query['post']>['content'];
   globalPageProps: ResolvedGlobalPageProps;
 };
-
-/** Heading tags the body can use: the page title is the only h1 */
-type BodyHeadingTag = 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
 /**
  * The id of the article's first image block when it sits among the first
@@ -52,11 +40,7 @@ function leadImageId(
   return node && isBlock(node) ? node.item : null;
 }
 
-/**
- * The post's Structured Text: its embedded blocks, links and inline mentions
- * of other posts, and the rules that adapt headings, links, quotes and code to
- * the article's design
- */
+/** The post's Structured Text body: embedded blocks and links to other posts */
 const PostBody = ({ content, globalPageProps }: Props) => {
   const { locale } = globalPageProps.params;
   const priorityImageId = leadImageId(content.value, content.blocks);
@@ -76,7 +60,11 @@ const PostBody = ({ content, globalPageProps }: Props) => {
             );
           case 'NewsletterSubscriptionRecord':
             return (
-              <NewsletterSubscriptionBlock key={record.id} fragment={record} />
+              <NewsletterSubscriptionBlock
+                key={record.id}
+                fragment={record}
+                locale={locale}
+              />
             );
           case 'CtaButtonWithImageRecord':
             return (
@@ -98,10 +86,7 @@ const PostBody = ({ content, globalPageProps }: Props) => {
               <Link
                 key={record.id}
                 {...transformedMeta}
-                href={buildUrl(
-                  globalPageProps,
-                  `/posts/${stripStega(record.slug)}`,
-                )}
+                href={postUrl(globalPageProps, record.slug)}
               >
                 {children}
               </Link>
@@ -117,10 +102,7 @@ const PostBody = ({ content, globalPageProps }: Props) => {
             return (
               <Link
                 key={record.id}
-                href={buildUrl(
-                  globalPageProps,
-                  `/posts/${stripStega(record.slug)}`,
-                )}
+                href={postUrl(globalPageProps, record.slug)}
               >
                 {record.title}
               </Link>
@@ -131,7 +113,7 @@ const PostBody = ({ content, globalPageProps }: Props) => {
       }}
       customNodeRules={[
         renderNodeRule(isHeading, ({ node, children, key }) => {
-          const HeadingTag = `h${Math.max(node.level, 2)}` as BodyHeadingTag;
+          const HeadingTag = bodyHeadingTag(node.level);
           return <HeadingTag key={key}>{children}</HeadingTag>;
         }),
         // The link's meta entries (target, rel…) become attributes
@@ -146,19 +128,7 @@ const PostBody = ({ content, globalPageProps }: Props) => {
             </a>
           );
         }),
-        renderNodeRule(isBlockquote, ({ children, key }) => (
-          <QuoteBlock key={key}>{children}</QuoteBlock>
-        )),
-        // The same code window (with its copy action) as docs and changelog entries
-        renderNodeRule(isCode, ({ node, key }) => (
-          <CodeBlock
-            key={key}
-            code={node.code}
-            language={node.language}
-            highlight={node.highlight}
-            locale={locale}
-          />
-        )),
+        ...longFormNodeRules(locale),
       ]}
     />
   );

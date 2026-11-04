@@ -1,5 +1,5 @@
 import { buildClient, type Client } from '@datocms/cma-client-node';
-import { NextResponse } from 'next/server';
+import { withCORS } from '@/app/api/utils';
 
 /*
  * Called once by DatoCMS right after this starter is deployed (`postDeploy` in
@@ -9,14 +9,6 @@ import { NextResponse } from 'next/server';
  * invalidation webhook, each sending its secret token to the route it calls.
  * The endpoint can be removed afterwards.
  */
-
-const cors = {
-  headers: {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'OPTIONS, POST',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  },
-};
 
 /**
  * The DatoCMS API token arrives in the request body, so without this check the
@@ -58,7 +50,7 @@ async function installWebPreviewsPlugin(client: Client, baseUrl: string) {
             },
           ],
           visualEditing: {
-            // Opened by a browser, where we cannot set headers
+            // Opened by the browser, which can't send headers: the secret goes in ?token=
             enableDraftModeUrl: new URL(
               `/api/draft/enable?token=${process.env.DRAFT_SECRET_TOKEN}`,
               baseUrl,
@@ -128,7 +120,7 @@ async function createCacheInvalidationWebhook(client: Client, baseUrl: string) {
 }
 
 export async function OPTIONS() {
-  return new Response('OK', cors);
+  return new Response('OK', withCORS());
 }
 
 export async function POST(request: Request) {
@@ -139,9 +131,9 @@ export async function POST(request: Request) {
 
   try {
     if (!(await isOurProject(client, process.env.DATOCMS_CMA_TOKEN!))) {
-      return NextResponse.json(
+      return Response.json(
         { success: false, error: 'Invalid token' },
-        { status: 401, ...cors },
+        withCORS({ status: 401 }),
       );
     }
 
@@ -151,15 +143,15 @@ export async function POST(request: Request) {
       installSEOAnalysisPlugin(client, baseUrl),
     ]);
 
-    return NextResponse.json({ success: true }, cors);
+    return Response.json({ success: true }, withCORS());
   } catch (error) {
     // Never return the error: the DatoCMS client stores the failed request in
     // it, Authorization header and payload included
     console.error(error);
 
-    return NextResponse.json(
+    return Response.json(
       { success: false, error: 'Internal server error' },
-      { status: 500, ...cors },
+      withCORS({ status: 500 }),
     );
   }
 }

@@ -9,7 +9,7 @@ const buildVariables: BuildVariablesFn<PageProps, Variables> = ({
   fallbackLocale,
 }) => ({
   locale: params.locale,
-  fallbackLocale: [fallbackLocale],
+  fallbackLocales: [fallbackLocale],
 });
 
 const Layout = generatePageComponent<PageProps, Query, Variables>({

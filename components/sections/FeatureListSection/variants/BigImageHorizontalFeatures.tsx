@@ -5,20 +5,22 @@ import { FeatureListSectionFragment } from '@/components/sections/FeatureListSec
 import SectionTitle from '@/components/ui/SectionTitle';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
+import {
+  itemHeadingLevel,
+  type SectionHeadingLevel,
+} from '@/utils/headingLevel';
 import { hasStructuredText } from '@/utils/structuredText';
 import { toneClass } from '@/utils/tones';
+import { twoDigits } from '@/utils/twoDigits';
 
 type Props = {
   fragment: FragmentOf<typeof FeatureListSectionFragment>;
-  /** h1 when the section opens a page without a hero */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
 };
 
 /**
- * "big_image_horizontal" feature list: media rows. Two-up horizontal cards,
- * each led by a glowing media well that holds the CMS image (a floating tile
- * for icon art, a cover photo otherwise), then a mono index, title and copy.
- * Below 640 every card becomes a compact row with a square well.
+ * `big_image_horizontal`: two-up cards, each led by a media well holding the
+ * CMS image (FeatureMedia), then an index, title and copy.
  */
 const BigImageHorizontalFeatures = ({ fragment, as = 'h2' }: Props) => {
   const headingId = useId();
@@ -27,8 +29,7 @@ const BigImageHorizontalFeatures = ({ fragment, as = 'h2' }: Props) => {
     featuresHeader,
     featuresSubheader,
   } = readFragment(FeatureListSectionFragment, fragment);
-  // Item titles sit one level below the section title
-  const ItemHeading = as === 'h1' ? 'h2' : 'h3';
+  const ItemHeading = itemHeadingLevel(as);
 
   return (
     <section
@@ -38,6 +39,7 @@ const BigImageHorizontalFeatures = ({ fragment, as = 'h2' }: Props) => {
       <div className="container-page">
         <SectionTitle
           as={as}
+          h1Size="page"
           align="split"
           twoTone={false}
           id={headingId}
@@ -55,7 +57,7 @@ const BigImageHorizontalFeatures = ({ fragment, as = 'h2' }: Props) => {
                   toneClass(i),
                 )}
               >
-                <div className="zone-glow relative grid min-h-[200px] place-items-center rounded-zone [--tile:110px] max-sm:size-[104px] max-sm:min-h-0 max-sm:rounded-[14px] max-sm:[--tile-ir:9px] max-sm:[--tile-p:4px] max-sm:[--tile-r:12px] max-sm:[--tile:56px]">
+                <div className="zone-glow relative grid min-h-[200px] place-items-center rounded-zone [--media-tile-size:110px] max-sm:size-[104px] max-sm:min-h-0 max-sm:rounded-[14px] max-sm:[--media-tile-inner-radius:9px] max-sm:[--media-tile-padding:4px] max-sm:[--media-tile-radius:12px] max-sm:[--media-tile-size:56px]">
                   <FeatureMedia
                     image={feature.featureIcon?.responsiveImage}
                     index={i}
@@ -64,7 +66,7 @@ const BigImageHorizontalFeatures = ({ fragment, as = 'h2' }: Props) => {
                 </div>
                 <div className="flex min-w-0 flex-col justify-center p-6 max-sm:py-2 max-sm:ps-0 max-sm:pe-2 lg:max-xl:p-5">
                   <span aria-hidden="true" className="mono">
-                    {String(i + 1).padStart(2, '0')}
+                    {twoDigits(i + 1)}
                   </span>
                   <ItemHeading className="mt-3 text-h3 max-sm:mt-1.5 max-sm:text-h4">
                     {feature.featureTitle}

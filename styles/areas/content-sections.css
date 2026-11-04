@@ -1,0 +1,111 @@
+/* Content sections: the video play button, the detail pill and chat card, the about-intro dividers. */
+
+@layer areas {
+  /* Video: the play circle's white ring and drop shadow; on keyboard focus the drop shadow
+     gives way to an accent ring 3px outside the white one */
+  .video-play {
+    --play-ring: 5px;
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.16),
+      0 0 0 var(--play-ring) var(--bg),
+      0 10px 24px -10px color-mix(in oklch, var(--ink) 45%, transparent);
+    @media (width >= 48rem) {
+      --play-ring: 6px;
+      box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 0.16),
+        0 0 0 var(--play-ring) var(--bg),
+        0 12px 28px -10px color-mix(in oklch, var(--ink) 45%, transparent);
+    }
+  }
+  :focus-visible > .video-play {
+    box-shadow:
+      0 0 0 var(--play-ring) var(--bg),
+      0 0 0 calc(var(--play-ring) + 3px) var(--accent-solid);
+  }
+
+  /* Detail: pill cloud item (a two-line pill stays round at radius 18) */
+  .detail-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    max-width: 100%;
+    padding: 6px 14px 6px 8px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--bg);
+    box-shadow: var(--shadow-xs);
+    font: 500 0.875rem / 1.3 var(--font-sans);
+    color: var(--ink);
+  }
+
+  /* Detail: a wordless chat card (an incoming bubble and a reply) that overlaps the photo */
+  .chat-card {
+    display: grid;
+    gap: 8px;
+    width: 220px;
+    padding: 14px;
+    border-radius: 18px 18px 18px 6px;
+    @media (width < 48rem) {
+      width: 196px;
+    }
+  }
+  .chat-card-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  .chat-card-avatar {
+    width: 22px;
+    height: 22px;
+    flex: none;
+    border-radius: 9999px;
+    background-image: var(--tone-grad);
+  }
+  .chat-card-bubble {
+    display: grid;
+    flex: 1;
+    gap: 6px;
+    padding: 10px 12px;
+    border-radius: 12px 12px 12px 4px;
+    background: var(--surface);
+    & > i {
+      display: block;
+      height: 7px;
+      border-radius: 4px;
+      background: color-mix(in oklch, var(--ink) 9%, var(--surface));
+    }
+    & > i:last-child {
+      width: 62%;
+      background: color-mix(in oklch, var(--ink) 5%, var(--surface));
+    }
+  }
+  .chat-card-reply {
+    margin-inline-start: 30px;
+    border-radius: 12px 12px 4px 12px;
+    background: var(--tone-wash);
+    & > i,
+    & > i:last-child {
+      background: var(--tone-mark);
+    }
+    & > i:last-child {
+      width: 48%;
+    }
+  }
+
+  /* AboutIntro: hairline dividers between the intro points, centred in the 56px column gap (lg and up) */
+  .intro-points > li + li::before {
+    @media (width >= 64rem) {
+      content: '';
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: -28px;
+      width: 1px;
+      background: var(--line);
+    }
+  }
+  .intro-points[data-cols='2'] > li:nth-child(2n + 1)::before,
+  .intro-points[data-cols='3'] > li:nth-child(3n + 1)::before {
+    content: none;
+  }
+}

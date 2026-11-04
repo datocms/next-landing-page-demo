@@ -83,7 +83,7 @@ const measureView = (track: HTMLElement): GalleryView => {
  * on scroll and resize. Returns the ref for the scroll track, the current
  * view and `scrollByCard`, which moves the track exactly one card.
  */
-export default function useGalleryView() {
+export function useGalleryView() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [view, setView] = useState<GalleryView>(INITIAL_VIEW);
 

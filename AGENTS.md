@@ -7,3 +7,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## This project
+
+- Code structure: the "How the code is organized" and "How a page is rendered" sections of README.md.
+- Task guides: `skills/landing-page-demo-{sections,layout,docs,content-records,routing-preview}/SKILL.md` (also linked from `.claude/skills/`).
+- Before committing: `npm run lint` (Biome and `gql.tada check`).

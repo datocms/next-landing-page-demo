@@ -1,12 +1,12 @@
 import { notFound } from 'next/navigation';
-import PostExcerpt, { postCardLayout } from '@/components/posts/PostExcerpt';
+import PostGrid from '@/components/posts/PostGrid';
 import PostsPageHeader from '@/components/posts/PostsPageHeader';
-import type { ContentPage } from '@/lib/datocms/realtime/types';
+import type { ContentComponent } from '@/lib/datocms/realtime/types';
 import { uiString } from '@/lib/i18n/uiStrings';
-import { toneIndex } from '@/utils/tones';
+import { toneClassFor } from '@/utils/tones';
 import type { PageProps, Query } from './meta';
 
-const Content: ContentPage<PageProps, Query> = ({
+const Content: ContentComponent<PageProps, Query> = ({
   data,
   ...globalPageProps
 }) => {
@@ -20,12 +20,11 @@ const Content: ContentPage<PageProps, Query> = ({
 
   return (
     <>
-      {/* No '#' prefix: tag chips across the site show the bare tag name; the label dot matches their tone */}
       <PostsPageHeader
         label={uiString(locale, 'tag')}
         title={data.tag.tag}
         titleId="tag-title"
-        tone={toneIndex(data.tag.tag)}
+        tone={toneClassFor(data.tag.tag)}
         meta={uiString(locale, 'postCount', { n: postCount })}
       />
 
@@ -34,18 +33,12 @@ const Content: ContentPage<PageProps, Query> = ({
         className="container-page mt-12 pb-24 max-md:mt-8 max-md:pb-16"
       >
         {posts.length > 0 ? (
-          <div className="grid gap-3 md:grid-cols-2 md:gap-4 lg:grid-cols-3">
-            {posts.map((post, index) => (
-              <PostExcerpt
-                key={post.id}
-                fragment={post}
-                globalPageProps={globalPageProps}
-                priority={index < 3}
-                headingLevel="h2"
-                {...postCardLayout(index, posts.length)}
-              />
-            ))}
-          </div>
+          <PostGrid
+            posts={posts}
+            globalPageProps={globalPageProps}
+            headingLevel="h2"
+            prioritizeFirstRow
+          />
         ) : (
           <p className="card p-8 text-center text-body text-ink-2">
             {uiString(locale, 'noTaggedPosts')}

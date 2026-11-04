@@ -15,7 +15,8 @@ const SEGMENT_KEYS = Array.from({ length: 12 }, (_, index) => `seg${index}`);
 /**
  * Progress segments that together read as one --grad-line sweep cut into
  * pieces (carousels, galleries). Decorative: pair it with a text counter or a
- * live region. No hooks, so client islands can import it.
+ * live region. Imported directly, not through the Ornaments barrel, so client
+ * islands don't bundle the other drawings.
  */
 const Segments = ({ count, active, className }: Props) => {
   if (count < 2 || count > 12) {

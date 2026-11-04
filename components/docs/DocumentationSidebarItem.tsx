@@ -7,10 +7,8 @@ import { usePathname } from 'next/navigation';
 import { useId, useState } from 'react';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
-import {
-  buildUrl,
-  type ResolvedGlobalPageProps,
-} from '@/utils/globalPageProps';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
+import { docsPageUrl } from '@/utils/routes';
 
 type SidebarPage = {
   id: string;
@@ -26,8 +24,7 @@ type Props = {
 
 // Row link. The hover fill comes from --row-hover (white on the tinted rail, the
 // well tint in the white drawer). Inset focus ring: the tree sits in scroll and
-// collapse containers that clip outlines. Rows grow to 44px in the drawer and on
-// touch screens.
+// collapse containers that clip outlines.
 const rowClass =
   'flex min-h-9 min-w-0 flex-1 items-center rounded-panel px-3 py-1.5 text-small transition-colors duration-150 focus-visible:-outline-offset-2 max-lg:min-h-11 pointer-coarse:min-h-11';
 
@@ -39,7 +36,7 @@ const currentTextClass = 'font-medium text-accent-text';
 /** Whether `page` or any page below it has this slug */
 function treeHasSlug(page: SidebarPage, slug: string): boolean {
   return (
-    stripStega(page.slug) === slug ||
+    page.slug === slug ||
     (page.children ?? []).some((child) => !!child && treeHasSlug(child, slug))
   );
 }
@@ -54,8 +51,8 @@ const DocumentationSidebarItem = ({ page, globalPageProps }: Props) => {
   const currentSlug = pathname.split('/').at(-1) ?? '';
   const childListId = useId();
 
-  const href = buildUrl(globalPageProps, `/docs/${stripStega(page.slug)}`);
-  const isCurrent = stripStega(page.slug) === currentSlug;
+  const href = docsPageUrl(globalPageProps, page.slug);
+  const isCurrent = page.slug === currentSlug;
   const childPages = (page.children ?? []).filter(
     (child): child is SidebarPage => Boolean(child),
   );

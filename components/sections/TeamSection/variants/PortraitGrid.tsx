@@ -1,4 +1,3 @@
-import { stripStega } from '@datocms/content-link';
 import Link from 'next/link';
 import { useId } from 'react';
 import DatoImage from '@/components/datocms/DatoImage';
@@ -6,11 +5,13 @@ import { TeamSectionFragment } from '@/components/sections/TeamSection/fragment'
 import SectionTitle from '@/components/ui/SectionTitle';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import {
-  buildUrl,
-  type ResolvedGlobalPageProps,
-} from '@/utils/globalPageProps';
-import initialsOf from '@/utils/initialsOf';
+  itemHeadingLevel,
+  type SectionHeadingLevel,
+} from '@/utils/headingLevel';
+import { initialsOf } from '@/utils/initialsOf';
+import { authorUrl } from '@/utils/routes';
 import {
   hasStructuredText,
   structuredTextToPlainText,
@@ -20,8 +21,7 @@ import { toneClass } from '@/utils/tones';
 type Props = {
   fragment: FragmentOf<typeof TeamSectionFragment>;
   globalPageProps: ResolvedGlobalPageProps;
-  /** Pass "h1" when this block opens the page, so its title doubles as the page header */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
 };
 
 /**
@@ -36,13 +36,9 @@ const PortraitGrid = ({ fragment, globalPageProps, as = 'h2' }: Props) => {
     subtitle,
     showcasedMembers: members,
   } = readFragment(TeamSectionFragment, fragment);
-  const headingId = `team-${useId().replace(/[^\w-]/g, '')}`;
+  const headingId = `team-${useId()}`;
 
-  if (members.length === 0) {
-    return null;
-  }
-
-  const MemberHeading = as === 'h1' ? 'h2' : 'h3';
+  const MemberHeading = itemHeadingLevel(as);
 
   return (
     <section
@@ -55,7 +51,6 @@ const PortraitGrid = ({ fragment, globalPageProps, as = 'h2' }: Props) => {
           paragraph={subtitle}
           align="split"
           as={as}
-          h1Size="section"
           id={headingId}
         />
 
@@ -92,10 +87,7 @@ const PortraitGrid = ({ fragment, globalPageProps, as = 'h2' }: Props) => {
               <div className="min-w-0 pt-1.5 md:pt-0">
                 <MemberHeading className="font-display text-[16px]/[1.3] font-medium tracking-[-0.01em] text-ink md:mt-3.5">
                   <Link
-                    href={buildUrl(
-                      globalPageProps,
-                      `/posts/author/${stripStega(member.slug)}`,
-                    )}
+                    href={authorUrl(globalPageProps, member.slug)}
                     className="stretched-link decoration-line-strong underline-offset-4 group-hover:underline focus-visible:underline"
                   >
                     {member.name}

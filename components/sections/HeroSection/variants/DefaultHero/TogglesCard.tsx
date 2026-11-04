@@ -1,16 +1,18 @@
 import { cn } from '@/utils/cn';
 
 type Props = {
-  /** Position and motion hooks (absolute right-… bottom-…, hero-float), set by the caller */
+  /** Position and motion, set by the caller */
   className?: string;
 };
 
-/** A 32×18 settings switch; `on` fills the track with the tone gradient */
+/** A settings switch; `on` fills the track with the tone gradient */
 const Switch = ({ on }: { on?: boolean }) => (
   <span
     className={cn(
       'relative h-[18px] w-8 flex-none rounded-[9px]',
-      on ? 'bg-[linear-gradient(90deg,var(--s-hi),var(--s))]' : 'bg-surface',
+      on
+        ? 'bg-[linear-gradient(90deg,var(--tone-hi),var(--tone))]'
+        : 'bg-surface',
     )}
   >
     <span
@@ -24,7 +26,7 @@ const Switch = ({ on }: { on?: boolean }) => (
   </span>
 );
 
-/** Wordless settings card floating on the default hero's well: two skeleton rows, one switch on and one off. Decorative */
+/** A wordless settings card with one switch on and one off. Decorative */
 const TogglesCard = ({ className }: Props) => (
   <div
     aria-hidden="true"

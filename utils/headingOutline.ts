@@ -3,8 +3,8 @@ import { isHeading, type Node } from 'datocms-structured-text-utils';
 
 /** One entry of a long-form page's outline (its "On this page" links) */
 export type OutlineHeading = {
-  /** Position among the document's root children (the renderer looks it up by this) */
-  index: number;
+  /** The heading node (the renderer looks its anchor id up by it) */
+  node: Node;
   /** Unique, stable anchor id (`^[a-z0-9-]+$`) */
   id: string;
   /** Raw heading text for the table of contents */
@@ -40,19 +40,19 @@ export function repeatsTitle(heading: Node, title: string) {
 }
 
 /**
- * The root-level headings that render as h2 (levels 1 and 2), minus the one at
- * `skipIndex`, each with a unique anchor id. Duplicate texts get -2, -3…
- * suffixes. Shared by the legal and docs pages and their "On this page" rails.
+ * The root-level headings that render as h2 (levels 1 and 2), minus `skip`,
+ * each with a unique anchor id. Duplicate texts get -2, -3… suffixes. Shared
+ * by the legal and docs pages and their "On this page" rails.
  */
 export function headingOutline(
   rootChildren: readonly Node[],
-  skipIndex = -1,
+  skip?: Node | null,
 ): OutlineHeading[] {
   const usedIds = new Set<string>();
   const headings: OutlineHeading[] = [];
 
-  rootChildren.forEach((node, index) => {
-    if (index === skipIndex || !isHeading(node) || node.level > 2) return;
+  for (const node of rootChildren) {
+    if (node === skip || !isHeading(node) || node.level > 2) continue;
 
     const text = plainText(node);
     const baseId = slugify(text) || 'section';
@@ -60,8 +60,8 @@ export function headingOutline(
     for (let n = 2; usedIds.has(id); n++) id = `${baseId}-${n}`;
     usedIds.add(id);
 
-    headings.push({ index, id, text });
-  });
+    headings.push({ node, id, text });
+  }
 
   return headings;
 }

@@ -105,7 +105,7 @@ function threadGeometry(shape: ShapeDef): ThreadGeometry {
  * No client JS: drawing is CSS-only and skipped under reduced motion.
  */
 const Threads = ({ shape, draw, aspect, className, style }: Props) => {
-  const gradientIdPrefix = `thr${useId().replace(/[^\w-]/g, '')}`;
+  const gradientIdPrefix = `thr${useId()}`;
   const shapeDef = typeof shape === 'string' ? THREAD_PRESETS[shape] : shape;
   const { width, height, paths } = threadGeometry(shapeDef);
 

@@ -28,14 +28,14 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'settings', Icon: Settings, width: '56px' },
 ];
 
-/** The product window's wordless sidebar: a logo row, the nav and a footer block. Hidden below 900 */
+/** The product window's wordless sidebar: a logo row, the nav and a footer block */
 const WindowSidebar = () => (
   <div
     aria-hidden="true"
     className="border-line border-r bg-well p-4 max-[900px]:hidden"
   >
     <div className="flex h-6 items-center gap-2.5 px-2">
-      <i className="size-5 flex-none rounded-md bg-accent" />
+      <i className="size-5 flex-none rounded-md bg-accent-solid" />
       <SkeletonBar className="bg-sk-2" width="72px" />
     </div>
     <ul className="mt-6 grid gap-0.5">
@@ -51,7 +51,7 @@ const WindowSidebar = () => (
             strokeWidth={2}
             className={cn(
               'size-3.5 flex-none',
-              active ? 'text-accent' : 'text-line-strong opacity-75',
+              active ? 'text-accent-solid' : 'text-line-strong opacity-75',
             )}
           />
           <SkeletonBar

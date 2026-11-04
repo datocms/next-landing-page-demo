@@ -23,8 +23,7 @@ type Props = {
   language?: string | null;
   /** Zero-based line indexes to highlight, counted from the original first line */
   highlight?: readonly number[] | null;
-  /** Site locale for the copy button's label (English when missing) */
-  locale?: string | null;
+  locale: string;
 };
 
 /** CMS language names (and common aliases) → a registered grammar */

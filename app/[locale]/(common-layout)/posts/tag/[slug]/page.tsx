@@ -10,7 +10,7 @@ const buildVariables: BuildVariablesFn<PageProps, Variables> = ({
   fallbackLocale,
 }) => ({
   locale: params.locale,
-  fallbackLocale: [fallbackLocale],
+  fallbackLocales: [fallbackLocale],
   slug: params.slug,
 });
 
@@ -18,7 +18,7 @@ export const generateMetadata = generateMetadataFn<PageProps, Query, Variables>(
   {
     query,
     buildVariables,
-    generate: (data) => data.tag?.seo,
+    pickSeoMetaTags: (data) => data.tag?.seo,
   },
 );
 

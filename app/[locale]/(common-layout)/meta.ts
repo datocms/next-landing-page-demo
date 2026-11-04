@@ -1,4 +1,5 @@
-import { ResponsiveImageFragment } from '@/components/datocms/DatoImage/fragment';
+import { FooterFragment } from '@/components/layout/Footer/fragment';
+import { HeaderFragment } from '@/components/layout/Header/fragment';
 import {
   graphql,
   type ResultOf,
@@ -12,74 +13,17 @@ export type PageProps = ResolvedGlobalPageProps & {
 
 export const query = graphql(
   /* GraphQL */ `
-    query CommonLayoutQuery($locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
-      layout(locale: $locale, fallbackLocales: $fallbackLocale) {
-        logo {
-          url
-          responsiveImage {
-            ...ResponsiveImageFragment
-          }
-        }
-        menu {
-          ... on MenuItemRecord {
-            id
-            title
-            __typename
-            page {
-              slug
-            }
-          }
-          ... on MenuDropdownRecord {
-            id
-            title
-            __typename
-            items {
-              ... on MenuItemRecord {
-                id
-                title
-                __typename
-                page {
-                  slug
-                }
-              }
-            }
-          }
-        }
-        notification {
-          value
-        }
-        footerSubtitle {
-          value
-        }
-        footerLogo {
-          url
-          height
-          width
-        }
-        socialMediaLinks {
-          url
-          name
-          id
-          icon {
-            url
-            height
-            width
-          }
-        }
-        footerLinks {
-          ... on LegalPageRecord {
-            id
-            slug
-            title
-          }
-        }
+    query CommonLayoutQuery($locale: SiteLocale, $fallbackLocales: [SiteLocale!]) {
+      layout(locale: $locale, fallbackLocales: $fallbackLocales) {
+        ...HeaderFragment
+        ...FooterFragment
       }
       _site {
         locales
       }
     }
   `,
-  [ResponsiveImageFragment],
+  [HeaderFragment, FooterFragment],
 );
 
 export type Query = ResultOf<typeof query>;

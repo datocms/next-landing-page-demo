@@ -17,12 +17,12 @@ export type PageProps = ResolvedGlobalPageProps & {
 export const query = graphql(/* GraphQL */ `
   query DocumentationSidebarQuery(
     $locale: SiteLocale
-    $fallbackLocale: [SiteLocale!]
+    $fallbackLocales: [SiteLocale!]
   ) {
     allDocumentationPages(
       filter: { parent: { exists: "false" } }
       locale: $locale
-      fallbackLocales: $fallbackLocale
+      fallbackLocales: $fallbackLocales
     ) {
       id
       slug
@@ -48,7 +48,7 @@ export const query = graphql(/* GraphQL */ `
         }
       }
     }
-    documentationHome(locale: $locale, fallbackLocales: $fallbackLocale) {
+    documentationHome(locale: $locale, fallbackLocales: $fallbackLocales) {
       footerText
       logo {
         url

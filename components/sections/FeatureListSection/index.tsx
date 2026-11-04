@@ -1,5 +1,6 @@
 import { stripStega } from '@datocms/content-link';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
+import type { SectionHeadingLevel } from '@/utils/headingLevel';
 import { FeatureListSectionFragment } from './fragment';
 import BentoGridFeatures from './variants/BentoGridFeatures';
 import BigImageHorizontalFeatures from './variants/BigImageHorizontalFeatures';
@@ -9,8 +10,7 @@ import IconListFeatures from './variants/IconListFeatures';
 
 type Props = {
   fragment: FragmentOf<typeof FeatureListSectionFragment>;
-  /** h1 when the section opens a page without a hero */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
   locale: string;
 };
 
@@ -18,7 +18,7 @@ type Props = {
 const FeatureListSection = ({ fragment, as, locale }: Props) => {
   const { displayOption } = readFragment(FeatureListSectionFragment, fragment);
 
-  switch (stripStega(displayOption ?? '')) {
+  switch (stripStega(displayOption)) {
     case 'card_minimal':
       return <IconListFeatures fragment={fragment} as={as} />;
     case 'grid':

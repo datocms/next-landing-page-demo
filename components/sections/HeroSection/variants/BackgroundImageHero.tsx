@@ -2,8 +2,8 @@ import { useId } from 'react';
 import DatoImage from '@/components/datocms/DatoImage';
 import { HeroSectionFragment } from '@/components/sections/HeroSection/fragment';
 import HeroButtons from '@/components/sections/HeroSection/HeroButtons';
-import HeroHeading from '@/components/sections/HeroSection/HeroHeading';
 import HeroSubtitle from '@/components/sections/HeroSection/HeroSubtitle';
+import HeroTitle from '@/components/sections/HeroSection/HeroTitle';
 import { PresencePill, Threads } from '@/components/ui/Ornaments';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 
@@ -12,13 +12,8 @@ type Props = {
 };
 
 /**
- * The "photo stage": the CMS image fills a container-wide rounded stage, left
- * as it is (no scrim, no tint, no text on the photo), and the copy sits in a
- * white card floating over its bottom-left corner. Below 1024 the card drops
- * under the photo and overlaps it (64px, 40px below 768), so the photo is never
- * mostly covered. Without an image the stage is an accent well of threads.
- * Below 768 the H1 scales from 28 to 32px with the viewport, so each half of
- * the title keeps its own line inside the card's padding.
+ * `background_image`: the CMS photo fills the stage and the copy sits in a
+ * floating card; without an image the stage is a well of threads.
  */
 const BackgroundImageHero = ({ fragment }: Props) => {
   const headingId = useId();
@@ -54,16 +49,12 @@ const BackgroundImageHero = ({ fragment }: Props) => {
           <PresencePill className="hero-float absolute top-3 right-3 z-10 [--d:2] md:top-5 md:right-5 lg:top-6 lg:right-6" />
 
           <div className="float relative z-10 -mt-10 rounded-card p-5 md:mx-6 md:-mt-16 md:p-8 lg:absolute lg:bottom-6 lg:left-6 lg:m-0 lg:w-[584px] lg:max-w-[calc(100%-48px)] lg:p-10">
-            <HeroHeading
-              id={headingId}
-              title={heroTitle}
-              className="text-h1 max-md:text-[length:clamp(28px,10.4vw_-_8.5px,32px)] max-md:tracking-[-0.035em] md:text-[44px] md:leading-[1.06]"
-            />
+            <HeroTitle id={headingId} title={heroTitle} size="compact" />
             <HeroSubtitle
               text={heroSubtitle}
               className="mt-4 text-lead text-ink-2 [&_p+p]:mt-3"
             />
-            <HeroButtons buttons={buttons} rise={2} className="mt-6" />
+            <HeroButtons buttons={buttons} className="mt-6" />
           </div>
         </div>
       </div>

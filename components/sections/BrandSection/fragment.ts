@@ -4,7 +4,6 @@ export const BrandSectionFragment = graphql(/* GraphQL */ `
   fragment BrandSectionFragment on BrandSectionRecord {
     displayOptions
     brand {
-      __typename
       brandName
       brandUrl
       id

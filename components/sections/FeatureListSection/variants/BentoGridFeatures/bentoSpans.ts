@@ -30,8 +30,7 @@ export function bentoSpans(count: number, columns: number): number[] {
   return spans;
 }
 
-/* Span → class, from 1200 (XL) and from 768 (MD). Literal class maps: Tailwind
-   only generates classes it can see */
+/* Literal class maps: Tailwind only generates classes it can see */
 export const XL_SPAN: Record<number, string> = {
   1: 'xl:col-span-1',
   2: 'xl:col-span-2',

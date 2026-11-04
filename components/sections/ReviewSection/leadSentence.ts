@@ -5,6 +5,15 @@
  * edited path are cloned, the rest of the document is shared.
  */
 
+import {
+  type InlineNode,
+  isDocument,
+  isItemLink,
+  isLink,
+  isParagraph,
+  isSpan,
+  type Span,
+} from 'datocms-structured-text-utils';
 import { createElement } from 'react';
 import {
   renderMarkRule,
@@ -12,12 +21,6 @@ import {
 } from 'react-datocms/structured-text';
 
 type MarkRules = NonNullable<StructuredTextPropTypes['customMarkRules']>;
-
-// Just the parts of the DAST document this module reads
-type Span = { type: 'span'; value: string; marks?: string[] };
-type Inline = { type: string; value?: unknown; children?: unknown[] };
-type Paragraph = { type: 'paragraph'; children: Inline[] };
-type Root = { type: 'root'; children: { type: string }[] };
 
 const LEAD_MARK = 'lead-sentence';
 
@@ -41,15 +44,6 @@ export const leadInkRules: MarkRules = [
     createElement('span', { key, className: 'text-ink' }, children),
   ),
 ];
-
-const isSpan = (node: Inline): node is Span =>
-  node.type === 'span' && typeof node.value === 'string';
-
-const isRoot = (node: unknown): node is Root =>
-  typeof node === 'object' &&
-  node !== null &&
-  (node as Root).type === 'root' &&
-  Array.isArray((node as Root).children);
 
 const withLeadMark = (span: Span): Span => ({
   ...span,
@@ -77,8 +71,10 @@ function markSpan(span: Span): [Span[], boolean] {
  * Marks inline nodes (descending into links) until the first sentence ends.
  * Returns the new nodes and whether the sentence ended among them
  */
-function markInlines(children: Inline[]): [Inline[], boolean] {
-  const next: Inline[] = [];
+function markInlines<T extends InlineNode>(
+  children: T[],
+): [(T | Span)[], boolean] {
+  const next: (T | Span)[] = [];
   let sentenceEnded = false;
 
   for (const child of children) {
@@ -88,11 +84,8 @@ function markInlines(children: Inline[]): [Inline[], boolean] {
       const [parts, ended] = markSpan(child);
       next.push(...parts);
       sentenceEnded = ended;
-    } else if (
-      (child.type === 'link' || child.type === 'itemLink') &&
-      Array.isArray(child.children)
-    ) {
-      const [linkChildren, ended] = markInlines(child.children as Inline[]);
+    } else if (isLink(child) || isItemLink(child)) {
+      const [linkChildren, ended] = markInlines(child.children);
       next.push({ ...child, children: linkChildren });
       sentenceEnded = ended;
     } else {
@@ -105,23 +98,20 @@ function markInlines(children: Inline[]): [Inline[], boolean] {
 
 /** A copy of the review field whose first sentence carries `lead-sentence` */
 export function withLeadSentence<T extends { value: unknown }>(field: T): T {
-  const value = field?.value as { document?: unknown } | null | undefined;
-  const document = value?.document;
-  if (!isRoot(document)) return field;
+  const { value } = field;
+  if (!isDocument(value)) return field;
 
-  const index = document.children.findIndex(
-    (node) =>
-      node.type === 'paragraph' && Array.isArray((node as Paragraph).children),
-  );
-  if (index < 0) return field;
+  const { children } = value.document;
+  const paragraph = children.find(isParagraph);
+  if (!paragraph) return field;
 
-  const paragraph = document.children[index] as Paragraph;
-  const [children] = markInlines(paragraph.children);
-  const nextChildren = [...document.children];
-  nextChildren[index] = { ...paragraph, children } as Paragraph;
-
-  return {
-    ...field,
-    value: { ...value, document: { ...document, children: nextChildren } },
+  const [markedChildren] = markInlines(paragraph.children);
+  const document = {
+    ...value.document,
+    children: children.map((node) =>
+      node === paragraph ? { ...paragraph, children: markedChildren } : node,
+    ),
   };
+
+  return { ...field, value: { ...value, document } };
 }

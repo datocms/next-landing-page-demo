@@ -32,7 +32,8 @@ const MAX_AVATARS = 6;
  */
 const MinimalStage = ({ slides, avatars, names, locale }: Props) => {
   const count = slides.length;
-  const { index, interacted, next, prev, goTo, onKeyDown } = useCarousel(count);
+  const { activeIndex, hasInteracted, next, prev, goTo, onKeyDown } =
+    useCarousel(count);
   const slidesId = useId();
   const multiple = count > 1;
   const showAvatars = count < MAX_AVATARS;
@@ -55,7 +56,7 @@ const MinimalStage = ({ slides, avatars, names, locale }: Props) => {
                   n: i + 1,
                   total: count,
                 })}
-                {...slideProps(i === index)}
+                {...slideProps(i === activeIndex)}
               >
                 {slide.node}
               </div>
@@ -74,7 +75,7 @@ const MinimalStage = ({ slides, avatars, names, locale }: Props) => {
             />
             {showAvatars ? (
               slides.map((slide, i) => {
-                const current = i === index;
+                const current = i === activeIndex;
                 return (
                   <button
                     key={slide.id}
@@ -104,7 +105,11 @@ const MinimalStage = ({ slides, avatars, names, locale }: Props) => {
                 );
               })
             ) : (
-              <SlideCounter index={index} count={count} className="px-2" />
+              <SlideCounter
+                index={activeIndex}
+                count={count}
+                className="px-2"
+              />
             )}
             <NextButton
               onClick={next}
@@ -117,10 +122,10 @@ const MinimalStage = ({ slides, avatars, names, locale }: Props) => {
       )}
 
       <SlideAnnouncer
-        index={index}
+        index={activeIndex}
         count={count}
-        name={names[index] ?? ''}
-        enabled={interacted}
+        name={names[activeIndex] ?? ''}
+        enabled={hasInteracted}
         locale={locale}
       />
     </div>

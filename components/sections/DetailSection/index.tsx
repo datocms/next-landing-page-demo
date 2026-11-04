@@ -3,7 +3,8 @@ import { useId } from 'react';
 import DatoImage from '@/components/datocms/DatoImage';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
-import { rootNodes } from '@/utils/rootNodes';
+import type { SectionHeadingLevel } from '@/utils/headingLevel';
+import { rootNodes } from '@/utils/structuredText';
 import ChatCard from './ChatCard';
 import DetailCopy from './DetailCopy';
 import { DetailSectionFragment } from './fragment';
@@ -11,8 +12,7 @@ import RingCard from './RingCard';
 
 type Props = {
   fragment: FragmentOf<typeof DetailSectionFragment>;
-  /** h1 when the section opens a page without a hero: its first heading becomes the page title */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
 };
 
 /**
@@ -28,7 +28,7 @@ const DetailSection = ({ fragment, as = 'h2' }: Props) => {
     DetailSectionFragment,
     fragment,
   );
-  const headingId = `detail-${useId().replace(/[^\w-]/g, '')}`;
+  const headingId = `detail-${useId()}`;
 
   const topHeadings = rootNodes(details?.value).filter(
     (node) => isHeading(node) && node.level <= 2,

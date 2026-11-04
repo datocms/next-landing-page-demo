@@ -2,11 +2,12 @@
 
 import { Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import DraftModeEnabledToast from './DraftModeEnabledToast';
 import DraftPasswordPrompt from './DraftPasswordPrompt';
+import { usePromptPopover } from './usePromptPopover';
 
 type Props = {
   isDraft: boolean;
@@ -24,23 +25,18 @@ const floatingPanelClass =
  */
 export default function DraftModeToggle({ isDraft, locale }: Props) {
   const router = useRouter();
-  const [promptOpen, setPromptOpen] = useState(false);
+  const { promptOpen, setPromptOpen, triggerRef, promptRef, promptId } =
+    usePromptPopover();
   const [toastVisible, setToastVisible] = useState(false);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const promptRef = useRef<HTMLDivElement>(null);
-  const wasPromptOpen = useRef(false);
-  // Off when the prompt is dismissed by interacting elsewhere, so focus stays where the visitor went
-  const returnFocusOnClose = useRef(true);
-  const promptId = useId();
 
-  async function toggleDraftMode() {
+  async function handleTriggerClick() {
     if (isDraft) {
       await fetch('/api/draft/disable');
       router.refresh();
     } else setPromptOpen((open) => !open);
   }
 
-  const onDraftModeEnabled = () => {
+  const handleDraftModeEnabled = () => {
     router.refresh();
     setPromptOpen(false);
     setToastVisible(true);
@@ -52,43 +48,6 @@ export default function DraftModeToggle({ isDraft, locale }: Props) {
     const timeout = setTimeout(() => setToastVisible(false), 5000);
     return () => clearTimeout(timeout);
   }, [toastVisible]);
-
-  // Non-modal popover: Escape closes it, and so does pressing or moving focus anywhere outside it and its trigger
-  useEffect(() => {
-    if (!promptOpen) return;
-
-    const isOutside = (target: EventTarget | null) =>
-      target instanceof Node &&
-      !promptRef.current?.contains(target) &&
-      !triggerRef.current?.contains(target);
-
-    const dismissIfOutside = (event: Event) => {
-      if (!isOutside(event.target)) return;
-      returnFocusOnClose.current = false;
-      setPromptOpen(false);
-    };
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setPromptOpen(false);
-    };
-
-    document.addEventListener('pointerdown', dismissIfOutside);
-    document.addEventListener('focusin', dismissIfOutside);
-    document.addEventListener('keydown', onKeyDown);
-    return () => {
-      document.removeEventListener('pointerdown', dismissIfOutside);
-      document.removeEventListener('focusin', dismissIfOutside);
-      document.removeEventListener('keydown', onKeyDown);
-    };
-  }, [promptOpen]);
-
-  // Give focus back to the trigger when the prompt closes from Escape, Cancel or a successful sign-in
-  useEffect(() => {
-    if (wasPromptOpen.current && !promptOpen && returnFocusOnClose.current) {
-      triggerRef.current?.focus();
-    }
-    if (promptOpen) returnFocusOnClose.current = true;
-    wasPromptOpen.current = promptOpen;
-  }, [promptOpen]);
 
   return (
     <>
@@ -111,7 +70,7 @@ export default function DraftModeToggle({ isDraft, locale }: Props) {
             id={promptId}
             locale={locale}
             onCancel={() => setPromptOpen(false)}
-            onEnabled={onDraftModeEnabled}
+            onEnabled={handleDraftModeEnabled}
           />
         </div>
       )}
@@ -120,7 +79,7 @@ export default function DraftModeToggle({ isDraft, locale }: Props) {
       <button
         ref={triggerRef}
         type="button"
-        onClick={toggleDraftMode}
+        onClick={handleTriggerClick}
         aria-label={isDraft ? uiString(locale, 'exitDraftMode') : undefined}
         aria-haspopup={isDraft ? undefined : 'dialog'}
         aria-expanded={isDraft ? undefined : promptOpen}

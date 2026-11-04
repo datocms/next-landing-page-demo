@@ -12,7 +12,7 @@
 }
 @utility container-reading {
   width: 100%;
-  max-width: calc(42.5rem + 2 * var(--pad));
+  max-width: calc(var(--container-reading) + 2 * var(--pad));
   margin-inline: auto;
   padding-inline: var(--pad);
 }
@@ -56,75 +56,123 @@
 
 /* ---------- Tones ---------- */
 
-/* Six stops of the ONE hue. The bodies are identical except --kn (the depth) and --s-at
-   (where zone-glow puts its light). Each repeats the --s formulas because a custom property is
-   computed where it is declared: setting --kn alone would leave the inherited --s unchanged.
-   Pick them with TONES / toneClass() / toneRamp() from @/utils/tones */
+/* Six stops of the ONE hue. The bodies differ only in --tone-depth and --tone-glow-at (where
+   zone-glow puts its light). Each repeats the --tone formulas because a custom property is
+   computed where it is declared: setting --tone-depth alone would leave the inherited --tone
+   unchanged. Pick them with toneClass() / toneClassFor() / toneRamp() from @/utils/tones */
 @utility tone-0 {
-  --kn: 0;
-  --s-at: 0% 0%;
-  --s: color-mix(in oklch, var(--g-800) calc(var(--kn) * 20%), var(--g-500));
-  --s-hi: color-mix(in oklch, var(--g-600) calc(var(--kn) * 20%), var(--g-300));
-  --s-ang: calc(120deg + var(--kn) * 30deg);
-  --s-grad: linear-gradient(var(--s-ang), var(--s-hi), var(--s));
-  --s-wash: var(--g-100);
-  --s-mark: var(--g-200);
-  --s-text: var(--g-800);
+  --tone-depth: 0;
+  --tone-glow-at: 0% 0%;
+  --tone: color-mix(
+    in oklch,
+    var(--g-800) calc(var(--tone-depth) * 20%),
+    var(--g-500)
+  );
+  --tone-hi: color-mix(
+    in oklch,
+    var(--g-600) calc(var(--tone-depth) * 20%),
+    var(--g-300)
+  );
+  --tone-angle: calc(120deg + var(--tone-depth) * 30deg);
+  --tone-grad: linear-gradient(var(--tone-angle), var(--tone-hi), var(--tone));
+  --tone-wash: var(--g-100);
+  --tone-mark: var(--g-200);
+  --tone-text: var(--g-800);
 }
 @utility tone-1 {
-  --kn: 1;
-  --s-at: 100% 0%;
-  --s: color-mix(in oklch, var(--g-800) calc(var(--kn) * 20%), var(--g-500));
-  --s-hi: color-mix(in oklch, var(--g-600) calc(var(--kn) * 20%), var(--g-300));
-  --s-ang: calc(120deg + var(--kn) * 30deg);
-  --s-grad: linear-gradient(var(--s-ang), var(--s-hi), var(--s));
-  --s-wash: var(--g-100);
-  --s-mark: var(--g-200);
-  --s-text: var(--g-800);
+  --tone-depth: 1;
+  --tone-glow-at: 100% 0%;
+  --tone: color-mix(
+    in oklch,
+    var(--g-800) calc(var(--tone-depth) * 20%),
+    var(--g-500)
+  );
+  --tone-hi: color-mix(
+    in oklch,
+    var(--g-600) calc(var(--tone-depth) * 20%),
+    var(--g-300)
+  );
+  --tone-angle: calc(120deg + var(--tone-depth) * 30deg);
+  --tone-grad: linear-gradient(var(--tone-angle), var(--tone-hi), var(--tone));
+  --tone-wash: var(--g-100);
+  --tone-mark: var(--g-200);
+  --tone-text: var(--g-800);
 }
 @utility tone-2 {
-  --kn: 2;
-  --s-at: 0% 100%;
-  --s: color-mix(in oklch, var(--g-800) calc(var(--kn) * 20%), var(--g-500));
-  --s-hi: color-mix(in oklch, var(--g-600) calc(var(--kn) * 20%), var(--g-300));
-  --s-ang: calc(120deg + var(--kn) * 30deg);
-  --s-grad: linear-gradient(var(--s-ang), var(--s-hi), var(--s));
-  --s-wash: var(--g-100);
-  --s-mark: var(--g-200);
-  --s-text: var(--g-800);
+  --tone-depth: 2;
+  --tone-glow-at: 0% 100%;
+  --tone: color-mix(
+    in oklch,
+    var(--g-800) calc(var(--tone-depth) * 20%),
+    var(--g-500)
+  );
+  --tone-hi: color-mix(
+    in oklch,
+    var(--g-600) calc(var(--tone-depth) * 20%),
+    var(--g-300)
+  );
+  --tone-angle: calc(120deg + var(--tone-depth) * 30deg);
+  --tone-grad: linear-gradient(var(--tone-angle), var(--tone-hi), var(--tone));
+  --tone-wash: var(--g-100);
+  --tone-mark: var(--g-200);
+  --tone-text: var(--g-800);
 }
 @utility tone-3 {
-  --kn: 3;
-  --s-at: 100% 100%;
-  --s: color-mix(in oklch, var(--g-800) calc(var(--kn) * 20%), var(--g-500));
-  --s-hi: color-mix(in oklch, var(--g-600) calc(var(--kn) * 20%), var(--g-300));
-  --s-ang: calc(120deg + var(--kn) * 30deg);
-  --s-grad: linear-gradient(var(--s-ang), var(--s-hi), var(--s));
-  --s-wash: var(--g-100);
-  --s-mark: var(--g-200);
-  --s-text: var(--g-800);
+  --tone-depth: 3;
+  --tone-glow-at: 100% 100%;
+  --tone: color-mix(
+    in oklch,
+    var(--g-800) calc(var(--tone-depth) * 20%),
+    var(--g-500)
+  );
+  --tone-hi: color-mix(
+    in oklch,
+    var(--g-600) calc(var(--tone-depth) * 20%),
+    var(--g-300)
+  );
+  --tone-angle: calc(120deg + var(--tone-depth) * 30deg);
+  --tone-grad: linear-gradient(var(--tone-angle), var(--tone-hi), var(--tone));
+  --tone-wash: var(--g-100);
+  --tone-mark: var(--g-200);
+  --tone-text: var(--g-800);
 }
 @utility tone-4 {
-  --kn: 4;
-  --s-at: 50% 0%;
-  --s: color-mix(in oklch, var(--g-800) calc(var(--kn) * 20%), var(--g-500));
-  --s-hi: color-mix(in oklch, var(--g-600) calc(var(--kn) * 20%), var(--g-300));
-  --s-ang: calc(120deg + var(--kn) * 30deg);
-  --s-grad: linear-gradient(var(--s-ang), var(--s-hi), var(--s));
-  --s-wash: var(--g-100);
-  --s-mark: var(--g-200);
-  --s-text: var(--g-800);
+  --tone-depth: 4;
+  --tone-glow-at: 50% 0%;
+  --tone: color-mix(
+    in oklch,
+    var(--g-800) calc(var(--tone-depth) * 20%),
+    var(--g-500)
+  );
+  --tone-hi: color-mix(
+    in oklch,
+    var(--g-600) calc(var(--tone-depth) * 20%),
+    var(--g-300)
+  );
+  --tone-angle: calc(120deg + var(--tone-depth) * 30deg);
+  --tone-grad: linear-gradient(var(--tone-angle), var(--tone-hi), var(--tone));
+  --tone-wash: var(--g-100);
+  --tone-mark: var(--g-200);
+  --tone-text: var(--g-800);
 }
 @utility tone-5 {
-  --kn: 5;
-  --s-at: 50% 100%;
-  --s: color-mix(in oklch, var(--g-800) calc(var(--kn) * 20%), var(--g-500));
-  --s-hi: color-mix(in oklch, var(--g-600) calc(var(--kn) * 20%), var(--g-300));
-  --s-ang: calc(120deg + var(--kn) * 30deg);
-  --s-grad: linear-gradient(var(--s-ang), var(--s-hi), var(--s));
-  --s-wash: var(--g-100);
-  --s-mark: var(--g-200);
-  --s-text: var(--g-800);
+  --tone-depth: 5;
+  --tone-glow-at: 50% 100%;
+  --tone: color-mix(
+    in oklch,
+    var(--g-800) calc(var(--tone-depth) * 20%),
+    var(--g-500)
+  );
+  --tone-hi: color-mix(
+    in oklch,
+    var(--g-600) calc(var(--tone-depth) * 20%),
+    var(--g-300)
+  );
+  --tone-angle: calc(120deg + var(--tone-depth) * 30deg);
+  --tone-grad: linear-gradient(var(--tone-angle), var(--tone-hi), var(--tone));
+  --tone-wash: var(--g-100);
+  --tone-mark: var(--g-200);
+  --tone-text: var(--g-800);
 }
 
 /* ---------- Gradients, dots and shapes ---------- */
@@ -136,13 +184,13 @@
   background-image: var(--grad-line);
 }
 @utility bg-tone-grad {
-  background-image: var(--s-grad);
+  background-image: var(--tone-grad);
 }
 /* Tone-gradient numerals, contrast-clamped (every stop L <= .60 so 44px text is >= 3:1 on white) */
 @utility text-tone-grad {
-  --tg-hi: oklch(from var(--s-hi) min(l, 0.6) c h);
-  --tg-lo: oklch(from var(--s) min(l, 0.5) c h);
-  color: var(--s);
+  --tg-hi: oklch(from var(--tone-hi) min(l, 0.6) c h);
+  --tg-lo: oklch(from var(--tone) min(l, 0.5) c h);
+  color: var(--tone);
   background-image: linear-gradient(180deg, var(--tg-hi) 8%, var(--tg-lo) 78%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -161,7 +209,7 @@
   height: 8px;
   flex: none;
   border-radius: 9999px;
-  background-image: var(--s-grad);
+  background-image: var(--tone-grad);
 }
 /* A placeholder bar in the mini UIs and mock windows; set its width with w-* */
 @utility sk {
@@ -176,31 +224,31 @@
   height: 10px;
   flex: none;
   border-radius: 9999px;
-  background-image: var(--s-grad);
+  background-image: var(--tone-grad);
 }
 @utility shape-square {
   width: 10px;
   height: 10px;
   flex: none;
   border-radius: 2px;
-  background-image: var(--s-grad);
+  background-image: var(--tone-grad);
 }
 @utility shape-triangle {
   width: 11px;
   height: 10px;
   flex: none;
-  background-image: var(--s-grad);
+  background-image: var(--tone-grad);
   clip-path: polygon(50% 0, 100% 100%, 0 100%);
 }
 
 /* ---------- Backgrounds ---------- */
 
-/* zone-glow: a tinted well lit from a corner or edge set by the tone (--s-at), for gallery and bento tiles.
+/* zone-glow: a tinted well lit from a corner or edge set by the tone (--tone-glow-at), for gallery and bento tiles.
    dot-grid: a white canvas with a hairline dot grid */
 @utility zone-glow {
   background:
     radial-gradient(
-      85% 95% at var(--s-at, 0% 0%),
+      85% 95% at var(--tone-glow-at, 0% 0%),
       color-mix(in oklch, var(--g-100) 85%, transparent),
       transparent 70%
     ),
@@ -260,7 +308,7 @@
     inset: -5px;
     border-radius: 9999px;
     pointer-events: none;
-    background-image: var(--s-grad);
+    background-image: var(--tone-grad);
     -webkit-mask: radial-gradient(
       farthest-side,
       transparent calc(100% - 2.5px),
@@ -291,12 +339,6 @@
 }
 @utility shadow-pop {
   box-shadow: var(--pop-shadow);
-}
-@utility shadow-window {
-  box-shadow: var(--window-shadow);
-}
-@utility shadow-window-sm {
-  box-shadow: var(--window-shadow-sm);
 }
 @utility shadow-thumb {
   box-shadow: var(--thumb-shadow);

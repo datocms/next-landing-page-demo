@@ -3,6 +3,7 @@ import { type ComponentPropsWithoutRef, type ReactNode, useId } from 'react';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
+import { cn } from '@/utils/cn';
 import { hasStructuredText } from '@/utils/structuredText';
 import AppStoreGlyph from './AppStoreGlyph';
 import { AppCtaFragment } from './fragment';
@@ -39,13 +40,11 @@ const StoreLink = ({ href, glyph, label, newTabHint }: StoreLinkProps) => (
 );
 
 /**
- * In-article app download card: copy with ink pill store buttons on the left,
- * a wordless phone mini-UI on the right (768 and up). It renders a single root
- * so the structured text renderer can clone content-link props onto it. The
- * title is not a heading, so the promo does not reshape the article outline;
- * the aside is named by it.
+ * In-article app download card: copy and store buttons beside a wordless phone
+ * mini-UI. The title is a <p>, not a heading, so it stays out of the article
+ * outline; the aside is named by it.
  */
-const AppCtaBlock = ({ fragment, locale, className = '', ...rest }: Props) => {
+const AppCtaBlock = ({ fragment, locale, className, ...rest }: Props) => {
   const { title, text, googlePlayUrl, appstoreUrl } = readFragment(
     AppCtaFragment,
     fragment,
@@ -58,7 +57,10 @@ const AppCtaBlock = ({ fragment, locale, className = '', ...rest }: Props) => {
     <aside
       {...rest}
       aria-labelledby={title ? titleId : undefined}
-      className={`prose-block not-prose reveal card grid items-start gap-7 p-7 max-md:p-5 md:grid-cols-[minmax(0,1fr)_148px] ${className}`}
+      className={cn(
+        'prose-block not-prose reveal card grid items-start gap-7 p-7 max-md:p-5 md:grid-cols-[minmax(0,1fr)_148px]',
+        className,
+      )}
     >
       <div className="min-w-0">
         {title && (

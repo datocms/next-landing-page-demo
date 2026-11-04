@@ -1,24 +1,32 @@
-import { ViewTransition } from 'react';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
-import type { ContentPage } from '@/lib/datocms/realtime/types';
+import PageTransition from '@/components/layout/PageTransition';
+import type { ContentComponent } from '@/lib/datocms/realtime/types';
 import type { PageProps, Query } from './meta';
 
-const Content: ContentPage<PageProps, Query> = ({
+const Content: ContentComponent<PageProps, Query> = ({
   data,
   children,
   ...globalPageProps
 }) => {
   return (
     <>
-      <Header globalPageProps={globalPageProps} data={data} />
+      <Header
+        globalPageProps={globalPageProps}
+        fragment={data.layout}
+        languages={data._site.locales}
+      />
       {/* Pages fade inside it; this one fades when the layout itself is swapped (docs, another language) */}
-      <ViewTransition enter="page-enter" exit="page-exit" default="none">
+      <PageTransition>
         <main id="main" className="min-h-[60svh]">
           {children}
         </main>
-        <Footer globalPageProps={globalPageProps} data={data} />
-      </ViewTransition>
+        <Footer
+          globalPageProps={globalPageProps}
+          fragment={data.layout}
+          languages={data._site.locales}
+        />
+      </PageTransition>
     </>
   );
 };

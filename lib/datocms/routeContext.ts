@@ -1,15 +1,10 @@
 import { draftMode } from 'next/headers';
-import { notFound } from 'next/navigation';
-import { getAvailableLocales, getFallbackLocale } from '@/lib/i18n/locales';
-import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
+import { getFallbackLocale, requireSiteLocale } from '@/lib/i18n/locales';
+import type {
+  GlobalPageProps,
+  ResolvedGlobalPageProps,
+} from '@/utils/globalPageProps';
 import type { SiteLocale } from './graphql';
-
-/** The props Next.js passes to a page or layout: params arrive as a promise, the locale as a plain string */
-export type AsyncPageProps = {
-  params: Promise<{ locale: string; [key: string]: string | number }>;
-  searchParams?: Promise<Record<string, string | string[] | undefined>>;
-  children?: React.ReactNode;
-};
 
 /** Builds a route's GraphQL variables from its resolved params */
 export type BuildVariablesFn<
@@ -26,14 +21,11 @@ export async function resolveRouteContext<
   PageProps extends ResolvedGlobalPageProps,
   Variables,
 >(
-  asyncPageProps: AsyncPageProps,
+  asyncPageProps: GlobalPageProps,
   buildVariables?: BuildVariablesFn<PageProps, Variables>,
 ) {
   const params = await asyncPageProps.params;
-  const locales = await getAvailableLocales();
-  if (!locales.includes(params.locale as SiteLocale)) {
-    notFound();
-  }
+  const locale = await requireSiteLocale(params.locale);
 
   // searchParams is left out: props passed to the client (RealTime) must be serializable
   const {
@@ -43,7 +35,7 @@ export async function resolveRouteContext<
   } = asyncPageProps;
   const pageProps = {
     ...rest,
-    params: { ...params, locale: params.locale as SiteLocale },
+    params: { ...params, locale },
   } as unknown as PageProps;
 
   const fallbackLocale = await getFallbackLocale();

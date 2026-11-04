@@ -8,7 +8,7 @@
     text-decoration-thickness: 1px;
     text-underline-offset: 3px;
     text-decoration-color: color-mix(in oklch, var(--ink) 35%, transparent);
-    transition: text-decoration-color var(--duration-fast) var(--ease);
+    transition: text-decoration-color var(--duration-fast) var(--ease-out-expo);
     @media (hover: hover) {
       &:hover {
         text-decoration-color: currentColor;
@@ -17,7 +17,7 @@
   }
   .link-quiet {
     color: var(--ink-2);
-    transition: color var(--duration-fast) var(--ease);
+    transition: color var(--duration-fast) var(--ease-out-expo);
     @media (hover: hover) {
       &:hover {
         color: var(--ink);
@@ -53,8 +53,8 @@
     height: 24px;
     padding: 0 10px 0 8px;
     border-radius: 9999px;
-    background: var(--s-wash);
-    color: var(--s-text);
+    background: var(--tone-wash);
+    color: var(--tone-text);
     font: 500 0.78125rem / 1 var(--font-sans);
     white-space: nowrap;
     &::before {
@@ -63,15 +63,15 @@
       height: 6px;
       flex: none;
       border-radius: 9999px;
-      background-image: var(--s-grad);
+      background-image: var(--tone-grad);
     }
   }
   a.chip {
     position: relative;
-    transition: background-color var(--duration-fast) var(--ease);
+    transition: background-color var(--duration-fast) var(--ease-out-expo);
     @media (hover: hover) {
       &:hover {
-        background: var(--s-mark);
+        background: var(--tone-mark);
       }
     }
     @media (pointer: coarse) {
@@ -81,19 +81,6 @@
         inset: -10px -4px;
       }
     }
-  }
-  .chip-neutral {
-    display: inline-flex;
-    align-items: center;
-    height: 24px;
-    padding-inline: 10px;
-    border: 1px solid var(--line);
-    border-radius: 9999px;
-    background: var(--bg-2);
-    font: 400 0.75rem / 1 var(--font-mono);
-    color: var(--ink-2);
-    white-space: nowrap;
-    font-variant-numeric: tabular-nums;
   }
   /* Page-opener label (AboutIntro pre-header, posts header, docs home). Dot tone from a tone-N class */
   .pill-label {
@@ -116,7 +103,7 @@
       height: 8px;
       flex: none;
       border-radius: 9999px;
-      background-image: var(--s-grad);
+      background-image: var(--tone-grad);
     }
   }
 }

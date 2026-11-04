@@ -1,9 +1,7 @@
 import { useId } from 'react';
 import DatoImage from '@/components/datocms/DatoImage';
 import { HeroSectionFragment } from '@/components/sections/HeroSection/fragment';
-import HeroButtons from '@/components/sections/HeroSection/HeroButtons';
-import HeroHeading from '@/components/sections/HeroSection/HeroHeading';
-import HeroSubtitle from '@/components/sections/HeroSection/HeroSubtitle';
+import HeroCopyColumn from '@/components/sections/HeroSection/HeroCopyColumn';
 import { Bars, Chart, Lock } from '@/components/ui/Ornaments';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 
@@ -12,10 +10,9 @@ type Props = {
 };
 
 /**
- * "Hero bento": DefaultHero's copy column, and on the right three separate
- * tiles instead of a threaded well: a wide photo tile with a live chip on
- * top, two wordless mini-UI tiles under it. No threads, no overlap. Without
- * an image the wide tile shows the chart drawing instead.
+ * `right_image`: the copy beside three tiles, the CMS photo in the wide one
+ * and two wordless mini-UIs under it; without an image the wide tile shows a
+ * chart drawing.
  */
 const RightImageHero = ({ fragment }: Props) => {
   const headingId = useId();
@@ -31,22 +28,12 @@ const RightImageHero = ({ fragment }: Props) => {
       className="pt-12 pb-10 max-lg:pt-10 max-lg:pb-16 max-md:pt-8 max-md:pb-14"
     >
       <div className="container-page grid-page items-center">
-        <div className="col-span-full max-w-[620px] lg:col-span-6 lg:max-w-none">
-          <HeroHeading
-            id={headingId}
-            title={heroTitle}
-            className="max-w-[588px] text-h1"
-          />
-          <HeroSubtitle
-            text={heroSubtitle}
-            className="mt-[18px] max-w-[520px] text-lead text-ink-2 max-md:mt-4 [&_p+p]:mt-3"
-          />
-          <HeroButtons
-            buttons={buttons}
-            rise={2}
-            className="mt-7 max-md:mt-6"
-          />
-        </div>
+        <HeroCopyColumn
+          headingId={headingId}
+          title={heroTitle}
+          subtitle={heroSubtitle}
+          buttons={buttons}
+        />
 
         <div className="col-span-full mt-10 grid h-[420px] grid-cols-2 grid-rows-[minmax(0,1fr)_152px] gap-4 max-md:mt-7 max-md:h-auto max-md:grid-rows-none max-md:gap-3 lg:col-span-6 lg:mt-0 lg:h-[448px] lg:grid-rows-[minmax(0,1fr)_168px]">
           {image ? (

@@ -2,13 +2,13 @@
 
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
-import { type BillingPeriod, useBilling } from './BillingScope';
+import { type BillingPeriod, useBillingPeriod } from './BillingPeriodProvider';
 
 // Each period is also the uiString key of its label
 const PERIODS: BillingPeriod[] = ['monthly', 'yearly'];
 
 /**
- * Monthly / yearly segmented control for the nearest BillingScope. The thumb
+ * Monthly / yearly segmented control for the nearest BillingPeriodProvider. The thumb
  * slides with CSS (.segmented reads aria-pressed); without JavaScript it shows
  * monthly and stays inert.
  */
@@ -19,7 +19,7 @@ const BillingToggle = ({
   locale: string;
   className?: string;
 }) => {
-  const billing = useBilling();
+  const billing = useBillingPeriod();
   const period = billing?.period ?? 'monthly';
 
   return (

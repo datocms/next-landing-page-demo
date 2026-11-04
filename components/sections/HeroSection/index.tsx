@@ -15,7 +15,7 @@ type Props = {
 const HeroSection = ({ fragment }: Props) => {
   const { displayOptions } = readFragment(HeroSectionFragment, fragment);
 
-  switch (stripStega(displayOptions ?? '')) {
+  switch (stripStega(displayOptions)) {
     case 'gradient':
       return <GradientHero fragment={fragment} />;
     case 'right_image':

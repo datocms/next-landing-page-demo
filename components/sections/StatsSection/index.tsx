@@ -3,15 +3,15 @@ import { Squiggle } from '@/components/ui/Ornaments';
 import SectionTitle from '@/components/ui/SectionTitle';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
+import type { SectionHeadingLevel } from '@/utils/headingLevel';
 import { toneRamp } from '@/utils/tones';
-import formatCompactNumber from './formatCompactNumber';
+import { formatCompactNumber } from './formatCompactNumber';
 import { StatsSectionFragment } from './fragment';
 import MaskIcon from './MaskIcon';
 
 type Props = {
   fragment: FragmentOf<typeof StatsSectionFragment>;
-  /** Pass "h1" when this block opens a page that has no hero */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
 };
 
 /**
@@ -28,17 +28,16 @@ function columnsFor(count: number) {
 /**
  * Tone tiles: one card per figure, its numeral in a contrast-clamped tone
  * gradient that deepens from left to right (tones 1 → 4), with the CMS icon in a
- * tone chip (or a squiggle) in the corner. Numerals render final: no count-up.
+ * tone chip (or a squiggle) in the corner.
  */
 const StatsSection = ({ fragment, as = 'h2' }: Props) => {
   const { title, subtitle, statistic } = readFragment(
     StatsSectionFragment,
     fragment,
   );
-  const headingId = `stats-${useId().replace(/[^\w-]/g, '')}`;
+  const headingId = `stats-${useId()}`;
   const count = statistic.length;
   const columns = columnsFor(count);
-  // From 768 up the last tile spans whatever its row leaves empty
   const lastSpan = columns - (count % columns || columns) + 1;
 
   return (
@@ -49,15 +48,14 @@ const StatsSection = ({ fragment, as = 'h2' }: Props) => {
       <div className="container-page">
         <SectionTitle
           as={as}
-          h1Size="section"
           id={headingId}
           title={title}
           paragraph={subtitle}
         />
         {count > 0 && (
           <dl
-            className="reveal-stagger grid grid-cols-2 gap-3 md:grid-cols-[repeat(var(--cs-cols),minmax(0,1fr))] md:gap-4"
-            style={{ '--cs-cols': columns } as CSSProperties}
+            className="reveal-stagger grid grid-cols-2 gap-3 md:grid-cols-[repeat(var(--stat-columns),minmax(0,1fr))] md:gap-4"
+            style={{ '--stat-columns': columns } as CSSProperties}
           >
             {statistic.map((stat, index) => {
               const isLast = index === count - 1;
@@ -69,13 +67,12 @@ const StatsSection = ({ fragment, as = 'h2' }: Props) => {
                     'card relative flex min-h-[120px] flex-col-reverse justify-start p-[18px] md:min-h-[148px] lg:p-6',
                     // On phones (two columns) an odd last tile spans the row
                     isLast && count % 2 === 1 && 'col-span-2',
-                    isLast && 'md:col-span-(--cs-span)',
-                    // Each row deepens left to right
+                    isLast && 'md:col-span-(--last-stat-span)',
                     toneRamp(index % columns, columns, 1, 4),
                   )}
                   style={
                     isLast
-                      ? ({ '--cs-span': lastSpan } as CSSProperties)
+                      ? ({ '--last-stat-span': lastSpan } as CSSProperties)
                       : undefined
                   }
                 >

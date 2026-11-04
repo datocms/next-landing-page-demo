@@ -1,3 +1,4 @@
+import { POSTS_PER_PAGE } from '@/components/posts/postsPagination';
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { generateMetadataFn } from '@/lib/datocms/generateMetadataFn';
 import { graphql } from '@/lib/datocms/graphql';
@@ -9,20 +10,23 @@ import { type PageProps, type Query, query, type Variables } from './meta';
 import RealTime from './RealTime';
 
 const staticParamsQuery = graphql(/* GraphQL */ `
-  query PostStaticParamsQuery {
+  query PostStaticParamsQuery($postsPerPage: IntType) {
     allPosts(
       filter: { title: { isBlank: "false" } }
       orderBy: _createdAt_DESC
-      first: 9
+      first: $postsPerPage
     ) {
       slug
     }
   }
 `);
 
+/** Prerenders the newest page of posts in every locale; older posts render on first visit */
 export async function generateStaticParams() {
   const locales = await getAvailableLocales();
-  const { allPosts } = await executeQuery(staticParamsQuery);
+  const { allPosts } = await executeQuery(staticParamsQuery, {
+    variables: { postsPerPage: POSTS_PER_PAGE },
+  });
 
   return allPosts.flatMap((post) =>
     locales.map((locale): PageProps['params'] => ({
@@ -37,7 +41,7 @@ const buildVariables: BuildVariablesFn<PageProps, Variables> = ({
   fallbackLocale,
 }) => ({
   locale: params.locale,
-  fallbackLocale: [fallbackLocale],
+  fallbackLocales: [fallbackLocale],
   slug: params.slug,
 });
 
@@ -45,7 +49,7 @@ export const generateMetadata = generateMetadataFn<PageProps, Query, Variables>(
   {
     query,
     buildVariables,
-    generate: (data) => data.post?.seo,
+    pickSeoMetaTags: (data) => data.post?.seo,
   },
 );
 

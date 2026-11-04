@@ -1,4 +1,4 @@
-import { POSTS_PER_PAGE } from '@/components/posts/PaginationLinks';
+import { POSTS_PER_PAGE } from '@/components/posts/postsPagination';
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { generateMetadataFn } from '@/lib/datocms/generateMetadataFn';
 import { graphql } from '@/lib/datocms/graphql';
@@ -11,7 +11,7 @@ import RealTime from './RealTime';
 
 const staticParamsQuery = graphql(/* GraphQL */ `
   query PageStaticParamsQuery {
-    allPages {
+    allPages(first: 500) {
       slug
     }
   }
@@ -35,7 +35,7 @@ const buildVariables: BuildVariablesFn<PageProps, Variables> = ({
   fallbackLocale,
 }) => ({
   locale: params.locale,
-  fallbackLocale: [fallbackLocale],
+  fallbackLocales: [fallbackLocale],
   slug: params.slug,
   // The All posts block lists the first page of posts
   postsPerPage: POSTS_PER_PAGE,
@@ -45,7 +45,7 @@ export const generateMetadata = generateMetadataFn<PageProps, Query, Variables>(
   {
     query,
     buildVariables,
-    generate: (data) => data.page?.seo,
+    pickSeoMetaTags: (data) => data.page?.seo,
   },
 );
 

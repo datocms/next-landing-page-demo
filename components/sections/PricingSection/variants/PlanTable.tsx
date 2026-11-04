@@ -1,6 +1,6 @@
 import { useId } from 'react';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
-import BillingScope from '@/components/sections/PricingSection/BillingScope';
+import BillingPeriodProvider from '@/components/sections/PricingSection/BillingPeriodProvider';
 import BillingToggle from '@/components/sections/PricingSection/BillingToggle';
 import { PricingSectionFragment } from '@/components/sections/PricingSection/fragment';
 import PlanFeature from '@/components/sections/PricingSection/PlanFeature';
@@ -13,21 +13,18 @@ import SectionTitle from '@/components/ui/SectionTitle';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
+import {
+  itemHeadingLevel,
+  type SectionHeadingLevel,
+} from '@/utils/headingLevel';
 
 type Props = {
   fragment: FragmentOf<typeof PricingSectionFragment>;
   locale: string;
-  /** h1 when the section opens a page without a hero */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
 };
 
-/**
- * `minimal`: one joined, hairline-divided plan table instead of separate
- * cards. Up to four plans are columns on lg that share row tracks (subgrid);
- * the featured column is filled with the well tint and carries the ink CTA.
- * Below lg (and always for five or more plans) each plan is a row, split into
- * details and features from 640.
- */
+/** `minimal`: one joined, hairline-divided plan table instead of separate cards */
 const PlanTable = ({ fragment, locale, as = 'h2' }: Props) => {
   const {
     pricingSectionHeader: header,
@@ -36,13 +33,10 @@ const PlanTable = ({ fragment, locale, as = 'h2' }: Props) => {
   } = readFragment(PricingSectionFragment, fragment);
   const uid = useId();
 
-  if (!plans?.length) return null;
-
-  // Plan names sit one level below the section heading
-  const PlanHeading = as === 'h1' ? 'h2' : 'h3';
+  const PlanHeading = itemHeadingLevel(as);
   const count = plans.length;
   const asColumns = count <= 4;
-  const featured = highlightedPlanIndex(plans);
+  const highlightedIndex = highlightedPlanIndex(plans);
   const featureRows = planFeatureRows(plans);
   const headingId = `${uid}-pricing`;
 
@@ -52,12 +46,13 @@ const PlanTable = ({ fragment, locale, as = 'h2' }: Props) => {
       aria-labelledby={header ? headingId : undefined}
       aria-label={header ? undefined : uiString(locale, 'pricing')}
     >
-      <BillingScope className="container-page" locale={locale}>
+      <BillingPeriodProvider className="container-page" locale={locale}>
         <SectionTitle
           id={headingId}
           title={header}
           paragraph={subheader}
           as={as}
+          h1Size="page"
           gap="lg"
           aside={<BillingToggle className="max-md:h-11" locale={locale} />}
         />
@@ -70,7 +65,7 @@ const PlanTable = ({ fragment, locale, as = 'h2' }: Props) => {
           )}
         >
           {plans.map((plan, i) => {
-            const isFeatured = i === featured;
+            const isHighlighted = i === highlightedIndex;
             const planHeadingId = `${uid}-plan-${i}`;
             const features = featureRows[i];
 
@@ -82,7 +77,7 @@ const PlanTable = ({ fragment, locale, as = 'h2' }: Props) => {
                   'p-6 sm:grid sm:grid-cols-2 sm:grid-rows-[auto_auto_1fr] sm:items-start sm:gap-x-10 md:p-7',
                   asColumns &&
                     'lg:row-span-4 lg:grid-cols-1 lg:grid-rows-subgrid lg:items-stretch',
-                  isFeatured && 'bg-well',
+                  isHighlighted && 'bg-well',
                 )}
               >
                 <div className="sm:col-start-1">
@@ -111,7 +106,7 @@ const PlanTable = ({ fragment, locale, as = 'h2' }: Props) => {
                     type="button"
                     className={cn(
                       'btn mt-5 w-full',
-                      isFeatured ? 'btn-ink' : 'btn-secondary',
+                      isHighlighted ? 'btn-ink' : 'btn-secondary',
                     )}
                   >
                     {plan.ctaLabel || uiString(locale, 'choosePlan')}
@@ -144,7 +139,7 @@ const PlanTable = ({ fragment, locale, as = 'h2' }: Props) => {
             );
           })}
         </div>
-      </BillingScope>
+      </BillingPeriodProvider>
     </section>
   );
 };

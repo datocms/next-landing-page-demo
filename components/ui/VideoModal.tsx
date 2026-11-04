@@ -4,22 +4,22 @@ import { X } from 'lucide-react';
 import { type MouseEvent, useEffect, useRef, useState } from 'react';
 import { uiString } from '@/lib/i18n/uiStrings';
 
-type VideoChannel = 'youtube' | 'vimeo';
+export type VideoProvider = 'youtube' | 'vimeo';
 
 type Props = {
   isOpen: boolean;
   videoId: string;
   onClose: () => void;
-  channel?: VideoChannel;
+  provider: VideoProvider;
   /** Accessible name for the dialog and the player (usually the section title) */
   title?: string;
   locale: string;
 };
 
 /** The provider's embed player URL, autoplaying */
-const embedUrl = (channel: VideoChannel, videoId: string) => {
+const embedUrl = (provider: VideoProvider, videoId: string) => {
   const id = encodeURIComponent(videoId);
-  if (channel === 'vimeo') {
+  if (provider === 'vimeo') {
     return `https://player.vimeo.com/video/${id}?autoplay=1`;
   }
   return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
@@ -35,7 +35,7 @@ const VideoModal = ({
   isOpen,
   videoId,
   onClose,
-  channel = 'youtube',
+  provider,
   title,
   locale,
 }: Props) => {
@@ -108,7 +108,7 @@ const VideoModal = ({
           <div className="aspect-video overflow-hidden rounded-zone bg-ink max-md:rounded-[14px]">
             {playerMounted && (
               <iframe
-                src={embedUrl(channel, videoId)}
+                src={embedUrl(provider, videoId)}
                 className="size-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen

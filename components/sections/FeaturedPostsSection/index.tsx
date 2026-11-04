@@ -1,43 +1,46 @@
 import { stripStega } from '@datocms/content-link';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
+import type { SectionHeadingLevel } from '@/utils/headingLevel';
 import { FeaturedPostsSectionFragment } from './fragment';
-import BentoGrid from './variants/BentoGrid';
-import CardGrid from './variants/CardGrid';
-import IndexList from './variants/IndexList';
-import PhotoCards from './variants/PhotoCards';
-import SpotlightCarousel from './variants/SpotlightCarousel';
+import BentoGridPosts from './variants/BentoGridPosts';
+import CardGridPosts from './variants/CardGridPosts';
+import IndexListPosts from './variants/IndexListPosts';
+import PhotoCardPosts from './variants/PhotoCardPosts';
+import SpotlightPosts from './variants/SpotlightPosts';
 
 type Props = {
   fragment: FragmentOf<typeof FeaturedPostsSectionFragment>;
   globalPageProps: ResolvedGlobalPageProps;
-  /** h1 when the section opens a page without a hero */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
 };
 
 /**
- * Renders the layout picked in the block's "Display options" field. Both
- * "carrousel" (the CMS spelling) and "carousel" pick the carousel.
+ * Renders the layout picked in the block's "Display options" field, or
+ * nothing without posts. Both "carrousel" (the CMS spelling) and "carousel"
+ * pick the carousel.
  */
 const FeaturedPostsSection = ({ fragment, globalPageProps, as }: Props) => {
-  const { displayOptions } = readFragment(
+  const { displayOptions, featuredPosts } = readFragment(
     FeaturedPostsSectionFragment,
     fragment,
   );
+  if (featuredPosts.length === 0) return null;
+
   const props = { fragment, globalPageProps, as };
 
-  switch (stripStega(displayOptions ?? '')) {
+  switch (stripStega(displayOptions)) {
     case 'modern_cards':
-      return <BentoGrid {...props} />;
+      return <BentoGridPosts {...props} />;
     case 'carrousel':
     case 'carousel':
-      return <SpotlightCarousel {...props} />;
+      return <SpotlightPosts {...props} />;
     case 'minimalist_grid':
-      return <IndexList {...props} />;
+      return <IndexListPosts {...props} />;
     case 'full_image_card':
-      return <PhotoCards {...props} />;
+      return <PhotoCardPosts {...props} />;
     default:
-      return <CardGrid {...props} />;
+      return <CardGridPosts {...props} />;
   }
 };
 

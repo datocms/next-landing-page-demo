@@ -2,13 +2,14 @@ import { stripStega } from '@datocms/content-link';
 import type { ReactNode } from 'react';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import { cn } from '@/utils/cn';
-import { twoToneHeading } from '@/utils/headings';
+import type { SectionHeadingLevel } from '@/utils/headingLevel';
 import {
   hasStructuredText,
   type StructuredTextField,
   structuredTextToPlainParagraph,
   structuredTextToPlainText,
 } from '@/utils/structuredText';
+import { mergeTitleWithLead } from '@/utils/twoToneHeading';
 import HeadingText from './HeadingText';
 
 type Props = {
@@ -20,9 +21,8 @@ type Props = {
    * A split lead longer than SPLIT_LEAD_MAX characters falls back to left, under the title
    */
   align?: 'left' | 'center' | 'split';
-  /** Use h1 when the section opens a page without a hero: it then doubles as the page title */
-  as?: 'h1' | 'h2';
-  /** Size of a promoted h1: 'page' (text-h1, two-tone split, default) or 'section' (keeps the h2 size) */
+  as?: SectionHeadingLevel;
+  /** Size of a promoted h1: 'section' (keeps the h2 size, default) or 'page' (text-h1, two-tone split) */
   h1Size?: 'page' | 'section';
   /** 'auto' (default) merges a short title and one-sentence lead into one two-tone h2; false never merges */
   twoTone?: 'auto' | false;
@@ -60,7 +60,7 @@ const SectionTitle = ({
   paragraph,
   align = 'left',
   as: Heading = 'h2',
-  h1Size = 'page',
+  h1Size = 'section',
   twoTone = 'auto',
   gap = 'default',
   id,
@@ -85,7 +85,7 @@ const SectionTitle = ({
   const plainLead = structuredTextToPlainParagraph(paragraph);
   const merged =
     title && !isPageTitle && twoTone === 'auto'
-      ? twoToneHeading(title, plainLead)
+      ? mergeTitleWithLead(title, plainLead)
       : null;
   const headerClass = cn('reveal', GAP_CLASS[gap], className);
 
@@ -113,7 +113,7 @@ const SectionTitle = ({
   ) : null;
 
   const lead =
-    hasStructuredText(paragraph) && !merged ? (
+    hasLead && !merged ? (
       <div
         className={cn(
           'section-lead',

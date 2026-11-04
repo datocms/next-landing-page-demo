@@ -2,27 +2,31 @@ import { stripStega } from '@datocms/content-link';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { CSSProperties, ReactNode } from 'react';
-import type { Query as CommonLayoutQuery } from '@/app/[locale]/(common-layout)/meta';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
+import {
+  type FragmentOf,
+  readFragment,
+  type SiteLocale,
+} from '@/lib/datocms/graphql';
+import { toLanguageTag } from '@/lib/i18n/languageTag';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
-import { buildUrl } from '@/utils/globalPageProps';
+import { legalPageUrl, pageUrl } from '@/utils/routes';
 import { hasStructuredText } from '@/utils/structuredText';
 import FooterLanguages from './FooterLanguages';
 import FooterPageLink from './FooterPageLink';
+import { FooterFragment } from './fragment';
 
 type Props = {
-  data: CommonLayoutQuery;
+  fragment: FragmentOf<typeof FooterFragment> | null;
+  languages: SiteLocale[];
   globalPageProps: ResolvedGlobalPageProps;
 };
 
 const columnHeadingClass = 'label mb-2.5 max-md:mb-0.5';
 
-/**
- * 30px rows from 768, 44px tap rows below. Long single words (German legal
- * titles in a half-width column at 390) hyphenate, or break as a last resort.
- */
+/** Long single words (German legal titles in a half-width column) hyphenate, or break as a last resort */
 const linkClass =
   'inline-flex min-h-[30px] items-center text-[14.5px] text-ink-2 underline-offset-[3px] transition-colors hyphens-auto wrap-anywhere hover:text-ink hover:underline aria-[current]:text-ink max-md:min-h-11 pointer-coarse:min-h-11';
 
@@ -59,17 +63,16 @@ const FooterColumn = ({
 );
 
 /** The site footer: logo and subtitle, the Legal, Social and Language columns, then the copyright and social icons */
-const Footer = ({ data, globalPageProps }: Props) => {
-  const layout = data.layout;
+const Footer = ({ fragment, languages, globalPageProps }: Props) => {
+  const layout = readFragment(FooterFragment, fragment);
   const locale = globalPageProps.params.locale;
   const footerLinks = layout?.footerLinks ?? [];
   const socialMediaLinks = layout?.socialMediaLinks ?? [];
-  const languages = data._site.locales;
 
   return (
     // lang lets the browser hyphenate the localized link titles
     <footer
-      lang={locale.replaceAll('_', '-')}
+      lang={toLanguageTag(locale)}
       className="bg-white pt-14 max-md:pt-12"
     >
       <div className="container-page">
@@ -77,7 +80,7 @@ const Footer = ({ data, globalPageProps }: Props) => {
           <div className="col-span-full lg:col-span-5">
             {layout?.footerLogo && (
               <Link
-                href={buildUrl(globalPageProps, '/home')}
+                href={pageUrl(globalPageProps, 'home')}
                 aria-label={uiString(locale, 'home')}
                 className="hit-44 inline-flex rounded-lg"
               >
@@ -113,10 +116,7 @@ const Footer = ({ data, globalPageProps }: Props) => {
                   <li key={pageLink.id}>
                     {/* A client link, so the current legal page is marked */}
                     <FooterPageLink
-                      href={buildUrl(
-                        globalPageProps,
-                        `/legal/${stripStega(pageLink.slug)}`,
-                      )}
+                      href={legalPageUrl(globalPageProps, pageLink.slug)}
                       className={linkClass}
                     >
                       {pageLink.title}

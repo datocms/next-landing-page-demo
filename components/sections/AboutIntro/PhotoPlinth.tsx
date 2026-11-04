@@ -10,13 +10,7 @@ type Props = {
   leadsPage: boolean;
 };
 
-/**
- * Photo card slots on the plinth. Each card is a white float framing a
- * fixed-size photo; the positions follow the number of photos (one centred,
- * two or three spread). From 1024 to 1199 the plinth is only 460-550px wide,
- * so the cards shrink to about 85% and spread to the corners to keep the
- * overlaps light.
- */
+/** Photo card positions by photo count; narrower between lg and xl so the overlaps stay light */
 const SLOTS = [
   {
     position:

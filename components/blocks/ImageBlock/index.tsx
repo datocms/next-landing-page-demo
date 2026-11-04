@@ -2,6 +2,7 @@ import type { ComponentPropsWithoutRef } from 'react';
 import DatoImage from '@/components/datocms/DatoImage';
 import { ResponsiveImageFragment } from '@/components/datocms/DatoImage/fragment';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
+import { cn } from '@/utils/cn';
 import { ImageBlockFragment } from './fragment';
 
 type Props = {
@@ -10,12 +11,8 @@ type Props = {
   priority?: boolean;
 } & Omit<ComponentPropsWithoutRef<'figure'>, 'children'>;
 
-/**
- * In-article image, wider than the reading column from 1024 up, captioned with
- * the image's title. It renders a single root so content-link props can be
- * cloned onto it.
- */
-const ImageBlock = ({ fragment, priority, ...rest }: Props) => {
+/** In-article image, wider than the reading column, captioned with the image's title */
+const ImageBlock = ({ fragment, priority, className, ...rest }: Props) => {
   const { image } = readFragment(ImageBlockFragment, fragment);
 
   if (!image?.responsiveImage) return null;
@@ -26,7 +23,10 @@ const ImageBlock = ({ fragment, priority, ...rest }: Props) => {
   );
 
   return (
-    <figure className="prose-block not-prose my-10 lg:-mx-20" {...rest}>
+    <figure
+      className={cn('prose-block not-prose my-10 lg:-mx-20', className)}
+      {...rest}
+    >
       {/* A capped 16:10 frame: landscape uploads fill it and portrait ones can't run tall */}
       <div className="photo aspect-[16/10] max-h-[520px] rounded-card max-md:rounded-zone">
         <DatoImage

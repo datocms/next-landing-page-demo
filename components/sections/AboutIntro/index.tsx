@@ -1,18 +1,20 @@
 import { useId } from 'react';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
+import TwoTone from '@/components/ui/TwoTone';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
-import { splitHeading } from '@/utils/headings';
+import {
+  itemHeadingLevel,
+  type SectionHeadingLevel,
+} from '@/utils/headingLevel';
 import { hasStructuredText } from '@/utils/structuredText';
 import { AboutIntroFragment } from './fragment';
 import Introduction from './Introduction';
-import keepHyphenatedWordsTogether from './keepHyphenatedWordsTogether';
 import PhotoPlinth from './PhotoPlinth';
 
 type Props = {
   fragment: FragmentOf<typeof AboutIntroFragment>;
-  /** Pass "h1" when this block opens a page that has no hero */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
 };
 
 /**
@@ -28,10 +30,8 @@ const AboutIntro = ({ fragment, as: Heading = 'h2' }: Props) => {
     introductionText: introduction,
     preHeader,
   } = readFragment(AboutIntroFragment, fragment);
-  const headingId = `about-${useId().replace(/[^\w-]/g, '')}`;
+  const headingId = `about-${useId()}`;
   const leadsPage = Heading === 'h1';
-
-  const [first, second] = splitHeading(header ?? '');
 
   return (
     <section
@@ -60,18 +60,7 @@ const AboutIntro = ({ fragment, as: Heading = 'h2' }: Props) => {
                   preHeader && 'mt-5',
                 )}
               >
-                {second ? (
-                  <>
-                    <span className="block">
-                      {keepHyphenatedWordsTogether(first)}
-                    </span>{' '}
-                    <span className="text-ink-2">
-                      {keepHyphenatedWordsTogether(second)}
-                    </span>
-                  </>
-                ) : (
-                  keepHyphenatedWordsTogether(header)
-                )}
+                <TwoTone text={header} lineBreak="always" keepHyphenatedWords />
               </Heading>
             )}
             {hasStructuredText(subheader) && (
@@ -90,7 +79,7 @@ const AboutIntro = ({ fragment, as: Heading = 'h2' }: Props) => {
         {introduction && (
           <Introduction
             introduction={introduction}
-            headingLevel={leadsPage ? 'h2' : 'h3'}
+            headingLevel={itemHeadingLevel(Heading)}
           />
         )}
       </div>

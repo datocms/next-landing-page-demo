@@ -1,8 +1,8 @@
 import { type CSSProperties, useId } from 'react';
 import { HeroSectionFragment } from '@/components/sections/HeroSection/fragment';
 import HeroButtons from '@/components/sections/HeroSection/HeroButtons';
-import HeroHeading from '@/components/sections/HeroSection/HeroHeading';
 import HeroSubtitle from '@/components/sections/HeroSection/HeroSubtitle';
+import HeroTitle from '@/components/sections/HeroSection/HeroTitle';
 import { Threads } from '@/components/ui/Ornaments';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import ProductWindow from './ProductWindow';
@@ -21,12 +21,8 @@ const glowStyle: CSSProperties = {
 const threadsStyle = { '--draw-delay': '700ms' };
 
 /**
- * "Centred window": centred copy on a soft accent glow above a 1040px
- * product window that the hero's bottom edge cuts off. From 1180 two fans of
- * threads run in from the viewport edges and plug into the window's side
- * ports; below that one bundle drops onto a top port. The CMS image is the
- * window's media panel. The CTA row spans the column (its pills stay centred),
- * so a long label ends in an ellipsis instead of widening the row.
+ * `gradient`: centred copy on an accent glow above a product window whose
+ * media panel is the CMS image, with threads plugging into the window's ports.
  */
 const GradientHero = ({ fragment }: Props) => {
   const headingId = useId();
@@ -46,24 +42,19 @@ const GradientHero = ({ fragment }: Props) => {
         style={glowStyle}
       />
       <div className="container-page flex flex-col items-center text-center">
-        <HeroHeading
-          id={headingId}
-          title={heroTitle}
-          className="max-w-[680px] text-h1"
-        />
+        <HeroTitle id={headingId} title={heroTitle} className="max-w-[680px]" />
         <HeroSubtitle
           text={heroSubtitle}
           className="mt-4 max-w-[640px] text-balance text-lead text-ink-2 [&_p+p]:mt-3"
         />
+        {/* Full column width, so a long label truncates instead of widening the row */}
         <HeroButtons
           buttons={buttons}
           tone="ink"
           align="center"
-          rise={2}
           className="mt-6 self-stretch"
         />
 
-        {/* Below 1180: one bundle of threads drops onto the window's top port */}
         <Threads
           shape="convergeTop"
           draw="load"
@@ -72,7 +63,6 @@ const GradientHero = ({ fragment }: Props) => {
         />
 
         <div className="relative mx-auto mt-12 h-[400px] w-[min(1040px,100%)] text-left max-[1180px]:mt-0 max-md:h-auto">
-          {/* From 1180: a fan of threads on each side, plugged into a side port */}
           <Threads
             shape="converge"
             draw="load"
@@ -85,7 +75,6 @@ const GradientHero = ({ fragment }: Props) => {
             style={threadsStyle}
             className="top-0 right-auto left-[calc(100%-44px)] z-0 hidden h-[400px] w-[max(120px,calc(50vw_-_50%_+_44px))] -scale-x-100 opacity-90 min-[1180px]:block"
           />
-          {/* The ports the threads plug into: one per side from 1180, one on top below that */}
           <span
             aria-hidden="true"
             className="port top-[190px] -left-1 hidden h-[52px] w-2 min-[1180px]:block"

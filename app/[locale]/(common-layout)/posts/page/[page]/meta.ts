@@ -8,7 +8,7 @@ import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 
 export type PageProps = ResolvedGlobalPageProps & {
   params: {
-    page: number;
+    page: string;
   };
 };
 
@@ -16,16 +16,16 @@ export const query = graphql(
   /* GraphQL */ `
     query PostsQuery(
       $locale: SiteLocale
-      $fallbackLocale: [SiteLocale!]
-      $first: IntType
+      $fallbackLocales: [SiteLocale!]
+      $postsPerPage: IntType
       $skip: IntType = "0"
     ) {
       allPosts(
         filter: { title: { isBlank: "false" } }
         orderBy: _createdAt_DESC
-        first: $first
+        first: $postsPerPage
         locale: $locale
-        fallbackLocales: $fallbackLocale
+        fallbackLocales: $fallbackLocales
         skip: $skip
       ) {
         id

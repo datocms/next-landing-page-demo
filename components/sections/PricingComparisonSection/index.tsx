@@ -6,14 +6,14 @@ import SectionTitle from '@/components/ui/SectionTitle';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
+import type { SectionHeadingLevel } from '@/utils/headingLevel';
+import { type ComparisonRow, comparisonGroups } from './comparisonGroups';
 import { PricingComparisonSectionFragment } from './fragment';
-import { type ComparisonRow, comparisonGroups } from './rows';
 
 type Props = {
   fragment: FragmentOf<typeof PricingComparisonSectionFragment>;
   locale: string;
-  /** h1 when the section opens a page without a hero */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
 };
 
 /** Cell padding, shared by every column so the rows line up */
@@ -52,7 +52,8 @@ const CellValue = ({
  * The plan-by-plan comparison table of a pricing page: one column per plan
  * (name, monthly price, button) and the plans' limits as rows, grouped by
  * their CMS group (Usage, Security…). The highlighted plan's column is
- * tinted. Below 768 the table scrolls sideways with the feature column pinned.
+ * tinted. When it does not fit, the table scrolls sideways with the feature
+ * column pinned.
  */
 const PricingComparisonSection = ({ fragment, locale, as = 'h2' }: Props) => {
   const {
@@ -65,9 +66,10 @@ const PricingComparisonSection = ({ fragment, locale, as = 'h2' }: Props) => {
   const groups = comparisonGroups(plans);
   if (!plans.length || !groups.length) return null;
 
-  const featured = highlightedPlanIndex(plans);
+  const highlightedIndex = highlightedPlanIndex(plans);
   const headingId = `${uid}-compare`;
-  const tint = (column: number) => column === featured && 'bg-well';
+  const tintHighlighted = (column: number) =>
+    column === highlightedIndex && 'bg-well';
 
   return (
     <section
@@ -82,6 +84,7 @@ const PricingComparisonSection = ({ fragment, locale, as = 'h2' }: Props) => {
           paragraph={subheader}
           align="center"
           as={as}
+          h1Size="page"
         />
 
         {/* The reveal stays outside the scroll container */}
@@ -106,14 +109,14 @@ const PricingComparisonSection = ({ fragment, locale, as = 'h2' }: Props) => {
                       className={cn(
                         CELL,
                         'py-6 text-start align-top font-normal',
-                        tint(i),
+                        tintHighlighted(i),
                       )}
                     >
                       <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
                         <span className="font-medium text-[1.0625rem] text-ink">
                           {plan.tierName}
                         </span>
-                        {i === featured && plan.highlightLabel && (
+                        {i === highlightedIndex && plan.highlightLabel && (
                           <span className="badge badge-accent h-6 px-2.5 text-[12px]">
                             {plan.highlightLabel}
                           </span>
@@ -129,7 +132,9 @@ const PricingComparisonSection = ({ fragment, locale, as = 'h2' }: Props) => {
                         type="button"
                         className={cn(
                           'btn btn-sm mt-4 w-full',
-                          i === featured ? 'btn-primary' : 'btn-secondary',
+                          i === highlightedIndex
+                            ? 'btn-primary'
+                            : 'btn-secondary',
                         )}
                       >
                         {plan.ctaLabel || uiString(locale, 'startFreeTrial')}
@@ -155,7 +160,7 @@ const PricingComparisonSection = ({ fragment, locale, as = 'h2' }: Props) => {
                       <td
                         key={plan.id}
                         aria-hidden="true"
-                        className={tint(i) || undefined}
+                        className={tintHighlighted(i) || undefined}
                       />
                     ))}
                   </tr>
@@ -173,7 +178,11 @@ const PricingComparisonSection = ({ fragment, locale, as = 'h2' }: Props) => {
                       {row.cells.map((limit, i) => (
                         <td
                           key={plans[i].id}
-                          className={cn(CELL, 'py-3.5 text-small', tint(i))}
+                          className={cn(
+                            CELL,
+                            'py-3.5 text-small',
+                            tintHighlighted(i),
+                          )}
                         >
                           <CellValue limit={limit} locale={locale} />
                         </td>

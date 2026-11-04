@@ -42,7 +42,7 @@ export type ThreadPreset =
 export const roundToHundredths = (value: number) =>
   Math.round(value * 100) / 100;
 
-/** Stop recipes, exported so a component can define its own ShapeDef (the posts spotlight, the posts header arches, the newsletter arches) */
+/** Stop recipes, exported so a component can define its own ShapeDef */
 export const STOPS = {
   /** Plinth and ribbon waves (axis x) */
   wave: (t: number): GradientStop[] => {
@@ -85,6 +85,44 @@ export const STOPS = {
     ];
   },
 };
+
+/**
+ * `n` nested arches pinned bottom-right, deep at the crown and light at the
+ * legs. Each one is a cubic from `baseY` (below the viewBox, so the legs run
+ * off its bottom edge) up to `crownY(i)` and back down, `halfSpan(i)` either
+ * side of `centerX`.
+ */
+export function nestedArches({
+  viewBox,
+  n,
+  centerX,
+  baseY,
+  halfSpan,
+  crownY,
+}: {
+  viewBox: [w: number, h: number];
+  n: number;
+  centerX: number;
+  baseY: number;
+  halfSpan: (i: number) => number;
+  crownY: (i: number) => number;
+}): ShapeDef {
+  return {
+    viewBox,
+    aspect: 'xMaxYMax meet',
+    n,
+    d: (i) => {
+      // Both control points sit this far above the base, which puts the curve's peak at crownY
+      const controlLift = roundToHundredths(((baseY - crownY(i)) * 4) / 3);
+      const left = centerX - halfSpan(i);
+      const right = centerX + halfSpan(i);
+      const controlY = roundToHundredths(baseY - controlLift);
+      return `M ${left} ${baseY} C ${left} ${controlY}, ${right} ${controlY}, ${right} ${baseY}`;
+    },
+    axis: 'y',
+    stops: STOPS.arch,
+  };
+}
 
 /** convergeTop is two mirrored fans of 12 paths: the place of path `i` within its own fan, 0–1 */
 const tInHalf = (i: number) => (i < 12 ? i : i - 12) / 11;

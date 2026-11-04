@@ -5,19 +5,20 @@ import {
 } from 'datocms-structured-text-utils';
 import { renderNodeRule, StructuredText } from 'react-datocms/structured-text';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
-import Highlighter from '@/components/datocms/DatoStructuredText/Highlighter';
 import type { ResultOf } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
-import { MARKER_SHAPES } from '@/utils/tones';
+import type { ItemHeadingLevel } from '@/utils/headingLevel';
+import { rootNodes } from '@/utils/structuredText';
+import { markerShapeClass } from '@/utils/tones';
 import type { AboutIntroFragment } from './fragment';
-import groupByHeading from './groupByHeading';
+import { groupByHeading } from './groupByHeading';
 
 type Props = {
   introduction: NonNullable<
     ResultOf<typeof AboutIntroFragment>['introductionText']
   >;
   /** Its headings sit one level below the block's title */
-  headingLevel: 'h2' | 'h3';
+  headingLevel: ItemHeadingLevel;
 };
 
 /** Lookup so Tailwind sees every column class */
@@ -38,7 +39,7 @@ const asValue = (nodes: Node[]) => ({
  * plain prose.
  */
 const Introduction = ({ introduction, headingLevel: Heading }: Props) => {
-  const groups = groupByHeading(introduction.value);
+  const groups = groupByHeading(rootNodes(introduction.value));
   const pointGroups = groups.filter((group) => isHeading(group.nodes[0]));
 
   if (pointGroups.length < 2) {
@@ -69,15 +70,12 @@ const Introduction = ({ introduction, headingLevel: Heading }: Props) => {
     <div data-datocms-content-link-group className="mt-12 md:mt-16">
       {leadGroup && (
         <div className="prose mb-12 max-w-[62ch]">
-          <StructuredText
-            data={asValue(leadGroup.nodes)}
-            renderNode={Highlighter}
-          />
+          <StructuredText data={asValue(leadGroup.nodes)} />
         </div>
       )}
       <ul
         className={cn(
-          'cs-points grid max-w-[640px] gap-y-8 lg:max-w-none lg:gap-x-14',
+          'intro-points grid max-w-[640px] gap-y-8 lg:max-w-none lg:gap-x-14',
           POINT_COLUMNS[columns],
         )}
         data-cols={columns}
@@ -89,7 +87,6 @@ const Introduction = ({ introduction, headingLevel: Heading }: Props) => {
           >
             <StructuredText
               data={asValue(group.nodes)}
-              renderNode={Highlighter}
               customNodeRules={[
                 renderNodeRule(isHeading, ({ children, key }) => (
                   <Heading
@@ -99,7 +96,7 @@ const Introduction = ({ introduction, headingLevel: Heading }: Props) => {
                     <span
                       aria-hidden="true"
                       className={cn(
-                        MARKER_SHAPES[index % MARKER_SHAPES.length],
+                        markerShapeClass(index),
                         'mt-[calc(0.65em-5px)]',
                       )}
                     />

@@ -1,15 +1,13 @@
-import { stripStega } from '@datocms/content-link';
 import Link from 'next/link';
-import DatoImage from '@/components/datocms/DatoImage';
+import AuthorAvatar from '@/components/posts/AuthorAvatar';
+import PostCover from '@/components/posts/PostCover';
+import PostMeta from '@/components/posts/PostMeta';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
-import {
-  buildUrl,
-  type ResolvedGlobalPageProps,
-} from '@/utils/globalPageProps';
-import CoverFallback from './CoverFallback';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
+import type { ItemHeadingLevel } from '@/utils/headingLevel';
+import { authorUrl, postUrl } from '@/utils/routes';
 import { PostExcerptFragment } from './fragment';
-import PostMeta from './PostMeta';
 
 type Props = {
   fragment: FragmentOf<typeof PostExcerptFragment>;
@@ -18,12 +16,10 @@ type Props = {
   phoneRow?: boolean;
   /** 768–1023: span both columns, image left and copy right (the odd last card of a 2-up grid) */
   tabletWide?: boolean;
-  /** Overrides the cover's `sizes` attribute */
-  sizes?: string;
   /** Load the cover eagerly (cards above the fold on index pages) */
   priority?: boolean;
   /** Title level: h3 under a section h2 (default), h2 when the grid sits right under the page h1 */
-  headingLevel?: 'h2' | 'h3';
+  headingLevel?: ItemHeadingLevel;
 };
 
 /** Cover widths of a card in the 1 → 2 → 3 column grid */
@@ -34,27 +30,15 @@ const PHONE_ROW_COVER_SIZES =
   '(min-width: 1024px) 372px, (min-width: 768px) 50vw, 96px';
 
 /**
- * Card layout for position `index` of `count` in a 1 → 2 → 3 column grid: the
- * first card stays a full card on phones, the rest become rows, and an odd
- * last card spans the 2-up tablet grid.
- */
-export const postCardLayout = (index: number, count: number) => ({
-  phoneRow: index > 0,
-  tabletWide: index === count - 1 && count % 2 === 1,
-});
-
-/**
- * The post card shared by the featured posts grid, the all posts grid and the
- * blog index, author and tag pages: cover, tag chip and date, title and
- * byline. The title link stretches over the whole card; the author link sits
- * above it as its own tab stop.
+ * A post card: cover, tag chip and date, title and byline. The title link
+ * stretches over the whole card; the author link sits above it as its own tab
+ * stop.
  */
 const PostExcerpt = ({
   fragment,
   globalPageProps,
   phoneRow = false,
   tabletWide = false,
-  sizes,
   priority = false,
   headingLevel: Heading = 'h3',
 }: Props) => {
@@ -65,8 +49,7 @@ const PostExcerpt = ({
 
   const cover = seoTags?.image?.responsiveImage;
   const avatar = author?.picture?.responsiveImage;
-  const coverSizes =
-    sizes ?? (phoneRow ? PHONE_ROW_COVER_SIZES : CARD_COVER_SIZES);
+  const coverSizes = phoneRow ? PHONE_ROW_COVER_SIZES : CARD_COVER_SIZES;
 
   return (
     <article
@@ -84,20 +67,12 @@ const PostExcerpt = ({
           phoneRow && 'max-md:aspect-square max-md:rounded-xl',
         )}
       >
-        {cover ? (
-          <div className="media-zoom absolute inset-0">
-            <DatoImage
-              layout="fill"
-              objectFit="cover"
-              objectPosition="50% 50%"
-              fragment={cover}
-              priority={priority}
-              sizes={coverSizes}
-            />
-          </div>
-        ) : (
-          <CoverFallback seed={title} />
-        )}
+        <PostCover
+          cover={cover}
+          title={title}
+          sizes={coverSizes}
+          priority={priority}
+        />
       </div>
 
       <div
@@ -116,7 +91,7 @@ const PostExcerpt = ({
         >
           {/* The link is a flex box so its ::after overlay stays out of the title's line box: Chrome only applies text-wrap: pretty to plain inline content */}
           <Link
-            href={buildUrl(globalPageProps, `/posts/${stripStega(slug)}`)}
+            href={postUrl(globalPageProps, slug)}
             className="stretched-link flex underline decoration-transparent decoration-1 underline-offset-[3px] transition-[text-decoration-color] duration-200 [--stretched-offset:3px] [--stretched-radius:19px] group-hover:decoration-current"
           >
             <span className="line-clamp-3 text-pretty">{title}</span>
@@ -125,25 +100,18 @@ const PostExcerpt = ({
 
         {author && (
           <Link
-            href={buildUrl(
-              globalPageProps,
-              `/posts/author/${stripStega(author.slug)}`,
-            )}
+            href={authorUrl(globalPageProps, author.slug)}
             className={cn(
               'hit-44 z-10 mt-3 inline-flex w-fit items-center gap-2 rounded-full pr-1 text-meta text-ink-2 transition-colors duration-150 hover:text-ink',
               phoneRow && 'max-md:mt-2',
             )}
           >
             {avatar && (
-              <div className="photo size-6 shrink-0 rounded-full">
-                <DatoImage
-                  layout="fill"
-                  objectFit="cover"
-                  objectPosition="50% 30%"
-                  fragment={avatar}
-                  sizes="24px"
-                />
-              </div>
+              <AuthorAvatar
+                image={avatar}
+                sizes="24px"
+                className="size-6 shrink-0"
+              />
             )}
             {author.name}
           </Link>

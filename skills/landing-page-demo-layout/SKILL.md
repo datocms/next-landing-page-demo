@@ -27,14 +27,14 @@ Before schema or content operations:
 
 ## Existing layout structure
 
-- Shared shell query: `app/[locale]/(common-layout)/meta.ts`.
+- Shared shell query: `app/[locale]/(common-layout)/meta.ts`, which spreads `HeaderFragment` (`components/layout/Header/fragment.ts`) and `FooterFragment` (`components/layout/Footer/fragment.ts`) on the `layout` singleton and adds the project locales.
 - Global color and favicon query: `app/[locale]/layout.tsx`.
 - `<html>` is rendered by `app/[locale]/layout.tsx`, with `lang` from the locale and the fonts from `styles/fonts.ts`. `app/layout.tsx` only passes children through, and `app/not-found.tsx` renders its own `<html>` for URLs no route matches. Switching locale swaps the root layout, so it is a full page load.
-- Header components: `components/layout/Header/**` (`index.tsx` with `DesktopNav`, `MobileNav`, `NotificationStrip` and `LanguageSelector`; the menu items are built in `navItems.ts`).
+- Header components: `components/layout/Header/**` (`index.tsx` with `DesktopNav`, `MobileNav` and its `MobileLanguageList`, `NotificationStrip` and `LanguageSelector`; the menu items are built in `navItems.ts`).
 - Footer components: `components/layout/Footer/**` (the footer and its language list, `FooterLanguages`). Header and footer share the language links from `components/layout/useLanguageLinks.ts`.
-- Accent color component: `components/layout/CustomColor.tsx`. It renders `--color-primary` on the server, and every color derives from it: `styles/tokens.css` holds the neutrals (`text-ink`, `text-ink-2`, `text-ink-3`, `border-line`, `bg-well`, `bg-surface`), the accent (`accent-solid`, `accent-text`, `accent-wash`, and `accent-fill` with its `on-accent` label for `btn-primary`), the `g-50`…`g-900` ramp, the gradients and the shadows; the `tone-N` stops (picked with `TONES` from `@/utils/tones`) are utilities in `styles/utilities.css`, and the focus ring in `styles/base.css` uses `--accent-solid`. Components never use the raw color, hex values or palette classes, so any brand color re-tints the whole shell.
-- Design tokens and shared primitives (`site-header`, `menu-panel`, `menu-item`, `btn-*`, `link`, `label`, `mono`, `hairline`, `card`, `float`): `styles/tokens.css`, `styles/utilities.css` and `styles/components/*.css`, all imported by `styles/global.css`. Shell-only rules go in `styles/sections/shell.css`. The site is light only: the announcement is a white strip with a gradient `hairline`, and there are no dark bands. Section-level styling rules (tokens, primitives, white-only exceptions, motion) are in the `landing-page-demo-sections` skill and apply to the shell too.
-- Shell copy that has no CMS field (footer column headings such as Legal, Social and Language, the 404 page) comes from `uiString(locale, key)` in `@/lib/i18n/uiStrings`, which covers en, it, de, fr and es with an English fallback. Add a key to `en` first, then to every locale.
+- Accent color component: `components/layout/CustomColor.tsx`. It renders `--color-primary` on the server, and every color derives from it through the runtime tokens in `styles/tokens.css` (tokens and rules: "Styling sections" in `landing-page-demo-sections`). Components never use the raw color, hex values or palette classes, so any brand color re-tints the whole shell.
+- Design tokens and shared primitives (`site-header`, `menu-panel`, `menu-item`, `btn-*`, `link`, `label`, `mono`, `hairline`, `card`, `float`): `styles/tokens.css`, `styles/utilities.css` and `styles/components/*.css`, all imported by `styles/global.css`. Shell-only rules go in `styles/areas/shell.css`. The site is light only: the announcement is a white strip with a gradient `hairline`, and there are no dark bands. Section-level styling rules (tokens, primitives, white-only exceptions, motion) are in the `landing-page-demo-sections` skill and apply to the shell too.
+- Shell copy that has no CMS field (footer column headings such as Legal, Social and Language, the 404 page) comes from `uiString(locale, key)` in `@/lib/i18n/uiStrings` (rules in `landing-page-demo-sections`).
 - DatoCMS singleton: `layout`.
 - Layout fields include `logo`, `main_color`, `notification`, `menu`, `footer_logo`, `footer_subtitle`, `social_media_links`, and `footer_links`.
 - Menu blocks are `menu_item` and `menu_dropdown`; social link blocks are `social_media_icon`.
@@ -53,7 +53,7 @@ Before schema or content operations:
 ### Add or change layout rendering
 
 1. Inspect the live field shape before changing a query or component.
-2. Update the query in `app/[locale]/(common-layout)/meta.ts` or `app/[locale]/layout.tsx` only when more data is needed.
+2. When more data is needed, add the fields to `components/layout/Header/fragment.ts` or `components/layout/Footer/fragment.ts` (or to the query in `app/[locale]/layout.tsx`).
 3. Update the relevant shared component under `components/layout/Header/**`, `components/layout/Footer/**`, or `components/layout/CustomColor.tsx`.
 4. Keep absent or empty optional fields safe.
 5. Query types are inferred by gql.tada; run `npm run generate-schema` only after DatoCMS schema changes.
@@ -62,9 +62,9 @@ Before schema or content operations:
 ### Adjust navigation or footer
 
 1. For navigation, inspect `layout.menu`, `menu_item`, and `menu_dropdown` records.
-2. Keep menu links route-aware through `buildUrl`.
+2. Keep menu links route-aware through `pageUrl` from `utils/routes.ts`.
 3. For footer work, inspect `footer_logo`, `footer_subtitle`, `social_media_links`, and `footer_links`.
-4. Keep legal footer links pointed at `/legal/[slug]` unless route behavior changes too.
+4. Keep legal footer links pointed at `/legal/[slug]` (`legalPageUrl`) unless route behavior changes too.
 5. Preserve item order unless the user requests a reorder.
 
 ## Guardrails

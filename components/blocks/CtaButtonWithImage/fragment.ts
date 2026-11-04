@@ -9,7 +9,6 @@ export const CtaButtonWithImageFragment = graphql(
         value
       }
       image {
-        id
         responsiveImage {
           ...ResponsiveImageFragment
         }

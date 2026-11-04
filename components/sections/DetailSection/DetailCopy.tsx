@@ -12,7 +12,7 @@ import { renderNodeRule } from 'react-datocms/structured-text';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import type { ResultOf } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
-import { MARKER_SHAPES, toneClass } from '@/utils/tones';
+import { markerShapeClass, toneClass } from '@/utils/tones';
 import type { DetailSectionFragment } from './fragment';
 
 type Props = {
@@ -27,7 +27,6 @@ type Props = {
   headingId: string;
 };
 
-/** Stacked item heading (18px, 17 below 768) */
 const ITEM_HEADING =
   'mt-6 flex items-start gap-3 font-display text-[17px]/[1.3] font-medium tracking-[-0.01em] text-ink first:mt-0 md:mt-7 md:text-[18px]/[1.3]';
 
@@ -70,8 +69,7 @@ const DetailCopy = ({
           }
           const Heading = node === pageTitle ? 'h1' : 'h2';
           if (stacked) {
-            const shape =
-              MARKER_SHAPES[topHeadings.indexOf(node) % MARKER_SHAPES.length];
+            const shape = markerShapeClass(topHeadings.indexOf(node));
             return (
               <Heading key={key} className={ITEM_HEADING}>
                 <span
@@ -129,7 +127,7 @@ const DetailCopy = ({
           const index = list && isList(list) ? list.children.indexOf(node) : 0;
           const numbered = list && isList(list) && list.style === 'numbered';
           return (
-            <li key={key} className={cn('cs-pill', toneClass(index))}>
+            <li key={key} className={cn('detail-pill', toneClass(index))}>
               <span
                 aria-hidden="true"
                 className="grid size-5 flex-none place-items-center rounded-full bg-tone-grad text-white"

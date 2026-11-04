@@ -2,7 +2,7 @@ import { RSCImage } from 'react-datocms/rsc-image';
 import { ResponsiveImageFragment } from '@/components/datocms/DatoImage/fragment';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
-import initialsOf from '@/utils/initialsOf';
+import { initialsOf } from '@/utils/initialsOf';
 
 type Props = {
   image?: FragmentOf<typeof ResponsiveImageFragment> | null;

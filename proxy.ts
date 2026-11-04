@@ -2,6 +2,7 @@ import { match } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
 import { type NextRequest, NextResponse } from 'next/server';
 import type { SiteLocale } from '@/lib/datocms/graphql';
+import { fromLanguageTag, toLanguageTag } from '@/lib/i18n/languageTag';
 import { getAvailableLocales } from '@/lib/i18n/locales';
 
 // Fetch caching has no effect in Proxy, so keep the locales in memory for a
@@ -25,9 +26,7 @@ function getCachedLocales() {
 
 /**
  * The project locale that best matches the browser's Accept-Language header
- * (the first locale when nothing matches). DatoCMS writes locales with an
- * underscore (pt_BR), browsers with a hyphen (pt-BR), so both sides are
- * compared in the hyphen form.
+ * (the first locale when nothing matches), compared as language tags.
  */
 function findBestLocaleForVisitor(
   request: Request,
@@ -36,18 +35,16 @@ function findBestLocaleForVisitor(
   const headers = new Headers(request.headers);
   const acceptLanguage = headers.get('accept-language');
   if (acceptLanguage) {
-    headers.set('accept-language', acceptLanguage.replaceAll('_', '-'));
+    headers.set('accept-language', toLanguageTag(acceptLanguage));
   }
 
-  const hyphenatedLocales = locales.map((locale) =>
-    locale.replaceAll('_', '-'),
-  );
+  const languageTags = locales.map(toLanguageTag);
   const languages = new Negotiator({
     headers: Object.fromEntries(headers.entries()),
-  }).languages(hyphenatedLocales);
-  const bestMatch = match(languages, hyphenatedLocales, hyphenatedLocales[0]);
+  }).languages(languageTags);
+  const bestMatch = match(languages, languageTags, languageTags[0]);
 
-  return bestMatch.replaceAll('-', '_') as SiteLocale;
+  return fromLanguageTag(bestMatch);
 }
 
 /**

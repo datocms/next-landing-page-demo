@@ -3,7 +3,7 @@ import { cn } from '@/utils/cn';
 
 type Props = {
   brand: { brandName: string; brandLogo: { url: string } };
-  /** Size of the logo box (the logo is contained inside it, at most 120px wide) */
+  /** Size of the logo box; the logo is contained inside it */
   className?: string;
   /** Duplicate or linked logos: the name is given elsewhere, so alt is empty */
   decorative?: boolean;

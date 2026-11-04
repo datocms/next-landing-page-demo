@@ -1,14 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import DocsShell from '@/components/docs/DocsShell';
 import DocumentationSidebarItem from '@/components/docs/DocumentationSidebarItem';
-import type { ContentPage } from '@/lib/datocms/realtime/types';
+import type { ContentComponent } from '@/lib/datocms/realtime/types';
 import { uiString } from '@/lib/i18n/uiStrings';
-import { buildUrl } from '@/utils/globalPageProps';
-import DocsShell from './DocsShell';
+import { docsHomeUrl, pageUrl } from '@/utils/routes';
 import type { PageProps, Query } from './meta';
 
-const Content: ContentPage<PageProps, Query> = ({
+const Content: ContentComponent<PageProps, Query> = ({
   data,
   children,
   ...globalPageProps
@@ -22,7 +22,7 @@ const Content: ContentPage<PageProps, Query> = ({
   // it render functions
   const brand = (
     <Link
-      href={buildUrl(globalPageProps, '/docs')}
+      href={docsHomeUrl(globalPageProps)}
       aria-label={uiString(locale, 'docsHome')}
       className="hit-44 flex shrink-0 items-center gap-2.5 rounded-lg"
     >
@@ -60,7 +60,7 @@ const Content: ContentPage<PageProps, Query> = ({
     <DocsShell
       brand={brand}
       nav={nav}
-      siteHref={buildUrl(globalPageProps, '/home')}
+      siteHref={pageUrl(globalPageProps, 'home')}
       footerText={footerText}
       locale={locale}
     >

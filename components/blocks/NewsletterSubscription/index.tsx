@@ -1,28 +1,31 @@
 import { type ComponentPropsWithoutRef, useId } from 'react';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import { Threads } from '@/components/ui/Ornaments';
-import TwoTone from '@/components/ui/SectionTitle/TwoTone';
+import TwoTone from '@/components/ui/TwoTone';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
+import { uiString } from '@/lib/i18n/uiStrings';
+import { cn } from '@/utils/cn';
 import { hasStructuredText } from '@/utils/structuredText';
 import { NewsletterSubscriptionFragment } from './fragment';
 import NewsletterForm from './NewsletterForm';
-import newsletterArches from './newsletterArches';
+import { newsletterArches } from './newsletterArches';
 
 type Props = {
   fragment: FragmentOf<typeof NewsletterSubscriptionFragment>;
+  /** Site locale for the form's labels and messages (English when missing) */
+  locale?: string | null;
 } & Omit<ComponentPropsWithoutRef<'aside'>, 'children'>;
 
 /**
- * In-article newsletter sign-up: a well fitted to the reading column, with
- * nested arch threads bottom-right (768 and up) in a lane the copy and the
- * capture never enter. There is no endpoint, so the form only confirms inline
- * (see NewsletterForm). It renders a single root so content-link props can be
- * cloned onto it. The title is not a heading, so the block does not reshape the
- * article outline.
+ * In-article newsletter sign-up: a well with arch threads in a lane the copy
+ * and the form never enter. There is no endpoint, so the form only confirms
+ * inline (see NewsletterForm). The title is a <p>, not a heading, so it stays
+ * out of the article outline.
  */
 const NewsletterSubscriptionBlock = ({
   fragment,
-  className = '',
+  locale,
+  className,
   ...rest
 }: Props) => {
   const { title, subtitle, buttonLabel } = readFragment(
@@ -35,7 +38,10 @@ const NewsletterSubscriptionBlock = ({
     <aside
       {...rest}
       aria-labelledby={title ? titleId : undefined}
-      className={`prose-block not-prose reveal well px-9 py-9 max-md:px-5 max-md:py-7 ${className}`}
+      className={cn(
+        'prose-block not-prose reveal well px-9 py-9 max-md:px-5 max-md:py-7',
+        className,
+      )}
     >
       <Threads
         shape={newsletterArches}
@@ -61,7 +67,16 @@ const NewsletterSubscriptionBlock = ({
         )}
       </div>
 
-      <NewsletterForm buttonLabel={buttonLabel} />
+      <NewsletterForm
+        buttonLabel={buttonLabel}
+        labels={{
+          emailAddress: uiString(locale, 'emailAddress'),
+          emailPlaceholder: uiString(locale, 'emailPlaceholder'),
+          subscribe: uiString(locale, 'subscribe'),
+          invalidEmail: uiString(locale, 'invalidEmail'),
+          subscribed: uiString(locale, 'subscribed'),
+        }}
+      />
     </aside>
   );
 };

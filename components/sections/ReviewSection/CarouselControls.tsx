@@ -1,6 +1,7 @@
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
+import { twoDigits } from '@/utils/twoDigits';
 
 type ArrowButtonProps = {
   onClick: () => void;
@@ -13,9 +14,6 @@ type ArrowButtonProps = {
 
 const arrowButtonClass = (tone: ArrowButtonProps['tone']) =>
   cn('btn btn-icon', tone === 'ghost' ? 'btn-ghost' : 'btn-secondary');
-
-/** "5" → "05" */
-const twoDigits = (value: number) => String(value).padStart(2, '0');
 
 /** Shows the previous testimonial (the arrow flips in right-to-left text) */
 export const PrevButton = ({

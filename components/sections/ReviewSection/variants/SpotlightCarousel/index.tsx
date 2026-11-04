@@ -14,15 +14,15 @@ import {
   readFragment,
 } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
-import initialsOf from '@/utils/initialsOf';
+import type { SectionHeadingLevel } from '@/utils/headingLevel';
+import { initialsOf } from '@/utils/initialsOf';
 import SpotlightQuote from './SpotlightQuote';
 import SpotlightStage from './SpotlightStage';
 
 type Props = {
   fragment: FragmentOf<typeof ReviewSectionFragment>;
   locale: string;
-  /** Use h1 when this section opens a page without a hero */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
 };
 
 type Testimonial = ResultOf<typeof TestimonialFragment>;
@@ -48,11 +48,10 @@ const portraitOf = (testimonial: Testimonial) =>
   );
 
 /**
- * `card_carrousel`: the spotlight plinth. One reviewer at a time stands on
- * the hero's thread plinth (portrait plus a rating pin) beside a white card
- * with their two-tone quote, a counter, progress segments and arrows. When no
- * reviewer has a photo, the card stands alone. Everything is rendered here;
- * the client stage only owns the index.
+ * `card_carrousel`: one review at a time, the reviewer's portrait on a thread
+ * plinth beside the quote card; when no reviewer has a photo the card stands
+ * alone. Everything renders here; the SpotlightStage island only owns the
+ * index.
  */
 const SpotlightCarousel = ({ fragment, locale, as = 'h2' }: Props) => {
   const headingId = useId();
@@ -61,8 +60,6 @@ const SpotlightCarousel = ({ fragment, locale, as = 'h2' }: Props) => {
     reviewSectionHeader: header,
     reviewSectionSubheader: subheader,
   } = readFragment(ReviewSectionFragment, fragment);
-
-  if (!reviews?.length) return null;
 
   const testimonials = reviews.map((review) =>
     readFragment(TestimonialFragment, review),
@@ -85,7 +82,6 @@ const SpotlightCarousel = ({ fragment, locale, as = 'h2' }: Props) => {
           title={header}
           paragraph={subheader}
           as={as}
-          h1Size="section"
           align="split"
           id={headingId}
         />

@@ -1,31 +1,36 @@
 import { stripStega } from '@datocms/content-link';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
+import type { SectionHeadingLevel } from '@/utils/headingLevel';
 import { ReviewSectionFragment } from './fragment';
 import HighlighterCards from './variants/HighlighterCards';
 import MinimalCarousel from './variants/MinimalCarousel';
 import MinimalReviewCards from './variants/MinimalReviewCards';
 import SpotlightCarousel from './variants/SpotlightCarousel';
-import WindowCarousel from './variants/WindowCarousel';
+import WindowTabs from './variants/WindowTabs';
 
 type Props = {
   fragment: FragmentOf<typeof ReviewSectionFragment>;
   locale: string;
-  /** h1 when the section opens a page without a hero */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
 };
 
 /**
- * Renders the layout picked in the block's "Display options" field. The
- * "carrousel" spelling comes from the CMS option values.
+ * Renders the layout picked in the block's "Display options" field, or
+ * nothing without reviews. The "carrousel" spelling comes from the CMS option
+ * values.
  */
 const ReviewSection = ({ fragment, locale, as }: Props) => {
-  const { displayOptions } = readFragment(ReviewSectionFragment, fragment);
+  const { displayOptions, reviews } = readFragment(
+    ReviewSectionFragment,
+    fragment,
+  );
+  if (reviews.length === 0) return null;
 
-  switch (stripStega(displayOptions ?? '')) {
+  switch (stripStega(displayOptions)) {
     case 'card_carrousel':
       return <SpotlightCarousel fragment={fragment} locale={locale} as={as} />;
     case 'modern_carrousel':
-      return <WindowCarousel fragment={fragment} locale={locale} as={as} />;
+      return <WindowTabs fragment={fragment} locale={locale} as={as} />;
     case 'minimal_carrousel':
       return <MinimalCarousel fragment={fragment} locale={locale} as={as} />;
     case 'minimal_cards':

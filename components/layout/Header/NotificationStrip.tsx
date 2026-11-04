@@ -4,14 +4,15 @@ import { ArrowRight, X } from 'lucide-react';
 import Link from 'next/link';
 import type { Ref } from 'react';
 import { renderNodeRule } from 'react-datocms/structured-text';
-import type { Query as CommonLayoutQuery } from '@/app/[locale]/(common-layout)/meta';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
+import type { ResultOf } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
-import { buildUrl } from '@/utils/globalPageProps';
+import { buildUrl } from '@/utils/routes';
+import type { HeaderFragment } from './fragment';
 
 type Props = {
-  notification?: NonNullable<CommonLayoutQuery['layout']>['notification'];
+  notification?: ResultOf<typeof HeaderFragment>['notification'];
   globalPageProps: ResolvedGlobalPageProps;
   onDismiss: () => void;
   /** Lets the header measure the bar, so its hairline only shows once the bar has scrolled away */
@@ -75,11 +76,7 @@ const NotificationStrip = ({
       className="relative bg-white"
       style={{ viewTransitionName: 'site-strip' }}
     >
-      {/*
-       * Centred from 768; below it the text sits left and keeps clear of the
-       * 44px close button. 36px tall for fine pointers, 44px below 768 and on
-       * coarse pointers, so the 44px targets stay inside the bar.
-       */}
+      {/* Below 768 the text sits left to clear the close button */}
       <div className="container-page flex min-h-9 items-center justify-center py-1.5 text-center text-[13.5px]/[1.4] text-ink-2 max-md:min-h-11 max-md:justify-start max-md:pr-12 max-md:text-left max-md:text-[13px] md:px-10 pointer-coarse:min-h-11">
         <div className="text-pretty [&>div>p:first-child]:inline [&>div]:inline">
           <DatoStructuredText

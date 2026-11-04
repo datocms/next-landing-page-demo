@@ -64,11 +64,11 @@ const ReleaseRail = ({ releases, changelogHref, locale }: Props) => (
 
         {/* Desktop: the same timeline rail as the changelog section */}
         <ol
-          className="lf-timeline hidden gap-1 lg:grid lg:auto-rows-fr"
+          className="changelog-rail hidden gap-1 lg:grid lg:auto-rows-fr"
           style={
             {
-              '--lf-rows': releases.length,
-              '--lf-gap': '4px',
+              '--rail-rows': releases.length,
+              '--rail-gap': '4px',
             } as CSSProperties
           }
         >

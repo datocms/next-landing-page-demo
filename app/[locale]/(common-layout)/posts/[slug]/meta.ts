@@ -19,11 +19,11 @@ export type PageProps = ResolvedGlobalPageProps & {
 
 export const query = graphql(
   /* GraphQL */ `
-    query PostQuery($slug: String, $locale: SiteLocale, $fallbackLocale: [SiteLocale!]) {
+    query PostQuery($slug: String, $locale: SiteLocale, $fallbackLocales: [SiteLocale!]) {
       post(
         filter: { slug: { eq: $slug }, title: { isBlank: "false" } }
         locale: $locale
-        fallbackLocales: $fallbackLocale
+        fallbackLocales: $fallbackLocales
       ) {
         seo: _seoMetaTags {
           ...TagFragment

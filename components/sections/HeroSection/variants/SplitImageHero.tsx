@@ -2,8 +2,8 @@ import { type CSSProperties, useId } from 'react';
 import DatoImage from '@/components/datocms/DatoImage';
 import { HeroSectionFragment } from '@/components/sections/HeroSection/fragment';
 import HeroButtons from '@/components/sections/HeroSection/HeroButtons';
-import HeroHeading from '@/components/sections/HeroSection/HeroHeading';
 import HeroSubtitle from '@/components/sections/HeroSection/HeroSubtitle';
+import HeroTitle from '@/components/sections/HeroSection/HeroTitle';
 import { PresencePill, Threads } from '@/components/ui/Ornaments';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
@@ -19,13 +19,9 @@ const tileStyle: CSSProperties = {
 };
 
 /**
- * "Split tiles": two equal rounded tiles. The copy sits in an accent-glow well
- * with a ribbon of threads along its bottom edge (always clear of the CTAs),
- * the CMS photo fills the other tile. Ink primary pill. Between 1024 and 1200
- * the copy tile takes 7 of 12 parts so the H1 keeps two lines; the tiles stack
- * below 1024. Without an image the copy tile spans the row. Below 768 the H1
- * scales from 28 to 32px with the viewport, so each half of the title keeps
- * its own line inside the tile's padding.
+ * `split_image`: the copy in a glowing well with a ribbon of threads, beside
+ * the CMS photo in a tile of its own; without an image the copy tile spans
+ * the row.
  */
 const SplitImageHero = ({ fragment }: Props) => {
   const headingId = useId();
@@ -57,13 +53,11 @@ const SplitImageHero = ({ fragment }: Props) => {
             draw="load"
             className="top-auto h-[136px] max-lg:h-28 max-md:h-24"
           />
-          <HeroHeading
+          <HeroTitle
             id={headingId}
             title={heroTitle}
-            className={cn(
-              'text-h1 max-md:text-[length:clamp(28px,10.4vw_-_8.5px,32px)] max-md:tracking-[-0.035em] md:text-[44px] md:leading-[1.06]',
-              copyWidth,
-            )}
+            size="compact"
+            className={copyWidth}
           />
           <HeroSubtitle
             text={heroSubtitle}
@@ -72,7 +66,6 @@ const SplitImageHero = ({ fragment }: Props) => {
           <HeroButtons
             buttons={buttons}
             tone="ink"
-            rise={2}
             className="mt-7 max-md:mt-6"
           />
         </div>

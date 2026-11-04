@@ -4,38 +4,39 @@ import DatoImage from '@/components/datocms/DatoImage';
 import { Threads } from '@/components/ui/Ornaments';
 import SectionTitle from '@/components/ui/SectionTitle';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
+import type { SectionHeadingLevel } from '@/utils/headingLevel';
 import { VideoSectionFragment } from './fragment';
 import PlayerBar from './PlayerBar';
 import VideoLauncher from './VideoLauncher';
 
 type Props = {
   fragment: FragmentOf<typeof VideoSectionFragment>;
-  /** h1 when the section opens a page without a hero */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
   locale: string;
 };
 
 /**
  * Video well: the title and lead beside a framed player, with a loop of accent
- * threads behind them from 1024 up. Everything is server-rendered except the
- * play button, a small client island that opens the video dialog.
+ * threads behind them. Everything is server-rendered except the play button,
+ * a small client island that opens the video dialog.
  */
 const VideoSection = ({ fragment, as = 'h2', locale }: Props) => {
   const { videoHeader, videoSubheader, videoThumbnail, video } = readFragment(
     VideoSectionFragment,
     fragment,
   );
-  const headingId = `video-${useId().replace(/[^\w-]/g, '')}`;
+  const headingId = `video-${useId()}`;
 
-  // Values used in URLs and attributes must not carry Content Link markers
-  const label = stripStega(videoHeader || '');
-  const videoId = stripStega(video?.providerUid || '');
-  const provider = stripStega(video?.provider || '').toLowerCase();
-  // The dialog embeds YouTube and Vimeo; any other provider shows its poster only
-  const channel =
-    provider === 'youtube' || provider === 'vimeo' ? provider : null;
-  const playable = Boolean(videoId && channel);
-  const fallbackPoster = stripStega(video?.thumbnailUrl || '');
+  // Used as accessible names, so it must not carry Content Link markers
+  const plainTitle = stripStega(videoHeader || '');
+  const videoId = video?.providerUid ?? '';
+  const rawProvider = (video?.provider ?? '').toLowerCase();
+  // The dialog embeds YouTube and Vimeo; any other video shows its poster only
+  const provider =
+    videoId && (rawProvider === 'youtube' || rawProvider === 'vimeo')
+      ? rawProvider
+      : null;
+  const fallbackPoster = video?.thumbnailUrl ?? '';
   const hasPoster = Boolean(videoThumbnail?.responsiveImage || fallbackPoster);
 
   const poster = (
@@ -60,7 +61,7 @@ const VideoSection = ({ fragment, as = 'h2', locale }: Props) => {
         )
       )}
       {/* Player chrome only over a real poster of a video that can play here */}
-      {playable && hasPoster && <PlayerBar />}
+      {provider && hasPoster && <PlayerBar />}
     </>
   );
 
@@ -71,18 +72,17 @@ const VideoSection = ({ fragment, as = 'h2', locale }: Props) => {
     >
       <div className="container-page">
         <div className="well reveal p-5 md:p-12">
-          {/* The loop keeps its proportions and sits on the well's floor, so longer copy grows the well instead of meeting the threads */}
+          {/* The loop sits on the well's floor, so longer copy grows the well */}
           <Threads
             shape="loop"
             draw="view"
             className="hidden opacity-50 lg:top-auto lg:block lg:h-auto lg:aspect-[1200/461]"
           />
           <div className="grid items-start lg:grid-cols-12 lg:gap-x-6">
-            {/* Under the copy the loop climbs to roughly half this column's width above the floor; the bottom padding keeps 40px or more between the last line and the threads */}
+            {/* Bottom padding keeps the copy clear of the loop */}
             <div className="max-w-[560px] lg:col-span-5 lg:max-w-[420px] lg:pt-1 lg:pb-[55%]">
               <SectionTitle
                 as={as}
-                h1Size="section"
                 gap="none"
                 id={headingId}
                 title={videoHeader}
@@ -92,11 +92,11 @@ const VideoSection = ({ fragment, as = 'h2', locale }: Props) => {
 
             <div className="mt-6 rounded-[16px] border border-line bg-white p-1.5 shadow-card md:mt-7 md:rounded-card md:p-2 lg:col-span-7 lg:col-start-6 lg:mt-0">
               <div className="photo aspect-video rounded-[11px] has-[button:focus-visible]:outline-2 has-[button:focus-visible]:outline-offset-4 has-[button:focus-visible]:outline-accent-solid md:rounded-[14px]">
-                {playable && channel ? (
+                {provider ? (
                   <VideoLauncher
                     videoId={videoId}
-                    channel={channel}
-                    label={label}
+                    provider={provider}
+                    title={plainTitle}
                     locale={locale}
                   >
                     {poster}

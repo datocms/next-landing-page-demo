@@ -13,8 +13,8 @@
     font: 400 0.9375rem / 1 var(--font-sans);
     box-shadow: var(--shadow-xs);
     transition:
-      border-color 0.2s var(--ease),
-      box-shadow 0.2s var(--ease);
+      border-color var(--duration-base) var(--ease-out-expo),
+      box-shadow var(--duration-base) var(--ease-out-expo);
     &:focus-visible {
       outline: none;
       border-color: var(--accent-solid);
@@ -46,8 +46,8 @@
     background: var(--bg);
     box-shadow: var(--shadow-xs);
     transition:
-      border-color 0.2s var(--ease),
-      box-shadow 0.2s var(--ease);
+      border-color var(--duration-base) var(--ease-out-expo),
+      box-shadow var(--duration-base) var(--ease-out-expo);
     &:focus-within {
       border-color: var(--accent-solid);
       box-shadow: 0 0 0 4px var(--accent-ring);
@@ -125,7 +125,7 @@
       background: none;
       font: 500 0.875rem / 1 var(--font-sans);
       color: var(--ink-2);
-      transition: color 0.24s var(--ease);
+      transition: color 0.24s var(--ease-out-expo);
     }
     & > button[aria-pressed='true'] {
       color: var(--ink);

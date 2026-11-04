@@ -12,10 +12,10 @@
     box-shadow: var(--card-shadow);
     transform-origin: top;
     transition:
-      opacity 0.2s var(--ease-out-quint),
-      translate 0.2s var(--ease-out-quint),
-      scale 0.2s var(--ease-out-quint),
-      display 0.2s allow-discrete;
+      opacity var(--duration-base) var(--ease-out-quint),
+      translate var(--duration-base) var(--ease-out-quint),
+      scale var(--duration-base) var(--ease-out-quint),
+      display var(--duration-base) allow-discrete;
     @starting-style {
       opacity: 0;
       translate: 0 -4px;
@@ -32,7 +32,7 @@
     font: 500 0.875rem / 1.2 var(--font-sans);
     color: var(--ink);
     text-decoration: none;
-    transition: background-color var(--duration-fast) var(--ease);
+    transition: background-color var(--duration-fast) var(--ease-out-expo);
     @media (hover: hover) {
       &:hover {
         background: var(--bg-2);

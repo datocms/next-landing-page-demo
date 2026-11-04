@@ -1,24 +1,29 @@
 import { stripStega } from '@datocms/content-link';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
+import type { SectionHeadingLevel } from '@/utils/headingLevel';
 import { FaqSectionFragment } from './fragment';
-import Accordion from './variants/Accordion';
-import TileGrid from './variants/TileGrid';
+import FaqAccordion from './variants/FaqAccordion';
+import FaqTileGrid from './variants/FaqTileGrid';
 
 type Props = {
   fragment: FragmentOf<typeof FaqSectionFragment>;
-  /** h1 when the section opens a page without a hero */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
 };
 
-/** Renders the layout picked in the block's "Display options" field */
+/** Renders the layout picked in the block's "Display options" field, or nothing without questions */
 const FaqSection = ({ fragment, as }: Props) => {
-  const { displayOptions } = readFragment(FaqSectionFragment, fragment);
-
-  return stripStega(displayOptions ?? '') === 'accordion' ? (
-    <Accordion fragment={fragment} as={as} />
-  ) : (
-    <TileGrid fragment={fragment} as={as} />
+  const { displayOptions, questions } = readFragment(
+    FaqSectionFragment,
+    fragment,
   );
+  if (questions.length === 0) return null;
+
+  switch (stripStega(displayOptions)) {
+    case 'accordion':
+      return <FaqAccordion fragment={fragment} as={as} />;
+    default:
+      return <FaqTileGrid fragment={fragment} as={as} />;
+  }
 };
 
 export default FaqSection;

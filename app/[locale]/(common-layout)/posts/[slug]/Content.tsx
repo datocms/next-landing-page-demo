@@ -1,28 +1,18 @@
-import { stripStega } from '@datocms/content-link';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import DatoImage from '@/components/datocms/DatoImage';
+import AuthorAvatar from '@/components/posts/AuthorAvatar';
 import SharePost from '@/components/posts/SharePost';
 import TagLink from '@/components/posts/TagLink';
-import type { ContentPage } from '@/lib/datocms/realtime/types';
+import type { ContentComponent } from '@/lib/datocms/realtime/types';
 import { uiString } from '@/lib/i18n/uiStrings';
+import { websiteBaseUrl } from '@/lib/websiteBaseUrl';
 import { cn } from '@/utils/cn';
-import formatPostDate from '@/utils/formatPostDate';
-import { buildUrl } from '@/utils/globalPageProps';
-import { TONES, toneIndex } from '@/utils/tones';
+import { formatDate } from '@/utils/formatDate';
+import { authorUrl, postUrl } from '@/utils/routes';
 import type { PageProps, Query } from './meta';
 import PostBody from './PostBody';
 
-/**
- * The site's public origin, resolved like the API routes do (Vercel and
- * Netlify set these variables). Server-only: in the draft-mode client tree
- * it is undefined and SharePost falls back to the browser address.
- */
-const siteOrigin = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  : process.env.URL;
-
-const Content: ContentPage<PageProps, Query> = ({
+const Content: ContentComponent<PageProps, Query> = ({
   data,
   ...globalPageProps
 }) => {
@@ -34,18 +24,15 @@ const Content: ContentPage<PageProps, Query> = ({
   const { post } = data;
   const hasTags = post.tags.length > 0;
   const firstTag = post.tags[0];
-  const date = post._publishedAt ? formatPostDate(post._publishedAt) : null;
+  const date = post._publishedAt ? formatDate(post._publishedAt) : null;
   const avatar = post.author.picture?.responsiveImage;
-  const authorUrl = buildUrl(
-    globalPageProps,
-    `/posts/author/${stripStega(post.author.slug)}`,
-  );
+  const authorHref = authorUrl(globalPageProps, post.author.slug);
   // The query doesn't select the slug: the route param is the same value
-  const postPath = buildUrl(
-    globalPageProps,
-    `/posts/${globalPageProps.params.slug}`,
-  );
-  const shareUrl = siteOrigin ? new URL(postPath, siteOrigin).href : undefined;
+  const postPath = postUrl(globalPageProps, globalPageProps.params.slug);
+  // websiteBaseUrl is undefined in the Draft Mode client tree: SharePost then uses the browser address
+  const shareUrl = websiteBaseUrl
+    ? new URL(postPath, websiteBaseUrl).href
+    : undefined;
 
   return (
     <article className="container-reading pt-14 pb-24 max-md:pt-8 max-md:pb-16">
@@ -72,26 +59,17 @@ const Content: ContentPage<PageProps, Query> = ({
         </h1>
 
         <Link
-          href={authorUrl}
+          href={authorHref}
           className="group hit-44 mt-7 flex w-fit max-w-full items-center gap-3"
         >
           {avatar && (
-            <div
-              className={cn(
-                'ring-tone size-10 shrink-0 rounded-full',
-                TONES[toneIndex(post.author.name)],
-              )}
-            >
-              <div className="photo block size-full rounded-full">
-                <DatoImage
-                  fragment={avatar}
-                  layout="fill"
-                  objectFit="cover"
-                  objectPosition="50% 30%"
-                  sizes="40px"
-                />
-              </div>
-            </div>
+            <AuthorAvatar
+              image={avatar}
+              sizes="40px"
+              ringName={post.author.name}
+              className="size-10 shrink-0"
+              photoClassName="block"
+            />
           )}
           <span className="min-w-0">
             <span className="block text-[15px] leading-snug font-medium text-ink underline decoration-transparent decoration-1 underline-offset-4 transition-[text-decoration-color] duration-200 group-hover:decoration-current">

@@ -1,0 +1,234 @@
+/* Feature lists and brand sections: gallery track, bento hover moves, figure columns, logo marquee. */
+
+@layer areas {
+  /* Logo marquee loop: the track holds two identical runs, so moving it by half its width
+     (the other way in RTL) brings the second run to where the first began */
+  @keyframes marquee-loop {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes marquee-loop-rtl {
+    to {
+      transform: translateX(50%);
+    }
+  }
+
+  /* Feature gallery (GalleryFeatures): a native scroll-snap track whose first card lines up with the
+     container and whose last card bleeds off the right edge */
+  .gallery-track {
+    --off: max(var(--pad), calc((100% - var(--container)) / 2));
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--off);
+    padding: 4px var(--off);
+    outline-offset: -2px;
+
+    @media (prefers-reduced-motion: no-preference) {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* Bento (BentoGridFeatures): each mini-UI moves once when its cell is hovered (pointer and motion users) */
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .bento-features [data-mini] [data-anim] {
+      transform-box: fill-box;
+      transform-origin: center;
+      transition: transform var(--duration-ui) var(--ease-out-expo);
+    }
+    .bento-features [data-mini='bars'] [data-anim] {
+      transform-origin: bottom;
+    }
+    .bento-features [data-mini='chat'] [data-anim]:nth-child(2) {
+      transition-delay: 80ms;
+    }
+    .bento-features [data-mini='chat'] [data-anim]:nth-child(3) {
+      transition-delay: 160ms;
+    }
+    .bento-features > li:hover [data-mini='bars'] [data-anim] {
+      transform: scaleY(1.06);
+    }
+    .bento-features > li:hover [data-mini='chart'] [data-anim] {
+      transform: translate(-16px, -6px);
+    }
+    .bento-features > li:hover [data-mini='flow'] [data-anim] {
+      transform: scale(1.06);
+    }
+    .bento-features > li:hover [data-mini='presence'] [data-anim] {
+      transform: translate(-12px, -4px);
+    }
+    .bento-features > li:hover [data-mini='chat'] [data-anim] {
+      transform: translateY(-3px);
+    }
+  }
+
+  /* Figure columns (BigImageVerticalFeatures). Each figure sits on a dot-grid canvas: the shared
+     dot-grid is a quiet card texture, but here the dots are the figure itself, so they take a
+     stronger hairline that reads on white and only fade out towards the figure's edges. */
+  .figure-canvas {
+    background:
+      radial-gradient(
+        circle at 7px 7px,
+        var(--line-hover) 1px,
+        transparent 1.6px
+      )
+      0 0 / 14px 14px;
+    mask-image: radial-gradient(closest-side, #000 70%, transparent);
+  }
+  /* Open columns split by hairlines, no outer borders. From 768 every column gets the same inner
+     padding and the list is pulled out by it, then clipped back to the container: the columns are
+     equally wide and the vertical and horizontal rules meet. */
+  .figure-columns > li + li {
+    margin-top: 32px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+  @media (width >= 48rem) {
+    .figure-columns {
+      margin-inline: calc(var(--figure-column-pad) * -1);
+      margin-bottom: -40px;
+      clip-path: inset(0 var(--figure-column-pad) 40px);
+    }
+    .figure-columns > li,
+    .figure-columns > li + li {
+      margin-top: 0;
+      padding: 0 var(--figure-column-pad) 40px;
+      border-top: 0;
+    }
+  }
+  @media (48rem <= width < 64rem) {
+    .figure-columns {
+      --figure-column-pad: 24px;
+    }
+    .figure-columns > li:nth-child(2n) {
+      border-inline-start: 1px solid var(--line);
+    }
+    .figure-columns > li:nth-child(n + 3) {
+      padding-top: 40px;
+      border-top: 1px solid var(--line);
+    }
+  }
+  @media (width >= 64rem) {
+    .figure-columns {
+      --figure-column-pad: 28px;
+    }
+    .figure-columns > li:not(:nth-child(3n + 1)) {
+      border-inline-start: 1px solid var(--line);
+    }
+    .figure-columns > li:nth-child(n + 4) {
+      padding-top: 40px;
+      border-top: 1px solid var(--line);
+    }
+  }
+
+  /* Logo marquee (LogoMarquee): two identical runs looping by -50% */
+  .marquee-band {
+    height: 88px;
+
+    @media (width < 48rem) {
+      height: 80px;
+    }
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+  }
+  .marquee-list {
+    --logo-o: 0.46;
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: space-around;
+    gap: 64px;
+    /* each run at least as wide as the viewport, so the loop never shows a gap */
+    min-width: 100cqw;
+    padding-inline-end: 64px;
+
+    @media (width < 75rem) {
+      gap: 56px;
+      padding-inline-end: 56px;
+    }
+    @media (width < 48rem) {
+      gap: 44px;
+      padding-inline-end: 44px;
+    }
+  }
+  .marquee-viewport {
+    container-type: inline-size;
+  }
+  .marquee-static {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 20px;
+    min-width: 0;
+    padding-inline-end: 0;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    /* Off screen the band is skipped, so the loop stops ticking (its height is fixed: no shift) */
+    .marquee-band {
+      content-visibility: auto;
+    }
+    .marquee-track {
+      animation: marquee-loop 40s linear infinite;
+
+      &:dir(rtl) {
+        animation-name: marquee-loop-rtl;
+      }
+    }
+    .marquee-viewport:hover .marquee-track,
+    [data-marquee][data-paused] .marquee-track {
+      animation-play-state: paused;
+    }
+    /* Focus on a logo stops the loop instead of pausing it: the track returns to its start, where
+       the linked run sits, so the focused logo and its ring are in view (the viewport scrolls to
+       logos past its edge). Scoped to the viewport, so focusing the toggle never moves the track. */
+    .marquee-viewport:focus-within .marquee-track {
+      animation: none;
+    }
+  }
+  /* Reduced motion: one static centred row (a 3-column grid below 1024), no copy, no toggle */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-band {
+      height: auto;
+      min-height: 88px;
+      padding-block: 20px;
+    }
+    .marquee-track {
+      width: auto;
+    }
+    /* the run fills the band, so its logos centre (and wrap into centred rows when they don't fit) */
+    .marquee-list {
+      flex: 1 1 auto;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px clamp(28px, 6.5vw - 30px, 72px);
+      min-width: 0;
+      padding-inline-end: 0;
+    }
+    @media (width < 64rem) {
+      .marquee-track {
+        display: block;
+      }
+      .marquee-list:not(.marquee-static) {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 32px 16px;
+        justify-items: center;
+      }
+    }
+    @media (width < 48rem) {
+      .marquee-list:not(.marquee-static) {
+        gap: 28px 12px;
+      }
+      .marquee-band {
+        padding-block: 28px 20px;
+      }
+    }
+    /* the copy that closes the loop: after the layout rules, so no display above revives it */
+    .marquee-track > .marquee-list[aria-hidden='true'] {
+      display: none;
+    }
+  }
+}

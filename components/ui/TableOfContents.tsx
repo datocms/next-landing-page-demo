@@ -4,11 +4,13 @@ import type { OutlineHeading } from '@/utils/headingOutline';
 
 type Props = {
   headings: OutlineHeading[];
-  /** Site locale for the "On this page" label (English when missing) */
-  locale?: string | null;
+  locale: string;
   /** Placement (grid column, visibility) */
   className?: string;
 };
+
+/** Fewer headings than this don't need an "On this page" rail */
+export const MIN_TOC_HEADINGS = 3;
 
 /**
  * "On this page": a sticky hairline rail of in-page links to the h2 sections,

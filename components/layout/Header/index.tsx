@@ -6,11 +6,16 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { Query as CommonLayoutQuery } from '@/app/[locale]/(common-layout)/meta';
+import {
+  type FragmentOf,
+  readFragment,
+  type SiteLocale,
+} from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
-import { buildUrl } from '@/utils/globalPageProps';
+import { pageUrl } from '@/utils/routes';
 import DesktopNav from './DesktopNav';
+import { HeaderFragment } from './fragment';
 import LanguageSelector from './LanguageSelector';
 import MobileNav from './MobileNav';
 import NotificationStrip from './NotificationStrip';
@@ -19,7 +24,8 @@ import { useNavCollapse } from './useNavCollapse';
 
 type Props = {
   globalPageProps: ResolvedGlobalPageProps;
-  data: CommonLayoutQuery;
+  fragment: FragmentOf<typeof HeaderFragment> | null;
+  languages: SiteLocale[];
 };
 
 const MOBILE_NAV_ID = 'mobile-nav';
@@ -29,15 +35,15 @@ const MOBILE_NAV_ID = 'mobile-nav';
  * the inline nav and the language selector, or the menu button that opens
  * the mobile menu when the nav doesn't fit
  */
-const Header = ({ globalPageProps, data }: Props) => {
+const Header = ({ globalPageProps, fragment, languages }: Props) => {
+  const layout = readFragment(HeaderFragment, fragment);
   const pathname = usePathname();
-  const navItems = buildNavItems(data.layout?.menu, globalPageProps);
-  const homeHref = buildUrl(globalPageProps, '/home');
-  const languages = data._site.locales;
+  const navItems = buildNavItems(layout?.menu, globalPageProps);
+  const homeHref = pageUrl(globalPageProps, 'home');
   const { locale } = globalPageProps.params;
 
   const [notificationVisible, setNotificationVisible] = useState(
-    !isEmptyDocument(data.layout?.notification),
+    !isEmptyDocument(layout?.notification),
   );
   const notificationRef = useRef<HTMLElement>(null);
   const logoLinkRef = useRef<HTMLAnchorElement>(null);
@@ -82,9 +88,9 @@ const Header = ({ globalPageProps, data }: Props) => {
   const { collapsed, navRef, listRef, languageRef, menuButtonRef } =
     useNavCollapse();
 
-  const logo = data.layout?.logo.url ? (
+  const logo = layout?.logo.url ? (
     <Image
-      src={data.layout.logo.url}
+      src={layout.logo.url}
       alt=""
       width={138}
       height={27}
@@ -105,7 +111,7 @@ const Header = ({ globalPageProps, data }: Props) => {
       {notificationVisible && (
         <NotificationStrip
           ref={notificationRef}
-          notification={data.layout?.notification}
+          notification={layout?.notification}
           globalPageProps={globalPageProps}
           onDismiss={dismissNotification}
         />

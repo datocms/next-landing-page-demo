@@ -31,14 +31,14 @@ export const query = graphql(
   /* GraphQL */ `
     query PageQuery(
       $locale: SiteLocale
-      $fallbackLocale: [SiteLocale!]
+      $fallbackLocales: [SiteLocale!]
       $slug: String
       $postsPerPage: IntType
     ) {
       page(
         filter: { slug: { eq: $slug } }
         locale: $locale
-        fallbackLocales: $fallbackLocale
+        fallbackLocales: $fallbackLocales
       ) {
         seo: _seoMetaTags {
           ...TagFragment
@@ -66,16 +66,14 @@ export const query = graphql(
             slugToRedirectTo
           }
         }
-        id
         label
-        __typename
       }
       allPosts(
         filter: { title: { isBlank: "false" } }
         orderBy: _createdAt_DESC
         first: $postsPerPage
         locale: $locale
-        fallbackLocales: $fallbackLocale
+        fallbackLocales: $fallbackLocales
       ) {
         id
         ...PostExcerptFragment

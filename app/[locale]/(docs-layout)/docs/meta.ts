@@ -13,14 +13,17 @@ export const query = graphql(
   /* GraphQL */ `
     query DocumentationHomePageQuery(
       $locale: SiteLocale
-      $fallbackLocale: [SiteLocale!]
+      $fallbackLocales: [SiteLocale!]
     ) {
-      documentationHome(locale: $locale, fallbackLocales: $fallbackLocale) {
+      documentationHome(locale: $locale, fallbackLocales: $fallbackLocales) {
         seo: _seoMetaTags {
           ...TagFragment
         }
         title
         subheader
+        featuredPages {
+          slug
+        }
         ...FeaturedDocumentationPagesFragment
       }
     }

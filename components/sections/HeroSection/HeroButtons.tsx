@@ -8,46 +8,37 @@ import type { HeroSectionFragment } from './fragment';
 
 type Props = {
   buttons: ResultOf<typeof HeroSectionFragment>['buttons'];
-  /** The primary pill: the accent fill (default) or ink (SplitImageHero, GradientHero) */
+  /** Fill of the primary button */
   tone?: 'accent' | 'ink';
   align?: 'start' | 'center';
-  /** Load-choreography step: the row rises after the lead (motion users only) */
-  rise?: number;
   /** Placement only (margins, max width) */
   className?: string;
 };
 
-/**
- * A pill never outgrows its row. Stacked below 768 it is full width and at
- * least 48px tall, and a long CMS label wraps onto a second line.
- */
+// A button never outgrows its row: a long CMS label wraps when the buttons stack, and truncates on one line otherwise
 const PILL =
   'max-w-full text-center max-md:h-auto max-md:min-h-12 max-md:w-full max-md:whitespace-normal max-md:py-3';
-
-/** From 768 a pill keeps one line: a label too long for the row ends in an ellipsis */
 const LABEL = 'leading-snug md:truncate';
 
 /**
- * The call-to-action row shared by every hero: the CMS "primary" flag picks
- * the filled pill (with a nudging arrow), every other button is the white
- * secondary pill. Below 768 the pills stack as equal full-width buttons.
+ * The hero's call-to-action row: the CMS "primary" flag picks the filled
+ * button with an arrow, the others are secondary. Step 2 of the hero's load
+ * animation, after the subtitle.
  */
 const HeroButtons = ({
   buttons,
   tone = 'accent',
   align = 'start',
-  rise,
   className,
 }: Props) => {
   if (buttons.length === 0) return null;
 
-  const rises = rise !== undefined;
   const primaryClass = tone === 'ink' ? 'btn-ink' : 'btn-primary';
 
   return (
     <div
-      data-hero-rise={rises ? '' : undefined}
-      style={rises ? ({ '--d': rise } as CSSProperties) : undefined}
+      data-hero-rise=""
+      style={{ '--d': 2 } as CSSProperties}
       className={cn(
         'flex flex-wrap gap-2.5 max-md:flex-col max-md:items-stretch max-md:gap-2',
         align === 'center' && 'justify-center',

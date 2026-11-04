@@ -1,22 +1,17 @@
-import { ChevronLeft } from 'lucide-react';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import PaginationLinks, {
-  POSTS_PER_PAGE,
-  postsPageUrl,
-} from '@/components/posts/PaginationLinks';
-import PostExcerpt, { postCardLayout } from '@/components/posts/PostExcerpt';
+import Pagination from '@/components/posts/Pagination';
+import PostGrid from '@/components/posts/PostGrid';
 import PostsPageHeader from '@/components/posts/PostsPageHeader';
-import type { ContentPage } from '@/lib/datocms/realtime/types';
+import { postsPageCount } from '@/components/posts/postsPagination';
+import type { ContentComponent } from '@/lib/datocms/realtime/types';
 import { uiString } from '@/lib/i18n/uiStrings';
 import type { PageProps, Query } from './meta';
 
-const Content: ContentPage<PageProps, Query> = ({
+const Content: ContentComponent<PageProps, Query> = ({
   data,
   ...globalPageProps
 }) => {
   const { locale } = globalPageProps.params;
-  // Route params arrive as strings at runtime
   const page = Number(globalPageProps.params.page);
 
   if (data.allPosts.length === 0) {
@@ -24,8 +19,7 @@ const Content: ContentPage<PageProps, Query> = ({
   }
 
   const postCount = data._allPostsMeta.count;
-  const pageCount = Math.max(1, Math.ceil(postCount / POSTS_PER_PAGE));
-  const posts = data.allPosts;
+  const pageCount = postsPageCount(postCount);
   const title = uiString(locale, 'latestPosts');
   const pageText = uiString(locale, 'pageOf', { page, total: pageCount });
 
@@ -45,47 +39,18 @@ const Content: ContentPage<PageProps, Query> = ({
         aria-labelledby="posts-title"
         className="container-page mt-12 pb-24 max-md:mt-8 max-md:pb-16"
       >
-        <div className="grid gap-3 md:grid-cols-2 md:gap-4 lg:grid-cols-3">
-          {posts.map((post, index) => (
-            <PostExcerpt
-              key={post.id}
-              fragment={post}
-              globalPageProps={globalPageProps}
-              priority={index < 3}
-              headingLevel="h2"
-              {...postCardLayout(index, posts.length)}
-            />
-          ))}
-        </div>
+        <PostGrid
+          posts={data.allPosts}
+          globalPageProps={globalPageProps}
+          headingLevel="h2"
+          prioritizeFirstRow
+        />
 
-        <nav
-          aria-label={uiString(locale, 'pagination')}
-          className="mt-12 flex justify-center"
-        >
-          <ul className="flex flex-wrap items-center justify-center gap-2">
-            {page > 1 && (
-              <li>
-                <Link
-                  href={postsPageUrl(globalPageProps, page - 1)}
-                  rel="prev"
-                  className="btn btn-secondary btn-sm h-10 max-md:h-11 pointer-coarse:h-11"
-                >
-                  <ChevronLeft
-                    strokeWidth={1.75}
-                    aria-hidden="true"
-                    className="btn-arrow-back rtl:rotate-180"
-                  />
-                  {uiString(locale, 'previous')}
-                </Link>
-              </li>
-            )}
-            <PaginationLinks
-              globalPageProps={globalPageProps}
-              postCount={postCount}
-              page={page}
-            />
-          </ul>
-        </nav>
+        <Pagination
+          page={page}
+          postCount={postCount}
+          globalPageProps={globalPageProps}
+        />
       </section>
     </>
   );

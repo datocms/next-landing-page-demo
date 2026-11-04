@@ -3,6 +3,7 @@ import DatoImage from '@/components/datocms/DatoImage';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import { PresencePill } from '@/components/ui/Ornaments';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
+import { cn } from '@/utils/cn';
 import { hasStructuredText } from '@/utils/structuredText';
 import { CtaButtonWithImageFragment } from './fragment';
 
@@ -11,18 +12,12 @@ type Props = {
 } & Omit<ComponentPropsWithoutRef<'aside'>, 'children'>;
 
 /**
- * In-article promo card: a photo inside an 8px card gutter with a wordless
- * presence pill pinned to it, copy on the right. The block has no URL field, so
- * the button label is a soft accent tag with no interactive role rather than a
- * fake link. It renders a single root so content-link props can be cloned onto
- * it. The title is not a heading, so the promo does not reshape the article
- * outline.
+ * In-article promo card: a photo with a wordless presence pill, and copy beside
+ * it. The title is a <p>, not a heading, so it stays out of the article
+ * outline. The block has no URL field, so the button label is a tag, not a
+ * fake link.
  */
-const CtaButtonWithImageBlock = ({
-  fragment,
-  className = '',
-  ...rest
-}: Props) => {
+const CtaButtonWithImageBlock = ({ fragment, className, ...rest }: Props) => {
   const { title, subtitle, buttonLabel, image } = readFragment(
     CtaButtonWithImageFragment,
     fragment,
@@ -34,7 +29,11 @@ const CtaButtonWithImageBlock = ({
     <aside
       {...rest}
       aria-labelledby={title ? titleId : undefined}
-      className={`prose-block not-prose reveal card grid overflow-hidden p-2 ${photo ? 'sm:grid-cols-[5fr_7fr]' : ''} ${className}`}
+      className={cn(
+        'prose-block not-prose reveal card grid overflow-hidden p-2',
+        photo && 'sm:grid-cols-[5fr_7fr]',
+        className,
+      )}
     >
       {photo && (
         <div className="photo relative aspect-[16/10] rounded-zone sm:aspect-auto sm:min-h-56">

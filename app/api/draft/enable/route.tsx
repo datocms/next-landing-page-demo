@@ -1,8 +1,8 @@
 import { draftMode } from 'next/headers';
 import { redirect } from 'next/navigation';
 import type { NextRequest } from 'next/server';
-import isSafeRedirectUrl from '@/utils/isSafeRedirectUrl';
-import partitionDraftModeCookie from '../partitionDraftModeCookie';
+import { isSafeRedirectUrl } from '../isSafeRedirectUrl';
+import { partitionDraftModeCookie } from '../partitionDraftModeCookie';
 
 /**
  * Turns Draft Mode on, then redirects to `?redirect=` when there is one (a path
@@ -21,15 +21,14 @@ export async function GET(request: NextRequest) {
   if (token !== process.env.DRAFT_SECRET_TOKEN)
     return new Response('Invalid token', { status: 401 });
 
-  const draft = await draftMode();
-  draft.enable();
-
-  if (!redirectPath) return new Response('Draft mode is enabled');
-
-  if (!isSafeRedirectUrl(redirectPath, requestUrl))
+  if (redirectPath && !isSafeRedirectUrl(redirectPath, requestUrl))
     return new Response('URL must be relative!', { status: 422 });
 
+  (await draftMode()).enable();
+
   await partitionDraftModeCookie();
+
+  if (!redirectPath) return new Response('Draft mode is enabled');
 
   redirect(redirectPath);
 }

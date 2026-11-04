@@ -3,6 +3,10 @@ import { ResponsiveImageFragment } from '@/components/datocms/DatoImage/fragment
 import { MINI_UIS } from '@/components/ui/Ornaments';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 
+/**
+ * Icon art is sized by the parent's --media-tile-size, with optional
+ * --media-tile-padding, --media-tile-radius and --media-tile-inner-radius.
+ */
 type Props = {
   /** The feature's CMS image (featureIcon.responsiveImage) */
   image?: FragmentOf<typeof ResponsiveImageFragment> | null;
@@ -13,14 +17,9 @@ type Props = {
 };
 
 /**
- * The CMS image of a big-image feature, decided on the server. Near-square
- * icon art (ratio 0.8–1.25) becomes a floating tile of `--tile` px centred in
- * the media box (frame `--tile-p`, radii `--tile-r` / `--tile-ir`, default
- * 5 / 16 / 12), tinted to the nearest tone like FeatureIcon; anything else is
- * treated as a photo, keeps its own colours and covers the box (the box must
- * be `relative` and carry its own radius). Without a usable image (none
- * uploaded, or an SVG, which has no responsiveImage) the box shows the
- * feature's wordless mini-UI instead, so it is never an empty well.
+ * A big-image feature's CMS image: near-square icon art becomes a tinted tile,
+ * anything else covers the parent as a photo. Without a usable image (none, or
+ * an SVG, which has no responsiveImage) it shows the feature's mini-UI.
  */
 const FeatureMedia = ({ image, index, sizes }: Props) => {
   if (!image) {
@@ -34,8 +33,8 @@ const FeatureMedia = ({ image, index, sizes }: Props) => {
 
   if (isIconArt) {
     return (
-      <div className="float relative rounded-[var(--tile-r,16px)] p-[var(--tile-p,5px)]">
-        <div className="photo size-(--tile) rounded-[var(--tile-ir,12px)] bg-tone [&_img]:mix-blend-luminosity">
+      <div className="float relative rounded-[var(--media-tile-radius,16px)] p-[var(--media-tile-padding,5px)]">
+        <div className="photo size-(--media-tile-size) rounded-[var(--media-tile-inner-radius,12px)] bg-tone [&_img]:mix-blend-luminosity">
           <DatoImage
             fragment={image}
             layout="fill"

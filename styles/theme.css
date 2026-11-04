@@ -111,7 +111,6 @@
   --font-mono:
     var(--font-spline-mono), ui-monospace, 'SF Mono', Menlo, monospace;
 
-  --color-page: var(--bg);
   --color-well: var(--bg-2);
   --color-surface: var(--surface);
   --color-ink: var(--ink);
@@ -119,16 +118,12 @@
   --color-ink-3: var(--ink-3);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
-  --color-frame: var(--frame);
   --color-sk: var(--sk);
   --color-sk-2: var(--sk-2);
   --color-sk-3: var(--sk-3);
-  --color-accent: var(--accent-solid);
   --color-accent-solid: var(--accent-solid);
   --color-accent-text: var(--accent-text);
   --color-accent-wash: var(--accent-wash);
-  --color-accent-fill: var(--accent-fill);
-  --color-on-accent: var(--on-accent);
   --color-g-50: var(--g-50);
   --color-g-100: var(--g-100);
   --color-g-200: var(--g-200);
@@ -139,12 +134,8 @@
   --color-g-700: var(--g-700);
   --color-g-800: var(--g-800);
   --color-g-900: var(--g-900);
-  --color-grad-a: var(--grad-a);
-  --color-grad-b: var(--grad-b);
-  --color-grad-c: var(--grad-c);
-  --color-tone: var(--s);
-  --color-tone-hi: var(--s-hi);
-  --color-tone-wash: var(--s-wash);
-  --color-tone-mark: var(--s-mark);
-  --color-tone-text: var(--s-text);
+  --color-tone: var(--tone);
+  --color-tone-wash: var(--tone-wash);
+  --color-tone-mark: var(--tone-mark);
+  --color-tone-text: var(--tone-text);
 }

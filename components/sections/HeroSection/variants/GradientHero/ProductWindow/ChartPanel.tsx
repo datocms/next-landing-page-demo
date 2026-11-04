@@ -7,7 +7,7 @@ type Props = {
   hideOnMobile: boolean;
 };
 
-/** The chart's main series, on a 440×150 viewBox; it also outlines the area fill under it */
+/** The chart's main series; it also outlines the area fill under it */
 const SERIES_PATH =
   'M0 118 C 20 118, 24 110, 40 112 S 64 122, 80 120 S 104 98, 120 96 S 148 104, 160 102 S 184 82, 200 80 S 228 88, 240 86 S 266 60, 280 58 S 306 68, 320 66 S 346 42, 360 40 S 388 50, 400 48 S 428 28, 440 26';
 
@@ -18,7 +18,7 @@ const SERIES_PATH =
  */
 const ChartPanel = ({ hideOnMobile }: Props) => {
   // Prefix for the gradients' ids: url(#…) needs an id without the punctuation React ids carry
-  const idPrefix = `win${useId().replace(/[^\w-]/g, '')}`;
+  const idPrefix = `win${useId()}`;
 
   return (
     <div
@@ -35,7 +35,7 @@ const ChartPanel = ({ hideOnMobile }: Props) => {
         </span>
         <span className="flex items-center gap-3">
           <span className="flex items-center gap-1.5">
-            <i className="size-2 rounded-full bg-accent" />
+            <i className="size-2 rounded-full bg-accent-solid" />
             <SkeletonBar className="bg-sk" width="36px" />
           </span>
           <span className="flex items-center gap-1.5">
@@ -106,7 +106,7 @@ const ChartPanel = ({ hideOnMobile }: Props) => {
           cx={280}
           cy={58}
           r={4}
-          className="fill-accent stroke-white"
+          className="fill-accent-solid stroke-white"
           strokeWidth={2}
         />
         <rect
@@ -117,7 +117,7 @@ const ChartPanel = ({ hideOnMobile }: Props) => {
           rx={6}
           className="fill-white stroke-line"
         />
-        <circle cx={304} cy={26.5} r={3} className="fill-accent" />
+        <circle cx={304} cy={26.5} r={3} className="fill-accent-solid" />
         <rect
           x={312}
           y={23.5}

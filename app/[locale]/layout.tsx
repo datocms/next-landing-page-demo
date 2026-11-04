@@ -1,6 +1,5 @@
 import '@/styles/global.css';
 import { draftMode } from 'next/headers';
-import { notFound } from 'next/navigation';
 import { toNextMetadata } from 'react-datocms/seo';
 import ContentLink from '@/components/datocms/ContentLink';
 import DraftModeToggle from '@/components/datocms/DraftModeToggle';
@@ -9,17 +8,18 @@ import InstantHistoryScroll from '@/components/layout/InstantHistoryScroll';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
-import type { AsyncPageProps } from '@/lib/datocms/routeContext';
-import { getAvailableLocales } from '@/lib/i18n/locales';
+import { toLanguageTag } from '@/lib/i18n/languageTag';
+import { requireSiteLocale } from '@/lib/i18n/locales';
 import { fontVariables } from '@/styles/fonts';
+import type { GlobalPageProps } from '@/utils/globalPageProps';
 
-type Props = AsyncPageProps & {
+type Props = GlobalPageProps & {
   children: React.ReactNode;
 };
 
 const query = graphql(
   /* GraphQL */ `
-    query LayoutQuery {
+    query LocaleLayoutQuery {
       _site {
         faviconMetaTags {
           ...TagFragment
@@ -45,30 +45,18 @@ export async function generateMetadata() {
 }
 
 /**
- * The layout of every page: pages live under a locale, so <html> is rendered
- * here with that locale as its `lang` (app/layout.tsx only passes children
- * through). It rejects unknown locales, applies the
- * project's accent color and adds the Draft Mode toggle (plus, while Draft Mode
- * is on, the Content Link overlay) and the Back/Forward scroll fix.
- *
- * Switching locale swaps the root layout, so it is a full page load.
+ * Validates the locale and renders <html lang> for it, with what every page
+ * shares: the accent color, the Draft Mode toggle and, in Draft Mode, Content Link
  */
 export default async function LocaleLayout({ children, params }: Props) {
   const { isEnabled: isDraft } = await draftMode();
-  const { locale } = await params;
-  const allLocales: string[] = await getAvailableLocales();
-
-  // Only the project's own locales are valid: any other first segment is a 404
-  if (!allLocales.includes(locale)) {
-    notFound();
-  }
+  const locale = await requireSiteLocale((await params).locale);
 
   const data = await executeQuery(query, { includeDrafts: isDraft });
 
   return (
     <html
-      // DatoCMS writes regional locales with an underscore (pt_BR), HTML with a hyphen (pt-BR)
-      lang={locale.replace('_', '-')}
+      lang={toLanguageTag(locale)}
       className={fontVariables}
       // Next scrolls to the top inside the navigation commit only with this attribute; never remove it
       data-scroll-behavior="smooth"

@@ -17,19 +17,17 @@ export const query = graphql(
     query DocumentationPageQuery(
       $slug: String
       $locale: SiteLocale
-      $fallbackLocale: [SiteLocale!]
+      $fallbackLocales: [SiteLocale!]
     ) {
       documentationPage(
         filter: { slug: { eq: $slug } }
         locale: $locale
-        fallbackLocales: $fallbackLocale
+        fallbackLocales: $fallbackLocales
       ) {
         seo: _seoMetaTags {
           ...TagFragment
         }
         title
-        __typename
-        id
         content {
           value
         }

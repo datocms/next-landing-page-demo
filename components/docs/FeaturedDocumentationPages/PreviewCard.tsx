@@ -1,13 +1,11 @@
-import { stripStega } from '@datocms/content-link';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
-import {
-  buildUrl,
-  type ResolvedGlobalPageProps,
-} from '@/utils/globalPageProps';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
+import { docsPageUrl } from '@/utils/routes';
 import { toneClass } from '@/utils/tones';
+import { twoDigits } from '@/utils/twoDigits';
 import { PreviewCardFragment } from './fragment';
 
 type Props = {
@@ -23,7 +21,7 @@ const PreviewCard = ({ fragment, globalPageProps, index = 0 }: Props) => {
 
   return (
     <Link
-      href={buildUrl(globalPageProps, `/docs/${stripStega(page.slug)}`)}
+      href={docsPageUrl(globalPageProps, page.slug)}
       className={cn(
         toneClass(index),
         // Below 768 the card turns into a compact row: copy left, arrow disc right
@@ -33,7 +31,7 @@ const PreviewCard = ({ fragment, globalPageProps, index = 0 }: Props) => {
       <span className="flex items-center">
         <span aria-hidden="true" className="dot" />
         <span aria-hidden="true" className="mono ms-auto max-md:ms-2.5">
-          {String(index + 1).padStart(2, '0')}
+          {twoDigits(index + 1)}
         </span>
       </span>
       <h3 className="mt-5 text-h3 text-ink max-md:mt-3">{page.title}</h3>

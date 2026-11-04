@@ -5,7 +5,6 @@ export const ImageBlockFragment = graphql(
   /* GraphQL */ `
     fragment ImageBlockFragment on ImageBlockRecord {
       image {
-        id
         responsiveImage {
           ...ResponsiveImageFragment
         }

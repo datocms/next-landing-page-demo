@@ -9,11 +9,15 @@ type Props = {
   locale: string;
 };
 
-/** Renders the layout picked in the block's "Display options" field */
+/** Renders the layout picked in the block's "Display options" field, or nothing without brands */
 const BrandSection = ({ fragment, locale }: Props) => {
-  const { displayOptions } = readFragment(BrandSectionFragment, fragment);
+  const { displayOptions, brand } = readFragment(
+    BrandSectionFragment,
+    fragment,
+  );
+  if (brand.length === 0) return null;
 
-  switch (stripStega(displayOptions ?? '')) {
+  switch (stripStega(displayOptions)) {
     case 'brand_cards':
       return <LogoMarquee fragment={fragment} locale={locale} />;
     default:

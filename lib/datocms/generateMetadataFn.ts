@@ -5,13 +5,12 @@ import {
   type TitleMetaLinkTag,
   toNextMetadata,
 } from 'react-datocms/seo';
-import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
+import type {
+  GlobalPageProps,
+  ResolvedGlobalPageProps,
+} from '@/utils/globalPageProps';
 import { executeQuery } from './executeQuery';
-import {
-  type AsyncPageProps,
-  type BuildVariablesFn,
-  resolveRouteContext,
-} from './routeContext';
+import { type BuildVariablesFn, resolveRouteContext } from './routeContext';
 
 /**
  * Builds a route's `generateMetadata`: it runs the same query as the page and
@@ -25,13 +24,12 @@ export function generateMetadataFn<
 >(options: {
   query: TadaDocumentNode<Result, Variables>;
   buildVariables?: BuildVariablesFn<PageProps, Variables>;
-  /** Picks the SEO tags out of the query result */
-  generate: (
+  pickSeoMetaTags: (
     data: Result,
   ) => TitleMetaLinkTag[] | SeoOrFaviconTag[] | undefined;
 }) {
   return async function generateMetadata(
-    asyncPageProps: AsyncPageProps,
+    asyncPageProps: GlobalPageProps,
   ): Promise<Metadata> {
     const { variables, includeDrafts } = await resolveRouteContext(
       asyncPageProps,
@@ -42,7 +40,7 @@ export function generateMetadataFn<
       variables,
       includeDrafts,
     });
-    const tags = options.generate(data);
+    const tags = options.pickSeoMetaTags(data);
 
     return tags ? toNextMetadata(tags) : {};
   };

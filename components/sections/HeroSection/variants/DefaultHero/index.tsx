@@ -1,9 +1,7 @@
 import { useId } from 'react';
 import DatoImage from '@/components/datocms/DatoImage';
 import { HeroSectionFragment } from '@/components/sections/HeroSection/fragment';
-import HeroButtons from '@/components/sections/HeroSection/HeroButtons';
-import HeroHeading from '@/components/sections/HeroSection/HeroHeading';
-import HeroSubtitle from '@/components/sections/HeroSection/HeroSubtitle';
+import HeroCopyColumn from '@/components/sections/HeroSection/HeroCopyColumn';
 import { PresencePill, Threads } from '@/components/ui/Ornaments';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
@@ -26,10 +24,9 @@ const PhotoCaption = () => (
 );
 
 /**
- * Default hero, the "plinth": a two-tone H1, lead and CTAs on the left; on the
- * right an accent well of drawn threads carrying the CMS photo as a media card,
- * a presence pill and a settings card. The floats are wordless and decorative.
- * Without an image the plinth keeps its height, threads and floats.
+ * The default layout: the copy beside an accent well of threads that carries
+ * the CMS photo in a floating card, with decorative floats around it; without
+ * an image the well keeps its threads and floats.
  */
 const DefaultHero = ({ fragment }: Props) => {
   const headingId = useId();
@@ -50,22 +47,12 @@ const DefaultHero = ({ fragment }: Props) => {
       className="pt-12 pb-10 max-lg:pt-10 max-lg:pb-16 max-md:pt-8 max-md:pb-14"
     >
       <div className="container-page grid-page items-center">
-        <div className="col-span-full max-w-[620px] lg:col-span-6 lg:max-w-none">
-          <HeroHeading
-            id={headingId}
-            title={heroTitle}
-            className="max-w-[588px] text-h1"
-          />
-          <HeroSubtitle
-            text={heroSubtitle}
-            className="mt-[18px] max-w-[520px] text-lead text-ink-2 max-md:mt-4 [&_p+p]:mt-3"
-          />
-          <HeroButtons
-            buttons={buttons}
-            rise={2}
-            className="mt-7 max-md:mt-6"
-          />
-        </div>
+        <HeroCopyColumn
+          headingId={headingId}
+          title={heroTitle}
+          subtitle={heroSubtitle}
+          buttons={buttons}
+        />
 
         <div className="well col-span-full mt-10 h-[420px] max-md:mt-7 max-md:h-[252px] lg:col-span-6 lg:mt-0 lg:h-[448px]">
           <Threads shape="plinth" draw="load" />

@@ -44,11 +44,6 @@ const LOGO_BOX = 'h-[22px] w-[120px] max-w-full max-sm:h-[18px] max-sm:w-24';
  */
 const LogoGrid = ({ fragment, locale }: Props) => {
   const { brand: brands } = readFragment(BrandSectionFragment, fragment);
-
-  if (brands.length === 0) {
-    return null;
-  }
-
   const count = brands.length;
 
   return (

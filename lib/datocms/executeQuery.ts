@@ -2,7 +2,7 @@ import { executeQuery as libExecuteQuery } from '@datocms/cda-client';
 import type { TadaDocumentNode } from 'gql.tada';
 
 /** Published-content requests are stored in the Next.js Data Cache under this tag */
-export const cacheTag = 'datocms';
+export const DATOCMS_CACHE_TAG = 'datocms';
 
 type ExecuteQueryOptions<Variables> = {
   variables?: Variables;
@@ -15,11 +15,12 @@ type ExecuteQueryOptions<Variables> = {
  *
  * Published content is cached in the Next.js Data Cache (`cache: 'force-cache'`),
  * so regular visitors don't cause extra calls to DatoCMS; Draft Mode requests
- * skip the cache. When content changes, DatoCMS calls the /api/revalidateCache
- * webhook, which invalidates every request tagged with `cacheTag`. This single
- * tag is the simplest strategy:
- * larger sites can tag each query with the records it uses instead
- * (https://www.datocms.com/docs/next-js/using-cache-tags).
+ * skip the cache.
+ *
+ * When content changes, DatoCMS calls the /api/revalidateCache webhook, which
+ * invalidates every request tagged with `DATOCMS_CACHE_TAG`. One tag for
+ * everything is the simplest strategy; larger sites can tag each query with the
+ * records it uses (https://www.datocms.com/docs/next-js/using-cache-tags).
  *
  * With `includeDrafts`, the query uses the draft-content token and turns on
  * Content Link: text fields then carry invisible stega markers, so editors can
@@ -46,7 +47,7 @@ export async function executeQuery<Result, Variables>(
       : {}),
     requestInitOptions: {
       cache: 'force-cache',
-      next: { tags: [cacheTag] },
+      next: { tags: [DATOCMS_CACHE_TAG] },
     },
   });
 }

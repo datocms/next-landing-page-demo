@@ -1,44 +1,28 @@
-import { stripStega } from '@datocms/content-link';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import FeaturedDocumentationPages from '@/components/docs/FeaturedDocumentationPages';
-import {
-  FeaturedDocumentationPagesFragment,
-  PreviewCardFragment,
-} from '@/components/docs/FeaturedDocumentationPages/fragment';
 import { Threads } from '@/components/ui/Ornaments';
-import TwoTone from '@/components/ui/SectionTitle/TwoTone';
-import { readFragment } from '@/lib/datocms/graphql';
-import type { ContentPage } from '@/lib/datocms/realtime/types';
+import TwoTone from '@/components/ui/TwoTone';
+import type { ContentComponent } from '@/lib/datocms/realtime/types';
 import { uiString } from '@/lib/i18n/uiStrings';
-import { buildUrl } from '@/utils/globalPageProps';
+import { docsPageUrl } from '@/utils/routes';
 import type { PageProps, Query } from './meta';
 
-const Content: ContentPage<PageProps, Query> = ({
+const Content: ContentComponent<PageProps, Query> = ({
   data,
   ...globalPageProps
 }) => {
   if (!data.documentationHome) notFound();
 
-  const { title, subheader } = data.documentationHome;
+  const { title, subheader, featuredPages } = data.documentationHome;
   const { locale } = globalPageProps.params;
-
-  const { featuredPages } = readFragment(
-    FeaturedDocumentationPagesFragment,
-    data.documentationHome,
-  );
   // "Get started" opens the first featured page
-  const firstPage = featuredPages[0]
-    ? readFragment(PreviewCardFragment, featuredPages[0])
-    : null;
+  const firstPageSlug = featuredPages[0]?.slug;
 
   return (
     <>
-      {/* The docs opener: a well with copy on the left and the plinth wave
-          drawing in on the right. The wave box starts 560px into the well and
-          fades in over its first 300px, so it only shows past the 640px title
-          column; below 1360 the well is too narrow for both and it is dropped */}
+      {/* The wave only fits beside the title column from 85rem up */}
       <section
         aria-labelledby="docs-title"
         className="px-(--pad) pt-10 lg:pt-12 xl:px-12"
@@ -68,12 +52,9 @@ const Content: ContentPage<PageProps, Query> = ({
               {subheader}
             </p>
           )}
-          {firstPage && (
+          {firstPageSlug && (
             <Link
-              href={buildUrl(
-                globalPageProps,
-                `/docs/${stripStega(firstPage.slug)}`,
-              )}
+              href={docsPageUrl(globalPageProps, firstPageSlug)}
               data-hero-rise=""
               className="btn btn-primary mt-7 [--d:1]"
             >

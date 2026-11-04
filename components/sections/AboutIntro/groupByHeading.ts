@@ -7,16 +7,13 @@ import {
 type Group = { key: string; nodes: Node[] };
 
 /**
- * Splits the root nodes of a Structured Text value into groups that each
+ * Splits the root nodes of a Structured Text document into groups that each
  * start at a heading (thematic breaks are dropped). Anything before the first
  * heading becomes group 0, with no heading of its own.
  */
-export default function groupByHeading(value: unknown): Group[] {
-  const children =
-    (value as { document?: { children?: Node[] } } | null)?.document
-      ?.children ?? [];
+export function groupByHeading(nodes: Node[]): Group[] {
   const groups: Group[] = [];
-  for (const node of children) {
+  for (const node of nodes) {
     if (isThematicBreak(node)) continue;
     if (isHeading(node) || groups.length === 0) {
       groups.push({ key: `group-${groups.length}`, nodes: [node] });

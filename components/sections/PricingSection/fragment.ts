@@ -15,7 +15,6 @@ export const PricingSectionFragment = graphql(/* GraphQL */ `
       tierDescription {
         value
       }
-      slug
       planFeatures
       highlightLabel
       ctaLabel

@@ -3,31 +3,31 @@ import { type KeyboardEvent, useCallback, useState } from 'react';
 /**
  * One-at-a-time testimonial state: wraps around, never autoplays, and lets
  * ArrowLeft/ArrowRight change slides while focus is on the carousel controls.
- * `interacted` turns on the polite announcement only after the first change,
+ * `hasInteracted` turns on the polite announcement only after the first change,
  * so nothing is read out on page load.
  */
 export function useCarousel(count: number) {
   const [rawIndex, setIndex] = useState(0);
-  const [interacted, setInteracted] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
   // Real-time updates can shrink the list under us
-  const index = count > 0 ? Math.min(rawIndex, count - 1) : 0;
+  const activeIndex = count > 0 ? Math.min(rawIndex, count - 1) : 0;
 
   const next = useCallback(() => {
     if (count < 2) return;
-    setInteracted(true);
+    setHasInteracted(true);
     setIndex((current) => (Math.min(current, count - 1) + 1) % count);
   }, [count]);
 
   const prev = useCallback(() => {
     if (count < 2) return;
-    setInteracted(true);
+    setHasInteracted(true);
     setIndex((current) => (Math.min(current, count - 1) - 1 + count) % count);
   }, [count]);
 
   const goTo = useCallback(
     (target: number) => {
       if (count < 2) return;
-      setInteracted(true);
+      setHasInteracted(true);
       setIndex(((target % count) + count) % count);
     },
     [count],
@@ -62,5 +62,5 @@ export function useCarousel(count: number) {
     [count, next, prev],
   );
 
-  return { index, interacted, next, prev, goTo, onKeyDown };
+  return { activeIndex, hasInteracted, next, prev, goTo, onKeyDown };
 }

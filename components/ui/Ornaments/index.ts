@@ -9,4 +9,9 @@ export { default as Lock } from './MiniUi/Lock';
 export { default as PresencePill } from './PresencePill';
 export { default as Squiggle } from './Squiggle';
 export { default as Threads } from './Threads';
-export { roundToHundredths, type ShapeDef, STOPS } from './threadShapes';
+export {
+  nestedArches,
+  roundToHundredths,
+  type ShapeDef,
+  STOPS,
+} from './threadShapes';

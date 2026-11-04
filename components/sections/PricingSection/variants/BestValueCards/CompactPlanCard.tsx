@@ -1,12 +1,12 @@
-import { stripStega } from '@datocms/content-link';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import type { PricingSectionFragment } from '@/components/sections/PricingSection/fragment';
-import PlanDot from '@/components/sections/PricingSection/PlanDot';
 import PlanFeature from '@/components/sections/PricingSection/PlanFeature';
+import PlanName from '@/components/sections/PricingSection/PlanName';
 import Price, { PriceTag } from '@/components/sections/PricingSection/Price';
-import { splitFeatures } from '@/components/sections/PricingSection/plans';
+import { ownFeatureRows } from '@/components/sections/PricingSection/plans';
 import type { ResultOf } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
+import type { ItemHeadingLevel } from '@/utils/headingLevel';
 import type { Tone } from '@/utils/tones';
 
 type Plan = ResultOf<typeof PricingSectionFragment>['plans'][number];
@@ -16,8 +16,7 @@ type Props = {
   tone: Tone;
   locale: string;
   headingId: string;
-  /** The plan name's heading level */
-  heading: 'h2' | 'h3';
+  headingLevel: ItemHeadingLevel;
 };
 
 /** A plan beside the best-value well: name and price on one row, its own features, a small CTA */
@@ -26,19 +25,23 @@ const CompactPlanCard = ({
   tone,
   locale,
   headingId,
-  heading: PlanHeading,
+  headingLevel,
 }: Props) => {
-  const features = splitFeatures(plan.planFeatures);
+  const features = ownFeatureRows(plan);
 
   return (
     <article aria-labelledby={headingId} className="card flex flex-col p-6">
       {/* Name and price share a row; the description runs under them, the yearly line beside it */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-2.5">
-          <PlanDot tone={tone} />
-          <PlanHeading id={headingId} className="text-h3 text-ink">
+          <PlanName
+            headingLevel={headingLevel}
+            id={headingId}
+            tone={tone}
+            size="sm"
+          >
             {plan.tierName}
-          </PlanHeading>
+          </PlanName>
         </div>
         <Price
           size="md"
@@ -62,10 +65,10 @@ const CompactPlanCard = ({
         <ul className="mt-4 grid items-start gap-x-4 sm:grid-cols-2 md:max-lg:grid-cols-1">
           {features.map((feature) => (
             <PlanFeature
-              key={`${plan.id}-${stripStega(feature)}`}
+              key={feature.key}
               size="sm"
-              text={feature}
-              included
+              text={feature.text}
+              included={feature.included}
               locale={locale}
             />
           ))}

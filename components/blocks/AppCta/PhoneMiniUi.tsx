@@ -1,10 +1,6 @@
 import { Squiggle } from '@/components/ui/Ornaments';
 
-/**
- * Wordless phone mini-UI for the in-article app CTA: a white handset on a tinted
- * zone with a notch, a tinted chart tile (the sweep squiggle), skeleton lines
- * and an accent-gradient action pill. Decorative; hidden below 768.
- */
+/** Wordless phone mini-UI for the in-article app CTA. Decorative */
 const PhoneMiniUi = () => (
   <div
     aria-hidden="true"

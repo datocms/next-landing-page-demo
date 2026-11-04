@@ -12,8 +12,8 @@
   }
   .card-hover {
     transition:
-      border-color 0.2s var(--ease),
-      box-shadow 0.2s var(--ease);
+      border-color var(--duration-base) var(--ease-out-expo),
+      box-shadow var(--duration-base) var(--ease-out-expo);
     @media (hover: hover) {
       &:hover {
         border-color: var(--line-hover);
@@ -131,7 +131,7 @@
       border-radius: 14px;
     }
   }
-  /* A 40px tile holding an icon or a small logo */
+  /* A tile holding an icon or a small logo */
   .icon-tile {
     position: relative;
     display: grid;

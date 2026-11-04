@@ -5,8 +5,7 @@ import { useRef, useState } from 'react';
 import { uiString } from '@/lib/i18n/uiStrings';
 
 type Props = {
-  /** Site locale for the button's label (English when missing) */
-  locale?: string | null;
+  locale: string;
 };
 
 /**

@@ -4,7 +4,8 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { type ReactNode, useId } from 'react';
 import Segments from '@/components/ui/Ornaments/Segments';
 import { uiString } from '@/lib/i18n/uiStrings';
-import useGalleryView from './useGalleryView';
+import { twoDigits } from '@/utils/twoDigits';
+import { useGalleryView } from './useGalleryView';
 
 type Props = {
   /** The server-rendered section head (SectionTitle with gap="none") */
@@ -17,9 +18,6 @@ type Props = {
   children: ReactNode;
   locale: string;
 };
-
-/** A card number as the counter shows it: 01, 02… */
-const twoDigits = (n: number) => String(n).padStart(2, '0');
 
 /**
  * The gallery's interactive shell: a head row with a counter and arrows, a

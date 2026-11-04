@@ -1,7 +1,7 @@
 'use client';
 
 import { Check, Copy } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCopyToClipboard } from '@/components/ui/useCopyToClipboard';
 import { cn } from '@/utils/cn';
 
 type Props = {
@@ -28,28 +28,13 @@ const CopyButton = ({
   accessibleLabel,
   className,
 }: Props) => {
-  const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    if (!copied) return;
-    const timeout = setTimeout(() => setCopied(false), 2000);
-    return () => clearTimeout(timeout);
-  }, [copied]);
-
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(code);
-      setCopied(true);
-    } catch {
-      // Clipboard access denied: nothing to report beyond the unchanged label
-    }
-  };
+  const { copied, copy } = useCopyToClipboard();
 
   return (
     <button
       type="button"
       aria-label={accessibleLabel}
-      onClick={copy}
+      onClick={() => copy(code)}
       className={cn(
         'btn btn-ghost btn-sm h-8 px-2.5 text-ink-2 focus-visible:-outline-offset-2 pointer-coarse:h-11 pointer-coarse:px-3.5',
         className,

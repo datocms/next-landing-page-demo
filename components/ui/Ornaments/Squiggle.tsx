@@ -2,15 +2,15 @@ import { useId } from 'react';
 import { cn } from '@/utils/cn';
 
 type Props = {
-  /** tone: strokes in the nearest tone-N colour (--s); sweep: the --grad-line sweep */
+  /** tone: strokes in the nearest tone-N colour (--tone); sweep: the --grad-line sweep */
   variant?: 'tone' | 'sweep';
   /** Size and placement. The default 40×16 comes from the width/height attributes, so h-* / w-* override it */
   className?: string;
 };
 
-/** Three stacked wavy strokes (Stats tiles, the minimal review carousel). Decorative */
+/** Three stacked wavy strokes. Decorative */
 const Squiggle = ({ variant = 'tone', className }: Props) => {
-  const gradientId = `sq${useId().replace(/[^\w-]/g, '')}`;
+  const gradientId = `sq${useId()}`;
   const sweep = variant === 'sweep';
 
   return (

@@ -3,11 +3,10 @@ name: landing-page-demo-docs
 description: >-
   Use for documentation-area work in the DatoCMS landing page demo starter:
   documentation home, documentation pages, docs tree structure, docs sidebar,
-  highlighted docs pages, docs home footer text, docs page Structured Text
-  rendering, docs metadata, and /docs routes. Handles Documentation Home, Documentation Page,
-  app/[locale]/(docs-layout)/**, components/docs/**,
-  components/datocms/DatoStructuredText/**, components/ui/QuoteBlock.tsx,
-  components/ui/CodeBlock/**, and docs code/quote rendering. Do not use for regular marketing
+  featured docs pages, docs home footer text, docs page Structured Text
+  rendering, docs metadata, and /docs routes. Handles Documentation Home,
+  Documentation Page, app/[locale]/(docs-layout)/**, components/docs/**, and
+  the docs-specific Structured Text node rules. Do not use for regular marketing
   page sections, shared header/footer/layout, blog/pricing/testimonial/changelog
   content records, new non-docs routes, or generic DatoCMS schema work.
 ---
@@ -31,12 +30,12 @@ Before schema or content operations:
 - Docs home route: `app/[locale]/(docs-layout)/docs/`.
 - Docs page route: `app/[locale]/(docs-layout)/docs/[slug]/`.
 - Docs shell query and sidebar: `app/[locale]/(docs-layout)/meta.ts`.
-- Docs chrome: `app/[locale]/(docs-layout)/DocsShell.tsx` (`'use client'`), the top bar and the sticky sidebar rail from `lg`; the mobile drawer is `DocsNavDrawer.tsx` next to it. `Content.tsx` renders the logo and the sidebar tree and passes them in as nodes (never functions).
+- Docs chrome: `components/docs/DocsShell/index.tsx` (`'use client'`), the top bar and the sticky sidebar rail from `lg`; the mobile drawer is `DocsNavDrawer.tsx` next to it. `app/[locale]/(docs-layout)/Content.tsx` renders the logo and the sidebar tree and passes them in as nodes (never functions).
 - Sidebar renderer: `components/docs/DocumentationSidebarItem.tsx`.
 - Featured docs cards: `components/docs/FeaturedDocumentationPages/**`. The "On this page" rail of a docs page is `components/ui/TableOfContents.tsx`.
-- Structured Text renderer: `components/datocms/DatoStructuredText/**`, with docs-specific rules in the docs page `Content.tsx`. Long-form text is styled by `.prose` in `styles/components/prose.css`.
-- Docs, legal and changelog styles that utilities and primitives can't express: `styles/sections/long-form.css`, inside `@layer groups { … }`, with no colors or `:root` variables. The styling rules in the `landing-page-demo-sections` skill apply here too.
-- Interface copy that has no CMS field ("On this page", "Back to site", "Copy") comes from `uiString(locale, key)` in `@/lib/i18n/uiStrings`; add new keys to `en` first, then to every locale.
+- Structured Text: the site-wide renderer is `components/datocms/DatoStructuredText`. The docs page `Content.tsx` adds the heading rule; the quote and code rules come from `longFormNodeRules` in `components/datocms/DatoStructuredText/longFormNodeRules.tsx`, shared with posts, legal and changelog pages. Long-form text is styled by `.prose` in `styles/components/prose.css`.
+- Long-form styles that utilities and primitives can't express go in `styles/areas/long-form.css`; the styling rules in the `landing-page-demo-sections` skill apply here too.
+- Interface copy that has no CMS field ("On this page", "Back to site", "Copy") comes from `uiString(locale, key)` in `@/lib/i18n/uiStrings` (rules in `landing-page-demo-sections`).
 
 ## Common workflows
 
@@ -53,8 +52,8 @@ Before schema or content operations:
 ### Change docs home
 
 1. Inspect the `documentation_home` singleton through MCP.
-2. Update title, subheader, logo, footer text, or highlighted pages as requested.
-3. Keep highlighted pages linked to valid `documentation_page` records.
+2. Update title, subheader, logo, footer text, or featured pages (`featured_pages`) as requested.
+3. Keep featured pages linked to valid `documentation_page` records.
 4. Publish the singleton if the change should be public.
 5. Verify `/docs` and featured docs cards.
 

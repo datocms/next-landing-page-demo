@@ -9,20 +9,20 @@ import { Squiggle } from '@/components/ui/Ornaments';
 import SectionTitle from '@/components/ui/SectionTitle';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
+import type { SectionHeadingLevel } from '@/utils/headingLevel';
 import CenteredQuote from './CenteredQuote';
 import MinimalStage from './MinimalStage';
 
 type Props = {
   fragment: FragmentOf<typeof ReviewSectionFragment>;
   locale: string;
-  /** Use h1 when this section opens a page without a hero */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
 };
 
 /**
- * `minimal_carrousel`: open and centred, no band or card. A squiggle, one
- * display quote at a time and a white avatar switcher pill. Everything is
- * rendered here; the client stage only owns the index.
+ * `minimal_carrousel`: one centred quote at a time, picked from a pill of
+ * reviewer avatars. Everything renders here; the MinimalStage island only
+ * owns the index.
  */
 const MinimalCarousel = ({ fragment, locale, as = 'h2' }: Props) => {
   const headingId = useId();
@@ -31,8 +31,6 @@ const MinimalCarousel = ({ fragment, locale, as = 'h2' }: Props) => {
     reviewSectionHeader: header,
     reviewSectionSubheader: subheader,
   } = readFragment(ReviewSectionFragment, fragment);
-
-  if (!reviews?.length) return null;
 
   const testimonials = reviews.map((review) =>
     readFragment(TestimonialFragment, review),
@@ -52,7 +50,6 @@ const MinimalCarousel = ({ fragment, locale, as = 'h2' }: Props) => {
           title={header}
           paragraph={subheader}
           as={as}
-          h1Size="section"
           align="center"
           gap="lg"
           id={headingId}

@@ -1,5 +1,5 @@
 {
-  "name": "startup-nextjs-template",
+  "name": "next-landing-page-demo",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -10,7 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "biome lint . && gql.tada check",
-    "format": "biome check . --write --unsafe --diagnostic-level=error && biome format --diagnostic-level=error --write .",
+    "format": "biome check . --write",
     "generate-schema": "dotenv -c -- bash -c 'gql.tada generate schema https://graphql.datocms.com --header \"X-Exclude-Invalid: true\" --header \"Authorization: $DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN\" && gql.tada generate-output'"
   },
   "dependencies": {
@@ -19,7 +19,6 @@
     "@datocms/content-link": "^0.3.23",
     "@formatjs/intl-localematcher": "^0.9.0",
     "datocms-structured-text-utils": "^6.0.1",
-    "got": "^16.1.0",
     "gql.tada": "^1.11.4",
     "linkedom": "^0.18.13",
     "lucide-react": "^1.57.0",
@@ -28,7 +27,6 @@
     "react": "^19.3.1",
     "react-datocms": "^8.1.2",
     "react-dom": "^19.3.1",
-    "react-markdown": "^10.1.0",
     "react-syntax-highlighter": "^16.1.2"
   },
   "devDependencies": {

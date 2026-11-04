@@ -1,18 +1,15 @@
-import {
-  isBlockquote,
-  isCode,
-  isHeading,
-  type Node,
-} from 'datocms-structured-text-utils';
+import { isHeading, type Node } from 'datocms-structured-text-utils';
 import { notFound } from 'next/navigation';
 import { renderNodeRule } from 'react-datocms/structured-text';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
-import CodeBlock from '@/components/ui/CodeBlock';
-import QuoteBlock from '@/components/ui/QuoteBlock';
-import TableOfContents from '@/components/ui/TableOfContents';
-import type { ContentPage } from '@/lib/datocms/realtime/types';
+import { longFormNodeRules } from '@/components/datocms/DatoStructuredText/longFormNodeRules';
+import TableOfContents, {
+  MIN_TOC_HEADINGS,
+} from '@/components/ui/TableOfContents';
+import type { ContentComponent } from '@/lib/datocms/realtime/types';
+import { bodyHeadingTag } from '@/utils/headingLevel';
 import { headingOutline, repeatsTitle } from '@/utils/headingOutline';
-import { rootNodes } from '@/utils/rootNodes';
+import { rootNodes } from '@/utils/structuredText';
 import type { PageProps, Query } from './meta';
 
 /**
@@ -40,7 +37,7 @@ function nestedHeadingLevels(rootChildren: Node[], leadingTitle: Node | null) {
   return levelByNode;
 }
 
-const Content: ContentPage<PageProps, Query> = ({
+const Content: ContentComponent<PageProps, Query> = ({
   data,
   ...globalPageProps
 }) => {
@@ -65,11 +62,9 @@ const Content: ContentPage<PageProps, Query> = ({
       : null;
   const headingLevels = nestedHeadingLevels(rootChildren, leadingTitle);
 
-  // The h2s get anchor ids and, from 1280 up, an "On this page" rail beside
-  // the article (the same outline and rail as legal pages)
-  const tocHeadings = headingOutline(rootChildren, leadingTitle ? 0 : -1);
-  const idByIndex = new Map(tocHeadings.map(({ index, id }) => [index, id]));
-  const showToc = tocHeadings.length >= 3;
+  const tocHeadings = headingOutline(rootChildren, leadingTitle);
+  const anchorIds = new Map(tocHeadings.map(({ node, id }) => [node, id]));
+  const showToc = tocHeadings.length >= MIN_TOC_HEADINGS;
 
   // Left-aligned at the docs home's inset, so its well and this title line up
   return (
@@ -87,47 +82,24 @@ const Content: ContentPage<PageProps, Query> = ({
           <DatoStructuredText
             data={content}
             customNodeRules={[
-              renderNodeRule(
-                isHeading,
-                ({ node, children, key, ancestors }) => {
-                  if (node === leadingTitle) {
-                    return (
-                      <h1 key={key} className="mt-0 mb-8 text-title text-ink">
-                        {children}
-                      </h1>
-                    );
-                  }
-                  const parent = ancestors[0];
-                  const index =
-                    parent?.type === 'root'
-                      ? parent.children.indexOf(node)
-                      : -1;
-                  const HeadingTag =
-                    `h${headingLevels.get(node) ?? Math.max(node.level, 2)}` as
-                      | 'h2'
-                      | 'h3'
-                      | 'h4'
-                      | 'h5'
-                      | 'h6';
+              renderNodeRule(isHeading, ({ node, children, key }) => {
+                if (node === leadingTitle) {
                   return (
-                    <HeadingTag key={key} id={idByIndex.get(index)}>
+                    <h1 key={key} className="mt-0 mb-8 text-title text-ink">
                       {children}
-                    </HeadingTag>
+                    </h1>
                   );
-                },
-              ),
-              renderNodeRule(isBlockquote, ({ children, key }) => (
-                <QuoteBlock key={key}>{children}</QuoteBlock>
-              )),
-              renderNodeRule(isCode, ({ node, key }) => (
-                <CodeBlock
-                  key={key}
-                  code={node.code}
-                  language={node.language}
-                  highlight={node.highlight}
-                  locale={locale}
-                />
-              )),
+                }
+                const HeadingTag = bodyHeadingTag(
+                  headingLevels.get(node) ?? node.level,
+                );
+                return (
+                  <HeadingTag key={key} id={anchorIds.get(node)}>
+                    {children}
+                  </HeadingTag>
+                );
+              }),
+              ...longFormNodeRules(locale),
             ]}
           />
         </div>

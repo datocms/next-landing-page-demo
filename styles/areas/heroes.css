@@ -1,0 +1,38 @@
+/* Hero sections: the load choreography. */
+
+@layer areas {
+  /* The window settles into place by transform only: it is never faded */
+  @keyframes win-in {
+    from {
+      transform: translateY(24px);
+    }
+  }
+  /* The hero copy's blur, kept apart from rise so the fade and the rise stay on the compositor */
+  @keyframes hero-blur {
+    from {
+      filter: blur(4px);
+    }
+  }
+
+  /* Load choreography, motion users only. The H1 and the hero photo never animate:
+     [data-hero-rise] is the lead and the CTA row (--d = step), .hero-float the
+     wordless floats and mini-UI tiles, [data-hero-win] the product window. Without
+     motion, or in print, everything is simply there. */
+  @media screen and (prefers-reduced-motion: no-preference) {
+    [data-hero-rise] {
+      --rise: 10px;
+      animation:
+        rise 0.7s var(--ease-out-expo) both,
+        hero-blur 0.7s var(--ease-out-expo) both;
+      animation-delay: calc(var(--d, 0) * 80ms);
+    }
+    .hero-float {
+      --rise: 16px;
+      animation: rise 0.7s var(--ease-out-expo) both;
+      animation-delay: calc(450ms + var(--d, 0) * 100ms);
+    }
+    [data-hero-win] {
+      animation: win-in 0.9s var(--ease-out-expo) 0.28s both;
+    }
+  }
+}

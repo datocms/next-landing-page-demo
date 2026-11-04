@@ -84,11 +84,11 @@
       oklch(
         from var(--accent-fill)
           calc(l + 0.05 - 0.025 * clamp(0, (0.72 - l) * 1000, 1)) c
-          calc(h - var(--g-dr) * 0.3)
+          calc(h - var(--g-drift) * 0.3)
       ),
       oklch(
         from var(--accent-fill) calc(l - 0.025 * clamp(0, (0.72 - l) * 1000, 1))
-          c calc(h + var(--g-dr) * 0.3)
+          c calc(h + var(--g-drift) * 0.3)
       )
     );
     --accent-fill-hover: oklch(from var(--accent-fill) calc(l - 0.05) c h);
@@ -102,36 +102,41 @@
       0 1px 2px oklch(from var(--accent-fill) 0.3 c h / 0.25);
 
     /* Gradient ramp: ten stops of the accent hue, light to deep. The hue drifts up to ±8° from
-       the light end to the deep end (--g-dr) so the ramp doesn't look flat. --g-dr contains `h`:
-       only ever substitute it inside oklch(from …) */
-    --g-dr: clamp(-8, -16 * cos((h - 40) * 1deg), 8);
+       the light end to the deep end (--g-drift) so the ramp doesn't look flat. --g-drift
+       contains `h`: only ever substitute it inside oklch(from …) */
+    --g-drift: clamp(-8, -16 * cos((h - 40) * 1deg), 8);
     --g-50: oklch(
-      from var(--accent) 0.975 min(c * 0.1, 0.018) calc(h - var(--g-dr))
+      from var(--accent) 0.975 min(c * 0.1, 0.018) calc(h - var(--g-drift))
     );
     --g-100: oklch(
-      from var(--accent) 0.95 min(c * 0.2, 0.036) calc(h - var(--g-dr))
+      from var(--accent) 0.95 min(c * 0.2, 0.036) calc(h - var(--g-drift))
     );
     --g-200: oklch(
-      from var(--accent) 0.905 min(c * 0.38, 0.072) calc(h - var(--g-dr) * 0.9)
+      from var(--accent) 0.905 min(c * 0.38, 0.072)
+        calc(h - var(--g-drift) * 0.9)
     );
     --g-300: oklch(
-      from var(--accent) 0.835 min(c * 0.58, 0.115) calc(h - var(--g-dr) * 0.75)
+      from var(--accent) 0.835 min(c * 0.58, 0.115)
+        calc(h - var(--g-drift) * 0.75)
     );
     --g-400: oklch(
-      from var(--accent) 0.745 min(c * 0.8, 0.155) calc(h - var(--g-dr) * 0.45)
+      from var(--accent) 0.745 min(c * 0.8, 0.155)
+        calc(h - var(--g-drift) * 0.45)
     );
     --g-500: oklch(
-      from var(--accent) 0.655 min(c * 0.95, 0.19) calc(h - var(--g-dr) * 0.15)
+      from var(--accent) 0.655 min(c * 0.95, 0.19)
+        calc(h - var(--g-drift) * 0.15)
     );
     --g-600: oklch(from var(--accent) 0.565 min(c, 0.21) h);
     --g-700: oklch(
-      from var(--accent) 0.475 min(c * 0.95, 0.19) calc(h + var(--g-dr) * 0.35)
+      from var(--accent) 0.475 min(c * 0.95, 0.19)
+        calc(h + var(--g-drift) * 0.35)
     );
     --g-800: oklch(
-      from var(--accent) 0.385 min(c * 0.8, 0.15) calc(h + var(--g-dr) * 0.7)
+      from var(--accent) 0.385 min(c * 0.8, 0.15) calc(h + var(--g-drift) * 0.7)
     );
     --g-900: oklch(
-      from var(--accent) 0.295 min(c * 0.6, 0.11) calc(h + var(--g-dr))
+      from var(--accent) 0.295 min(c * 0.6, 0.11) calc(h + var(--g-drift))
     );
     --grad-a: var(--g-300);
     --grad-b: oklch(from var(--accent) clamp(0.5, l, 0.68) min(c, 0.21) h);
@@ -163,22 +168,29 @@
       var(--grad-c)
     );
 
-    /* Default tone (= tone-2) so dots and chips work without a tone class. --kn is the depth
-       (0…5), --s the tone colour, --s-hi its light end and --s-grad the two as a gradient;
-       --s-at is where zone-glow puts its light. The tone-N utilities override these */
-    --kn: 2;
-    --s-at: 0% 100%;
-    --s: color-mix(in oklch, var(--g-800) calc(var(--kn) * 20%), var(--g-500));
-    --s-hi: color-mix(
+    /* Default tone (= tone-2), so dots and chips work without a tone class. --tone-depth runs
+       0…5 and --tone-glow-at is where zone-glow puts its light. The tone-N utilities override these */
+    --tone-depth: 2;
+    --tone-glow-at: 0% 100%;
+    --tone: color-mix(
       in oklch,
-      var(--g-600) calc(var(--kn) * 20%),
+      var(--g-800) calc(var(--tone-depth) * 20%),
+      var(--g-500)
+    );
+    --tone-hi: color-mix(
+      in oklch,
+      var(--g-600) calc(var(--tone-depth) * 20%),
       var(--g-300)
     );
-    --s-ang: calc(120deg + var(--kn) * 30deg);
-    --s-grad: linear-gradient(var(--s-ang), var(--s-hi), var(--s));
-    --s-wash: var(--g-100);
-    --s-mark: var(--g-200);
-    --s-text: var(--g-800);
+    --tone-angle: calc(120deg + var(--tone-depth) * 30deg);
+    --tone-grad: linear-gradient(
+      var(--tone-angle),
+      var(--tone-hi),
+      var(--tone)
+    );
+    --tone-wash: var(--g-100);
+    --tone-mark: var(--g-200);
+    --tone-text: var(--g-800);
 
     /* Shadows */
     --shadow-xs: 0 1px 2px oklch(from var(--accent) 0.22 min(c, 0.04) h / 0.04);
@@ -192,9 +204,6 @@
     --window-shadow:
       0 1px 2px oklch(from var(--accent) 0.22 min(c, 0.04) h / 0.05),
       0 32px 64px -40px oklch(from var(--accent) 0.3 min(c, 0.08) h / 0.28);
-    --window-shadow-sm:
-      0 1px 2px oklch(from var(--accent) 0.22 min(c, 0.04) h / 0.05),
-      0 20px 40px -28px oklch(from var(--accent) 0.3 min(c, 0.08) h / 0.22);
     --thumb-shadow:
       0 1px 2px oklch(from var(--accent) 0.22 min(c, 0.04) h / 0.1),
       0 0 0 1px oklch(from var(--accent) 0.22 min(c, 0.04) h / 0.05);
@@ -213,7 +222,6 @@
     --gutter: 24px;
     --section: 80px;
     --header-h: 64px;
-    --ease: cubic-bezier(0.16, 1, 0.3, 1);
     --duration-fast: 150ms;
     --duration-base: 200ms;
     --duration-slow: 250ms;

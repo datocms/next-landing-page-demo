@@ -1,7 +1,8 @@
-import type { Query as CommonLayoutQuery } from '@/app/[locale]/(common-layout)/meta';
+import type { ResultOf } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
-import { buildUrl } from '@/utils/globalPageProps';
+import { pageUrl } from '@/utils/routes';
+import type { HeaderFragment } from './fragment';
 
 export type NavLink = {
   id: string;
@@ -18,7 +19,7 @@ export type NavGroup = Extract<NavItem, { kind: 'group' }>;
 
 /** Flattens the Layout menu (links and dropdowns) into locale-aware hrefs */
 export function buildNavItems(
-  menu: NonNullable<CommonLayoutQuery['layout']>['menu'] | undefined,
+  menu: ResultOf<typeof HeaderFragment>['menu'] | undefined,
   globalPageProps: ResolvedGlobalPageProps,
 ): NavItem[] {
   return (menu ?? []).map((item) => {
@@ -31,7 +32,7 @@ export function buildNavItems(
         items: item.items.map((child) => ({
           id: child.id,
           title: child.title,
-          href: buildUrl(globalPageProps, `/${child.page.slug}`),
+          href: pageUrl(globalPageProps, child.page.slug),
         })),
       };
     }
@@ -40,7 +41,7 @@ export function buildNavItems(
       kind: 'link',
       id: item.id,
       title: item.title,
-      href: buildUrl(globalPageProps, `/${item.page.slug}`),
+      href: pageUrl(globalPageProps, item.page.slug),
     };
   });
 }

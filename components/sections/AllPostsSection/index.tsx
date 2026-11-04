@@ -1,15 +1,19 @@
-import type { Query as PageQuery } from '@/app/[locale]/(common-layout)/[slug]/meta';
-import PaginationLinks, {
-  POSTS_PER_PAGE,
-} from '@/components/posts/PaginationLinks';
-import PostExcerpt, { postCardLayout } from '@/components/posts/PostExcerpt';
+import Pagination from '@/components/posts/Pagination';
+import type { PostExcerptFragment } from '@/components/posts/PostExcerpt/fragment';
+import PostGrid from '@/components/posts/PostGrid';
 import PostsPageHeader from '@/components/posts/PostsPageHeader';
+import { postsPageCount } from '@/components/posts/postsPagination';
+import type { FragmentOf } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
+import type { SectionHeadingLevel } from '@/utils/headingLevel';
 
 type Props = {
-  data: PageQuery;
+  posts: (FragmentOf<typeof PostExcerptFragment> & { id: string })[];
+  postCount: number;
+  pageLabel: string;
   globalPageProps: ResolvedGlobalPageProps;
+  as?: SectionHeadingLevel;
 };
 
 /**
@@ -17,13 +21,16 @@ type Props = {
  * other pages. When it opens the page (the /posts page) it also brings the
  * blog header, matching /posts/page/[page].
  */
-const AllPostsSection = ({ data, globalPageProps }: Props) => {
+const AllPostsSection = ({
+  posts,
+  postCount,
+  pageLabel,
+  globalPageProps,
+  as = 'h2',
+}: Props) => {
   const { locale } = globalPageProps.params;
-  const postCount = data._allPostsMeta.count;
-  const pageCount = Math.ceil(postCount / POSTS_PER_PAGE);
-  const leadsPage =
-    data.page?.sections[0]?.__typename === 'AllPostsSectionRecord';
-  const posts = data.allPosts;
+  const pageCount = postsPageCount(postCount);
+  const leadsPage = as === 'h1';
 
   if (posts.length === 0) {
     return null;
@@ -31,33 +38,20 @@ const AllPostsSection = ({ data, globalPageProps }: Props) => {
 
   const grid = (
     <>
-      <div className="grid gap-3 md:grid-cols-2 md:gap-4 lg:grid-cols-3">
-        {posts.map((post, index) => (
-          <PostExcerpt
-            key={post.id}
-            fragment={post}
-            globalPageProps={globalPageProps}
-            priority={leadsPage && index < 3}
-            // Under the page h1 the card titles are the next level down
-            headingLevel={leadsPage ? 'h2' : 'h3'}
-            {...postCardLayout(index, posts.length)}
-          />
-        ))}
-      </div>
+      <PostGrid
+        posts={posts}
+        globalPageProps={globalPageProps}
+        // Under the page h1 the card titles are the next level down
+        headingLevel={leadsPage ? 'h2' : 'h3'}
+        prioritizeFirstRow={leadsPage}
+      />
 
       {pageCount > 1 && (
-        <nav
-          aria-label={uiString(locale, 'pagination')}
-          className="mt-12 flex justify-center"
-        >
-          <ul className="flex flex-wrap items-center justify-center gap-2">
-            <PaginationLinks
-              globalPageProps={globalPageProps}
-              postCount={postCount}
-              page={1}
-            />
-          </ul>
-        </nav>
+        <Pagination
+          page={1}
+          postCount={postCount}
+          globalPageProps={globalPageProps}
+        />
       )}
     </>
   );
@@ -77,7 +71,7 @@ const AllPostsSection = ({ data, globalPageProps }: Props) => {
       <PostsPageHeader
         label={uiString(locale, 'blog')}
         // The page's own CMS label (raw, so Content Link can target it)
-        title={data.page?.label || uiString(locale, 'latestPosts')}
+        title={pageLabel || uiString(locale, 'latestPosts')}
         titleId="posts-title"
         meta={
           pageCount > 1

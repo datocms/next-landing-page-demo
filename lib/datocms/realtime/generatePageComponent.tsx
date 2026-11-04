@@ -1,13 +1,12 @@
 import type { TadaDocumentNode } from 'gql.tada';
-import { ViewTransition } from 'react';
-import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
+import PageTransition from '@/components/layout/PageTransition';
+import type {
+  GlobalPageProps,
+  ResolvedGlobalPageProps,
+} from '@/utils/globalPageProps';
 import { executeQuery } from '../executeQuery';
-import {
-  type AsyncPageProps,
-  type BuildVariablesFn,
-  resolveRouteContext,
-} from '../routeContext';
-import type { ContentPage, RealtimeComponent } from './types';
+import { type BuildVariablesFn, resolveRouteContext } from '../routeContext';
+import type { ContentComponent, RealtimeComponent } from './types';
 
 type Options<PageProps extends ResolvedGlobalPageProps, Result, Variables> = {
   /** The route's GraphQL query (its meta.ts) */
@@ -15,10 +14,14 @@ type Options<PageProps extends ResolvedGlobalPageProps, Result, Variables> = {
   /** Turns the route params into the query variables */
   buildVariables?: BuildVariablesFn<PageProps, Variables>;
   /** Renders the page from the query result (its Content.tsx) */
-  contentComponent: ContentPage<PageProps, Result>;
+  contentComponent: ContentComponent<PageProps, Result>;
   /** The client version of contentComponent used in Draft Mode (its RealTime.tsx) */
   realtimeComponent: RealtimeComponent<PageProps, Result, Variables>;
-  /** Layouts persist across navigations, so only pages fade; the two layouts pass false */
+  /**
+   * Wraps the page in <PageTransition> (the default). The two layouts pass
+   * false: they persist across navigations and place their own around the
+   * part that changes
+   */
   pageTransition?: boolean;
 };
 
@@ -37,7 +40,7 @@ export function generatePageComponent<
   Result = unknown,
   Variables = Record<string, unknown>,
 >(options: Options<PageProps, Result, Variables>) {
-  return async function Page(asyncPageProps: AsyncPageProps) {
+  return async function Page(asyncPageProps: GlobalPageProps) {
     const { pageProps, variables, includeDrafts } = await resolveRouteContext(
       asyncPageProps,
       options.buildVariables,
@@ -50,14 +53,18 @@ export function generatePageComponent<
 
     const { realtimeComponent: RealTime, contentComponent: Content } = options;
 
+    // Subscribes with the same draft settings executeQuery used to fetch `data`
     const page = includeDrafts ? (
       <RealTime
-        token={process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!}
-        baseEditingUrl={process.env.DATOCMS_BASE_EDITING_URL!}
+        pageProps={pageProps}
         query={options.query}
         variables={variables}
         initialData={data}
-        pageProps={pageProps}
+        token={process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!}
+        includeDrafts
+        excludeInvalid
+        contentLink="v1"
+        baseEditingUrl={process.env.DATOCMS_BASE_EDITING_URL}
       />
     ) : (
       <Content {...pageProps} data={data} />
@@ -65,12 +72,6 @@ export function generatePageComponent<
 
     if (options.pageTransition === false) return page;
 
-    // Navigations fade one page out and the next in (styles/components/motion.css);
-    // refreshes and draft updates stay still
-    return (
-      <ViewTransition enter="page-enter" exit="page-exit" default="none">
-        {page}
-      </ViewTransition>
-    );
+    return <PageTransition>{page}</PageTransition>;
   };
 }

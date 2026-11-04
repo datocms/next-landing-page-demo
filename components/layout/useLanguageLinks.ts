@@ -2,12 +2,13 @@
 
 import { usePathname } from 'next/navigation';
 import type { SiteLocale } from '@/lib/datocms/graphql';
+import { toLanguageTag } from '@/lib/i18n/languageTag';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
-import { buildUrl } from '@/utils/globalPageProps';
+import { buildUrl } from '@/utils/routes';
 
 /** Each locale's name in its own language, capitalized for menus ("italiano" → "Italiano") */
 const nativeLanguageName = (locale: SiteLocale) => {
-  const languageTag = locale.replaceAll('_', '-');
+  const languageTag = toLanguageTag(locale);
   const name =
     new Intl.DisplayNames([languageTag], { type: 'language' }).of(
       languageTag,
@@ -35,7 +36,7 @@ export function useLanguageLinks(
     links: languages.map((locale) => ({
       locale,
       /** BCP 47 tag for hrefLang and lang */
-      tag: locale.replaceAll('_', '-'),
+      tag: toLanguageTag(locale),
       name: nativeLanguageName(locale),
       href: buildUrl({ params: { locale } }, pathnameWithoutPrefix),
       current: locale === currentLocale,

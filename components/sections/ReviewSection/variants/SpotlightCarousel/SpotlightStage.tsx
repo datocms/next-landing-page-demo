@@ -43,9 +43,10 @@ const SpotlightStage = ({
   locale,
 }: Props) => {
   const count = slides.length;
-  const { index, interacted, next, prev, onKeyDown } = useCarousel(count);
+  const { activeIndex, hasInteracted, next, prev, onKeyDown } =
+    useCarousel(count);
   const slidesId = useId();
-  const rating = ratings[index] ?? 0;
+  const rating = ratings[activeIndex] ?? 0;
   const multiple = count > 1;
 
   return (
@@ -63,9 +64,8 @@ const SpotlightStage = ({
             className="relative isolate h-60 md:h-[300px] lg:h-auto lg:min-h-[400px]"
           >
             {plinth && (
-              // The wave bleeds through the well's padding, so it runs out at
-              // the well's clipped edge (as on the hero plinth) and at the
-              // card's edge, never at an invisible line in mid-air
+              // The wave bleeds through the well's padding, so it ends at the
+              // well's clipped edge and the card's edge, never in mid-air
               <div className="absolute -inset-1.5 md:-inset-2">{plinth}</div>
             )}
             <div className="float absolute top-6 left-6 rounded-[18px] p-1.5 md:left-8 md:rounded-card lg:top-10 lg:left-12">
@@ -75,7 +75,7 @@ const SpotlightStage = ({
                     key={slides[i]?.id ?? i}
                     className={cn(
                       'absolute inset-0 motion-safe:transition-opacity motion-safe:duration-300 motion-safe:ease-out-expo',
-                      i === index ? 'opacity-100' : 'opacity-0',
+                      i === activeIndex ? 'opacity-100' : 'opacity-0',
                     )}
                   >
                     {node}
@@ -98,8 +98,8 @@ const SpotlightStage = ({
         <div className="card flex flex-col rounded-zone p-10 max-lg:p-8 max-md:rounded-[14px] max-md:p-6">
           {multiple && (
             <div className="flex items-center gap-3">
-              <SlideCounter index={index} count={count} />
-              <Segments count={count} active={index} />
+              <SlideCounter index={activeIndex} count={count} />
+              <Segments count={count} active={activeIndex} />
             </div>
           )}
 
@@ -115,7 +115,7 @@ const SpotlightStage = ({
                       n: i + 1,
                       total: count,
                     })}
-                    {...slideProps(i === index)}
+                    {...slideProps(i === activeIndex)}
                   >
                     {slide.node}
                   </div>
@@ -133,10 +133,10 @@ const SpotlightStage = ({
           )}
 
           <SlideAnnouncer
-            index={index}
+            index={activeIndex}
             count={count}
-            name={names[index] ?? ''}
-            enabled={interacted}
+            name={names[activeIndex] ?? ''}
+            enabled={hasInteracted}
             locale={locale}
           />
         </div>

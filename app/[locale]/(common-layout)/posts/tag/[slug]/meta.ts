@@ -18,8 +18,7 @@ export const query = graphql(
     query TagQuery(
       $slug: String
       $locale: SiteLocale
-      $fallbackLocale: [SiteLocale!]
-      $skip: IntType = "0"
+      $fallbackLocales: [SiteLocale!]
     ) {
       tag(filter: { slug: { eq: $slug } }, locale: $locale) {
         seo: _seoMetaTags {
@@ -31,8 +30,7 @@ export const query = graphql(
           orderBy: _createdAt_DESC
           first: 100
           locale: $locale
-          fallbackLocales: $fallbackLocale
-          skip: $skip
+          fallbackLocales: $fallbackLocales
         ) {
           id
           ...PostExcerptFragment

@@ -38,7 +38,7 @@
     -webkit-backdrop-filter: saturate(1.4) blur(12px);
     backdrop-filter: saturate(1.4) blur(12px);
     box-shadow: 0 1px 0 transparent;
-    transition: box-shadow 0.2s var(--ease);
+    transition: box-shadow var(--duration-base) var(--ease-out-expo);
     &[data-scrolled='true'] {
       box-shadow: 0 1px 0 var(--line);
     }
@@ -63,7 +63,7 @@
   @media (prefers-reduced-motion: no-preference) {
     .threads[data-draw='load'] path {
       stroke-dasharray: 1;
-      animation: draw 1.4s var(--ease) both;
+      animation: draw 1.4s var(--ease-out-expo) both;
       animation-delay: calc(var(--i, 0) * 12ms + var(--draw-delay, 80ms));
     }
     @supports (animation-timeline: view()) {

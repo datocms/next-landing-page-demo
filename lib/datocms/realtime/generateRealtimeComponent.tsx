@@ -1,6 +1,6 @@
 import { useQuerySubscription } from 'react-datocms/use-query-subscription';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
-import type { ContentPage, RealtimeComponent } from './types';
+import type { ContentComponent, RealtimeComponent } from './types';
 
 /**
  * Builds the client component a route renders in Draft Mode (its RealTime.tsx).
@@ -16,26 +16,13 @@ export function generateRealtimeComponent<
 >({
   contentComponent: Content,
 }: {
-  contentComponent: ContentPage<PageProps, Result>;
+  contentComponent: ContentComponent<PageProps, Result>;
 }) {
   const RealTime: RealtimeComponent<PageProps, Result, Variables> = ({
     pageProps,
-    query,
-    variables,
-    initialData,
-    token,
-    baseEditingUrl,
+    ...subscriptionOptions
   }) => {
-    const { data } = useQuerySubscription({
-      query,
-      variables,
-      token,
-      initialData,
-      includeDrafts: true,
-      excludeInvalid: true,
-      contentLink: 'v1',
-      baseEditingUrl,
-    });
+    const { data } = useQuerySubscription(subscriptionOptions);
 
     if (!data) return null;
 

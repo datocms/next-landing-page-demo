@@ -1,12 +1,21 @@
 'use client';
 
 import { ArrowRight, CircleCheck } from 'lucide-react';
-import { useParams } from 'next/navigation';
 import { type FormEvent, useEffect, useId, useRef, useState } from 'react';
-import { uiString } from '@/lib/i18n/uiStrings';
+
+/** Interface copy, resolved on the server for the page's locale */
+type NewsletterFormLabels = {
+  emailAddress: string;
+  emailPlaceholder: string;
+  /** The button's label when the block sets none */
+  subscribe: string;
+  invalidEmail: string;
+  subscribed: string;
+};
 
 type Props = {
   buttonLabel?: string | null;
+  labels: NewsletterFormLabels;
 };
 
 /**
@@ -15,8 +24,7 @@ type Props = {
  * an inline confirmation pill, announced by the live region. The input has no
  * name, so even a submit before hydration carries no address.
  */
-const NewsletterForm = ({ buttonLabel }: Props) => {
-  const { locale } = useParams<{ locale?: string }>();
+const NewsletterForm = ({ buttonLabel, labels }: Props) => {
   const id = useId();
   const inputId = `${id}-email`;
   const errorId = `${id}-error`;
@@ -57,7 +65,7 @@ const NewsletterForm = ({ buttonLabel }: Props) => {
             className="capture"
           >
             <label htmlFor={inputId} className="sr-only">
-              {uiString(locale, 'emailAddress')}
+              {labels.emailAddress}
             </label>
             <input
               ref={inputRef}
@@ -65,13 +73,13 @@ const NewsletterForm = ({ buttonLabel }: Props) => {
               type="email"
               autoComplete="email"
               required
-              placeholder={uiString(locale, 'emailPlaceholder')}
+              placeholder={labels.emailPlaceholder}
               aria-invalid={hasError}
               aria-describedby={hasError ? errorId : undefined}
               onChange={() => setHasError(false)}
             />
             <button type="submit" className="btn btn-primary">
-              {buttonLabel || uiString(locale, 'subscribe')}
+              {buttonLabel || labels.subscribe}
               <ArrowRight
                 strokeWidth={1.75}
                 aria-hidden="true"
@@ -84,7 +92,7 @@ const NewsletterForm = ({ buttonLabel }: Props) => {
             aria-live="assertive"
             className="mt-2 ps-[22px] text-small text-danger empty:hidden max-md:ps-[18px]"
           >
-            {hasError ? uiString(locale, 'invalidEmail') : ''}
+            {hasError ? labels.invalidEmail : ''}
           </p>
         </>
       )}
@@ -109,7 +117,7 @@ const NewsletterForm = ({ buttonLabel }: Props) => {
               aria-hidden="true"
               className="size-4 shrink-0 text-success"
             />
-            {uiString(locale, 'subscribed')}
+            {labels.subscribed}
           </p>
         )}
       </div>

@@ -1,0 +1,52 @@
+/* Long-form pages: the changelog timeline rail (changelog page and Changelog section). */
+
+@layer areas {
+  /* Changelog timeline: one 2px accent rail joining the row nodes. The list uses equal
+     rows (auto-rows-fr), so the rail runs from the first node's centre to the last
+     one's: (list height − gaps) / rows / 2. --rail-rows is set inline; --rail-gap must
+     match the list's gap (12px = gap-3, the changelog page sets 4px for its gap-1) */
+  .changelog-rail {
+    --rail-gap: 12px;
+    --rail-end: calc(
+      (100% - (var(--rail-rows, 1) - 1) * var(--rail-gap)) /
+      (2 * var(--rail-rows, 1))
+    );
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset-inline-start: 11px;
+      top: var(--rail-end);
+      bottom: var(--rail-end);
+      width: 2px;
+      border-radius: 2px;
+      background: linear-gradient(
+        180deg,
+        var(--g-200),
+        var(--grad-b) 40%,
+        var(--grad-c)
+      );
+      pointer-events: none;
+    }
+  }
+
+  /* The rail draws down once as the list enters (Chromium; static elsewhere). A clip, not a scale: a
+     triggered compositor animation keeps Chromium producing frames at rest, a 2px repaint does not */
+  @keyframes changelog-rail-grow {
+    from {
+      clip-path: inset(0 0 100% 0);
+    }
+  }
+  @supports (timeline-trigger: --t view()) {
+    @media screen and (prefers-reduced-motion: no-preference) {
+      .changelog-rail-draw {
+        timeline-trigger: --rail view() entry 40px exit 100%;
+      }
+      .changelog-rail-draw::before {
+        animation: changelog-rail-grow 1s var(--ease-out-expo) 0.1s both;
+        animation-trigger: --rail play-forwards;
+      }
+    }
+  }
+}

@@ -6,23 +6,24 @@ import { MINI_UIS } from '@/components/ui/Ornaments';
 import SectionTitle from '@/components/ui/SectionTitle';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
+import {
+  itemHeadingLevel,
+  type SectionHeadingLevel,
+} from '@/utils/headingLevel';
 import { hasStructuredText } from '@/utils/structuredText';
 import { toneClass } from '@/utils/tones';
 import { bentoSpans, MD_SPAN, XL_SPAN } from './bentoSpans';
 
 type Props = {
   fragment: FragmentOf<typeof FeatureListSectionFragment>;
-  /** h1 when the section opens a page without a hero */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
 };
 
 /**
- * "grid" feature list: the bento. Tinted cells with mixed spans (4 columns
- * from 1200, 2 from 768). Each cell lays itself out by its own width: a
- * narrow cell stacks a white mini-UI zone above the copy (from 768 the zone
- * and its drawing run off the cell's right edge, scaled with the cell); a
- * wide one puts the copy beside a dot-grid canvas. The mini-UIs move once on
- * hover (pointer and motion users only, styles/sections/features-brands.css).
+ * `grid`: a bento of tinted cells with mixed spans. A cell lays itself out by
+ * its own width (container queries): narrow ones stack the mini-UI above the
+ * copy, wide ones set it beside. The hover motion is in
+ * styles/areas/features-brands.css.
  */
 const BentoGridFeatures = ({ fragment, as = 'h2' }: Props) => {
   const headingId = useId();
@@ -31,8 +32,7 @@ const BentoGridFeatures = ({ fragment, as = 'h2' }: Props) => {
     featuresHeader,
     featuresSubheader,
   } = readFragment(FeatureListSectionFragment, fragment);
-  // Item titles sit one level below the section title
-  const ItemHeading = as === 'h1' ? 'h2' : 'h3';
+  const ItemHeading = itemHeadingLevel(as);
   const xlSpans = bentoSpans(features.length, 4);
   const mdSpans = bentoSpans(features.length, 2);
 
@@ -45,6 +45,7 @@ const BentoGridFeatures = ({ fragment, as = 'h2' }: Props) => {
       <div className="container-page">
         <SectionTitle
           as={as}
+          h1Size="page"
           gap="lg"
           id={headingId}
           title={featuresHeader}
@@ -52,7 +53,7 @@ const BentoGridFeatures = ({ fragment, as = 'h2' }: Props) => {
         />
 
         {features.length > 0 && (
-          <ul className="fb-bento reveal-stagger grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 xl:auto-rows-[minmax(326px,auto)] xl:grid-cols-4">
+          <ul className="bento-features reveal-stagger grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 xl:auto-rows-[minmax(326px,auto)] xl:grid-cols-4">
             {features.map((feature, i) => {
               const MiniUi = MINI_UIS[i % MINI_UIS.length];
               return (

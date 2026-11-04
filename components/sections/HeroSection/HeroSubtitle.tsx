@@ -12,11 +12,7 @@ type Props = {
   className: string;
 };
 
-/**
- * The hero lead under the H1, shared by every hero. It is step 1 of the load
- * choreography: it rises after the heading and before the CTA row (motion
- * users only).
- */
+/** The hero subtitle: step 1 of the hero's load animation, between the title and the buttons */
 const HeroSubtitle = ({ text, className }: Props) => {
   if (!hasStructuredText(text)) return null;
 

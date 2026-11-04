@@ -4,19 +4,18 @@ import SectionTitle from '@/components/ui/SectionTitle';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
+import type { SectionHeadingLevel } from '@/utils/headingLevel';
 import ReviewCell from './ReviewCell';
 
 type Props = {
   fragment: FragmentOf<typeof ReviewSectionFragment>;
   locale: string;
-  /** Use h1 when this section opens a page without a hero */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
 };
 
 /**
- * One review reads at a measure; two or four split in half; three or more go
- * three across from 1024 and two across at tablet width, where an odd last
- * cell spans the row. A partial last row at 1024+ stays white (`cells`).
+ * One review alone at a measure, two or four in pairs, any other count three
+ * across (two on tablets, where an odd last cell spans the row)
  */
 const gridClasses = (count: number) => {
   if (count === 1) return 'max-w-[720px]';
@@ -33,8 +32,6 @@ const MinimalReviewCards = ({ fragment, locale, as = 'h2' }: Props) => {
     reviewSectionSubheader: subheader,
   } = readFragment(ReviewSectionFragment, fragment);
 
-  if (!reviews?.length) return null;
-
   return (
     <section
       className="section"
@@ -46,7 +43,6 @@ const MinimalReviewCards = ({ fragment, locale, as = 'h2' }: Props) => {
           title={header}
           paragraph={subheader}
           as={as}
-          h1Size="section"
           align="split"
           id={headingId}
         />

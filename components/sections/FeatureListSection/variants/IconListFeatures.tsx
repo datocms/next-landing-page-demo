@@ -5,22 +5,19 @@ import { FeatureListSectionFragment } from '@/components/sections/FeatureListSec
 import SectionTitle from '@/components/ui/SectionTitle';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
+import {
+  itemHeadingLevel,
+  type SectionHeadingLevel,
+} from '@/utils/headingLevel';
 import { hasStructuredText } from '@/utils/structuredText';
 import { toneClass } from '@/utils/tones';
 
 type Props = {
   fragment: FragmentOf<typeof FeatureListSectionFragment>;
-  /** h1 when the section opens a page without a hero */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
 };
 
-/**
- * "card_minimal" feature list: the icon list. A calm editorial split with no
- * cards and no mini-UIs: the head stays pinned on the left (from 1024) while a
- * two-column hairline list of icon rows scrolls past on the right. Between
- * 1024 and 1200 the head gives the list a column, so each row keeps about 4
- * lines of copy.
- */
+/** `card_minimal`: a sticky head beside a two-column hairline list of icon rows */
 const IconListFeatures = ({ fragment, as = 'h2' }: Props) => {
   const headingId = useId();
   const {
@@ -28,8 +25,7 @@ const IconListFeatures = ({ fragment, as = 'h2' }: Props) => {
     featuresHeader,
     featuresSubheader,
   } = readFragment(FeatureListSectionFragment, fragment);
-  // Item titles sit one level below the section title
-  const ItemHeading = as === 'h1' ? 'h2' : 'h3';
+  const ItemHeading = itemHeadingLevel(as);
 
   return (
     <section
@@ -40,7 +36,6 @@ const IconListFeatures = ({ fragment, as = 'h2' }: Props) => {
         <div className="col-span-full lg:sticky lg:top-[calc(var(--header-h)+32px)] lg:col-span-4 xl:col-span-5">
           <SectionTitle
             as={as}
-            h1Size="section"
             twoTone={false}
             gap="none"
             id={headingId}

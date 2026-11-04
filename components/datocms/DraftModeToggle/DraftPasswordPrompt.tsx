@@ -51,7 +51,6 @@ const DraftPasswordPrompt = ({ id, locale, onCancel, onEnabled }: Props) => {
   }
 
   return (
-    // Non-modal popover: the page stays usable, and DraftModeToggle closes it on Escape or any interaction outside it
     <div
       id={id}
       role="dialog"

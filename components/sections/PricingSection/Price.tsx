@@ -1,13 +1,13 @@
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
-import type { BillingPeriod } from './BillingScope';
+import type { BillingPeriod } from './BillingPeriodProvider';
 
 type PriceProps = {
   monthly: number;
-  /** When given, the price follows the nearest BillingScope */
+  /** When given, the price follows the nearest BillingPeriodProvider */
   yearly?: number | null;
   locale: string;
-  /** lg 36 (32 below 768) · md 32 (28) · responsive 28 below 640, then lg */
+  /** responsive: md on phones, lg from sm */
   size?: keyof typeof AMOUNT_SIZES;
   className?: string;
 };
@@ -24,7 +24,7 @@ const UNIT_KEYS = {
   yearly: { short: 'perYearShort', spoken: 'perYearSpoken' },
 } as const satisfies Record<BillingPeriod, { short: string; spoken: string }>;
 
-/* Inside a BillingScope (group/billing) the yearly figures swap in with CSS only,
+/* Inside a BillingPeriodProvider (group/billing) the yearly figures swap in with CSS only,
    so the server output is complete and monthly shows without JavaScript. The figure
    that appears fades in (pop-in); an inline PriceTag span only fades, a Price one also rises */
 const MONTHLY_ONLY = 'pop-in group-data-[period=yearly]/billing:hidden';
@@ -36,7 +36,6 @@ const YEARLY_ONLY_INLINE =
 const AMOUNT_SIZES = {
   lg: 'text-price',
   md: 'text-[2rem] leading-none tracking-[-0.03em] max-md:text-[1.75rem]',
-  // md on phones (single-row tiers), lg from 640
   responsive: 'text-[1.75rem] leading-none tracking-[-0.03em] sm:text-price',
 } as const;
 
@@ -119,7 +118,7 @@ const Price = ({
 
 /**
  * Compact mono price ("$40/mo") for option chips and secondary lines. With
- * both figures it follows the nearest BillingScope; with one it always shows it
+ * both figures it follows the nearest BillingPeriodProvider; with one it always shows it
  */
 export const PriceTag = ({
   monthly,

@@ -13,7 +13,7 @@ import {
 import type { SiteLocale } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
-import LanguageList from './LanguageList';
+import MobileLanguageList from './MobileLanguageList';
 import MobileNavItems from './MobileNavItems';
 import type { NavItem } from './navItems';
 
@@ -66,11 +66,11 @@ const MobileNav = ({
   const { locale } = globalPageProps.params;
   const languageHeadingId = `${id}-language`;
 
-  // `site-sheet` only while the sheet fades out on the page it was shown on: a route change starting
-  // meanwhile draws it above the page, the new page never has it, and while open the scrim keeps its blur
+  // `site-sheet` draws the fading sheet above the page during a route change; it is off while open,
+  // so the scrim keeps its blur
   const [openedOnPathname, setOpenedOnPathname] = useState<string>();
   if (open && openedOnPathname !== pathname) setOpenedOnPathname(pathname);
-  const fadingOut = !open && openedOnPathname === pathname;
+  const keepSheetAboveExitingPage = !open && openedOnPathname === pathname;
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -131,7 +131,9 @@ const MobileNav = ({
       style={
         {
           '--sheet-top': `${top}px`,
-          viewTransitionName: fadingOut ? 'site-sheet' : undefined,
+          viewTransitionName: keepSheetAboveExitingPage
+            ? 'site-sheet'
+            : undefined,
         } as CSSProperties
       }
       className="fixed inset-0 m-0 size-full max-h-none max-w-none overflow-hidden border-0 bg-transparent p-0 text-ink opacity-0 transition-[opacity,overlay,display] transition-discrete duration-[120ms] ease-standard backdrop:bg-transparent open:opacity-100 open:duration-[180ms] open:ease-out-quint starting:open:opacity-0"
@@ -181,7 +183,7 @@ const MobileNav = ({
                 <p id={languageHeadingId} className="mono mb-3 ml-2">
                   {uiString(locale, 'language')}
                 </p>
-                <LanguageList
+                <MobileLanguageList
                   globalPageProps={globalPageProps}
                   languages={languages}
                   onNavigate={onClose}

@@ -5,21 +5,23 @@ import { FeatureListSectionFragment } from '@/components/sections/FeatureListSec
 import SectionTitle from '@/components/ui/SectionTitle';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
+import {
+  itemHeadingLevel,
+  type SectionHeadingLevel,
+} from '@/utils/headingLevel';
 import { hasStructuredText } from '@/utils/structuredText';
 import { toneClass } from '@/utils/tones';
+import { twoDigits } from '@/utils/twoDigits';
 
 type Props = {
   fragment: FragmentOf<typeof FeatureListSectionFragment>;
-  /** h1 when the section opens a page without a hero */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
 };
 
 /**
- * "big_image_vertical" feature list: figure columns. Open columns with no
- * cards, split by hairlines (no outer borders). Each leads with a figure: a
- * white dot-grid canvas with a soft accent glow and the CMS image as a
- * floating tile (a cover photo, or the feature's mini-UI without an image),
- * then a mono index, title and copy.
+ * `big_image_vertical`: open columns split by hairlines, each led by a
+ * dot-grid figure holding the CMS image (FeatureMedia), then an index, title
+ * and copy.
  */
 const BigImageVerticalFeatures = ({ fragment, as = 'h2' }: Props) => {
   const headingId = useId();
@@ -28,8 +30,7 @@ const BigImageVerticalFeatures = ({ fragment, as = 'h2' }: Props) => {
     featuresHeader,
     featuresSubheader,
   } = readFragment(FeatureListSectionFragment, fragment);
-  // Item titles sit one level below the section title
-  const ItemHeading = as === 'h1' ? 'h2' : 'h3';
+  const ItemHeading = itemHeadingLevel(as);
 
   return (
     <section
@@ -39,6 +40,7 @@ const BigImageVerticalFeatures = ({ fragment, as = 'h2' }: Props) => {
       <div className="container-page">
         <SectionTitle
           as={as}
+          h1Size="page"
           twoTone={false}
           gap="lg"
           id={headingId}
@@ -47,13 +49,13 @@ const BigImageVerticalFeatures = ({ fragment, as = 'h2' }: Props) => {
         />
 
         {features.length > 0 && (
-          <ul className="fig-cols reveal grid md:grid-cols-2 lg:grid-cols-3">
+          <ul className="figure-columns reveal grid md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature, i) => (
               <li
                 key={feature.id}
                 className={cn('flex flex-col', toneClass(i))}
               >
-                <div className="relative isolate grid h-[200px] place-items-center overflow-hidden rounded-zone border border-line bg-white [--tile:120px] max-md:h-[140px] max-md:[--tile:88px]">
+                <div className="relative isolate grid h-[200px] place-items-center overflow-hidden rounded-zone border border-line bg-white [--media-tile-size:120px] max-md:h-[140px] max-md:[--media-tile-size:88px]">
                   {/* A soft accent glow, with the dot grid drawn over it */}
                   <span
                     aria-hidden="true"
@@ -61,7 +63,7 @@ const BigImageVerticalFeatures = ({ fragment, as = 'h2' }: Props) => {
                   />
                   <span
                     aria-hidden="true"
-                    className="fig-canvas absolute inset-0 -z-10"
+                    className="figure-canvas absolute inset-0 -z-10"
                   />
                   <FeatureMedia
                     image={feature.featureIcon?.responsiveImage}
@@ -70,7 +72,7 @@ const BigImageVerticalFeatures = ({ fragment, as = 'h2' }: Props) => {
                   />
                 </div>
                 <span aria-hidden="true" className="mono mt-4">
-                  {String(i + 1).padStart(2, '0')}
+                  {twoDigits(i + 1)}
                 </span>
                 <ItemHeading className="mt-2 text-h3">
                   {feature.featureTitle}

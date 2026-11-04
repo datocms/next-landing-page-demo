@@ -6,7 +6,7 @@ type Props = {
   text: string;
   included: boolean;
   locale: string;
-  /** md: 18px disc, 14.5px text (cards) · sm: 16px disc, 14px text (tables, compact cards) */
+  /** md in plan cards, sm in tables and compact cards */
   size?: 'md' | 'sm';
 };
 

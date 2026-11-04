@@ -5,10 +5,9 @@ type Props = {
 };
 
 /**
- * Pull quote inside long-form content: a 2px vertical rule running tint → accent →
- * deep (grad-a → grad-b → grad-c) and 20px display text in ink (18 below 768). It
- * opts out of the prose element styles, so its own paragraph, bold and link
- * styles are set here; a <mark> inside keeps the base highlighter.
+ * Pull quote inside long-form content. It opts out of the prose element
+ * styles, so its own paragraph, bold and link styles are set here; a <mark>
+ * inside keeps the base highlighter.
  */
 const QuoteBlock = ({ children }: Props) => {
   if (!children) return null;

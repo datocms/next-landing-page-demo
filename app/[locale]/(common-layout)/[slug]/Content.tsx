@@ -15,8 +15,8 @@ import ReviewSection from '@/components/sections/ReviewSection';
 import StatsSection from '@/components/sections/StatsSection';
 import TeamSection from '@/components/sections/TeamSection';
 import VideoSection from '@/components/sections/VideoSection';
-import type { ContentPage } from '@/lib/datocms/realtime/types';
-import { buildUrl } from '@/utils/globalPageProps';
+import type { ContentComponent } from '@/lib/datocms/realtime/types';
+import { pageUrl } from '@/utils/routes';
 import type { PageProps, Query } from './meta';
 
 /**
@@ -24,17 +24,18 @@ import type { PageProps, Query } from './meta';
  * Each block type has its own component in components/sections/, which also
  * picks the block's layout from its display option field.
  */
-const Content: ContentPage<PageProps, Query> = ({
+const Content: ContentComponent<PageProps, Query> = ({
   data,
   ...globalPageProps
 }) => {
-  if (!data.page) {
+  const { page } = data;
+  if (!page) {
     notFound();
   }
 
   const { locale } = globalPageProps.params;
 
-  return data.page.sections.map((section, index) => {
+  return page.sections.map((section, index) => {
     // A section that opens a page without a hero carries the page's h1
     const as = index === 0 ? 'h1' : 'h2';
     const key = section.id;
@@ -118,15 +119,18 @@ const Content: ContentPage<PageProps, Query> = ({
         return (
           <AllPostsSection
             key={key}
-            data={data}
+            posts={data.allPosts}
+            postCount={data._allPostsMeta.count}
+            pageLabel={page.label}
             globalPageProps={globalPageProps}
+            as={as}
           />
         );
       case 'RedirectSectionRecord':
         // A page made of a redirect block forwards to another page.
         // stripStega: Content Link markers would end up in the URL
         return redirect(
-          buildUrl(globalPageProps, `/${stripStega(section.slugToRedirectTo)}`),
+          pageUrl(globalPageProps, stripStega(section.slugToRedirectTo)),
         );
       default:
         return null;

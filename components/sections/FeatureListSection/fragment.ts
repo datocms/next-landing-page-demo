@@ -10,7 +10,6 @@ export const FeatureListSectionFragment = graphql(
       }
       displayOption
       feature {
-        __typename
         id
         featureTitle
         featureDescription {

@@ -6,11 +6,10 @@ import { cn } from '@/utils/cn';
 type Props = {
   /** The feature's CMS icon (featureIcon.responsiveImage) */
   image?: FragmentOf<typeof ResponsiveImageFragment> | null;
-  /** sm: 24px, beside a card title; md: 40px (36 below 768), leading a list row */
+  /** sm beside a card title, md leading a list row */
   size?: 'sm' | 'md';
 };
 
-/** Tile size and radius for each size */
 const TILE = {
   sm: 'size-6 rounded-[7px]',
   md: 'size-10 rounded-[12px] max-md:size-9',

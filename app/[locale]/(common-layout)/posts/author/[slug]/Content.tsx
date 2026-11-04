@@ -1,47 +1,15 @@
 import { notFound } from 'next/navigation';
-import DatoImage from '@/components/datocms/DatoImage';
-import type { ResponsiveImageFragment } from '@/components/datocms/DatoImage/fragment';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
-import PostExcerpt, { postCardLayout } from '@/components/posts/PostExcerpt';
+import AuthorAvatar from '@/components/posts/AuthorAvatar';
+import PostGrid from '@/components/posts/PostGrid';
 import PostsPageHeader from '@/components/posts/PostsPageHeader';
-import type { FragmentOf } from '@/lib/datocms/graphql';
-import type { ContentPage } from '@/lib/datocms/realtime/types';
+import type { ContentComponent } from '@/lib/datocms/realtime/types';
 import { uiString } from '@/lib/i18n/uiStrings';
-import { cn } from '@/utils/cn';
 import { hasStructuredText } from '@/utils/structuredText';
-import { TONES, toneIndex } from '@/utils/tones';
+import { toneClassFor } from '@/utils/tones';
 import type { PageProps, Query } from './meta';
 
-type AuthorPortraitProps = {
-  image: FragmentOf<typeof ResponsiveImageFragment>;
-  /** Raw CMS name: the ring's tone is hashed from it */
-  name: string;
-};
-
-/**
- * The author's round portrait in a tone ring. It sits on top of the header
- * arches, which pass behind it.
- */
-const AuthorPortrait = ({ image, name }: AuthorPortraitProps) => (
-  <div
-    className={cn(
-      'ring-tone size-36 rounded-full max-lg:size-24',
-      TONES[toneIndex(name)],
-    )}
-  >
-    <div className="photo size-full rounded-full bg-white">
-      <DatoImage
-        fragment={image}
-        layout="fill"
-        objectFit="cover"
-        objectPosition="50% 30%"
-        sizes="144px"
-      />
-    </div>
-  </div>
-);
-
-const Content: ContentPage<PageProps, Query> = ({
+const Content: ContentComponent<PageProps, Query> = ({
   data,
   ...globalPageProps
 }) => {
@@ -60,10 +28,17 @@ const Content: ContentPage<PageProps, Query> = ({
       <PostsPageHeader
         label={uiString(locale, 'author')}
         title={author.name}
-        tone={toneIndex(author.name)}
+        tone={toneClassFor(author.name)}
         media={
           portrait ? (
-            <AuthorPortrait image={portrait} name={author.name} />
+            // It sits on top of the header arches, which pass behind it
+            <AuthorAvatar
+              image={portrait}
+              sizes="144px"
+              ringName={author.name}
+              className="size-36 max-lg:size-24"
+              photoClassName="bg-white"
+            />
           ) : undefined
         }
       >
@@ -91,17 +66,11 @@ const Content: ContentPage<PageProps, Query> = ({
               {uiString(locale, 'postCount', { n: postCount })}
             </p>
           </div>
-          <div className="grid gap-3 md:grid-cols-2 md:gap-4 lg:grid-cols-3">
-            {posts.map((post, index) => (
-              <PostExcerpt
-                key={post.id}
-                fragment={post}
-                globalPageProps={globalPageProps}
-                priority={index < 3}
-                {...postCardLayout(index, posts.length)}
-              />
-            ))}
-          </div>
+          <PostGrid
+            posts={posts}
+            globalPageProps={globalPageProps}
+            prioritizeFirstRow
+          />
         </section>
       )}
     </>

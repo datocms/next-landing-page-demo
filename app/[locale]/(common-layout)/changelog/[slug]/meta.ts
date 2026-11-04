@@ -17,12 +17,12 @@ export const query = graphql(
     query ChangelogQuery(
       $slug: String
       $locale: SiteLocale
-      $fallbackLocale: [SiteLocale!]
+      $fallbackLocales: [SiteLocale!]
     ) {
       changeLog(
         filter: { slug: { eq: $slug } }
         locale: $locale
-        fallbackLocales: $fallbackLocale
+        fallbackLocales: $fallbackLocales
       ) {
         seo: _seoMetaTags {
           ...TagFragment
@@ -38,7 +38,7 @@ export const query = graphql(
         orderBy: timeOfRelease_DESC
         first: 100
         locale: $locale
-        fallbackLocales: $fallbackLocale
+        fallbackLocales: $fallbackLocales
       ) {
         id
         versionName

@@ -2,12 +2,11 @@
  * The site stylesheet. Tailwind CSS 4 is configured in CSS: this file sets the
  * cascade layer order and imports everything else.
  *
- * Design language: one CMS accent (--color-primary, written by
- * components/layout/CustomColor.tsx) drives every colour: whites, tinted wells, a
- * one-hue gradient ramp (--g-50 … --g-900) and six tone stops of that hue
- * (tone-0 … tone-5). Light mode only.
+ * Design language: one CMS accent (--color-primary) drives every colour: whites,
+ * tinted wells, a one-hue gradient ramp (--g-50 … --g-900) and six tone stops of
+ * that hue (tone-0 … tone-5). Light mode only.
  */
-@layer theme, base, components, groups, utilities;
+@layer theme, base, components, areas, utilities;
 @import 'tailwindcss';
 
 /* Foundation: keyframes, Tailwind theme, runtime tokens, element defaults, custom utilities */
@@ -30,15 +29,15 @@
 @import './components/code.css';
 
 /* Rules for one area of the site that utilities and the primitives can't express.
-   Each file wraps its rules in `@layer groups { … }`, so they beat the primitives
+   Each file wraps its rules in `@layer areas { … }`, so they beat the primitives
    without !important (and lose to utilities), declares no :root variables and takes
    its colours from tokens.css. Add rules to the file for that area, or a new file here. */
-@import './sections/shell.css';
-@import './sections/heroes.css';
-@import './sections/features-brands.css';
-@import './sections/content-sections.css';
-@import './sections/posts.css';
-@import './sections/long-form.css';
+@import './areas/shell.css';
+@import './areas/heroes.css';
+@import './areas/features-brands.css';
+@import './areas/content-sections.css';
+@import './areas/posts.css';
+@import './areas/long-form.css';
 
 /* The skills' Markdown (also reachable through the .claude/skills symlinks) names
    classes in prose; it must not generate CSS */

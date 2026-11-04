@@ -5,13 +5,16 @@ import SectionTitle from '@/components/ui/SectionTitle';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
+import {
+  itemHeadingLevel,
+  type SectionHeadingLevel,
+} from '@/utils/headingLevel';
 import TierMeter from './TierMeter';
 
 type Props = {
   fragment: FragmentOf<typeof PricingSectionFragment>;
   locale: string;
-  /** h1 when the section opens a page without a hero */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
 };
 
 // One joined strip, kept narrow for a few plans instead of stretching over the page
@@ -36,10 +39,7 @@ const TierStrip = ({ fragment, locale, as = 'h2' }: Props) => {
   } = readFragment(PricingSectionFragment, fragment);
   const uid = useId();
 
-  if (!plans?.length) return null;
-
-  // Plan names sit one level below the section heading
-  const PlanHeading = as === 'h1' ? 'h2' : 'h3';
+  const PlanHeading = itemHeadingLevel(as);
   const count = plans.length;
   const headingId = `${uid}-pricing`;
 
@@ -56,6 +56,7 @@ const TierStrip = ({ fragment, locale, as = 'h2' }: Props) => {
           paragraph={subheader}
           align="center"
           as={as}
+          h1Size="page"
         />
 
         <ul

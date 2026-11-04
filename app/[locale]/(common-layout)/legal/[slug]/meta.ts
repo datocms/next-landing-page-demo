@@ -17,12 +17,12 @@ export const query = graphql(
     query LegalQuery(
       $slug: String
       $locale: SiteLocale
-      $fallbackLocale: [SiteLocale!]
+      $fallbackLocales: [SiteLocale!]
     ) {
       legalPage(
         filter: { slug: { eq: $slug } }
         locale: $locale
-        fallbackLocales: $fallbackLocale
+        fallbackLocales: $fallbackLocales
       ) {
         seo: _seoMetaTags {
           ...TagFragment

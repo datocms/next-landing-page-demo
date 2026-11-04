@@ -1,7 +1,7 @@
 import { cn } from '@/utils/cn';
 
 type Props = {
-  /** Colour, and a height when it isn't the default 8px */
+  /** Colour, and a height to override the default */
   className?: string;
   /** Any CSS length: px for fixed bars, % for bars that follow their row */
   width: string;

@@ -1,7 +1,8 @@
 'use client';
 
 import { ArrowUpRight, Check, Link2, Share2 } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useCopyToClipboard } from '@/components/ui/useCopyToClipboard';
 
 /** Interface copy, resolved on the server for the page's locale */
 type SharePostLabels = {
@@ -40,9 +41,6 @@ const SHARE_NETWORKS = [
   },
 ];
 
-/** How long the "Copied" confirmation stays before the button resets */
-const COPIED_MS = 2000;
-
 const BUTTON_CLASS = 'btn btn-secondary btn-sm pointer-coarse:h-11';
 
 /** One of the copy button's two stacked labels; the hidden one keeps its size */
@@ -59,27 +57,15 @@ const CopyLinkButton = ({
 }: {
   labels: Pick<SharePostLabels, 'copyLink' | 'copied'>;
 }) => {
-  const [copied, setCopied] = useState(false);
-  const resetTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
-    undefined,
-  );
-
-  useEffect(() => () => clearTimeout(resetTimer.current), []);
-
-  const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      clearTimeout(resetTimer.current);
-      resetTimer.current = setTimeout(() => setCopied(false), COPIED_MS);
-    } catch {
-      // Clipboard access can be denied; the share links still work
-    }
-  };
+  const { copied, copy } = useCopyToClipboard();
 
   return (
     <>
-      <button type="button" onClick={copyLink} className={BUTTON_CLASS}>
+      <button
+        type="button"
+        onClick={() => copy(window.location.href)}
+        className={BUTTON_CLASS}
+      >
         {/* Both labels share one grid cell, so the button keeps the width of the longer one */}
         <span className="grid">
           <span

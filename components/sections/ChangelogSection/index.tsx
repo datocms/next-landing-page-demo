@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { type CSSProperties, useId } from 'react';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import SectionTitle from '@/components/ui/SectionTitle';
-import TwoTone from '@/components/ui/SectionTitle/TwoTone';
+import TwoTone from '@/components/ui/TwoTone';
 import {
   type FragmentOf,
   type ResultOf,
@@ -12,11 +12,13 @@ import {
 } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
-import formatPostDate from '@/utils/formatPostDate';
+import { formatDate } from '@/utils/formatDate';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import {
-  buildUrl,
-  type ResolvedGlobalPageProps,
-} from '@/utils/globalPageProps';
+  itemHeadingLevel,
+  type SectionHeadingLevel,
+} from '@/utils/headingLevel';
+import { changelogUrl } from '@/utils/routes';
 import { hasStructuredText } from '@/utils/structuredText';
 import { toneClass } from '@/utils/tones';
 import { ChangelogSectionFragment } from './fragment';
@@ -28,8 +30,7 @@ type Release = ResultOf<
 type Props = {
   fragment: FragmentOf<typeof ChangelogSectionFragment>;
   globalPageProps: ResolvedGlobalPageProps;
-  /** Pass "h1" when this block opens the page, so its title doubles as the page header */
-  as?: 'h1' | 'h2';
+  as?: SectionHeadingLevel;
 };
 
 /** Release time in ms, or null when the CMS value is missing or not a date */
@@ -55,7 +56,7 @@ const newestReleaseId = (releases: Release[]) => {
 
 /**
  * Release timeline: a sticky head on the left and, on the right, row cards
- * joined by a 2px accent-gradient rail through tone nodes. Only the newest
+ * joined by an accent-gradient rail through tone nodes. Only the newest
  * release carries "Latest".
  */
 const ChangelogSection = ({ fragment, globalPageProps, as = 'h2' }: Props) => {
@@ -66,8 +67,7 @@ const ChangelogSection = ({ fragment, globalPageProps, as = 'h2' }: Props) => {
   const headingId = useId();
 
   const leadsPage = as === 'h1';
-  // Each release is a heading one level under the block's title
-  const RowHeading = leadsPage ? 'h2' : 'h3';
+  const RowHeading = itemHeadingLevel(as);
   const latestLabel = uiString(globalPageProps.params.locale, 'latest');
   const latestId = newestReleaseId(featuredVersions);
 
@@ -109,12 +109,12 @@ const ChangelogSection = ({ fragment, globalPageProps, as = 'h2' }: Props) => {
 
         {featuredVersions.length > 0 && (
           <ol
-            className="lf-timeline lf-draw reveal-stagger grid auto-rows-fr gap-3 max-lg:mt-10 max-md:mt-8 lg:col-span-7 lg:col-start-6"
-            style={{ '--lf-rows': featuredVersions.length } as CSSProperties}
+            className="changelog-rail changelog-rail-draw reveal-stagger grid auto-rows-fr gap-3 max-lg:mt-10 max-md:mt-8 lg:col-span-7 lg:col-start-6"
+            style={{ '--rail-rows': featuredVersions.length } as CSSProperties}
           >
             {featuredVersions.map((release, index) => {
               const date = release.timeOfRelease
-                ? formatPostDate(release.timeOfRelease)
+                ? formatDate(release.timeOfRelease)
                 : null;
 
               return (
@@ -127,10 +127,7 @@ const ChangelogSection = ({ fragment, globalPageProps, as = 'h2' }: Props) => {
                     className="absolute start-[7px] top-1/2 size-2.5 -translate-y-1/2 rounded-full bg-tone-grad shadow-[0_0_0_3px_var(--bg),0_0_0_4px_var(--line)]"
                   />
                   <Link
-                    href={buildUrl(
-                      globalPageProps,
-                      `/changelog/${stripStega(release.slug)}`,
-                    )}
+                    href={changelogUrl(globalPageProps, release.slug)}
                     className="card card-hover group grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-[18px] max-md:p-4"
                   >
                     <div className="min-w-0">

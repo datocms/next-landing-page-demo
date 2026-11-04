@@ -11,7 +11,6 @@ export const ChangelogSectionFragment = graphql(/* GraphQL */ `
       versionName
       slug
       id
-      __typename
     }
   }
 `);

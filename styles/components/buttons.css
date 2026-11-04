@@ -1,7 +1,7 @@
-/* Buttons: .btn, its sizes (sm, lg, icon) and its colours (primary, secondary, ink, ghost). */
+/* Buttons: .btn, its sizes (sm, icon) and its colours (primary, secondary, ink, ghost). */
 
 @layer components {
-  /* Base: a 44px pill; .btn-arrow / .btn-arrow-back icons nudge forward or back on hover */
+  /* The base pill. .btn-arrow / .btn-arrow-back icons nudge forward or back on hover */
   .btn {
     display: inline-flex;
     align-items: center;
@@ -23,9 +23,9 @@
     max-width: 100%;
     min-width: 0;
     transition:
-      background-color 0.2s var(--ease),
-      box-shadow 0.2s var(--ease),
-      color 0.2s var(--ease),
+      background-color var(--duration-base) var(--ease-out-expo),
+      box-shadow var(--duration-base) var(--ease-out-expo),
+      color var(--duration-base) var(--ease-out-expo),
       scale var(--duration-fast) var(--ease-out-quint);
     @media (prefers-reduced-motion: no-preference) {
       &:active:not(:disabled, [aria-disabled='true']) {
@@ -39,7 +39,7 @@
     }
     & .btn-arrow,
     & .btn-arrow-back {
-      transition: translate 0.25s var(--ease);
+      transition: translate var(--duration-slow) var(--ease-out-expo);
     }
     @media (hover: hover) {
       &:hover .btn-arrow {
@@ -80,11 +80,6 @@
       width: 14px;
       height: 14px;
     }
-  }
-  .btn-lg {
-    height: 48px;
-    padding-inline: 24px;
-    font-size: 0.9375rem;
   }
   .btn-icon {
     width: 40px;

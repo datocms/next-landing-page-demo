@@ -8,7 +8,7 @@ const CHART_LINE =
 
 /** An area chart with a guide, tooltip and data point; those three are the hover part */
 const Chart = ({ className }: MiniUiProps) => {
-  const gradientIdPrefix = `mini${useId().replace(/[^\w-]/g, '')}`;
+  const gradientIdPrefix = `mini${useId()}`;
 
   return (
     <MiniUiFrame name="chart" className={className}>

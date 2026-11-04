@@ -14,40 +14,14 @@
     "enabled": true,
     "rules": {
       "preset": "recommended",
-      "suspicious": {
-        "noExplicitAny": "warn",
-        "noArrayIndexKey": "warn"
+      "style": {
+        "noNonNullAssertion": "warn"
       },
       "correctness": {
-        "useExhaustiveDependencies": "warn",
         "noUnknownProperty": {
           "level": "error",
           "options": { "ignore": ["timeline-trigger", "animation-trigger"] }
         }
-      },
-      "performance": {
-        "noDelete": "warn"
-      },
-      "security": {
-        "noDangerouslySetInnerHtml": "warn"
-      },
-      "style": {
-        "noNonNullAssertion": "warn"
-      },
-      "complexity": {
-        "noBannedTypes": "warn"
-      },
-      "a11y": {
-        "useKeyWithClickEvents": "warn",
-        "noSvgWithoutTitle": "warn",
-        "useAltText": "warn",
-        "useValidAnchor": "warn",
-        "useAnchorContent": "warn",
-        "useMediaCaption": "warn",
-        "useIframeTitle": "warn",
-        "noStaticElementInteractions": "warn",
-        "useAriaPropsSupportedByRole": "warn",
-        "useHtmlLang": "warn"
       }
     }
   },

@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { Threads } from '@/components/ui/Ornaments';
 import { cn } from '@/utils/cn';
-import { toneClass } from '@/utils/tones';
-import headerArches from './headerArches';
+import type { Tone } from '@/utils/tones';
+import { headerArches } from './headerArches';
 
 type Props = {
   /** Small label pill above the title ("Blog", "Tag", "Author") */
@@ -13,8 +13,8 @@ type Props = {
   titleId?: string;
   /** A mono line under the title (post count, page) */
   meta?: ReactNode;
-  /** Tone 0–5 of the label dot (the tag page passes its tag's tone) */
-  tone?: number;
+  /** Tone of the label dot (the tag page passes its tag's tone) */
+  tone?: Tone;
   /** Right-hand media (the author portrait); it sits over the arches */
   media?: ReactNode;
   /** Extra copy under the title (author bio and description) */
@@ -43,7 +43,7 @@ const PostsPageHeader = ({
         className="top-auto left-auto h-[240px] w-[min(600px,46%)] opacity-[.62] max-lg:hidden"
       />
       <div className="min-w-0 lg:col-span-6">
-        <p className={cn('pill-label', toneClass(tone ?? 0))}>{label}</p>
+        <p className={cn('pill-label', tone ?? 'tone-0')}>{label}</p>
         <h1
           id={titleId}
           className="mt-4 -ms-[0.03em] text-balance text-h1 text-ink"

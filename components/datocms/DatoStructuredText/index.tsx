@@ -4,7 +4,6 @@ import {
   StructuredText,
   type StructuredTextPropTypes,
 } from 'react-datocms/structured-text';
-import Highlighter from './Highlighter';
 
 /** Makes an embedded block or inline record its own Content Link target inside the text's group */
 function addBoundaryAttribute(
@@ -17,29 +16,22 @@ function addBoundaryAttribute(
 }
 
 /**
- * react-datocms's StructuredText for the whole site. The text is one Content
- * Link group (one click target for the field), embedded blocks and inline
- * records are boundaries inside it (each opens its own record), and nodes
- * render through Highlighter unless the caller passes its own `renderNode`.
+ * react-datocms's StructuredText inside one Content Link group; embedded
+ * blocks and inline records become boundaries, so each one opens its own
+ * record. renderBlock and renderInlineRecord must return one element that
+ * forwards extra props to its root, where the boundary attribute is cloned.
  */
 export default function DatoStructuredText<
   BlockRecord extends CdaStructuredTextRecord = CdaStructuredTextRecord,
   LinkRecord extends CdaStructuredTextRecord = CdaStructuredTextRecord,
   InlineBlockRecord extends CdaStructuredTextRecord = CdaStructuredTextRecord,
 >(props: StructuredTextPropTypes<BlockRecord, LinkRecord, InlineBlockRecord>) {
-  const {
-    renderBlock,
-    renderInlineRecord,
-    renderLinkToRecord,
-    renderNode,
-    ...rest
-  } = props;
+  const { renderBlock, renderInlineRecord, ...rest } = props;
 
   return (
     <div data-datocms-content-link-group>
       <StructuredText
         {...rest}
-        renderNode={renderNode ?? Highlighter}
         renderBlock={
           renderBlock
             ? (context) => addBoundaryAttribute(renderBlock(context))
@@ -50,7 +42,6 @@ export default function DatoStructuredText<
             ? (context) => addBoundaryAttribute(renderInlineRecord(context))
             : undefined
         }
-        renderLinkToRecord={renderLinkToRecord}
       />
     </div>
   );
