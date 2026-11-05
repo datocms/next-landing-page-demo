@@ -96,7 +96,7 @@ Have a look at the end result live:
 
 3. Let DatoCMS set everything up for you clicking this button below:
 
-[![Deploy with DatoCMS](https://dashboard.datocms.com/deploy/button.svg)](https://dashboard.datocms.com/deploy?repo=marcelofinamorvieira%2Fsaas-starter%3Amain)
+[![Deploy with DatoCMS](https://dashboard.datocms.com/deploy/button.svg)](https://dashboard.datocms.com/deploy?repo=datocms%2Fnext-landing-page-demo%3Amain)
 
 ### Local setup
 
