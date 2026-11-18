@@ -44,8 +44,11 @@ export async function POST(request: NextRequest) {
     return Response.json({ previewLinks: [] }, withCORS());
   }
 
-  // The token in front of the page picks the project (see proxy.ts)
-  const url = `/${apiToken}${route}`;
+  const url = route;
+  // The links also store the project's API token (see lib/datocms/apiToken.ts),
+  // so they work in a new tab. The page path itself stays the one the Web
+  // Previews plugin sees in its iframe
+  const tokenParam = `&datocmsApiToken=${encodeURIComponent(apiToken)}`;
 
   const previewLinks = [];
 
@@ -55,7 +58,7 @@ export async function POST(request: NextRequest) {
   if (item.meta.status !== 'published')
     previewLinks.push({
       label: 'Draft version',
-      url: `${websiteBaseUrl}/api/draft/enable?token=${encodeURIComponent(process.env.DRAFT_SECRET_TOKEN as string)}&redirect=${encodeURIComponent(url)}`,
+      url: `${websiteBaseUrl}/api/draft/enable?token=${encodeURIComponent(process.env.DRAFT_SECRET_TOKEN as string)}&redirect=${encodeURIComponent(url)}${tokenParam}`,
     });
 
   // A record that isn't a draft has a published version: the link turns Draft
@@ -63,7 +66,7 @@ export async function POST(request: NextRequest) {
   if (item.meta.status !== 'draft')
     previewLinks.push({
       label: 'Published version',
-      url: `${websiteBaseUrl}/api/draft/disable?redirect=${encodeURIComponent(url)}`,
+      url: `${websiteBaseUrl}/api/draft/disable?redirect=${encodeURIComponent(url)}${tokenParam}`,
     });
 
   return Response.json({ previewLinks }, withCORS());

@@ -1,4 +1,4 @@
-import { headers } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
 
@@ -15,6 +15,34 @@ export const API_TOKEN_HEADER = 'x-datocms-api-token';
 
 /** The cookie that keeps the API token across the visitor's navigation */
 export const API_TOKEN_COOKIE = 'datocms_api_token';
+
+/**
+ * The API token cookie. Partitioned and SameSite=None, so it also works inside
+ * the iframe of the Web Previews plugin, where this site is a third party
+ */
+export function apiTokenCookie(value: string) {
+  return {
+    name: API_TOKEN_COOKIE,
+    value,
+    httpOnly: true,
+    path: '/',
+    secure: true,
+    sameSite: 'none' as const,
+    partitioned: true,
+    maxAge: 60 * 60 * 24,
+  };
+}
+
+/**
+ * Stores `?datocmsApiToken=` in the cookie: the preview links of
+ * /api/draft/preview-links carry it, so they also work in a new tab
+ */
+export async function storeApiTokenFromSearchParams(
+  searchParams: URLSearchParams,
+) {
+  const token = searchParams.get('datocmsApiToken') ?? undefined;
+  if (isApiToken(token)) (await cookies()).set(apiTokenCookie(token));
+}
 
 /** Whether a URL segment is an API token rather than a locale or a slug */
 export function isApiToken(segment: string | undefined): segment is string {

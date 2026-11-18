@@ -4,6 +4,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import {
   API_TOKEN_COOKIE,
   API_TOKEN_HEADER,
+  apiTokenCookie,
   isApiToken,
 } from '@/lib/datocms/apiToken';
 import type { SiteLocale } from '@/lib/datocms/graphql';
@@ -115,20 +116,7 @@ export default async function proxy(request: NextRequest) {
     url.search = request.nextUrl.search;
     const response = NextResponse.redirect(url);
 
-    if (tokenInPathname) {
-      // Partitioned and SameSite=None, so it also works inside the iframe of
-      // the Web Previews plugin, where this site is a third party
-      response.cookies.set({
-        name: API_TOKEN_COOKIE,
-        value: tokenInPathname,
-        httpOnly: true,
-        path: '/',
-        secure: true,
-        sameSite: 'none',
-        partitioned: true,
-        maxAge: 60 * 60 * 24,
-      });
-    }
+    if (tokenInPathname) response.cookies.set(apiTokenCookie(tokenInPathname));
 
     return response;
   }

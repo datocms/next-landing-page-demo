@@ -1,6 +1,7 @@
 import { draftMode } from 'next/headers';
 import { redirect } from 'next/navigation';
 import type { NextRequest } from 'next/server';
+import { storeApiTokenFromSearchParams } from '@/lib/datocms/apiToken';
 import { isSafeRedirectUrl } from '../isSafeRedirectUrl';
 import { partitionDraftModeCookie } from '../partitionDraftModeCookie';
 
@@ -27,6 +28,7 @@ export async function GET(request: NextRequest) {
   (await draftMode()).enable();
 
   await partitionDraftModeCookie();
+  await storeApiTokenFromSearchParams(searchParams);
 
   if (!redirectPath) return new Response('Draft mode is enabled');
 
