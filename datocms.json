@@ -3,7 +3,7 @@
   "description": "Offers typed GraphQL queries, Tailwind, multi-language, Web Previews, real-time updates in Draft Mode, SEO/Readability analysis, and much more!",
   "previewImage": "https://www.datocms-assets.com/205/1724222109-landingdemofrontend.png",
   "livePreviewUrl": "https://company-website-demo-preview.vercel.app/",
-  "datocmsProjectId": "105705",
+  "datocmsProjectId": "239167",
   "deploymentType": "static",
   "environmentVariables": {
     "SEO_SECRET_TOKEN": {
