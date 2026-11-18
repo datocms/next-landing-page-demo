@@ -1,7 +1,7 @@
 {
   "name": "Marketing Website",
   "description": "Offers typed GraphQL queries, Tailwind, multi-language, Web Previews, real-time updates in Draft Mode, SEO/Readability analysis, and much more!",
-  "previewImage": "https://www.datocms-assets.com/205/1724222109-landingdemofrontend.png",
+  "previewImage": "https://www.datocms-assets.com/205/1794997046-marketing-starter-frontend.png",
   "livePreviewUrl": "https://company-website-demo-preview.vercel.app/",
   "datocmsProjectId": "239167",
   "deploymentType": "static",
