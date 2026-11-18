@@ -31,6 +31,11 @@ export function authorUrl(
   return buildUrl(globalPageProps, `/posts/author/${slug}`);
 }
 
+/** The list of every author */
+export function authorsUrl(globalPageProps: ResolvedGlobalPageProps) {
+  return buildUrl(globalPageProps, '/posts/author');
+}
+
 export function tagUrl(globalPageProps: ResolvedGlobalPageProps, slug: string) {
   return buildUrl(globalPageProps, `/posts/tag/${slug}`);
 }

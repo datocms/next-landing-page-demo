@@ -34,6 +34,22 @@ export const query = graphql(
       _allPostsMeta(locale: $locale, filter: { title: { isBlank: "false" } }) {
         count
       }
+      # The topic links at the top of the page: tags that have posts
+      topics: allTags(
+        orderBy: name_ASC
+        first: 100
+        locale: $locale
+        fallbackLocales: $fallbackLocales
+      ) {
+        name
+        slug
+        _allReferencingPostsMeta(
+          locale: $locale
+          filter: { title: { isBlank: "false" } }
+        ) {
+          count
+        }
+      }
     }
   `,
   [PostExcerptFragment],

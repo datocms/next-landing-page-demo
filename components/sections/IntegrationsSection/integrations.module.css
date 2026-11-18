@@ -1,0 +1,105 @@
+/* The drifting rows of the integrations section. Each row is a track of two
+   identical halves (the real list plus enough repeats to be wider than any
+   screen, then an aria-hidden copy of all of that); the track slides left by
+   one half and starts again, so the loop has no seam. The second row runs the
+   other way. Both pause under the pointer, and the edges fade out. Under
+   reduced motion there is no drift: the repeats go and each row wraps,
+   centred, inside the page width. */
+
+.rows {
+  --gap: 0.75rem;
+  display: grid;
+  gap: var(--gap);
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+}
+
+.row {
+  display: flex;
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  flex-shrink: 0;
+  width: max-content;
+}
+
+.half,
+.list,
+.filler {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--gap);
+}
+
+/* The half's trailing gap, so two halves side by side are exactly periodic */
+.half {
+  padding-right: var(--gap);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .track {
+    animation: drift var(--duration, 60s) linear infinite;
+    will-change: transform;
+  }
+
+  .row[data-reverse] .track {
+    animation-direction: reverse;
+  }
+
+  .rows:hover .track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rows {
+    width: 100%;
+    max-width: calc(var(--page-max) + 2 * var(--gutter));
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    mask-image: none;
+  }
+
+  .row {
+    overflow: visible;
+    justify-content: center;
+  }
+
+  .track,
+  .half,
+  .list {
+    flex-shrink: 1;
+    width: auto;
+    min-width: 0;
+  }
+
+  .half {
+    padding-right: 0;
+  }
+
+  .list {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .filler,
+  .copy {
+    display: none;
+  }
+}

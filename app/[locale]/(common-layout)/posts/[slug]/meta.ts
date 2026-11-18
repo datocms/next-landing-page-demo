@@ -3,6 +3,7 @@ import { CtaButtonWithImageFragment } from '@/components/blocks/CtaButtonWithIma
 import { ImageBlockFragment } from '@/components/blocks/ImageBlock/fragment';
 import { NewsletterSubscriptionFragment } from '@/components/blocks/NewsletterSubscription/fragment';
 import { ResponsiveImageFragment } from '@/components/datocms/DatoImage/fragment';
+import { PostExcerptFragment } from '@/components/posts/PostExcerpt/fragment';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import {
   graphql,
@@ -30,19 +31,50 @@ export const query = graphql(
         }
         _publishedAt
         title
+        coverImage {
+          id
+          focalPoint {
+            x
+            y
+          }
+          responsiveImage(
+            imgixParams: {
+              w: "2000"
+              h: "1250"
+              fit: crop
+              crop: focalpoint
+              auto: format
+            }
+          ) {
+            ...ResponsiveImageFragment
+          }
+        }
         author {
           name
-          bio
+          role
           slug
+          description {
+            value
+          }
           picture {
-            responsiveImage(imgixParams: { w: "64", h: "64", fit: crop }) {
+            responsiveImage(
+              imgixParams: {
+                w: "112"
+                h: "112"
+                fit: crop
+                crop: focalpoint
+                # The avatars are drawn as busts: small crops zoom in on the head
+                fpZ: 1.5
+                auto: format
+              }
+            ) {
               ...ResponsiveImageFragment
             }
           }
         }
         tags {
           id
-          tag
+          name
           slug
         }
         content {
@@ -67,9 +99,21 @@ export const query = graphql(
           }
         }
       }
+      # "More posts" under the article: the newest others
+      morePosts: allPosts(
+        filter: { slug: { neq: $slug }, title: { isBlank: "false" } }
+        orderBy: _createdAt_DESC
+        first: 3
+        locale: $locale
+        fallbackLocales: $fallbackLocales
+      ) {
+        id
+        ...PostExcerptFragment
+      }
     }
   `,
   [
+    PostExcerptFragment,
     TagFragment,
     ResponsiveImageFragment,
     ImageBlockFragment,

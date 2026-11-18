@@ -3,17 +3,30 @@ import { graphql } from '@/lib/datocms/graphql';
 
 export const CtaButtonWithImageFragment = graphql(
   /* GraphQL */ `
-    fragment CtaButtonWithImageFragment on CtaButtonWithImageRecord {
+    fragment CtaButtonWithImageFragment on CtaButtonWithImageBlockRecord {
       title
+      buttonLabel
+      buttonUrl
       subtitle {
         value
       }
       image {
-        responsiveImage {
+        focalPoint {
+          x
+          y
+        }
+        responsiveImage(
+          imgixParams: {
+            w: "640"
+            h: "480"
+            fit: crop
+            crop: focalpoint
+            auto: format
+          }
+        ) {
           ...ResponsiveImageFragment
         }
       }
-      buttonLabel
     }
   `,
   [ResponsiveImageFragment],

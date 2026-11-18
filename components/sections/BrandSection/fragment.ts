@@ -1,14 +1,17 @@
 import { graphql } from '@/lib/datocms/graphql';
 
 export const BrandSectionFragment = graphql(/* GraphQL */ `
-  fragment BrandSectionFragment on BrandSectionRecord {
-    displayOptions
-    brand {
-      brandName
-      brandUrl
+  fragment BrandSectionFragment on BrandSectionBlockRecord {
+    layout
+    brands {
+      name
+      url
       id
-      brandLogo {
+      logo {
         url
+        width
+        height
+        format
       }
     }
   }

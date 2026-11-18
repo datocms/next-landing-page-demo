@@ -1,141 +1,93 @@
-/* Tailwind theme: the design tokens Tailwind turns into utilities (colours, fonts, text
-   sizes, radii). Colours point at the runtime tokens in tokens.css, which all derive from
-   the CMS accent colour. */
-
-/* ---------- Theme: static values (every value is emitted, even when only used via var()) ---------- */
+/* Tailwind theme: the static design tokens Tailwind turns into utilities. Every default
+   palette, radius, shadow, text size and breakpoint is cleared first, so only the roles
+   below exist: `bg-surface`, `text-fg-muted`, `rounded-card`, `shadow-card`…
+   Type tokens (text-display … text-small) set several properties at once, so they are
+   utilities of their own in utilities.css. */
 
 @theme static {
-  /* Colours: Tailwind's palette is cleared, so only these and the @theme inline ones exist */
+  /* Colour: token names are roles. Transparent, current and inherit stay available */
   --color-*: initial;
-  --color-white: #fff;
-  --color-black: #000;
-  /* Default only: components/layout/CustomColor.tsx writes the project's main colour on :root */
-  --color-primary: #4a6cf7;
-  --color-success: oklch(0.5 0.13 150);
-  --color-danger: oklch(0.52 0.19 27);
+  --color-surface: #fff; /* the page, cards */
+  --color-fg: #090e34; /* text: the navy of the logo */
+  --color-fg-muted: #565b78; /* secondary text: AA on surface, subtle and tint */
+  --color-fg-faint: #9296ad; /* placeholders, disabled, decorative marks */
+  --color-ink: #090e34; /* the dark panels (closing panel, a dark tile) */
+  --color-line: #e3e5ef; /* borders and hairlines */
+  --color-line-strong: #d2d5e2; /* input borders, hovered borders */
+  --color-success: #13754a; /* "included" checks, positive states */
+  --color-success-soft: #e4f6ec; /* the fill behind a positive figure */
+  --color-danger: #dc2626; /* form errors */
 
-  /* Layout: xl is the 1200px page container; container-* give max-w-page, -reading, -docs */
-  --breakpoint-xl: 75rem;
+  /* Breakpoints */
+  --breakpoint-*: initial;
+  --breakpoint-sm: 40rem; /* 640 */
+  --breakpoint-md: 48rem; /* 768 */
+  --breakpoint-lg: 64rem; /* 1024 */
+  --breakpoint-xl: 80rem; /* 1280 */
 
-  --container-page: 75rem;
-  --container-reading: 42.5rem;
-  --container-docs: 46rem;
+  /* Widths: max-w-page is the page container, max-w-measure the longest line of text */
+  --container-*: initial;
+  --container-page: 70rem;
+  --container-measure: 68ch;
 
-  /* Radii, named after what they round */
-  --radius-pill: 999px;
-  --radius-well: 1.5rem;
-  --radius-card: 1.25rem;
-  --radius-photo: 1.25rem;
-  --radius-row: 1.125rem;
-  --radius-zone: 1rem;
-  --radius-window: 0.875rem;
-  --radius-tile: 0.75rem;
-  --radius-panel: 0.625rem;
+  /* Radii, by role. Avatars use rounded-full */
+  --radius-*: initial;
+  --radius-chip: 999px; /* chips and badges are pills (buttons use rounded-full) */
+  --radius-control: 14px; /* inputs, menus, small controls */
+  --radius-tile: 16px; /* small cards inside a card, code blocks */
+  --radius-card: 28px; /* cards and tiles */
+  --radius-frame: 36px; /* the full-width panels: hero, tinted bands, the closing panel */
+  --radius-media: 24px; /* photographs, video, covers */
 
-  /* Shadows come from the shadow-* utilities in utilities.css */
+  /* Shadows: a faint one under cards and buttons, a deeper one under menus and the hero image */
   --shadow-*: initial;
+  --shadow-card: 0 1px 2px rgb(9 14 52 / 0.05);
+  /* A white card resting on a tinted panel */
+  --shadow-soft: 0 30px 50px -40px rgb(9 14 52 / 0.3);
+  /* What floats: menus, and the small product cards over the hero images */
+  --shadow-float:
+    0 0 0 1px rgb(9 14 52 / 0.06), 0 40px 70px -30px rgb(9 14 52 / 0.5);
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --blur-*: initial;
 
-  /* Type: desktop values; tokens.css steps them down at each breakpoint */
-  --text-h1: 3.25rem;
-  --text-h1--line-height: 1.04;
-  --text-h1--letter-spacing: -0.035em;
-  --text-h1--font-weight: 400;
-  --text-title: 2.75rem;
-  --text-title--line-height: 1.08;
-  --text-title--letter-spacing: -0.03em;
-  --text-title--font-weight: 400;
-  --text-h2: 2rem;
-  --text-h2--line-height: 1.15;
-  --text-h2--letter-spacing: -0.025em;
-  --text-h2--font-weight: 400;
-  --text-quote: 1.5rem;
-  --text-quote--line-height: 1.35;
-  --text-quote--letter-spacing: -0.015em;
-  --text-quote--font-weight: 400;
-  --text-h3-lg: 1.25rem;
-  --text-h3-lg--line-height: 1.25;
-  --text-h3-lg--letter-spacing: -0.015em;
-  --text-h3-lg--font-weight: 500;
-  --text-h3: 1.0625rem;
-  --text-h3--line-height: 1.3;
-  --text-h3--letter-spacing: -0.01em;
-  --text-h3--font-weight: 500;
-  --text-h4: 1rem;
-  --text-h4--line-height: 1.4;
-  --text-h4--letter-spacing: -0.01em;
-  --text-h4--font-weight: 500;
-  --text-lead: 1.0625rem;
-  --text-lead--line-height: 1.55;
-  --text-lead--letter-spacing: -0.005em;
-  --text-body: 0.9375rem;
-  --text-body--line-height: 1.6;
-  --text-ui: 0.90625rem;
-  --text-ui--line-height: 1.2;
-  --text-ui--font-weight: 500;
-  --text-small: 0.875rem;
-  --text-small--line-height: 1.5;
-  --text-meta: 0.84375rem;
-  --text-meta--line-height: 1.4;
-  --text-caption: 0.8125rem;
-  --text-caption--line-height: 1.45;
-  --text-mono: 0.75rem;
-  --text-mono--line-height: 1.2;
-  --text-label: 0.6875rem;
-  --text-label--line-height: 1;
-  --text-label--letter-spacing: 0.05em;
-  --text-stat: 2.75rem;
-  --text-stat--line-height: 1;
-  --text-stat--letter-spacing: -0.03em;
-  --text-stat--font-weight: 400;
-  --text-price: 2.25rem;
-  --text-price--line-height: 1;
-  --text-price--letter-spacing: -0.03em;
-  --text-price--font-weight: 400;
+  /* Type: no default scale. Weights the type tokens use, for the rare override */
+  --text-*: initial;
+  --font-weight-*: initial;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500; /* labels, nav items, buttons */
+  --font-weight-semibold: 600; /* headings, item titles */
+  --font-weight-label: 500; /* alias of medium: a small text that names something */
 
-  /* Motion */
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
-  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
-  /* Small physical things only (a toggle thumb, an icon): settles with a 2.7% overshoot */
-  --ease-spring: linear(0, 0.415, 0.847, 1.008, 1.027, 1.013, 1.003, 1, 1);
-
-  --animate-fade-in: fade-in 0.15s var(--ease-standard) both;
+  --animate-*: initial;
 }
 
-/* ---------- Theme: Tailwind names mapped onto runtime variables ---------- */
-
+/* Names that point at runtime variables: the fonts (styles/fonts.ts puts them on <html>)
+   and the accent (tokens.css, overridden by components/layout/CustomColor.tsx) */
 @theme inline {
-  --font-display:
-    var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono:
-    var(--font-spline-mono), ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-code), ui-monospace, 'SF Mono', Menlo, monospace;
 
-  --color-well: var(--bg-2);
-  --color-surface: var(--surface);
-  --color-ink: var(--ink);
-  --color-ink-2: var(--ink-2);
-  --color-ink-3: var(--ink-3);
-  --color-line: var(--line);
-  --color-line-strong: var(--line-strong);
-  --color-sk: var(--sk);
-  --color-sk-2: var(--sk-2);
-  --color-sk-3: var(--sk-3);
-  --color-accent-solid: var(--accent-solid);
-  --color-accent-text: var(--accent-text);
-  --color-accent-wash: var(--accent-wash);
-  --color-g-50: var(--g-50);
-  --color-g-100: var(--g-100);
-  --color-g-200: var(--g-200);
-  --color-g-300: var(--g-300);
-  --color-g-400: var(--g-400);
-  --color-g-500: var(--g-500);
-  --color-g-600: var(--g-600);
-  --color-g-700: var(--g-700);
-  --color-g-800: var(--g-800);
-  --color-g-900: var(--g-900);
-  --color-tone: var(--tone);
-  --color-tone-wash: var(--tone-wash);
-  --color-tone-mark: var(--tone-mark);
-  --color-tone-text: var(--tone-text);
+  --color-subtle: var(
+    --pale
+  ); /* quiet tiles, wells, code: the accent's hue, nearly white */
+  --color-tint: var(
+    --ice
+  ); /* a stronger tint: the hero panel, selected pills, tags */
+  --color-star: var(--accent); /* rating stars */
+  --shadow-glow: 0 60px 100px -48px var(--glow); /* under a photograph or the featured plan */
+
+  --color-accent: var(--accent); /* primary buttons, selected states */
+  --color-on-accent: var(--on-accent); /* text on an accent fill */
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-ink: var(
+    --accent-ink
+  ); /* the accent as text: links, small labels */
+  --color-accent-soft: var(
+    --accent-soft
+  ); /* a pale tint: badges, icon tiles, selected rows */
+  --color-accent-line: var(--accent-line); /* a border in the accent's hue */
+  --color-accent-edge: var(
+    --accent-edge
+  ); /* a 2px accent border that shows even for a pale accent */
 }

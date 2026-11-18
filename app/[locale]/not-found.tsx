@@ -1,6 +1,6 @@
 import NotFoundPage from '@/components/layout/NotFoundPage';
 
-/** A missing record inside a locale (notFound() in a page): rendered in the locale's root layout */
+/** Fallback for a notFound() the group layouts cannot catch (their own data missing): rendered in the locale root layout, without header or footer */
 export default function NotFound() {
   return <NotFoundPage />;
 }

@@ -28,6 +28,30 @@ export const query = graphql(
           ...TagFragment
         }
         title
+        subtitle
+        # The way up for the breadcrumb (the tree is four levels deep)
+        parent {
+          id
+          slug
+          title
+          parent {
+            id
+            slug
+            title
+            parent {
+              id
+              slug
+              title
+            }
+          }
+        }
+        # The subtopics, listed at the end of the page
+        children {
+          id
+          slug
+          title
+          subtitle
+        }
         content {
           value
         }

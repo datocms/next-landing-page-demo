@@ -3,6 +3,7 @@ import { draftMode } from 'next/headers';
 import { toNextMetadata } from 'react-datocms/seo';
 import ContentLink from '@/components/datocms/ContentLink';
 import DraftModeToggle from '@/components/datocms/DraftModeToggle';
+import UiStringsProvider from '@/components/i18n/UiStringsProvider';
 import CustomColor from '@/components/layout/CustomColor';
 import InstantHistoryScroll from '@/components/layout/InstantHistoryScroll';
 import { TagFragment } from '@/lib/datocms/commonFragments';
@@ -10,6 +11,7 @@ import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import { toLanguageTag } from '@/lib/i18n/languageTag';
 import { requireSiteLocale } from '@/lib/i18n/locales';
+import { primeUiStrings } from '@/lib/i18n/uiStrings/load';
 import { fontVariables } from '@/styles/fonts';
 import type { GlobalPageProps } from '@/utils/globalPageProps';
 
@@ -53,11 +55,16 @@ export default async function LocaleLayout({ children, params }: Props) {
   const locale = await requireSiteLocale((await params).locale);
 
   const data = await executeQuery(query, { includeDrafts: isDraft });
+  // Fills the request store, and hands the same texts to the browser through the provider
+  const dictionary = await primeUiStrings(locale, isDraft);
 
   return (
     <html
       lang={toLanguageTag(locale)}
       className={fontVariables}
+      // Browser extensions add their own classes and attributes to <html> before React loads;
+      // this only silences the mismatch warning for this one element, not for its children
+      suppressHydrationWarning
       // Next scrolls to the top inside the navigation commit only with this attribute; never remove it
       data-scroll-behavior="smooth"
       // Inline on purpose: React drops the root from a route's view transition when only the page
@@ -66,15 +73,17 @@ export default async function LocaleLayout({ children, params }: Props) {
       style={{ viewTransitionName: 'root' }}
     >
       <body className="font-sans">
-        {/* Without a main color in the Layout record, the theme's default accent (#4a6cf7) */}
+        {/* Without a Layout record, the default accent of styles/tokens.css (#4a6cf7) */}
         <CustomColor
           r={data.layout?.mainColor.red ?? 74}
           g={data.layout?.mainColor.green ?? 108}
           b={data.layout?.mainColor.blue ?? 247}
         />
         {isDraft && <ContentLink />}
-        {children}
-        <DraftModeToggle isDraft={isDraft} locale={locale} />
+        <UiStringsProvider locale={locale} dictionary={dictionary}>
+          {children}
+          <DraftModeToggle isDraft={isDraft} locale={locale} />
+        </UiStringsProvider>
         <InstantHistoryScroll />
       </body>
     </html>

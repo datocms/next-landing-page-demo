@@ -20,7 +20,7 @@ const FooterLanguages = ({
   const { links } = useLanguageLinks(globalPageProps, languages);
 
   return (
-    <ul className="max-md:grid max-md:grid-cols-2 max-md:gap-x-(--gutter)">
+    <ul>
       {links.map((link) => (
         <li key={link.locale}>
           <Link

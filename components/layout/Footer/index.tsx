@@ -1,7 +1,7 @@
 import { stripStega } from '@datocms/content-link';
 import Image from 'next/image';
 import Link from 'next/link';
-import type { CSSProperties, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import {
   type FragmentOf,
@@ -24,11 +24,13 @@ type Props = {
   globalPageProps: ResolvedGlobalPageProps;
 };
 
-const columnHeadingClass = 'label mb-2.5 max-md:mb-0.5';
-
-/** Long single words (German legal titles in a half-width column) hyphenate, or break as a last resort */
+/**
+ * A footer link: dimmed white, white on hover, white and medium weight when it is
+ * the current page or language. Long single words (German legal titles) hyphenate, or break as
+ * a last resort
+ */
 const linkClass =
-  'inline-flex min-h-[30px] items-center text-[14.5px] text-ink-2 underline-offset-[3px] transition-colors hyphens-auto wrap-anywhere hover:text-ink hover:underline aria-[current]:text-ink max-md:min-h-11 pointer-coarse:min-h-11';
+  'inline-flex min-h-7 items-center text-small text-surface/70 hyphens-auto wrap-anywhere transition-colors duration-150 hover:text-surface aria-[current]:font-medium aria-[current]:text-surface pointer-coarse:min-h-11';
 
 /** The visible name of a social link: its CMS name, or the site's host when the name is empty */
 const socialLabel = (name: string | null | undefined, url: string) => {
@@ -55,14 +57,19 @@ const FooterColumn = ({
   children: ReactNode;
 }) => (
   <nav aria-labelledby={id} className={className}>
-    <h2 id={id} className={columnHeadingClass}>
+    <h2 id={id} className="mb-2 text-small font-semibold text-surface">
       {title}
     </h2>
     {children}
   </nav>
 );
 
-/** The site footer: logo and subtitle, the Legal, Social and Language columns, then the copyright and social icons */
+/**
+ * The site footer, a navy rounded panel: the logo and one sentence, the Legal,
+ * Social and Language columns, then the copyright year under a hairline. After a
+ * closing call to action (the last block of a page, also navy) it loses its top
+ * corners and its top margin, so the two read as one panel
+ */
 const Footer = ({ fragment, languages, globalPageProps }: Props) => {
   const layout = readFragment(FooterFragment, fragment);
   const locale = globalPageProps.params.locale;
@@ -73,43 +80,52 @@ const Footer = ({ fragment, languages, globalPageProps }: Props) => {
     // lang lets the browser hyphenate the localized link titles
     <footer
       lang={toLanguageTag(locale)}
-      className="bg-white pt-14 max-md:pt-12"
+      className="on-ink panel relative isolate mt-(--section-space) overflow-hidden mb-(--inset) bg-ink text-surface [main:has([data-closing])+&]:mt-0 [main:has([data-closing])+&]:rounded-t-none"
     >
-      <div className="container-page">
-        <div className="grid-page gap-y-8 pb-8">
-          <div className="col-span-full lg:col-span-5">
-            {layout?.footerLogo && (
+      {/* Faint rings breathing in the bottom-left corner, answering the closing panel's top-right ones */}
+      <span
+        aria-hidden="true"
+        className="breathe loop pointer-events-none absolute -bottom-[130px] -left-[130px] -z-10 size-[260px] rounded-full shadow-[0_0_0_64px_rgb(255_255_255/0.04),0_0_0_136px_rgb(255_255_255/0.026),0_0_0_216px_rgb(255_255_255/0.016)] [--loop-delay:-20s] [--loop-scale:1.06] [--loop-time:52s]"
+      />
+      <div className="container-page pt-9 pb-8 lg:pt-10 [main:has([data-closing])+footer_&]:border-surface/15 [main:has([data-closing])+footer_&]:border-t">
+        <div className="grid-12 gap-y-8">
+          <div className="col-span-full flex flex-col lg:col-span-5">
+            {layout?.footerLogo?.url && (
               <Link
                 href={pageUrl(globalPageProps, 'home')}
                 aria-label={uiString(locale, 'home')}
-                className="hit-44 inline-flex rounded-lg"
+                className="inline-flex"
               >
                 <Image
                   src={layout.footerLogo.url}
                   alt=""
-                  className="h-6 w-auto"
-                  width={layout.footerLogo.width || 100}
-                  height={layout.footerLogo.height || 100}
+                  className="h-7 w-auto"
+                  width={layout.footerLogo.width ?? 111}
+                  height={layout.footerLogo.height ?? 28}
                 />
               </Link>
             )}
             {hasStructuredText(layout?.footerSubtitle) && (
               <div
                 className={cn(
-                  'max-w-[32ch] text-[14.5px]/[1.55] text-ink-2 [&_a]:text-ink [&_a]:underline [&_a]:decoration-ink/35 [&_a]:underline-offset-[3px] [&_p+p]:mt-2',
-                  layout.footerLogo && 'mt-3.5',
+                  'max-w-[36ch] text-small text-surface/70 [&_a]:font-medium [&_a]:text-surface [&_a:hover]:underline [&_p+p]:mt-3',
+                  layout.footerLogo?.url && 'mt-4',
                 )}
               >
                 <DatoStructuredText data={layout.footerSubtitle} />
               </div>
             )}
+            {/* The year sits at the foot of this column, level with the last links */}
+            <p className="mt-6 text-small text-surface/60 lg:mt-auto lg:pt-6">
+              © {new Date().getFullYear()}
+            </p>
           </div>
 
           {footerLinks.length > 0 && (
             <FooterColumn
               id="footer-legal"
               title={uiString(locale, 'legal')}
-              className="col-span-2 md:col-span-4 lg:col-span-2 lg:col-start-7"
+              className="col-span-2 lg:col-start-7"
             >
               <ul>
                 {footerLinks.map((pageLink) => (
@@ -131,14 +147,29 @@ const Footer = ({ fragment, languages, globalPageProps }: Props) => {
             <FooterColumn
               id="footer-social"
               title={uiString(locale, 'social')}
-              className="col-span-2 md:col-span-4 lg:col-span-2"
+              className="col-span-2"
             >
               <ul>
                 {socialMediaLinks.map((socialMedia) => {
                   const href = stripStega(socialMedia.url);
                   return (
                     <li key={socialMedia.id}>
-                      <a href={href} className={linkClass}>
+                      <a
+                        href={href}
+                        className={cn(
+                          linkClass,
+                          'inline-flex items-center gap-2',
+                        )}
+                      >
+                        {socialMedia.icon?.url && (
+                          <Image
+                            src={socialMedia.icon.url}
+                            alt=""
+                            width={16}
+                            height={16}
+                            className="size-4 shrink-0 object-contain opacity-70 brightness-0 invert"
+                          />
+                        )}
                         {socialLabel(socialMedia.name, href)}
                       </a>
                     </li>
@@ -152,7 +183,7 @@ const Footer = ({ fragment, languages, globalPageProps }: Props) => {
             <FooterColumn
               id="footer-language"
               title={uiString(locale, 'language')}
-              className="col-span-full md:col-span-4 lg:col-span-2"
+              className="col-span-2"
             >
               <FooterLanguages
                 globalPageProps={globalPageProps}
@@ -160,43 +191,6 @@ const Footer = ({ fragment, languages, globalPageProps }: Props) => {
                 linkClassName={linkClass}
               />
             </FooterColumn>
-          )}
-        </div>
-
-        <div aria-hidden="true" className="hairline rounded-full" />
-
-        {/* The bottom clearance keeps the floating draft-mode button off the social buttons */}
-        <div className="flex items-center justify-between gap-4 pt-5 pb-18 sm:pb-20">
-          <p className="text-caption text-ink-3 tabular-nums">
-            © {new Date().getFullYear()}
-          </p>
-          {/*
-           * The round icons repeat the Social column for pointer users, so they
-           * stay out of the accessibility tree and the tab order. The icon is
-           * the uploaded SVG used as a mask over currentColor: drawn by CSS
-           * alone (no JS), and it follows the hover colour.
-           */}
-          {socialMediaLinks.length > 0 && (
-            <ul aria-hidden="true" className="flex gap-2">
-              {socialMediaLinks.map((socialMedia) => (
-                <li key={socialMedia.id}>
-                  <a
-                    href={stripStega(socialMedia.url)}
-                    tabIndex={-1}
-                    className="grid size-9 place-items-center rounded-full bg-well text-ink-2 transition-colors hover:bg-surface hover:text-ink max-md:size-11 pointer-coarse:size-11"
-                  >
-                    <span
-                      className="size-4 bg-current [mask:var(--icon)_center/contain_no-repeat]"
-                      style={
-                        {
-                          '--icon': `url(${JSON.stringify(socialMedia.icon.url)})`,
-                        } as CSSProperties
-                      }
-                    />
-                  </a>
-                </li>
-              ))}
-            </ul>
           )}
         </div>
       </div>

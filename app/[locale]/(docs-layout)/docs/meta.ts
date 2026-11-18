@@ -20,11 +20,35 @@ export const query = graphql(
           ...TagFragment
         }
         title
-        subheader
-        featuredPages {
-          slug
-        }
+        subtitle
         ...FeaturedDocumentationPagesFragment
+      }
+      # The overview of the docs by section: each top-level page with its
+      # subpages (three levels, flattened on the page)
+      allDocumentationPages(
+        filter: { parent: { exists: "false" } }
+        locale: $locale
+        fallbackLocales: $fallbackLocales
+      ) {
+        id
+        slug
+        title
+        subtitle
+        children {
+          id
+          slug
+          title
+          children {
+            id
+            slug
+            title
+            children {
+              id
+              slug
+              title
+            }
+          }
+        }
       }
     }
   `,

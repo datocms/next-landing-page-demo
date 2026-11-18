@@ -1,6 +1,7 @@
 import type { Entry } from './types';
 
-/** Add a key here first: this dictionary defines the keys every other locale must have */
+/** Add a key here first: this dictionary defines the keys and is the English fallback used
+ * whenever DatoCMS has no text for a key */
 export const en = {
   // Header: navigation, language picker, menu sheet and announcement bar
   skipToContent: 'Skip to content',
@@ -9,33 +10,37 @@ export const en = {
   openMenu: 'Open menu',
   closeMenu: 'Close menu',
   announcement: 'Announcement',
-  dismissAnnouncement: 'Dismiss announcement',
   // Suffix for the accessible name of links that open a new tab
   opensInNewTab: '(opens in a new tab)',
   mainNavigation: 'Main',
   // Title of a dropdown menu the CMS left without one
-  otherItems: 'Other Items',
+  otherItems: 'More',
   currentLanguage: 'Language: {language}',
 
+  // Ratings: the value in words, read by screen readers next to the stars
+  ratingOutOf: '{value} out of {max}',
+
   // Posts index, tag and author pages
-  blog: 'Blog',
   latestPosts: 'Latest posts',
-  tag: 'Tag',
-  author: 'Author',
   postsBy: 'Posts by {name}',
   postCount: { one: '{n} post', other: '{n} posts' },
   pageOf: 'Page {page} of {total}',
   noTaggedPosts: 'No posts with this tag yet.',
   pagination: 'Pagination',
-  previous: 'Prev',
-  next: 'Next',
+  // Post lists and the end of a post. "Untitled" stands in for a post without a title
+  untitled: 'Untitled',
+  allPosts: 'All posts',
+  // The list of authors: its title, and the link to it from an author's page
+  allAuthors: 'All authors',
+  morePosts: 'More posts',
+  writtenBy: 'Written by',
+  taggedPostCount: {
+    one: '{n} post with this tag',
+    other: '{n} posts with this tag',
+  },
 
-  // Featured posts sections and their carousel
+  // Featured posts sections
   featuredPosts: 'Featured posts',
-  readMore: 'Read more',
-  previousPost: 'Previous post',
-  nextPost: 'Next post',
-  slideOf: '{n} of {total}',
 
   // Post detail
   tags: 'Tags',
@@ -43,6 +48,8 @@ export const en = {
   shareOn: 'Share on {network} (opens in a new tab)',
   copyLink: 'Copy link',
   copied: 'Copied',
+  // The browser's own share sheet, after the links to the networks
+  shareOther: 'Other apps',
 
   // Docs, legal and changelog
   copy: 'Copy',
@@ -51,17 +58,23 @@ export const en = {
   closeDocsMenu: 'Close documentation menu',
   onThisPage: 'On this page',
   documentation: 'Documentation',
-  getStarted: 'Get started',
   backToSite: 'Back to site',
   latest: 'Latest',
-  releases: 'Releases',
   docsHome: 'Docs home',
   docsBadge: 'Docs',
   featuredPages: 'Featured pages',
-  subpagesOf: '{title} subpages',
+  // Over the list of a docs page's subtopics, at the end of the page
+  inThisTopic: 'In this topic',
+  // Docs, on phones: the button under the header that opens the topic list
+  allTopics: 'All topics',
+  previousPage: 'Previous',
+  nextPage: 'Next',
+  docsPagination: 'Previous and next page',
   changelog: 'Changelog',
   // Read before a release date, for screen readers
   released: 'Released',
+  // Before the date a legal page last changed
+  lastUpdated: 'Last updated',
 
   // Footer column headings
   legal: 'Legal',
@@ -75,18 +88,15 @@ export const en = {
   invalidEmail: 'Enter a valid email address.',
   subscribed: "Thanks, you're on the list.",
 
-  // 404 page (the title is split in two for the two-tone heading)
-  notFoundTitle: 'Page',
-  notFoundTitleRest: 'not found',
+  // 404 page
+  notFoundTitle: 'Page not found',
   notFoundBody:
     'The page you were looking for appears to have been moved, deleted or does not exist.',
   backToHome: 'Back to homepage',
 
   // Draft Mode toggle, password prompt and confirmation
-  draftMode: 'Draft mode',
   enterDraftMode: 'Enter draft mode',
   exitDraftMode: 'Exit draft mode',
-  exit: 'Exit',
   authenticate: 'Authenticate',
   // {variable} is replaced by the environment variable name, set in code
   draftPasswordHint:
@@ -99,23 +109,9 @@ export const en = {
     "You're now seeing content from the DatoCMS draft endpoint, with real-time updates. Changes you make in DatoCMS show up here instantly.",
   dismiss: 'Dismiss',
 
-  // Carousels and galleries in page sections (roledescriptions are lowercase nouns)
-  carousel: 'carousel',
-  slide: 'slide',
-  features: 'Features',
-  previousFeature: 'Previous feature',
-  nextFeature: 'Next feature',
+  // Accessible names of page sections without a visible title
   testimonials: 'Testimonials',
-  previousTestimonial: 'Previous testimonial',
-  nextTestimonial: 'Next testimonial',
-  // Announced when a testimonial carousel changes slide
-  testimonialAnnouncement: 'Testimonial {n} of {total}: {name}',
-  // Accessible name of one testimonial slide
-  testimonialSlide: 'Testimonial {n} of {total}, {name}',
-  ratedOutOf: 'Rated {value} out of {max}',
   brands: 'Brands',
-  pauseLogos: 'Pause logos',
-  playLogos: 'Play logos',
 
   // Video sections
   video: 'Video',
@@ -127,9 +123,6 @@ export const en = {
   // Pricing sections
   pricing: 'Pricing',
   choosePlan: 'Choose plan',
-  startFreeTrial: 'Start free trial',
-  startNow: 'Start now',
-  bestValue: 'Best value',
   // Read before a feature the plan lacks, for screen readers
   notIncluded: 'Not included:',
   billingPeriod: 'Billing period',
@@ -137,12 +130,11 @@ export const en = {
   yearly: 'Yearly',
   showingMonthlyPrices: 'Showing monthly prices',
   showingYearlyPrices: 'Showing yearly prices',
-  // Price units: the short one is shown, the spoken one read by screen readers
-  perMonthShort: '/mo',
-  perMonthSpoken: 'per month',
-  perYearShort: '/yr',
-  perYearSpoken: 'per year',
-  plan: 'Plan',
+  // Price periods, shown in small type after the figure
+  perMonth: 'per month',
+  perYear: 'per year',
+  // Accessible name of the plan tabs
+  plans: 'Plans',
   // Plan comparison table: the column head of feature names, and what screen readers say for a check or a dash
   comparePlans: 'Compare plans',
   feature: 'Feature',

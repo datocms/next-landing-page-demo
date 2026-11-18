@@ -1,7 +1,7 @@
 'use client';
 
-import { X } from 'lucide-react';
 import { type MouseEvent, useEffect, useRef, useState } from 'react';
+import { CloseIcon } from '@/components/ui/icons';
 import { uiString } from '@/lib/i18n/uiStrings';
 
 export type VideoProvider = 'youtube' | 'vimeo';
@@ -50,8 +50,8 @@ const VideoModal = ({
 
     if (!isOpen) {
       if (dialog.open) dialog.close();
-      // Unmount the player once the 150ms fade-out is over
-      const timeout = setTimeout(() => setPlayerMounted(false), 150);
+      // Unmount the player once the 100ms fade-out is over
+      const timeout = setTimeout(() => setPlayerMounted(false), 100);
       return () => clearTimeout(timeout);
     }
 
@@ -82,30 +82,27 @@ const VideoModal = ({
       aria-label={title || uiString(locale, 'video')}
       onClose={onClose}
       onClick={closeOnBackdropClick}
-      className="group fixed inset-0 m-0 size-full max-h-none max-w-none overflow-hidden border-0 bg-transparent p-0 opacity-0 transition-[opacity,overlay,display] transition-discrete duration-150 ease-standard backdrop:bg-transparent open:opacity-100 open:duration-200 open:ease-out-quint starting:open:opacity-0"
+      className="fixed inset-0 m-0 size-full max-h-none max-w-none overflow-hidden border-0 bg-transparent p-0 opacity-0 transition-[opacity,overlay,display] transition-discrete duration-100 ease-linear backdrop:bg-transparent open:opacity-100 starting:open:opacity-0"
     >
       <div className="relative grid size-full place-items-center px-(--gutter) py-16">
-        {/* Light scrim: the page stays visible, softly blurred */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-white/80 backdrop-blur-[8px]"
-        />
+        {/* An ink scrim: the one moment the page goes dark, while a video plays */}
+        <div aria-hidden="true" className="absolute inset-0 bg-fg/85" />
 
         <div
           data-video-modal-content
-          className="relative w-[min(60rem,calc(100vw_-_2*var(--gutter)),calc((100svh_-_8rem)*16/9))] scale-[.98] rounded-well bg-white p-2 shadow-pop transition-[scale] duration-150 ease-standard group-open:scale-100 group-open:duration-200 group-open:ease-out-quint max-md:rounded-[20px] max-md:p-1.5 starting:group-open:scale-[.98]"
+          className="on-ink relative w-[min(60rem,calc(100vw_-_2*var(--gutter)),calc((100svh_-_8rem)*16/9))]"
         >
           <button
             ref={closeButtonRef}
             type="button"
             onClick={onClose}
             aria-label={uiString(locale, 'closeVideo')}
-            className="btn btn-secondary btn-icon absolute -top-13 right-0 max-md:-top-14"
+            className="absolute -top-12 right-0 grid size-10 place-items-center rounded-control text-surface transition-colors duration-100 hover:bg-surface/20"
           >
-            <X aria-hidden="true" strokeWidth={1.75} />
+            <CloseIcon className="size-5" />
           </button>
 
-          <div className="aspect-video overflow-hidden rounded-zone bg-ink max-md:rounded-[14px]">
+          <div className="aspect-video overflow-hidden rounded-media bg-fg">
             {playerMounted && (
               <iframe
                 src={embedUrl(provider, videoId)}

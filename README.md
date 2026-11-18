@@ -50,7 +50,8 @@ components/
   layout/                 Header, footer, 404 page, page transition and the accent color
   datocms/                react-datocms wrappers (images, Structured Text,
                           Content Link) and the Draft Mode toggle
-  ui/                     Shared building blocks: section titles, code blocks, ornaments
+  ui/                     Shared building blocks: buttons, chips, section headers, photos,
+                          icons, code blocks, the table of contents, the video modal
 lib/
   datocms/                Data layer: executeQuery, gql.tada setup, page generators,
                           the website URL of each record (recordInfo.ts)
@@ -58,9 +59,9 @@ lib/
   websiteBaseUrl.ts       The site's public origin, for absolute URLs
 utils/                    Small helpers: route URLs (routes.ts), the page props every
                           route passes down (globalPageProps.ts), class names, dates,
-                          color tones, Structured Text
-styles/                   Tailwind CSS 4 setup, design tokens, component styles and
-                          the styles of each site area (areas/)
+                          the accent color, Structured Text
+styles/                   Tailwind CSS 4 setup: theme and runtime design tokens, base
+                          styles, custom utilities (type, container, grid, card), prose
 skills/                   Agent skills that explain how to extend this demo
 proxy.ts                  Adds the visitor's locale to URLs without one (/ → /en/home)
 ```
@@ -74,9 +75,9 @@ Every route backed by DatoCMS is made of the same four files:
 - `Content.tsx` renders the query result.
 - `RealTime.tsx` is the client version of `Content.tsx`, used in Draft Mode: it subscribes to DatoCMS's Real-time Updates API, so the page changes while editors type.
 
-The two route-group layouts, `(common-layout)` and `(docs-layout)`, use the same files with `layout.tsx` in place of `page.tsx`, so the header, footer and docs sidebar also update live in Draft Mode. `app/[locale]/layout.tsx` is the exception: it runs its small favicon and accent color query directly. Pieces that only make sense inside one route's markup sit next to its files (`posts/[slug]/PostBody.tsx`, `changelog/[slug]/ReleaseRail.tsx`); components that belong to a content area live in `components/<area>` (posts, docs) even when one route uses them.
+The two route-group layouts, `(common-layout)` and `(docs-layout)`, use the same files with `layout.tsx` in place of `page.tsx`, so the header, footer and docs sidebar also update live in Draft Mode. `app/[locale]/layout.tsx` is the exception: it runs its small favicon and accent color query directly. Pieces that only make sense inside one route's markup sit next to its files (`posts/[slug]/PostBody.tsx`); components that belong to a content area live in `components/<area>` (posts, docs) even when one route uses them.
 
-Pages (`app/[locale]/(common-layout)/[slug]`) are a stack of section blocks. `Content.tsx` maps each block type to its folder in `components/sections` (the Redirect block is handled right in `Content.tsx`). Blocks with several layouts (the folders with a `variants/` directory) switch on their display option field in `index.tsx` and render the matching component from `variants/`, named after what it renders (`SplitImageHero`, `CardGridPosts`). To add a layout: add the new value to that field's options in DatoCMS, add a component to `variants/`, and add a `case` for the value in the block's `index.tsx`. The blog index is a page too: `/posts` is the `posts` Page, whose All posts block shows the first page of posts, and `posts/page/[page]` serves the others.
+Pages (`app/[locale]/(common-layout)/[slug]`) are a stack of section blocks. `Content.tsx` maps each block type to its folder in `components/sections`. Blocks with several layouts (the folders with a `variants/` directory) switch on their display options field in `index.tsx` and render the matching component from `variants/`, named after what it renders (`SplitHero`, `PlanTabs`). To add a layout: add the new value to that field's options in DatoCMS, add a component to `variants/`, and add a `case` for the value in the block's `index.tsx`. The blog index is a page too: `/posts` is the `posts` Page, whose All posts block shows the first page of posts, and `posts/page/[page]` serves the others.
 
 Published content is cached in the Next.js Data Cache under one tag. When content changes, DatoCMS calls `/api/revalidateCache`, which invalidates it (see `lib/datocms/executeQuery.ts`). In Draft Mode, text fields carry Content Link markers: hold Alt/Option (or turn on Visual Editing in the Web Previews plugin) and click any text to open the matching field in DatoCMS.
 

@@ -1,41 +1,108 @@
+import type { ResponsiveImageFragment } from '@/components/datocms/DatoImage/fragment';
+import AppLink from '@/components/ui/AppLink';
+import Avatar, { type AvatarSize } from '@/components/ui/Avatar';
+import type { FragmentOf } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
 import { formatDate } from '@/utils/formatDate';
-import { toneClassFor } from '@/utils/tones';
+
+export type PostAuthor = {
+  name: string;
+  picture?: {
+    responsiveImage?: FragmentOf<typeof ResponsiveImageFragment> | null;
+  } | null;
+};
+
+/** A post's date as a <time>, in the page's language */
+export const PostDate = ({
+  date,
+  locale,
+  className,
+}: {
+  date: string;
+  locale: string;
+  className?: string;
+}) => {
+  const { iso, label } = formatDate(date, locale);
+  return (
+    <time dateTime={iso} className={cn('whitespace-nowrap', className)}>
+      {label}
+    </time>
+  );
+};
+
+/** The author's avatar and name; with `href` the name links to the author page */
+export const Byline = ({
+  author,
+  href,
+  size = 24,
+  className,
+}: {
+  author: PostAuthor;
+  href?: string;
+  /** 24 is drawn at 26px, the byline size of every post listing */
+  size?: AvatarSize;
+  className?: string;
+}) => {
+  const content = (
+    <>
+      <Avatar
+        image={author.picture?.responsiveImage}
+        name={author.name}
+        size={size}
+        // Avatar has no 26px step: the important size wins over its size-6
+        className={size === 24 ? 'size-[26px]!' : undefined}
+      />
+      <span
+        className={cn(
+          'min-w-0 font-medium text-fg',
+          href &&
+            'underline decoration-transparent decoration-1 underline-offset-[3px] transition-colors duration-150 group-hover/byline:decoration-current',
+        )}
+      >
+        {author.name}
+      </span>
+    </>
+  );
+
+  return href ? (
+    <AppLink
+      href={href}
+      className={cn('group/byline inline-flex items-center gap-2', className)}
+    >
+      {content}
+    </AppLink>
+  ) : (
+    <span className={cn('inline-flex items-center gap-2', className)}>
+      {content}
+    </span>
+  );
+};
 
 type Props = {
-  /** Raw CMS tag (stega kept for visual editing); its tone is hashed on the visible text */
-  tag?: string | null;
+  locale: string;
   /** Raw CMS date or datetime */
   date?: string | null;
-  /** Chip above the date, right-aligned (the side column of index rows) */
-  stack?: boolean;
+  author?: PostAuthor | null;
   /** Placement only */
   className?: string;
 };
 
-/** Tag chip + mono date, the meta row shared by every post card. Renders nothing when both are missing. */
-const PostMeta = ({ tag, date, stack = false, className }: Props) => {
-  const formattedDate = date ? formatDate(date) : null;
-
-  if (!tag && !formattedDate) {
-    return null;
-  }
+/**
+ * The byline of every post listing: the author's 26px round photo, the name
+ * in navy (13.5px medium), then the date, muted. Renders nothing when both are missing.
+ */
+const PostMeta = ({ locale, date, author, className }: Props) => {
+  if (!date && !author) return null;
 
   return (
     <div
       className={cn(
-        stack
-          ? 'flex flex-col items-end gap-2'
-          : 'flex flex-wrap items-center gap-x-2.5 gap-y-1.5',
+        'flex flex-wrap items-center gap-x-2 gap-y-1 text-ui text-fg-muted',
         className,
       )}
     >
-      {tag && <span className={cn('chip', toneClassFor(tag))}>{tag}</span>}
-      {formattedDate && (
-        <time dateTime={formattedDate.iso} className="mono whitespace-nowrap">
-          {formattedDate.label}
-        </time>
-      )}
+      {author && <Byline author={author} />}
+      {date && <PostDate date={date} locale={locale} />}
     </div>
   );
 };

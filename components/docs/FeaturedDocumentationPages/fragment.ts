@@ -1,21 +1,16 @@
 import { graphql } from '@/lib/datocms/graphql';
 
-export const PreviewCardFragment = graphql(/* GraphQL */ `
-  fragment PreviewCardFragment on DocumentationPageRecord {
-    title
-    subtitle
-    slug
-  }
-`);
-
-export const FeaturedDocumentationPagesFragment = graphql(
-  /* GraphQL */ `
-    fragment FeaturedDocumentationPagesFragment on DocumentationHomeRecord {
-      featuredPages {
+export const FeaturedDocumentationPagesFragment = graphql(/* GraphQL */ `
+  fragment FeaturedDocumentationPagesFragment on DocumentationHomeRecord {
+    featuredPages {
+      id
+      slug
+      title
+      subtitle
+      parent {
         id
-        ...PreviewCardFragment
+        title
       }
     }
-  `,
-  [PreviewCardFragment],
-);
+  }
+`);

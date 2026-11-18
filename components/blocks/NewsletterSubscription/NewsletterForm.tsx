@@ -1,7 +1,8 @@
 'use client';
 
-import { ArrowRight, CircleCheck } from 'lucide-react';
 import { type FormEvent, useEffect, useId, useRef, useState } from 'react';
+import Button from '@/components/ui/Button';
+import { CheckIcon } from '@/components/ui/icons';
 
 /** Interface copy, resolved on the server for the page's locale */
 type NewsletterFormLabels = {
@@ -19,10 +20,11 @@ type Props = {
 };
 
 /**
- * Demo sign-up form: a pill capture (field plus inset primary button). There is
- * no newsletter endpoint, so nothing is sent: a valid address swaps the form for
- * an inline confirmation pill, announced by the live region. The input has no
- * name, so even a submit before hydration carries no address.
+ * Demo sign-up form: a labelled email field and a submit button. There is no
+ * newsletter endpoint, so nothing is sent: a valid address swaps the form for
+ * an inline confirmation, announced by the live region and focused so the
+ * keyboard does not lose its place. The input has no name, so even a submit
+ * before hydration carries no address.
  */
 const NewsletterForm = ({ buttonLabel, labels }: Props) => {
   const id = useId();
@@ -53,20 +55,13 @@ const NewsletterForm = ({ buttonLabel, labels }: Props) => {
   };
 
   return (
-    // From 768 the well's arch threads sit bottom-right: the row stops 200px
-    // short of the content edge so the capture never touches a strand
-    <div className="relative mt-5 w-full max-w-[440px] md:max-w-[min(440px,calc(100%-200px))]">
+    <div className="mt-6">
       {!subscribed && (
-        <>
-          <form
-            noValidate
-            onSubmit={subscribe}
-            data-invalid={hasError || undefined}
-            className="capture"
-          >
-            <label htmlFor={inputId} className="sr-only">
-              {labels.emailAddress}
-            </label>
+        <form noValidate onSubmit={subscribe} className="max-w-[28rem]">
+          <label htmlFor={inputId} className="sr-only">
+            {labels.emailAddress}
+          </label>
+          <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
             <input
               ref={inputRef}
               id={inputId}
@@ -77,46 +72,29 @@ const NewsletterForm = ({ buttonLabel, labels }: Props) => {
               aria-invalid={hasError}
               aria-describedby={hasError ? errorId : undefined}
               onChange={() => setHasError(false)}
+              className="h-11 w-full min-w-0 rounded-control border border-line bg-surface px-4 text-body transition-colors duration-150 placeholder:text-fg-faint hover:border-line-strong focus:border-accent aria-invalid:border-danger sm:flex-1"
             />
-            <button type="submit" className="btn btn-primary">
-              {buttonLabel || labels.subscribe}
-              <ArrowRight
-                strokeWidth={1.75}
-                aria-hidden="true"
-                className="btn-arrow rtl:rotate-180"
-              />
-            </button>
-          </form>
+            <Button type="submit">{buttonLabel || labels.subscribe}</Button>
+          </div>
           <p
             id={errorId}
             aria-live="assertive"
-            className="mt-2 ps-[22px] text-small text-danger empty:hidden max-md:ps-[18px]"
+            className="mt-2 text-small text-danger empty:hidden"
           >
             {hasError ? labels.invalidEmail : ''}
           </p>
-        </>
+        </form>
       )}
 
-      {/* Once subscribed, the region keeps the capture's height so the well does not jump */}
-      <div
-        aria-live="polite"
-        className={
-          subscribed
-            ? 'flex min-h-13 items-center pointer-coarse:min-h-14'
-            : undefined
-        }
-      >
+      {/* Present from the start, so the confirmation is announced when it appears */}
+      <div aria-live="polite">
         {subscribed && (
           <p
             ref={confirmationRef}
             tabIndex={-1}
-            className="inline-flex min-h-7 items-center gap-2 rounded-full bg-white px-3 text-caption text-ink-2 shadow-[var(--shadow-xs),inset_0_0_0_1px_var(--line)] outline-none"
+            className="flex items-center gap-2 text-body font-medium outline-none"
           >
-            <CircleCheck
-              strokeWidth={1.75}
-              aria-hidden="true"
-              className="size-4 shrink-0 text-success"
-            />
+            <CheckIcon className="size-4 shrink-0 text-success" />
             {labels.subscribed}
           </p>
         )}

@@ -1,8 +1,9 @@
 'use client';
 
-import { ArrowUpRight, Check, Link2, Share2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { buttonClass } from '@/components/ui/Button';
 import { useCopyToClipboard } from '@/components/ui/useCopyToClipboard';
+import { cn } from '@/utils/cn';
 
 /** Interface copy, resolved on the server for the page's locale */
 type SharePostLabels = {
@@ -25,14 +26,14 @@ type Props = {
 
 const SHARE_NETWORKS = [
   {
-    name: 'X',
-    buildHref: (url: string) =>
-      `https://x.com/intent/post?url=${encodeURIComponent(url)}`,
-  },
-  {
     name: 'LinkedIn',
     buildHref: (url: string) =>
       `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+  },
+  {
+    name: 'X',
+    buildHref: (url: string) =>
+      `https://x.com/intent/post?url=${encodeURIComponent(url)}`,
   },
   {
     name: 'Facebook',
@@ -41,65 +42,18 @@ const SHARE_NETWORKS = [
   },
 ];
 
-const BUTTON_CLASS = 'btn btn-secondary btn-sm pointer-coarse:h-11';
-
-/** One of the copy button's two stacked labels; the hidden one keeps its size */
-const SWAP_LABEL_CLASS =
-  'col-start-1 row-start-1 inline-flex items-center justify-center gap-1.5 transition-[opacity,scale,visibility] duration-300 ease-spring';
-const HIDDEN_LABEL_CLASS = 'invisible scale-90 opacity-0';
+// Small secondary buttons, text only
+const LINK = buttonClass({ variant: 'secondary', size: 'sm' });
 
 /**
- * Copies the browser address and confirms it in place for two seconds, with a
- * polite announcement for screen readers
- */
-const CopyLinkButton = ({
-  labels,
-}: {
-  labels: Pick<SharePostLabels, 'copyLink' | 'copied'>;
-}) => {
-  const { copied, copy } = useCopyToClipboard();
-
-  return (
-    <>
-      <button
-        type="button"
-        onClick={() => copy(window.location.href)}
-        className={BUTTON_CLASS}
-      >
-        {/* Both labels share one grid cell, so the button keeps the width of the longer one */}
-        <span className="grid">
-          <span
-            className={`${SWAP_LABEL_CLASS} ${copied ? HIDDEN_LABEL_CLASS : ''}`}
-          >
-            <Link2 strokeWidth={1.75} aria-hidden="true" />
-            {labels.copyLink}
-          </span>
-          <span
-            className={`${SWAP_LABEL_CLASS} ${copied ? '' : HIDDEN_LABEL_CLASS}`}
-          >
-            <Check
-              strokeWidth={2}
-              aria-hidden="true"
-              className="text-accent-text"
-            />
-            {labels.copied}
-          </span>
-        </span>
-      </button>
-      <span aria-live="polite" className="sr-only">
-        {copied ? labels.copied : ''}
-      </span>
-    </>
-  );
-};
-
-/**
- * The post's share row: copy link, one link per network and, where the
- * browser has a share sheet, a native Share button
+ * The post's share row as small secondary buttons: copy the link, one link per network
+ * and, where the browser has a share sheet, "Share". Copying swaps the label
+ * to "Copied" for two seconds and announces it.
  */
 const SharePost = ({ url: serverUrl, labels }: Props) => {
   const [url, setUrl] = useState(serverUrl ?? '');
   const [canShare, setCanShare] = useState(false);
+  const { copied, copy } = useCopyToClipboard();
 
   useEffect(() => {
     setUrl(window.location.href);
@@ -117,43 +71,58 @@ const SharePost = ({ url: serverUrl, labels }: Props) => {
     }
   };
 
-  // Phones: an even two-column grid, so no button is left alone on a row (the
-  // native Share button spans a full row). From sm up: one wrapping row. Share
-  // comes last because it only appears after hydration: nothing shifts.
   return (
-    <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
-      <CopyLinkButton labels={labels} />
-      {SHARE_NETWORKS.map((network) => (
-        <a
-          key={network.name}
-          href={network.buildHref(url)}
-          // In draft mode this island also hydrates inside the client preview tree,
-          // which has no server origin: the browser address replaces it on mount
-          suppressHydrationWarning
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={labels.shareOn.replace('{network}', network.name)}
-          className={BUTTON_CLASS}
-        >
-          {network.name}
-          <ArrowUpRight
-            strokeWidth={1.75}
-            aria-hidden="true"
-            className="text-ink-3"
-          />
-        </a>
-      ))}
-      {canShare && (
+    <ul className="flex flex-wrap items-center gap-2">
+      <li>
         <button
           type="button"
-          onClick={share}
-          className="btn btn-secondary btn-sm col-span-2 pointer-coarse:h-11"
+          onClick={() => copy(window.location.href)}
+          className={LINK}
         >
-          <Share2 strokeWidth={1.75} aria-hidden="true" />
-          {labels.share}
+          {/* Both labels share one grid cell, so the link keeps the width of the longer one */}
+          <span className="grid text-start">
+            <span
+              className={cn('col-start-1 row-start-1', copied && 'invisible')}
+            >
+              {labels.copyLink}
+            </span>
+            <span
+              aria-hidden="true"
+              className={cn('col-start-1 row-start-1', !copied && 'invisible')}
+            >
+              {labels.copied}
+            </span>
+          </span>
         </button>
+        <span aria-live="polite" className="sr-only">
+          {copied ? labels.copied : ''}
+        </span>
+      </li>
+      {SHARE_NETWORKS.map((network) => (
+        <li key={network.name}>
+          <a
+            href={network.buildHref(url)}
+            // In draft mode this island also hydrates inside the client preview tree,
+            // which has no server origin: the browser address replaces it on mount
+            suppressHydrationWarning
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={labels.shareOn.replace('{network}', network.name)}
+            className={LINK}
+          >
+            {network.name}
+          </a>
+        </li>
+      ))}
+      {/* Last, because it only appears after hydration: nothing shifts */}
+      {canShare && (
+        <li>
+          <button type="button" onClick={share} className={LINK}>
+            {labels.share}
+          </button>
+        </li>
       )}
-    </div>
+    </ul>
   );
 };
 

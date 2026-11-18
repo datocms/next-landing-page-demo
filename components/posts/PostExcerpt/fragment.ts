@@ -1,30 +1,57 @@
 import { ResponsiveImageFragment } from '@/components/datocms/DatoImage/fragment';
 import { graphql } from '@/lib/datocms/graphql';
 
+/** What every post list needs: the cards, the featured post and the text rows */
 export const PostExcerptFragment = graphql(
   /* GraphQL */ `
     fragment PostExcerptFragment on PostRecord {
+      id
       _publishedAt
       slug
-      id
       title
       tags {
-        tag
+        name
+        # The topic links of the blog index
+        slug
       }
-      seoTags {
+      # The body's first paragraph is the card's excerpt when the description repeats the title
+      content {
+        value
+      }
+      seoMeta {
         description
-        image {
-          responsiveImage {
-            ...ResponsiveImageFragment
+      }
+      coverImage {
+        focalPoint {
+          x
+          y
+        }
+        responsiveImage(
+          imgixParams: {
+            w: "1600"
+            h: "1000"
+            fit: crop
+            crop: focalpoint
+            auto: format
           }
+        ) {
+          ...ResponsiveImageFragment
         }
       }
       author {
         name
-        bio
-        slug
         picture {
-          responsiveImage(imgixParams: { w: "64", h: "64", fit: crop }) {
+          responsiveImage(
+            imgixParams: {
+              w: "48"
+              h: "48"
+              fit: crop
+              crop: focalpoint
+              # The avatars are drawn as busts: small crops zoom in on the head
+              fpZ: 1.5
+              auto: format
+            }
+          ) {
             ...ResponsiveImageFragment
           }
         }

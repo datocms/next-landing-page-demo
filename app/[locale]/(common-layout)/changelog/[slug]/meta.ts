@@ -19,7 +19,7 @@ export const query = graphql(
       $locale: SiteLocale
       $fallbackLocales: [SiteLocale!]
     ) {
-      changeLog(
+      changelogEntry(
         filter: { slug: { eq: $slug } }
         locale: $locale
         fallbackLocales: $fallbackLocales
@@ -34,15 +34,16 @@ export const query = graphql(
           value
         }
       }
-      allChangeLogs(
-        orderBy: timeOfRelease_DESC
-        first: 100
+      # Every release, newest first: the neighbours of this one, and whether it is the latest
+      releases: allChangelogEntries(
         locale: $locale
         fallbackLocales: $fallbackLocales
+        orderBy: [timeOfRelease_DESC]
+        first: 100
       ) {
         id
-        versionName
         slug
+        versionName
         timeOfRelease
       }
     }

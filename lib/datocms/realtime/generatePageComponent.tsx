@@ -1,5 +1,6 @@
 import type { TadaDocumentNode } from 'gql.tada';
 import PageTransition from '@/components/layout/PageTransition';
+import { primeUiStrings } from '@/lib/i18n/uiStrings/load';
 import type {
   GlobalPageProps,
   ResolvedGlobalPageProps,
@@ -45,6 +46,9 @@ export function generatePageComponent<
       asyncPageProps,
       options.buildVariables,
     );
+
+    // Fills the request store first, whatever order React renders the layouts and the page in
+    await primeUiStrings(pageProps.params.locale, includeDrafts);
 
     const data = await executeQuery(options.query, {
       variables,

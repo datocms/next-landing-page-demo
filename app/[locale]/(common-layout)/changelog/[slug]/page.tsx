@@ -1,9 +1,13 @@
 import { generateMetadataFn } from '@/lib/datocms/generateMetadataFn';
 import { generatePageComponent } from '@/lib/datocms/realtime/generatePageComponent';
 import type { BuildVariablesFn } from '@/lib/datocms/routeContext';
+import { slugParams } from '@/lib/datocms/staticParams';
 import Content from './Content';
 import { type PageProps, type Query, query, type Variables } from './meta';
 import RealTime from './RealTime';
+
+/** Prerendered at build time (lib/datocms/staticParams.ts); a newer record renders on its first visit */
+export const generateStaticParams = () => slugParams('changelog');
 
 const buildVariables: BuildVariablesFn<PageProps, Variables> = ({
   params,
@@ -18,7 +22,7 @@ export const generateMetadata = generateMetadataFn<PageProps, Query, Variables>(
   {
     query,
     buildVariables,
-    pickSeoMetaTags: (data) => data.changeLog?.seo,
+    pickSeoMetaTags: (data) => data.changelogEntry?.seo,
   },
 );
 

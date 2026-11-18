@@ -1,87 +1,104 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import Link from 'next/link';
+import AppLink from '@/components/ui/AppLink';
+import Button from '@/components/ui/Button';
 import { uiString } from '@/lib/i18n/uiStrings';
+import { cn } from '@/utils/cn';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import { postsPageUrl } from '@/utils/routes';
-import { POSTS_PER_PAGE, postsPageCount } from './postsPagination';
+import { postsPageCount } from './postsPagination';
 
 type Props = {
   /** The current page, from 1 */
   page: number;
   postCount: number;
   globalPageProps: ResolvedGlobalPageProps;
+  /** Placement only */
+  className?: string;
 };
 
 /**
- * The blog index's page links: Previous, the page numbers and Next. The
- * current page is a filled ink circle, so it reads without relying on colour.
+ * A disabled end button keeps the secondary look, only faded (Button's own
+ * disabled state is a grey fill, which reads as a different control). cn has
+ * no tailwind-merge, so the overrides are marked important; Button already
+ * drops pointer events when disabled.
  */
-const Pagination = ({ page, postCount, globalPageProps }: Props) => {
+const DISABLED_END =
+  'disabled:border-line-strong! disabled:bg-surface! disabled:text-fg! disabled:shadow-card! disabled:opacity-50';
+
+/**
+ * The post list's pages, all pills: "Previous" and "Next" as secondary buttons
+ * (disabled at either end) with the page numbers between them, the current one
+ * on the pale tint. The list runs newest first, so "Next" goes to older posts.
+ */
+const Pagination = ({ page, postCount, globalPageProps, className }: Props) => {
   const { locale } = globalPageProps.params;
   const pageCount = postsPageCount(postCount);
-  const hasNextPage = postCount > page * POSTS_PER_PAGE;
+  if (pageCount < 2) return null;
 
-  const pageLinks = Array.from({ length: pageCount }, (_, i) => {
-    const pageNumber = i + 1;
-    const isCurrent = pageNumber === page;
-
-    return (
-      <li key={pageNumber}>
-        <Link
-          href={postsPageUrl(globalPageProps, pageNumber)}
-          aria-current={isCurrent ? 'page' : undefined}
-          aria-label={uiString(locale, 'pageOf', {
-            page: pageNumber,
-            total: pageCount,
-          })}
-          className="btn btn-secondary btn-icon text-ui tabular-nums aria-[current=page]:bg-ink aria-[current=page]:text-white aria-[current=page]:shadow-none"
-        >
-          {pageNumber}
-        </Link>
-      </li>
-    );
-  });
+  const previous = uiString(locale, 'previousPage');
+  const next = uiString(locale, 'nextPage');
 
   return (
     <nav
       aria-label={uiString(locale, 'pagination')}
-      className="mt-12 flex justify-center"
+      className={cn('flex items-center justify-between gap-4', className)}
     >
-      <ul className="flex flex-wrap items-center justify-center gap-2">
-        {page > 1 && (
-          <li>
-            <Link
-              href={postsPageUrl(globalPageProps, page - 1)}
-              rel="prev"
-              className="btn btn-secondary btn-sm h-10 max-md:h-11 pointer-coarse:h-11"
-            >
-              <ChevronLeft
-                strokeWidth={1.75}
-                aria-hidden="true"
-                className="btn-arrow-back rtl:rotate-180"
-              />
-              {uiString(locale, 'previous')}
-            </Link>
-          </li>
-        )}
-        {pageLinks}
-        {hasNextPage && (
-          <li>
-            <Link
-              href={postsPageUrl(globalPageProps, page + 1)}
-              rel="next"
-              className="btn btn-secondary btn-sm h-10 max-md:h-11 pointer-coarse:h-11"
-            >
-              {uiString(locale, 'next')}
-              <ChevronRight
-                aria-hidden="true"
-                strokeWidth={1.75}
-                className="btn-arrow rtl:rotate-180"
-              />
-            </Link>
-          </li>
-        )}
-      </ul>
+      {page > 1 ? (
+        <Button
+          variant="secondary"
+          href={postsPageUrl(globalPageProps, page - 1)}
+          rel="prev"
+        >
+          {previous}
+        </Button>
+      ) : (
+        <Button variant="secondary" disabled className={DISABLED_END}>
+          {previous}
+        </Button>
+      )}
+
+      <ol className="flex flex-wrap items-center justify-center gap-1">
+        {Array.from({ length: pageCount }, (_, index) => {
+          const number = index + 1;
+          const current = number === page;
+
+          return (
+            <li key={number}>
+              <AppLink
+                href={postsPageUrl(globalPageProps, number)}
+                aria-current={current ? 'page' : undefined}
+                // The page transition comes in from the side the page lies on (Previous and Next say it with rel)
+                data-direction={number > page ? 'forward' : 'back'}
+                aria-label={uiString(locale, 'pageOf', {
+                  page: number,
+                  total: pageCount,
+                })}
+                className={cn(
+                  'grid size-11 place-items-center rounded-full text-small font-semibold tabular-nums transition-colors duration-150',
+                  current
+                    ? 'bg-tint text-accent-ink'
+                    : 'text-fg-muted hover:bg-subtle hover:text-fg',
+                )}
+              >
+                {number}
+              </AppLink>
+            </li>
+          );
+        })}
+      </ol>
+
+      {page < pageCount ? (
+        <Button
+          variant="secondary"
+          href={postsPageUrl(globalPageProps, page + 1)}
+          rel="next"
+        >
+          {next}
+        </Button>
+      ) : (
+        <Button variant="secondary" disabled className={DISABLED_END}>
+          {next}
+        </Button>
+      )}
     </nav>
   );
 };

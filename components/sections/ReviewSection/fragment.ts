@@ -9,13 +9,40 @@ export const TestimonialFragment = graphql(
       review {
         value
       }
-      reviewerName
-      reviewerPicture {
-        responsiveImage {
+      name
+      # Square, in colour: the largest avatar is 56px
+      picture {
+        responsiveImage(
+          imgixParams: {
+            w: "112"
+            h: "112"
+            fit: crop
+            crop: focalpoint
+            auto: format
+          }
+        ) {
           ...ResponsiveImageFragment
         }
       }
-      reviewerTitle
+      role
+      # A 4:5 crop for the layouts that show the person as a photograph
+      portrait: picture {
+        focalPoint {
+          x
+          y
+        }
+        responsiveImage(
+          imgixParams: {
+            w: "480"
+            h: "600"
+            fit: crop
+            crop: focalpoint
+            auto: format
+          }
+        ) {
+          ...ResponsiveImageFragment
+        }
+      }
     }
   `,
   [ResponsiveImageFragment],
@@ -23,13 +50,9 @@ export const TestimonialFragment = graphql(
 
 export const ReviewSectionFragment = graphql(
   /* GraphQL */ `
-    fragment ReviewSectionFragment on ReviewSectionRecord {
-      reviewSectionHeader
-      reviewSectionSubheader {
-        value
-      }
-      displayOptions
-      reviews {
+    fragment ReviewSectionFragment on TestimonialSectionBlockRecord {
+      layout
+      testimonials {
         id
         ...TestimonialFragment
       }

@@ -1,0 +1,52 @@
+/* The steps as arches on one hairline, rising step by step from 1024px */
+
+.rail {
+  display: grid;
+  gap: 1rem;
+  @media (width >= 64rem) {
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    align-items: end;
+    gap: 1.5rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3.75rem 1.5rem 1.5rem;
+  border-radius: 999px 999px var(--radius-card) var(--radius-card);
+  background-color: var(--color-subtle);
+  text-align: center;
+  @media (width >= 64rem) {
+    /* Each arch a step taller than the one before; they stand on the hairline */
+    min-height: calc(29rem + var(--i) * 3.5rem);
+    padding: 4.5rem 1.75rem 1.75rem;
+    border-radius: 999px 999px 0 0;
+  }
+}
+
+.disc {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border-radius: 999px;
+  background-color: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The product card stands at the arch's foot, white on the pale fill */
+.card {
+  width: 100%;
+  max-width: 21rem;
+  margin-top: 1.75rem;
+  @media (width >= 64rem) {
+    margin-top: auto;
+    padding-top: 1.75rem;
+  }
+}

@@ -3,12 +3,8 @@ import { graphql } from '@/lib/datocms/graphql';
 
 export const FeaturedPostsSectionFragment = graphql(
   /* GraphQL */ `
-    fragment FeaturedPostsSectionFragment on FeaturedPostsSectionRecord {
-      featuredPostsHeader
-      featuredPostsSubheader {
-        value
-      }
-      displayOptions
+    fragment FeaturedPostsSectionFragment on FeaturedPostsSectionBlockRecord {
+      layout
       featuredPosts {
         id
         ...PostExcerptFragment

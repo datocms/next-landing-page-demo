@@ -1,34 +1,33 @@
 import { stripStega } from '@datocms/content-link';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
-import type { SectionHeadingLevel } from '@/utils/headingLevel';
 import { FeatureListSectionFragment } from './fragment';
-import BentoGridFeatures from './variants/BentoGridFeatures';
-import BigImageHorizontalFeatures from './variants/BigImageHorizontalFeatures';
-import BigImageVerticalFeatures from './variants/BigImageVerticalFeatures';
-import GalleryFeatures from './variants/GalleryFeatures';
-import IconListFeatures from './variants/IconListFeatures';
+import BentoFeatures from './variants/BentoFeatures';
+import GridFeatures from './variants/GridFeatures';
+import ListFeatures from './variants/ListFeatures';
+import MosaicFeatures from './variants/MosaicFeatures';
 
 type Props = {
   fragment: FragmentOf<typeof FeatureListSectionFragment>;
-  as?: SectionHeadingLevel;
   locale: string;
 };
 
-/** Renders the layout picked in the block's "Display option" field */
-const FeatureListSection = ({ fragment, as, locale }: Props) => {
-  const { displayOption } = readFragment(FeatureListSectionFragment, fragment);
+/**
+ * Renders the layout picked in the block's "Layout" field:
+ * `grid` (the mosaic of large tiles; also for unknown or empty values), `list`,
+ * `cards` or `mosaic` (the mosaic landing page's tiles and shapes)
+ */
+const FeatureListSection = ({ fragment, locale }: Props) => {
+  const { layout } = readFragment(FeatureListSectionFragment, fragment);
 
-  switch (stripStega(displayOption)) {
-    case 'card_minimal':
-      return <IconListFeatures fragment={fragment} as={as} />;
-    case 'grid':
-      return <BentoGridFeatures fragment={fragment} as={as} />;
-    case 'big_image_horizontal':
-      return <BigImageHorizontalFeatures fragment={fragment} as={as} />;
-    case 'big_image_vertical':
-      return <BigImageVerticalFeatures fragment={fragment} as={as} />;
+  switch (stripStega(layout ?? '').trim()) {
+    case 'list':
+      return <ListFeatures fragment={fragment} />;
+    case 'cards':
+      return <GridFeatures fragment={fragment} />;
+    case 'mosaic':
+      return <MosaicFeatures fragment={fragment} />;
     default:
-      return <GalleryFeatures fragment={fragment} as={as} locale={locale} />;
+      return <BentoFeatures fragment={fragment} locale={locale} />;
   }
 };
 

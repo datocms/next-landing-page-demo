@@ -3,9 +3,9 @@ import { graphql } from '@/lib/datocms/graphql';
 
 export const VideoSectionFragment = graphql(
   /* GraphQL */ `
-    fragment VideoSectionFragment on VideoSectionRecord {
-      videoHeader
-      videoSubheader {
+    fragment VideoSectionFragment on VideoSectionBlockRecord {
+      title
+      subtitle {
         value
       }
       video {
@@ -13,8 +13,21 @@ export const VideoSectionFragment = graphql(
         provider
         thumbnailUrl
       }
-      videoThumbnail {
-        responsiveImage {
+      # Cropped to the 16:9 frame around the focal point
+      thumbnail {
+        focalPoint {
+          x
+          y
+        }
+        responsiveImage(
+          imgixParams: {
+            w: "1920"
+            h: "1080"
+            fit: crop
+            crop: focalpoint
+            auto: format
+          }
+        ) {
           ...ResponsiveImageFragment
         }
       }

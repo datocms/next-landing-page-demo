@@ -1,29 +1,26 @@
 import { stripStega } from '@datocms/content-link';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
-import type { SectionHeadingLevel } from '@/utils/headingLevel';
 import { FaqSectionFragment } from './fragment';
 import FaqAccordion from './variants/FaqAccordion';
-import FaqTileGrid from './variants/FaqTileGrid';
+import FaqColumns from './variants/FaqColumns';
+import FaqTabs from './variants/FaqTabs';
 
 type Props = {
   fragment: FragmentOf<typeof FaqSectionFragment>;
-  as?: SectionHeadingLevel;
 };
 
-/** Renders the layout picked in the block's "Display options" field, or nothing without questions */
-const FaqSection = ({ fragment, as }: Props) => {
-  const { displayOptions, questions } = readFragment(
-    FaqSectionFragment,
-    fragment,
-  );
+/**
+ * Renders the layout picked in the block's "Layout" field
+ * (`columns`, also for unknown values, `accordion` or `tabs`), or nothing without questions
+ */
+const FaqSection = ({ fragment }: Props) => {
+  const { layout, questions } = readFragment(FaqSectionFragment, fragment);
   if (questions.length === 0) return null;
 
-  switch (stripStega(displayOptions)) {
-    case 'accordion':
-      return <FaqAccordion fragment={fragment} as={as} />;
-    default:
-      return <FaqTileGrid fragment={fragment} as={as} />;
-  }
+  const value = stripStega(layout ?? '').trim();
+  if (value === 'accordion') return <FaqAccordion fragment={fragment} />;
+  if (value === 'tabs') return <FaqTabs fragment={fragment} />;
+  return <FaqColumns fragment={fragment} />;
 };
 
 export default FaqSection;

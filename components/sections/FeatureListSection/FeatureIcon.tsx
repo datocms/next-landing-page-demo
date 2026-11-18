@@ -1,58 +1,69 @@
-import DatoImage from '@/components/datocms/DatoImage';
+import Image from 'next/image';
+import { DatoInlineImage } from '@/components/datocms/DatoImage';
 import type { ResponsiveImageFragment } from '@/components/datocms/DatoImage/fragment';
 import type { FragmentOf } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
 
-type Props = {
-  /** The feature's CMS icon (featureIcon.responsiveImage) */
-  image?: FragmentOf<typeof ResponsiveImageFragment> | null;
-  /** sm beside a card title, md leading a list row */
-  size?: 'sm' | 'md';
+/** A CMS icon as the Features block queries it */
+export type CmsIcon = {
+  url: string;
+  format?: string | null;
+  width?: number | null;
+  height?: number | null;
+  /** Bitmaps only: SVG files have none */
+  responsiveImage?: FragmentOf<typeof ResponsiveImageFragment> | null;
 };
 
-const TILE = {
-  sm: 'size-6 rounded-[7px]',
-  md: 'size-10 rounded-[12px] max-md:size-9',
-} as const;
+type Props = {
+  icon?: CmsIcon | null;
+  /** md: 40px tile. sm: 32px tile, for the compact cards */
+  size?: 'md' | 'sm';
+  /** Placement only */
+  className?: string;
+};
 
 /**
- * The CMS feature icon in a small framed tile. The art is tinted to the
- * nearest tone-N (its luminosity over the tone colour), so icons drawn in
- * any colour follow the CMS accent like the rest of the page. Without an icon
- * it falls back to the tone dot, so a title row never loses its mark.
+ * A CMS icon in a flat tile filled with the pale accent tint. Decorative: a title
+ * always sits next to it. Nothing renders without an icon.
  */
-const FeatureIcon = ({ image, size = 'sm' }: Props) => {
-  if (!image && size === 'sm') {
-    return <span aria-hidden="true" className="dot" />;
-  }
+const FeatureIcon = ({ icon, size = 'md', className }: Props) => {
+  if (!icon?.url) return null;
 
-  // The md dot keeps the tile's footprint, so list rows stay aligned
-  if (!image) {
-    return (
-      <span
-        aria-hidden="true"
-        className="grid size-10 shrink-0 place-items-center max-md:size-9"
-      >
-        <span className="dot" />
-      </span>
-    );
-  }
-
-  // A div, not a span: DatoImage renders block-level wrappers inside
   return (
-    <div
+    <span
+      aria-hidden="true"
       className={cn(
-        'relative isolate shrink-0 overflow-hidden bg-tone ring-1 ring-line [&_img]:mix-blend-luminosity',
-        TILE[size],
+        'grid shrink-0 place-items-center bg-accent-soft',
+        size === 'sm' ? 'size-8 rounded-[8px]' : 'size-10 rounded-[10px]',
+        className,
       )}
     >
-      <DatoImage
-        fragment={image}
-        layout="fill"
-        objectFit="cover"
-        sizes={size === 'sm' ? '24px' : '40px'}
-      />
-    </div>
+      {icon.responsiveImage ? (
+        <span
+          className={cn(
+            'relative block overflow-hidden',
+            size === 'sm' ? 'size-4' : 'size-5',
+          )}
+        >
+          <DatoInlineImage
+            fragment={icon.responsiveImage}
+            alt=""
+            sizes="20px"
+          />
+        </span>
+      ) : (
+        <Image
+          src={icon.url}
+          alt=""
+          width={icon.width ?? 26}
+          height={icon.height ?? 26}
+          className={cn(
+            'object-contain',
+            size === 'sm' ? 'size-5' : 'size-6.5',
+          )}
+        />
+      )}
+    </span>
   );
 };
 

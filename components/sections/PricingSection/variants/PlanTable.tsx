@@ -1,146 +1,255 @@
-import { useId } from 'react';
-import DatoStructuredText from '@/components/datocms/DatoStructuredText';
-import BillingPeriodProvider from '@/components/sections/PricingSection/BillingPeriodProvider';
-import BillingToggle from '@/components/sections/PricingSection/BillingToggle';
-import { PricingSectionFragment } from '@/components/sections/PricingSection/fragment';
-import PlanFeature from '@/components/sections/PricingSection/PlanFeature';
-import Price from '@/components/sections/PricingSection/Price';
-import {
-  highlightedPlanIndex,
-  planFeatureRows,
-} from '@/components/sections/PricingSection/plans';
-import SectionTitle from '@/components/ui/SectionTitle';
-import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
+import { type CSSProperties, useId } from 'react';
+import Chip from '@/components/ui/Chip';
+import { CheckIcon, DashIcon } from '@/components/ui/icons';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
+import type { Plan } from '../fragment';
 import {
-  itemHeadingLevel,
-  type SectionHeadingLevel,
-} from '@/utils/headingLevel';
+  FeatureList,
+  PlanButton,
+  PlanDescription,
+  type PlanTone,
+  Price,
+} from '../PlanParts';
+import { ownFeatureRows, planFeatureRows } from '../plans';
 
 type Props = {
-  fragment: FragmentOf<typeof PricingSectionFragment>;
+  plans: Plan[];
+  highlighted: number;
   locale: string;
-  as?: SectionHeadingLevel;
 };
 
-/** `minimal`: one joined, hairline-divided plan table instead of separate cards */
-const PlanTable = ({ fragment, locale, as = 'h2' }: Props) => {
-  const {
-    pricingSectionHeader: header,
-    pricingSectionSubheader: subheader,
-    plans,
-  } = readFragment(PricingSectionFragment, fragment);
-  const uid = useId();
+/** A plan's name, badge, price and note, centred under the top of its arch */
+const PlanHead = ({
+  plan,
+  isHighlighted,
+  headingId,
+  index,
+  locale,
+}: {
+  plan: Plan;
+  isHighlighted: boolean;
+  headingId?: string;
+  index: number;
+  locale: string;
+}) => {
+  const tone: PlanTone = isHighlighted ? 'accent' : 'default';
+  return (
+    <div className="flex flex-col items-center text-center">
+      <h2 id={headingId} className="text-h3">
+        {plan.name}
+      </h2>
+      {isHighlighted && plan.highlightLabel && (
+        <Chip tone="inverse" className="mt-2">
+          {plan.highlightLabel}
+        </Chip>
+      )}
+      <div style={{ '--plan-i': index } as CSSProperties} className="mt-4">
+        <Price
+          monthly={plan.monthlyPrice}
+          yearly={plan.yearlyPrice}
+          locale={locale}
+          tone={tone}
+          size="md"
+          className="[&>span]:justify-center"
+        />
+        {plan.priceNote && (
+          <p
+            className={cn(
+              'mt-2 text-[0.875rem]',
+              isHighlighted ? 'text-on-accent/80' : 'text-fg-muted',
+            )}
+          >
+            {plan.priceNote}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+};
 
-  const PlanHeading = itemHeadingLevel(as);
-  const count = plans.length;
-  const asColumns = count <= 4;
-  const highlightedIndex = highlightedPlanIndex(plans);
-  const featureRows = planFeatureRows(plans);
-  const headingId = `${uid}-pricing`;
+/**
+ * `table` (the statement page's look): the plans compared side by side, each
+ * plan a column whose top is an arch, like the arches of the statement hero.
+ * The highlighted plan's column is the deep accent with white text and rises
+ * above the others; the rest are pale. Under the arches every feature is a
+ * row: its name on the left, a check or a dash in each plan's column. The
+ * buttons close the columns. Below 1024px each plan is an arch-topped card
+ * of its own with only the features it includes. When the plans' features do
+ * not build on each other, the cards show at every width.
+ */
+const PlanTable = ({ plans, highlighted, locale }: Props) => {
+  const uid = useId();
+  const rowsByPlan = planFeatureRows(plans);
+  // The rows line up only when every plan lists the same features in the same order
+  const aligned =
+    plans.length > 1 &&
+    rowsByPlan.every((rows) => rows.length === rowsByPlan[0].length);
+  const featureNames = aligned
+    ? rowsByPlan[highlighted >= 0 ? highlighted : plans.length - 1]
+    : [];
+
+  const cards = (
+    <ul
+      className={cn(
+        'grid gap-4 md:grid-cols-2',
+        aligned && 'lg:hidden',
+        !aligned && 'lg:grid-cols-[repeat(auto-fit,minmax(0,1fr))]',
+      )}
+    >
+      {plans.map((plan, i) => {
+        const isHighlighted = i === highlighted;
+        return (
+          <li
+            key={plan.id}
+            className={cn(
+              'reveal flex flex-col rounded-t-full rounded-b-card px-6 pt-20 pb-7 sm:px-8',
+              isHighlighted
+                ? 'on-ink bg-(--accent-deep) text-on-accent'
+                : 'bg-subtle',
+            )}
+          >
+            <PlanHead
+              plan={plan}
+              isHighlighted={isHighlighted}
+              headingId={`${uid}-card-${i}`}
+              index={i}
+              locale={locale}
+            />
+            <PlanDescription
+              plan={plan}
+              tone={isHighlighted ? 'accent' : 'default'}
+              className="mx-auto mt-4 max-w-[30ch] text-balance text-center text-small"
+            />
+            <FeatureList
+              rows={ownFeatureRows(plan)}
+              locale={locale}
+              tone={isHighlighted ? 'accent' : 'default'}
+              className="mt-7 flex-1 text-small"
+            />
+            <PlanButton
+              plan={plan}
+              primary={isHighlighted}
+              variant={isHighlighted ? 'light' : 'secondary'}
+              locale={locale}
+              size="lg"
+              className="mt-8 w-full"
+            />
+          </li>
+        );
+      })}
+    </ul>
+  );
+
+  if (!aligned) return cards;
+
+  /** A column's fill: pale, or the deep accent for the highlighted plan */
+  const fill = (i: number) =>
+    i === highlighted
+      ? 'on-ink bg-(--accent-deep) text-on-accent'
+      : 'bg-subtle';
 
   return (
-    <section
-      className="section"
-      aria-labelledby={header ? headingId : undefined}
-      aria-label={header ? undefined : uiString(locale, 'pricing')}
-    >
-      <BillingPeriodProvider className="container-page" locale={locale}>
-        <SectionTitle
-          id={headingId}
-          title={header}
-          paragraph={subheader}
-          as={as}
-          h1Size="page"
-          gap="lg"
-          aside={<BillingToggle className="max-md:h-11" locale={locale} />}
-        />
-
-        <div
-          className={cn(
-            'reveal grid divide-y divide-line overflow-hidden rounded-card border border-line bg-white',
-            asColumns &&
-              'lg:auto-cols-fr lg:grid-flow-col lg:grid-rows-[auto_auto_auto_1fr] lg:divide-x lg:divide-y-0',
-          )}
-        >
-          {plans.map((plan, i) => {
-            const isHighlighted = i === highlightedIndex;
-            const planHeadingId = `${uid}-plan-${i}`;
-            const features = featureRows[i];
-
-            return (
-              <article
+    <>
+      {cards}
+      {/* A real table laid out as a grid: the rows and groups step aside
+          (display: contents), so each cell is a grid item and a column's cells
+          stack into one fill, arched at the top */}
+      <table
+        style={{
+          gridTemplateColumns: `minmax(0,1.15fr) repeat(${plans.length}, minmax(0,1fr))`,
+        }}
+        className="reveal grid border-separate gap-x-4 max-lg:hidden xl:gap-x-5"
+      >
+        <caption className="sr-only">{uiString(locale, 'plans')}</caption>
+        <thead className="contents">
+          <tr className="contents">
+            <td />
+            {plans.map((plan, i) => (
+              <th
                 key={plan.id}
-                aria-labelledby={planHeadingId}
+                scope="col"
                 className={cn(
-                  'p-6 sm:grid sm:grid-cols-2 sm:grid-rows-[auto_auto_1fr] sm:items-start sm:gap-x-10 md:p-7',
-                  asColumns &&
-                    'lg:row-span-4 lg:grid-cols-1 lg:grid-rows-subgrid lg:items-stretch',
-                  isHighlighted && 'bg-well',
+                  // The highlighted arch rises 2.5rem above the others
+                  'rounded-t-full px-5 pt-24 pb-8 font-normal',
+                  i !== highlighted && 'mt-10',
+                  fill(i),
                 )}
               >
-                <div className="sm:col-start-1">
-                  <PlanHeading id={planHeadingId} className="text-h3 text-ink">
-                    {plan.tierName}
-                  </PlanHeading>
-                  <div
-                    className={cn(
-                      'mt-1.5 max-w-[34ch] text-body text-ink-2 [&_p+p]:mt-2',
-                      asColumns && 'lg:min-h-[4.8em]',
-                    )}
-                  >
-                    <DatoStructuredText data={plan.tierDescription} />
-                  </div>
-                </div>
-
-                <Price
-                  className="mt-5 sm:col-start-1"
-                  monthly={plan.monthlyPrice}
-                  yearly={plan.yearlyPrice}
+                <PlanHead
+                  plan={plan}
+                  isHighlighted={i === highlighted}
+                  index={i}
                   locale={locale}
                 />
-
-                <div className="sm:col-start-1">
-                  <button
-                    type="button"
-                    className={cn(
-                      'btn mt-5 w-full',
-                      isHighlighted ? 'btn-ink' : 'btn-secondary',
-                    )}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="contents">
+          {featureNames.map((feature, r) => (
+            <tr key={feature.key} className="contents">
+              <th
+                scope="row"
+                className="flex items-center border-line border-t py-3.5 text-left font-medium text-[0.9375rem]"
+              >
+                {feature.text}
+              </th>
+              {plans.map((plan, i) => {
+                const included = rowsByPlan[i][r].included;
+                const onAccent = i === highlighted;
+                return (
+                  <td
+                    key={plan.id}
+                    className={cn('grid place-items-center py-3.5', fill(i))}
                   >
-                    {plan.ctaLabel || uiString(locale, 'choosePlan')}
-                  </button>
-                </div>
-
-                {features.length > 0 ? (
-                  <ul
-                    className={cn(
-                      'mt-6 grid content-start sm:col-start-2 sm:row-span-3 sm:row-start-1 sm:mt-0',
-                      asColumns &&
-                        'lg:col-start-auto lg:row-span-1 lg:row-start-auto lg:mt-6',
-                    )}
-                  >
-                    {features.map((feature) => (
-                      <PlanFeature
-                        key={feature.key}
-                        size="sm"
-                        text={feature.text}
-                        included={feature.included}
-                        locale={locale}
+                    {included ? (
+                      <CheckIcon
+                        aria-hidden="true"
+                        className={cn(
+                          'size-[18px]',
+                          onAccent ? 'text-on-accent' : 'text-accent-ink',
+                        )}
                       />
-                    ))}
-                  </ul>
-                ) : (
-                  // Keeps the subgrid's last row so the columns stay the same height
-                  <div aria-hidden="true" />
-                )}
-              </article>
-            );
-          })}
-        </div>
-      </BillingPeriodProvider>
-    </section>
+                    ) : (
+                      <DashIcon
+                        aria-hidden="true"
+                        className={cn(
+                          'size-[18px]',
+                          onAccent ? 'text-on-accent/50' : 'text-fg-faint',
+                        )}
+                      />
+                    )}
+                    <span className="sr-only">
+                      {uiString(locale, included ? 'included' : 'excluded')}
+                    </span>
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+        <tfoot className="contents">
+          <tr className="contents">
+            <td className="border-line border-t" />
+            {plans.map((plan, i) => (
+              <td
+                key={plan.id}
+                className={cn('rounded-b-card px-5 pt-6 pb-6', fill(i))}
+              >
+                <PlanButton
+                  plan={plan}
+                  primary={i === highlighted}
+                  variant={i === highlighted ? 'light' : 'secondary'}
+                  locale={locale}
+                  className="w-full"
+                />
+              </td>
+            ))}
+          </tr>
+        </tfoot>
+      </table>
+    </>
   );
 };
 

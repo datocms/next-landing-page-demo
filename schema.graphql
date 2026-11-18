@@ -1,19 +1,19 @@
-type AboutIntroModelIntroductionTextField {
+type AboutIntroBlockModelIntroductionTextField {
   blocks: [String!]!
   inlineBlocks: [String!]!
   links: [String!]!
   value: JsonField!
 }
 
-type AboutIntroModelSubheaderField {
+type AboutIntroBlockModelSubtitleField {
   blocks: [String!]!
   inlineBlocks: [String!]!
   links: [String!]!
   value: JsonField!
 }
 
-"""Block of type 💁 About Intro (about_intro)"""
-type AboutIntroRecord implements RecordInterface {
+"""Block of type 💁 About intro (about_intro_block)"""
+type AboutIntroBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -32,16 +32,16 @@ type AboutIntroRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  header: String!
+  eyebrow: String
   id: ItemId!
-  images: [ImageFileField!]!
-  introductionText: AboutIntroModelIntroductionTextField
-  preHeader: String
-  subheader: AboutIntroModelSubheaderField
+  images: [ImageAltFileField!]!
+  introductionText: AboutIntroBlockModelIntroductionTextField
+  subtitle: AboutIntroBlockModelSubtitleField
+  title: String!
 }
 
-"""Block of type 📚 All Posts Section (all_posts_section)"""
-type AllPostsSectionRecord implements RecordInterface {
+"""Block of type 🗂️ All posts section (all_posts_section_block)"""
+type AllPostsSectionBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -63,15 +63,15 @@ type AllPostsSectionRecord implements RecordInterface {
   id: ItemId!
 }
 
-type AppCtaModelTextField {
+type AppCtaBlockModelSubtitleField {
   blocks: [String!]!
   inlineBlocks: [String!]!
   links: [String!]!
   value: JsonField!
 }
 
-"""Block of type 📲 CTA App Download (app_cta)"""
-type AppCtaRecord implements RecordInterface {
+"""Block of type 📲 App download CTA (app_cta_block)"""
+type AppCtaBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -93,8 +93,37 @@ type AppCtaRecord implements RecordInterface {
   appstoreUrl: String
   googlePlayUrl: String
   id: ItemId!
-  text: AppCtaModelTextField
+  subtitle: AppCtaBlockModelSubtitleField
   title: String!
+}
+
+"""Block of type 💡 Area of interest (area_of_interest_block)"""
+type AreaOfInterestBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  id: ItemId!
+  label: String!
+}
+
+type AreaOfInterestBlockRecordListListNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: [AreaOfInterestBlockRecord!]!
 }
 
 type AuthorModelDescriptionField {
@@ -120,11 +149,10 @@ input AuthorModelFilter {
   _updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   _locales: LocalesFilter
-  areaOfInterest: StringFilter
-  bio: StringFilter
   description: StructuredTextFilter
   name: StringFilter
   picture: FileFilter
+  role: StringFilter
   slug: SlugFilter
   OR: [AuthorModelFilter]
   AND: [AuthorModelFilter]
@@ -149,40 +177,26 @@ enum AuthorModelOrderBy {
   _updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
-  areaOfInterest_ASC
-  areaOfInterest_DESC
-  bio_ASC
-  bio_DESC
   name_ASC
   name_DESC
+  role_ASC
+  role_DESC
 }
 
 """Record of type ✍️ Author (author)"""
 type AuthorRecord implements RecordInterface {
-  _allAreaOfInterestLocales(
+  _allAreasOfInterestLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): [StringMultiLocaleField!]
-  _allBioLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringNonNullMultiLocaleField!]
+  ): [AreaOfInterestBlockRecordListListNonNullMultiLocaleField!]
   _allDescriptionLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [AuthorModelDescriptionFieldNonNullMultiLocaleField!]
-  _allNameLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringNonNullMultiLocaleField!]
   _allReferencingPages(
     """Specifies how to filter linking records"""
     through: InverseRelationshipFilterBetweenPageAndAuthor
@@ -243,6 +257,12 @@ type AuthorRecord implements RecordInterface {
     locale: SiteLocale
     filter: PostModelFilter
   ): CollectionMetadata!
+  _allRoleLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -262,7 +282,7 @@ type AuthorRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  areaOfInterest(
+  areasOfInterest(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
@@ -270,16 +290,7 @@ type AuthorRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): String
-  bio(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String!
+  ): [AreaOfInterestBlockRecord!]!
   description(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -290,7 +301,9 @@ type AuthorRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): AuthorModelDescriptionField!
   id: ItemId!
-  name(
+  name: String!
+  picture: ImageFileField!
+  role(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
@@ -299,7 +312,6 @@ type AuthorRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): String!
-  picture: ImageFileField!
   slug: String!
 }
 
@@ -312,8 +324,8 @@ input BooleanFilter {
 """Represents `true` or `false` values."""
 scalar BooleanType
 
-"""Block of type 🏢 Brand (brand)"""
-type BrandRecord implements RecordInterface {
+"""Block of type 🏢 Brand (brand_block)"""
+type BrandBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -332,14 +344,14 @@ type BrandRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  brandLogo: FileField!
-  brandName: String!
-  brandUrl: String
   id: ItemId!
+  logo: FileField!
+  name: String!
+  url: String
 }
 
-"""Block of type 🏢 Brands Section (brand_section)"""
-type BrandSectionRecord implements RecordInterface {
+"""Block of type 🏢 Brands section (brand_section_block)"""
+type BrandSectionBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -358,13 +370,13 @@ type BrandSectionRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  brand: [BrandRecord!]!
-  displayOptions: String!
+  brands: [BrandBlockRecord!]!
   id: ItemId!
+  layout: String!
 }
 
-"""Block of type 🎯 Button (button)"""
-type ButtonRecord implements RecordInterface {
+"""Block of type 🎯 Button (button_block)"""
+type ButtonBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -389,14 +401,19 @@ type ButtonRecord implements RecordInterface {
   url: String
 }
 
-type ChangeLogModelContentField {
+type ChangelogEntryModelContentField {
   blocks: [String!]!
   inlineBlocks: [String!]!
   links: [String!]!
   value: JsonField!
 }
 
-input ChangeLogModelFilter {
+type ChangelogEntryModelContentFieldNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: ChangelogEntryModelContentField!
+}
+
+input ChangelogEntryModelFilter {
   _createdAt: CreatedAtFilter
   id: ItemIdFilter
   _firstPublishedAt: PublishedAtFilter
@@ -406,15 +423,16 @@ input ChangeLogModelFilter {
   _status: StatusFilter
   _updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
+  _locales: LocalesFilter
   content: StructuredTextFilter
   slug: SlugFilter
   timeOfRelease: DateTimeFilter
   versionName: StringFilter
-  OR: [ChangeLogModelFilter]
-  AND: [ChangeLogModelFilter]
+  OR: [ChangelogEntryModelFilter]
+  AND: [ChangelogEntryModelFilter]
 }
 
-enum ChangeLogModelOrderBy {
+enum ChangelogEntryModelOrderBy {
   _createdAt_ASC
   _createdAt_DESC
   id_ASC
@@ -439,14 +457,21 @@ enum ChangeLogModelOrderBy {
   versionName_DESC
 }
 
-"""Record of type 🧪 Changelog entry (change_log)"""
-type ChangeLogRecord implements RecordInterface {
+"""Record of type 🧪 Changelog entry (changelog_entry)"""
+type ChangelogEntryRecord implements RecordInterface {
+  _allContentLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [ChangelogEntryModelContentFieldNonNullMultiLocaleField!]
   _createdAt: DateTime!
 
   """Editing URL"""
   _editingUrl: String
   _firstPublishedAt: DateTime!
   _isValid: BooleanType!
+  _locales: [SiteLocale!]!
   _modelApiKey: String!
   _publicationScheduledAt: DateTime
   _publishedAt: DateTime!
@@ -459,22 +484,23 @@ type ChangeLogRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  content: ChangeLogModelContentField!
+  content(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): ChangelogEntryModelContentField!
   id: ItemId!
   slug: String!
   timeOfRelease: DateTime!
   versionName: String!
 }
 
-type ChangelogSectionModelSubtitleField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-"""Block of type 📝 Changelog Section (changelog_section)"""
-type ChangelogSectionRecord implements RecordInterface {
+"""Block of type 📝 Changelog section (changelog_section_block)"""
+type ChangelogSectionBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -493,10 +519,8 @@ type ChangelogSectionRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  featuredVersions: [ChangeLogRecord!]!
+  featuredVersions: [ChangelogEntryRecord!]!
   id: ItemId!
-  subtitle: ChangelogSectionModelSubtitleField
-  title: String!
 }
 
 type CollectionMetadata {
@@ -565,15 +589,15 @@ input CreatedAtFilter {
   exists: BooleanType
 }
 
-type CtaButtonWithImageModelSubtitleField {
+type CtaButtonWithImageBlockModelSubtitleField {
   blocks: [String!]!
   inlineBlocks: [String!]!
   links: [String!]!
   value: JsonField!
 }
 
-"""Block of type 📸 CTA Button with image (cta_button_with_image)"""
-type CtaButtonWithImageRecord implements RecordInterface {
+"""Block of type 📸 CTA with image (cta_button_with_image_block)"""
+type CtaButtonWithImageBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -593,9 +617,44 @@ type CtaButtonWithImageRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   buttonLabel: String!
+  buttonUrl: String
   id: ItemId!
-  image: ImageFileField!
-  subtitle: CtaButtonWithImageModelSubtitleField!
+  image: ImageAltFileField!
+  subtitle: CtaButtonWithImageBlockModelSubtitleField!
+  title: String!
+}
+
+type CtaSectionBlockModelSubtitleField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+"""Block of type 📣 Call to action section (cta_section_block)"""
+type CtaSectionBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  buttons: [ButtonBlockRecord!]!
+  id: ItemId!
+  layout: String
+  subtitle: CtaSectionBlockModelSubtitleField
   title: String!
 }
 
@@ -642,15 +701,15 @@ input DateTimeFilter {
   exists: BooleanType
 }
 
-type DetailSectionModelDetailsField {
+type DetailSectionBlockModelDetailsField {
   blocks: [String!]!
   inlineBlocks: [String!]!
   links: [String!]!
   value: JsonField!
 }
 
-"""Block of type 📄 Detail section (detail_section)"""
-type DetailSectionRecord implements RecordInterface {
+"""Block of type 📄 Detail section (detail_section_block)"""
+type DetailSectionBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -669,14 +728,33 @@ type DetailSectionRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  details: DetailSectionModelDetailsField!
+  details: DetailSectionBlockModelDetailsField!
   id: ItemId!
-  image: FileField!
+  image: ImageAltFileField!
   imagePosition: BooleanType!
+  layout: String
 }
 
-"""Record of type 📚 Documentation Home (documentation_home)"""
+"""Record of type 📚 Documentation home (documentation_home)"""
 type DocumentationHomeRecord implements RecordInterface {
+  _allFooterTextLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
+  _allSubtitleLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
+  _allTitleLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -696,11 +774,35 @@ type DocumentationHomeRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   featuredPages: [DocumentationPageRecord!]!
-  footerText: String
+  footerText(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
   id: ItemId!
   logo: FileField!
-  subheader: String
-  title: String!
+  subtitle(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+  title(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
 }
 
 type DocumentationPageModelContentField {
@@ -708,6 +810,11 @@ type DocumentationPageModelContentField {
   inlineBlocks: [String!]!
   links: [String!]!
   value: JsonField!
+}
+
+type DocumentationPageModelContentFieldNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: DocumentationPageModelContentField!
 }
 
 input DocumentationPageModelFilter {
@@ -722,6 +829,7 @@ input DocumentationPageModelFilter {
   _status: StatusFilter
   _updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
+  _locales: LocalesFilter
   content: StructuredTextFilter
   seoMeta: SeoFilter
   slug: SlugFilter
@@ -758,14 +866,39 @@ enum DocumentationPageModelOrderBy {
   title_DESC
 }
 
-"""Record of type 📖 Documentation Page (documentation_page)"""
+"""Record of type 📖 Documentation page (documentation_page)"""
 type DocumentationPageRecord implements RecordInterface {
+  _allContentLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [DocumentationPageModelContentFieldNonNullMultiLocaleField!]
+  _allSeoMetaLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [SeoFieldMultiLocaleField!]
+  _allSubtitleLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
+  _allTitleLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
   _createdAt: DateTime!
 
   """Editing URL"""
   _editingUrl: String
   _firstPublishedAt: DateTime!
   _isValid: BooleanType!
+  _locales: [SiteLocale!]!
   _modelApiKey: String!
   _publicationScheduledAt: DateTime
   _publishedAt: DateTime!
@@ -779,25 +912,50 @@ type DocumentationPageRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   children: [DocumentationPageRecord!]!
-  content: DocumentationPageModelContentField!
+  content(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): DocumentationPageModelContentField!
   id: ItemId!
   parent: DocumentationPageRecord
   position: IntType
-  seoMeta: SeoField
+  seoMeta(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): SeoField
   slug: String!
-  subtitle: String
-  title: String!
+  subtitle(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+  title(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
 }
 
-type FaqSectionModelSubtitleField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-"""Block of type ❓ FAQ Section (faq_section)"""
-type FaqSectionRecord implements RecordInterface {
+"""Block of type ❓ FAQ section (faq_section_block)"""
+type FaqSectionBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -816,11 +974,9 @@ type FaqSectionRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  displayOptions: String!
   id: ItemId!
-  questions: [QuestionRecord!]!
-  subtitle: FaqSectionModelSubtitleField
-  title: String!
+  layout: String!
+  questions: [QuestionBlockRecord!]!
 }
 
 enum FaviconType {
@@ -829,15 +985,17 @@ enum FaviconType {
   msApplication
 }
 
-type FeatureListSectionModelFeaturesSubheaderField {
+type FeatureBlockModelDescriptionField {
   blocks: [String!]!
   inlineBlocks: [String!]!
   links: [String!]!
   value: JsonField!
 }
 
-"""Block of type 📋 Feature list section (feature_list_section)"""
-type FeatureListSectionRecord implements RecordInterface {
+union FeatureBlockModelIllustrationField = IconCardBlockRecord | ListCardBlockRecord | MessageCardBlockRecord | MetricsCardBlockRecord
+
+"""Block of type ✨ Feature (feature_block)"""
+type FeatureBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -856,22 +1014,15 @@ type FeatureListSectionRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  displayOption: String!
-  feature: [FeatureRecord!]!
-  featuresHeader: String!
-  featuresSubheader: FeatureListSectionModelFeaturesSubheaderField
+  description: FeatureBlockModelDescriptionField!
+  icon: FileField!
   id: ItemId!
+  illustration: FeatureBlockModelIllustrationField
+  title: String!
 }
 
-type FeatureModelFeatureDescriptionField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-"""Block of type ⭐ Feature (feature)"""
-type FeatureRecord implements RecordInterface {
+"""Block of type 📋 Feature list section (feature_list_section_block)"""
+type FeatureListSectionBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -890,21 +1041,15 @@ type FeatureRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  featureDescription: FeatureModelFeatureDescriptionField!
-  featureIcon: ImageFileField!
-  featureTitle: String!
+  features: [FeatureBlockRecord!]!
   id: ItemId!
+  layout: String!
 }
 
-type FeaturedPostsSectionModelFeaturedPostsSubheaderField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-"""Block of type 📰 Featured posts section (featured_posts_section)"""
-type FeaturedPostsSectionRecord implements RecordInterface {
+"""
+Block of type 🗞️ Featured posts section (featured_posts_section_block)
+"""
+type FeaturedPostsSectionBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -923,11 +1068,9 @@ type FeaturedPostsSectionRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  displayOptions: String!
   featuredPosts: [PostRecord!]!
-  featuredPostsHeader: String!
-  featuredPostsSubheader: FeaturedPostsSectionModelFeaturedPostsSubheaderField
   id: ItemId!
+  layout: String!
 }
 
 type FileField implements FileFieldInterface {
@@ -1152,38 +1295,6 @@ input FileFilter {
   exists: BooleanType
 }
 
-"""Specifies how to filter Floating-point fields"""
-input FloatFilter {
-  """
-  Filter records with a value that's strictly greater than the one specified
-  """
-  gt: FloatType
-
-  """Filter records with a value that's less than the one specified"""
-  lt: FloatType
-
-  """
-  Filter records with a value that's greater than or equal to the one specified
-  """
-  gte: FloatType
-
-  """
-  Filter records with a value that's less or equal than the one specified
-  """
-  lte: FloatType
-
-  """
-  Filter records with the specified field defined (i.e. with any value) or not
-  """
-  exists: BooleanType
-
-  """Search for records with an exact match"""
-  eq: FloatType
-
-  """Exclude records with an exact match"""
-  neq: FloatType
-}
-
 """
 Represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point).
 """
@@ -1197,15 +1308,24 @@ type GlobalSeoField {
   twitterAccount: String
 }
 
-type HeroSectionModelHeroSubtitleField {
+type HeroSectionBlockModelAnnouncementField {
   blocks: [String!]!
   inlineBlocks: [String!]!
   links: [String!]!
   value: JsonField!
 }
 
-"""Block of type 🚀 Hero section (hero_section)"""
-type HeroSectionRecord implements RecordInterface {
+union HeroSectionBlockModelProductCardsField = IconCardBlockRecord | ListCardBlockRecord | MetricsCardBlockRecord
+
+type HeroSectionBlockModelSubtitleField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+"""Block of type 🚀 Hero section (hero_section_block)"""
+type HeroSectionBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -1224,15 +1344,145 @@ type HeroSectionRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  buttons: [ButtonRecord!]!
-  displayOptions: String!
-  heroImage: FileField
-  heroSubtitle: HeroSectionModelHeroSubtitleField
-  heroTitle: String!
+  announcement: HeroSectionBlockModelAnnouncementField
+  announcementLabel: String
+  buttons: [ButtonBlockRecord!]!
+  highlight: String
   id: ItemId!
+  image: ImageAltFileField
+  layout: String!
+  productCards: [HeroSectionBlockModelProductCardsField!]!
+  secondaryImage: ImageAltFileField
+  subtitle: HeroSectionBlockModelSubtitleField
+  title: String!
 }
 
-"""Block of type 🌅 Image block (image_block)"""
+"""Block of type 💠 Icon card (icon_card_block)"""
+type IconCardBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  icon: FileField!
+  id: ItemId!
+  text: String
+  title: String!
+}
+
+type ImageAltFileField implements FileFieldInterface {
+  _createdAt: DateTime!
+
+  """
+  The DatoCMS URL where you can edit this entity. To use this field, you need to set a X-Base-Editing-Url header in the request
+  """
+  _editingUrl: String
+  _updatedAt: DateTime!
+  alt(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  author: String
+  basename: String!
+  blurUpThumb(
+    """
+    Controls the "punch" value (~contrast) of the blurhash decoding algorithm (defaults to 1.0)
+    """
+    punch: Float! = 1.0
+
+    """Maximum image dimension (defaults to 24px)"""
+    size: Int! = 24
+
+    """Image quality (defaults to 70%)"""
+    quality: Int! = 70
+
+    """Imgix transformations to apply to the image"""
+    imgixParams: ImgixParams
+  ): String
+  blurhash: String
+  colors: [ColorField!]!
+  copyright: String
+  customData(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): CustomData!
+  exifInfo: CustomData!
+  filename: String!
+  focalPoint(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): focalPoint!
+  format: String!
+  height: IntType!
+  id: UploadId!
+  md5: String!
+  mimeType: String!
+  notes: String
+  responsiveImage(
+    """Imgix transformations to apply to the image"""
+    imgixParams: ImgixParams
+
+    """Specify a custom `sizes` attribute for the image"""
+    sizes: String
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): ResponsiveImage!
+  size: IntType!
+  smartTags: [String!]!
+  tags: [String!]!
+  thumbhash: String
+  title(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+  url(
+    """Imgix transformations to apply to the image"""
+    imgixParams: ImgixParams
+  ): String!
+  video: UploadVideoField
+  width: IntType!
+}
+
+"""Block of type 🌅 Image (image_block)"""
 type ImageBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
@@ -1253,7 +1503,7 @@ type ImageBlockRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   id: ItemId!
-  image: ImageFileField!
+  image: ImageAltFileField!
 }
 
 type ImageFileField implements FileFieldInterface {
@@ -3364,6 +3614,1519 @@ input IntegerFilter {
   neq: IntType
 }
 
+"""Block of type 🔌 Integration (integration_block)"""
+type IntegrationBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  icon: FileField!
+  id: ItemId!
+  name: String!
+}
+
+"""Block of type 🔌 Integrations section (integration_section_block)"""
+type IntegrationSectionBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  id: ItemId!
+  integrations: [IntegrationBlockRecord!]!
+  layout: String
+}
+
+"""Record of type 🔤 Interface texts (interface_text)"""
+type InterfaceTextRecord implements RecordInterface {
+  _allAllAuthorsLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allAllPostsLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allAllTopicsLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
+  _allAnnouncementLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allAuthenticateLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allBackToHomeLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allBackToSiteLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allBillingPeriodLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allBrandsLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allCancelLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allChangelogLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allChoosePlanLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allCloseDocsMenuLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allCloseMenuLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allCloseVideoLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allComparePlansLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allCopiedLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allCopyCodeLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allCopyLinkLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allCopyLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allCurrentLanguageLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allDismissLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allDocsBadgeLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allDocsHomeLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allDocsPaginationLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allDocumentationLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allDraftModeOnBodyLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allDraftModeOnLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allDraftPasswordHintLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allEmailAddressLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allEmailPlaceholderLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allEnterDraftModeLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allExcludedLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allExitDraftModeLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allFeatureLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allFeaturedPagesLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allFeaturedPostsLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allGetOnAppStoreLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allGetOnGooglePlayLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allHomeLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allInThisTopicLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allIncludedLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allInvalidEmailLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allLanguageLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allLastUpdatedLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allLatestLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allLatestPostsLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allLegalLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allMainNavigationLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allMenuLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allMonthlyLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allMorePostsLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allNextPageLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allNoTaggedPostsLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allNotFoundBodyLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allNotFoundTitleLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allNotIncludedLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allOnThisPageLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allOpenDocsMenuLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allOpenMenuLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allOpensInNewTabLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allOtherItemsLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allPageOfLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allPaginationLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allPasswordLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allPerMonthLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allPerYearLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allPlansLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allPlayVideoLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allPlayVideoTitledLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allPostCountOneLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allPostCountOtherLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allPostsByLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allPreviousPageLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allPricingLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allRatingOutOfLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allReleasedLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allShareLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allShareOnLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allShareOtherLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allShowingMonthlyPricesLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allShowingYearlyPricesLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allSkipToContentLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allSocialLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allSubscribeLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allSubscribedLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allTaggedPostCountOneLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allTaggedPostCountOtherLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allTagsLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allTestimonialsLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allUntitledLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allVideoLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allVideoPlayerLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allWrittenByLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allWrongPasswordLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allYearlyLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  allAuthors(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  allPosts(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  allTopics(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+  announcement(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  authenticate(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  backToHome(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  backToSite(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  billingPeriod(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  brands(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  cancel(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  changelog(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  choosePlan(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  closeDocsMenu(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  closeMenu(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  closeVideo(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  comparePlans(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  copied(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  copy(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  copyCode(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  copyLink(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  currentLanguage(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  dismiss(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  docsBadge(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  docsHome(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  docsPagination(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  documentation(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  draftModeOn(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  draftModeOnBody(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  draftPasswordHint(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  emailAddress(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  emailPlaceholder(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  enterDraftMode(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  excluded(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  exitDraftMode(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  feature(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  featuredPages(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  featuredPosts(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  getOnAppStore(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  getOnGooglePlay(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  home(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  id: ItemId!
+  inThisTopic(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  included(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  invalidEmail(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  language(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  lastUpdated(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  latest(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  latestPosts(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  legal(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  mainNavigation(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  menu(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  monthly(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  morePosts(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  nextPage(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  noTaggedPosts(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  notFoundBody(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  notFoundTitle(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  notIncluded(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  onThisPage(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  openDocsMenu(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  openMenu(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  opensInNewTab(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  otherItems(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  pageOf(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  pagination(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  password(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  perMonth(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  perYear(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  plans(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  playVideo(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  playVideoTitled(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  postCountOne(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  postCountOther(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  postsBy(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  previousPage(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  pricing(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  ratingOutOf(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  released(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  share(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  shareOn(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  shareOther(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  showingMonthlyPrices(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  showingYearlyPrices(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  skipToContent(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  social(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  subscribe(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  subscribed(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  taggedPostCountOne(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  taggedPostCountOther(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  tags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  testimonials(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  untitled(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  video(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  videoPlayer(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  writtenBy(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  wrongPassword(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  yearly(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+}
+
 """Specifies how to filter by linking fields"""
 input InverseRelationshipFieldFilterBetweenPageAndAuthor {
   """
@@ -3475,13 +5238,11 @@ type LayoutModelFooterSubtitleFieldMultiLocaleField {
   value: LayoutModelFooterSubtitleField
 }
 
-union LayoutModelMenuField = MenuDropdownRecord | MenuItemRecord
+union LayoutModelMenuField = MenuDropdownBlockRecord | MenuItemBlockRecord
 
-type LayoutModelNotificationField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
+type LayoutModelMenuFieldListListNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: [LayoutModelMenuField!]!
 }
 
 """Record of type 🧩 Layout (layout)"""
@@ -3492,13 +5253,18 @@ type LayoutRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): [LayoutModelFooterSubtitleFieldMultiLocaleField!]
+  _allMenuLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [LayoutModelMenuFieldListListNonNullMultiLocaleField!]
   _createdAt: DateTime!
 
   """Editing URL"""
   _editingUrl: String
   _firstPublishedAt: DateTime!
   _isValid: BooleanType!
-  _locales: [SiteLocale!]!
   _modelApiKey: String!
   _publicationScheduledAt: DateTime
   _publishedAt: DateTime!
@@ -3525,9 +5291,16 @@ type LayoutRecord implements RecordInterface {
   id: ItemId!
   logo: FileField!
   mainColor: ColorField!
-  menu: [LayoutModelMenuField!]!
-  notification: LayoutModelNotificationField
-  socialMediaLinks: [SocialMediaIconRecord!]!
+  menu(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [LayoutModelMenuField!]!
+  socialMediaLinks: [SocialLinkBlockRecord!]!
 }
 
 type LegalPageModelContentField {
@@ -3583,7 +5356,7 @@ enum LegalPageModelOrderBy {
   title_DESC
 }
 
-"""Record of type 🏛️ Legal Page (legal_page)"""
+"""Record of type 🏛️ Legal page (legal_page)"""
 type LegalPageRecord implements RecordInterface {
   _allContentLocales(
     """
@@ -3713,6 +5486,59 @@ input LinksFilter {
   exists: BooleanType
 }
 
+"""Block of type 📋 List card (list_card_block)"""
+type ListCardBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  id: ItemId!
+  rows: [ListRowBlockRecord!]!
+  style: String!
+  title: String
+}
+
+"""Block of type ➖ List row (list_row_block)"""
+type ListRowBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  highlighted: BooleanType!
+  id: ItemId!
+  label: String!
+  share: IntType
+  value: String
+}
+
 """Specifies how to filter by locale"""
 input LocalesFilter {
   """Filter records that are localized in all the specified locales"""
@@ -3727,8 +5553,8 @@ input LocalesFilter {
   notIn: [SiteLocale!]
 }
 
-"""Block of type 🔽 Menu Dropdown (menu_dropdown)"""
-type MenuDropdownRecord implements RecordInterface {
+"""Block of type 🔽 Menu dropdown (menu_dropdown_block)"""
+type MenuDropdownBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -3748,12 +5574,14 @@ type MenuDropdownRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   id: ItemId!
-  items: [MenuItemRecord!]!
+  items: [MenuItemBlockRecord!]!
   title: String!
 }
 
-"""Block of type ➡️ Menu Item (menu_item)"""
-type MenuItemRecord implements RecordInterface {
+union MenuItemBlockModelLinkField = DocumentationHomeRecord | PageRecord
+
+"""Block of type ➡️ Menu item (menu_item_block)"""
+type MenuItemBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -3773,11 +5601,129 @@ type MenuItemRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   id: ItemId!
-  page: PageRecord!
+  link: MenuItemBlockModelLinkField!
+  title: String!
+}
+
+type MessageCardBlockModelTextField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+"""Block of type ✉️ Message card (message_card_block)"""
+type MessageCardBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  id: ItemId!
+  metrics: [MetricBlockRecord!]!
+  text: MessageCardBlockModelTextField!
+  timeLabel: String
   title: String!
 }
 
 scalar MetaTagAttributes
+
+"""Block of type 🔢 Metric (metric_block)"""
+type MetricBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  change: String
+  id: ItemId!
+  label: String!
+  value: String!
+}
+
+"""Block of type 📊 Metrics card (metrics_card_block)"""
+type MetricsCardBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  chart: String!
+  id: ItemId!
+  metrics: [MetricBlockRecord!]!
+}
+
+type MilestoneBlockModelDescriptionField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+"""Block of type 📍 Milestone (milestone_block)"""
+type MilestoneBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  description: MilestoneBlockModelDescriptionField!
+  id: ItemId!
+  period: String!
+  title: String!
+}
 
 enum MuxThumbnailFitMode {
   preserve
@@ -3804,15 +5750,15 @@ enum MuxThumbnailRotation {
   ROTATE_270
 }
 
-type NewsletterSubscriptionModelSubtitleField {
+type NewsletterSubscriptionBlockModelSubtitleField {
   blocks: [String!]!
   inlineBlocks: [String!]!
   links: [String!]!
   value: JsonField!
 }
 
-"""Block of type 📬 CTA Newsletter Subscription (newsletter_subscription)"""
-type NewsletterSubscriptionRecord implements RecordInterface {
+"""Block of type 📬 Newsletter CTA (newsletter_subscription_block)"""
+type NewsletterSubscriptionBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -3833,7 +5779,67 @@ type NewsletterSubscriptionRecord implements RecordInterface {
   _updatedAt: DateTime!
   buttonLabel: String!
   id: ItemId!
-  subtitle: NewsletterSubscriptionModelSubtitleField!
+  subtitle: NewsletterSubscriptionBlockModelSubtitleField!
+  title: String!
+}
+
+"""Block of type 💼 Open position (open_position_block)"""
+type OpenPositionBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  id: ItemId!
+  location: String!
+  team: String!
+  title: String!
+  url: String!
+}
+
+type OpenPositionsSectionBlockModelSubtitleField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+"""Block of type 💼 Open positions section (open_positions_section_block)"""
+type OpenPositionsSectionBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  id: ItemId!
+  positions: [OpenPositionBlockRecord!]!
+  subtitle: OpenPositionsSectionBlockModelSubtitleField
   title: String!
 }
 
@@ -3849,7 +5855,7 @@ input OrientationFilter {
 """Linking fields"""
 enum PageModelFieldsReferencingAuthorModel {
   page_sections
-  page_sections__teamSection_showcasedMembers
+  page_sections__teamSectionBlock_showcasedMembers
 }
 
 input PageModelFilter {
@@ -3863,10 +5869,10 @@ input PageModelFilter {
   _updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   _locales: LocalesFilter
-  label: StringFilter
   seoAnalysis: JsonFilter
   seoMeta: SeoFilter
   slug: SlugFilter
+  title: StringFilter
   OR: [PageModelFilter]
   AND: [PageModelFilter]
 }
@@ -3890,11 +5896,11 @@ enum PageModelOrderBy {
   _updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
-  label_ASC
-  label_DESC
+  title_ASC
+  title_DESC
 }
 
-union PageModelSectionsField = AboutIntroRecord | AllPostsSectionRecord | BrandSectionRecord | ChangelogSectionRecord | DetailSectionRecord | FaqSectionRecord | FeatureListSectionRecord | FeaturedPostsSectionRecord | HeroSectionRecord | PricingComparisonSectionRecord | PricingSectionRecord | RedirectSectionRecord | ReviewSectionRecord | StatsSectionRecord | TeamSectionRecord | VideoSectionRecord
+union PageModelSectionsField = AboutIntroBlockRecord | AllPostsSectionBlockRecord | BrandSectionBlockRecord | ChangelogSectionBlockRecord | CtaSectionBlockRecord | DetailSectionBlockRecord | FaqSectionBlockRecord | FeatureListSectionBlockRecord | FeaturedPostsSectionBlockRecord | HeroSectionBlockRecord | IntegrationSectionBlockRecord | PricingComparisonSectionBlockRecord | PricingSectionBlockRecord | StatsSectionBlockRecord | StepsSectionBlockRecord | TeamSectionBlockRecord | TestimonialSectionBlockRecord | TimelineSectionBlockRecord | VideoSectionBlockRecord
 
 type PageModelSectionsFieldListListNonNullMultiLocaleField {
   locale: SiteLocale
@@ -3935,7 +5941,6 @@ type PageRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   id: ItemId!
-  label: String!
   sections(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -3956,6 +5961,7 @@ type PageRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): SeoField
   slug: String!
+  title: String!
 }
 
 """Specifies how to filter by parent (tree-like collections only)"""
@@ -3969,8 +5975,37 @@ input ParentFilter {
   exists: BooleanType
 }
 
-"""Block of type Plan limit (plan_limit)"""
-type PlanLimitRecord implements RecordInterface {
+"""Block of type ✔️ Plan feature (plan_feature_block)"""
+type PlanFeatureBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  id: ItemId!
+  label: String!
+}
+
+type PlanFeatureBlockRecordListListNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: [PlanFeatureBlockRecord!]!
+}
+
+"""Block of type 📏 Plan limit (plan_limit_block)"""
+type PlanLimitBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -3995,9 +6030,9 @@ type PlanLimitRecord implements RecordInterface {
   value: String
 }
 
-type PlanLimitRecordListListNonNullMultiLocaleField {
+type PlanLimitBlockRecordListListNonNullMultiLocaleField {
   locale: SiteLocale
-  value: [PlanLimitRecord!]!
+  value: [PlanLimitBlockRecord!]!
 }
 
 """Specifies how to filter by position (sorted and tree-like collections)"""
@@ -4027,7 +6062,7 @@ input PositionFilter {
   neq: IntType
 }
 
-union PostModelContentBlocksField = AppCtaRecord | CtaButtonWithImageRecord | ImageBlockRecord | NewsletterSubscriptionRecord
+union PostModelContentBlocksField = AppCtaBlockRecord | CtaButtonWithImageBlockRecord | ImageBlockRecord | NewsletterSubscriptionBlockRecord
 
 type PostModelContentField {
   blocks: [PostModelContentBlocksField!]!
@@ -4064,8 +6099,9 @@ input PostModelFilter {
   _locales: LocalesFilter
   author: LinkFilter
   content: StructuredTextFilter
+  coverImage: FileFilter
   seoAnalysis: JsonFilter
-  seoTags: SeoFilter
+  seoMeta: SeoFilter
   slug: SlugFilter
   tags: LinksFilter
   title: StringFilter
@@ -4096,7 +6132,7 @@ enum PostModelOrderBy {
   title_DESC
 }
 
-"""Record of type 📰 Blog Post (post)"""
+"""Record of type 📰 Blog post (post)"""
 type PostRecord implements RecordInterface {
   _allContentLocales(
     """
@@ -4104,7 +6140,7 @@ type PostRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): [PostModelContentFieldNonNullMultiLocaleField!]
-  _allSeoTagsLocales(
+  _allSeoMetaLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -4145,9 +6181,10 @@ type PostRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): PostModelContentField!
+  coverImage: ImageAltFileField!
   id: ItemId!
   seoAnalysis: JsonField
-  seoTags(
+  seoMeta(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
@@ -4169,15 +6206,10 @@ type PostRecord implements RecordInterface {
   ): String!
 }
 
-type PricingComparisonSectionModelComparisonSubheaderField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-"""Block of type Pricing comparison section (pricing_comparison_section)"""
-type PricingComparisonSectionRecord implements RecordInterface {
+"""
+Block of type 📊 Pricing comparison section (pricing_comparison_section_block)
+"""
+type PricingComparisonSectionBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -4196,21 +6228,12 @@ type PricingComparisonSectionRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  comparisonHeader: String
-  comparisonSubheader: PricingComparisonSectionModelComparisonSubheaderField
   id: ItemId!
   plans: [PricingTierRecord!]!
 }
 
-type PricingSectionModelPricingSectionSubheaderField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-"""Block of type 💰 Pricing section (pricing_section)"""
-type PricingSectionRecord implements RecordInterface {
+"""Block of type 💳 Pricing section (pricing_section_block)"""
+type PricingSectionBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -4229,11 +6252,21 @@ type PricingSectionRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  displayOption: String!
   id: ItemId!
+  layout: String!
   plans: [PricingTierRecord!]!
-  pricingSectionHeader: String!
-  pricingSectionSubheader: PricingSectionModelPricingSectionSubheaderField
+}
+
+type PricingTierModelDescriptionField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+type PricingTierModelDescriptionFieldNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: PricingTierModelDescriptionField!
 }
 
 input PricingTierModelFilter {
@@ -4248,14 +6281,13 @@ input PricingTierModelFilter {
   _isValid: BooleanFilter
   _locales: LocalesFilter
   ctaLabel: StringFilter
+  description: StructuredTextFilter
   highlightLabel: StringFilter
   monthlyPrice: IntegerFilter
-  planFeatures: StringFilter
+  name: StringFilter
   priceNote: StringFilter
   slug: SlugFilter
-  tierDescription: StructuredTextFilter
-  tierName: StringFilter
-  yearlyPrice: FloatFilter
+  yearlyPrice: IntegerFilter
   OR: [PricingTierModelFilter]
   AND: [PricingTierModelFilter]
 }
@@ -4285,29 +6317,15 @@ enum PricingTierModelOrderBy {
   highlightLabel_DESC
   monthlyPrice_ASC
   monthlyPrice_DESC
-  planFeatures_ASC
-  planFeatures_DESC
+  name_ASC
+  name_DESC
   priceNote_ASC
   priceNote_DESC
-  tierName_ASC
-  tierName_DESC
   yearlyPrice_ASC
   yearlyPrice_DESC
 }
 
-type PricingTierModelTierDescriptionField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-type PricingTierModelTierDescriptionFieldNonNullMultiLocaleField {
-  locale: SiteLocale
-  value: PricingTierModelTierDescriptionField!
-}
-
-"""Record of type 💰 Pricing Tier (pricing_tier)"""
+"""Record of type 💰 Pricing tier (pricing_tier)"""
 type PricingTierRecord implements RecordInterface {
   _allCtaLabelLocales(
     """
@@ -4315,30 +6333,36 @@ type PricingTierRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
+  _allDescriptionLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [PricingTierModelDescriptionFieldNonNullMultiLocaleField!]
+  _allFeaturesLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [PlanFeatureBlockRecordListListNonNullMultiLocaleField!]
   _allHighlightLabelLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
-  _allPlanLimitsLocales(
+  _allLimitsLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): [PlanLimitRecordListListNonNullMultiLocaleField!]
+  ): [PlanLimitBlockRecordListListNonNullMultiLocaleField!]
   _allPriceNoteLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
-  _allTierDescriptionLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [PricingTierModelTierDescriptionFieldNonNullMultiLocaleField!]
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -4367,6 +6391,24 @@ type PricingTierRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): String
+  description(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): PricingTierModelDescriptionField!
+  features(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [PlanFeatureBlockRecord!]!
   highlightLabel(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -4377,9 +6419,7 @@ type PricingTierRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): String
   id: ItemId!
-  monthlyPrice: IntType!
-  planFeatures: String!
-  planLimits(
+  limits(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
@@ -4387,7 +6427,9 @@ type PricingTierRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): [PlanLimitRecord!]!
+  ): [PlanLimitBlockRecord!]!
+  monthlyPrice: IntType!
+  name: String!
   priceNote(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -4398,17 +6440,7 @@ type PricingTierRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): String
   slug: String!
-  tierDescription(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): PricingTierModelTierDescriptionField!
-  tierName: String!
-  yearlyPrice: FloatType!
+  yearlyPrice: IntType!
 }
 
 """Specifies how to filter by publication datetime"""
@@ -4459,10 +6491,10 @@ type Query {
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
-  _allChangeLogsMeta(
+  _allChangelogEntriesMeta(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
-    filter: ChangeLogModelFilter
+    filter: ChangelogEntryModelFilter
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -4552,7 +6584,7 @@ type Query {
   ): [AuthorRecord!]!
 
   """Returns a collection of records"""
-  allChangeLogs(
+  allChangelogEntries(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
@@ -4566,9 +6598,9 @@ type Query {
 
     """Limit the number of results"""
     first: IntType = 20
-    filter: ChangeLogModelFilter
-    orderBy: [ChangeLogModelOrderBy] = [_updatedAt_DESC]
-  ): [ChangeLogRecord!]!
+    filter: ChangelogEntryModelFilter
+    orderBy: [ChangelogEntryModelOrderBy] = [_updatedAt_DESC]
+  ): [ChangelogEntryRecord!]!
 
   """Returns a collection of records"""
   allDocumentationPages(
@@ -4736,7 +6768,7 @@ type Query {
   ): AuthorRecord
 
   """Returns a specific record"""
-  changeLog(
+  changelogEntry(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
@@ -4744,9 +6776,9 @@ type Query {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-    filter: ChangeLogModelFilter
-    orderBy: [ChangeLogModelOrderBy] = [_updatedAt_DESC]
-  ): ChangeLogRecord
+    filter: ChangelogEntryModelFilter
+    orderBy: [ChangelogEntryModelOrderBy] = [_updatedAt_DESC]
+  ): ChangelogEntryRecord
 
   """Returns the single instance record"""
   documentationHome(
@@ -4771,6 +6803,17 @@ type Query {
     filter: DocumentationPageModelFilter
     orderBy: [DocumentationPageModelOrderBy] = [position_ASC]
   ): DocumentationPageRecord
+
+  """Returns the single instance record"""
+  interfaceText(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): InterfaceTextRecord
 
   """Returns the single instance record"""
   layout(
@@ -4875,17 +6918,17 @@ type Query {
   ): FileField
 }
 
-union QuestionModelAnswerBlocksField = CtaButtonWithImageRecord | NewsletterSubscriptionRecord
+union QuestionBlockModelAnswerBlocksField = CtaButtonWithImageBlockRecord | NewsletterSubscriptionBlockRecord
 
-type QuestionModelAnswerField {
-  blocks: [QuestionModelAnswerBlocksField!]!
+type QuestionBlockModelAnswerField {
+  blocks: [QuestionBlockModelAnswerBlocksField!]!
   inlineBlocks: [String!]!
   links: [String!]!
   value: JsonField!
 }
 
-"""Block of type ❓Question (question)"""
-type QuestionRecord implements RecordInterface {
+"""Block of type ❓ Question (question_block)"""
+type QuestionBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -4904,7 +6947,7 @@ type QuestionRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  answer: QuestionModelAnswerField!
+  answer: QuestionBlockModelAnswerField!
   id: ItemId!
   question: String!
 }
@@ -4929,30 +6972,6 @@ interface RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   id: ItemId!
-}
-
-"""Block of type 🔄 Redirect Section (redirect_section)"""
-type RedirectSectionRecord implements RecordInterface {
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  id: ItemId!
-  slugToRedirectTo: String!
 }
 
 """Specifies how to filter by upload type"""
@@ -4989,40 +7008,6 @@ type ResponsiveImage {
   title: String
   webpSrcSet: String!
   width: IntType!
-}
-
-type ReviewSectionModelReviewSectionSubheaderField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-"""Block of type 💬 Testimonials Section (review_section)"""
-type ReviewSectionRecord implements RecordInterface {
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  displayOptions: String!
-  id: ItemId!
-  reviewSectionHeader: String!
-  reviewSectionSubheader: ReviewSectionModelReviewSectionSubheaderField
-  reviews: [TestimonialRecord!]!
 }
 
 type SeoField {
@@ -5088,8 +7073,8 @@ input SlugFilter {
   notIn: [String]
 }
 
-"""Block of type 🌐 Social Media Icon (social_media_icon)"""
-type SocialMediaIconRecord implements RecordInterface {
+"""Block of type 🌐 Social link (social_link_block)"""
+type SocialLinkBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -5110,12 +7095,12 @@ type SocialMediaIconRecord implements RecordInterface {
   _updatedAt: DateTime!
   icon: FileField!
   id: ItemId!
-  name: String
+  name: String!
   url: String!
 }
 
-"""Block of type 📈 Stat (statistic)"""
-type StatisticRecord implements RecordInterface {
+"""Block of type 📈 Statistic (statistic_block)"""
+type StatisticBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -5140,15 +7125,8 @@ type StatisticRecord implements RecordInterface {
   quantity: IntType!
 }
 
-type StatsSectionModelSubtitleField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-"""Block of type 📈 Stats Section (stats_section)"""
-type StatsSectionRecord implements RecordInterface {
+"""Block of type 📈 Statistics section (stats_section_block)"""
+type StatsSectionBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -5168,9 +7146,8 @@ type StatsSectionRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   id: ItemId!
-  statistic: [StatisticRecord!]!
-  subtitle: StatsSectionModelSubtitleField
-  title: String!
+  layout: String
+  statistics: [StatisticBlockRecord!]!
 }
 
 """Specifies how to filter by status"""
@@ -5186,6 +7163,66 @@ input StatusFilter {
 
   """Search records without the specified statuses"""
   notIn: [ItemStatus]
+}
+
+type StepBlockModelDescriptionField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+union StepBlockModelIllustrationField = IconCardBlockRecord | ListCardBlockRecord | MessageCardBlockRecord | MetricsCardBlockRecord
+
+"""Block of type 👣 Step (step_block)"""
+type StepBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  description: StepBlockModelDescriptionField!
+  id: ItemId!
+  illustration: StepBlockModelIllustrationField
+  title: String!
+}
+
+"""Block of type 👣 Steps section (steps_section_block)"""
+type StepsSectionBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  id: ItemId!
+  layout: String
+  steps: [StepBlockRecord!]!
 }
 
 """Specifies how to filter Single-line string fields"""
@@ -5280,8 +7317,8 @@ input TagModelFilter {
   _status: StatusFilter
   _updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
+  name: StringFilter
   slug: SlugFilter
-  tag: StringFilter
   OR: [TagModelFilter]
   AND: [TagModelFilter]
 }
@@ -5305,12 +7342,18 @@ enum TagModelOrderBy {
   _updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
-  tag_ASC
-  tag_DESC
+  name_ASC
+  name_DESC
 }
 
 """Record of type 🏷️ Tag (tag)"""
 type TagRecord implements RecordInterface {
+  _allNameLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
   _allReferencingPosts(
     """Specifies how to filter linking records"""
     through: InverseRelationshipFilterBetweenPostAndTag
@@ -5341,12 +7384,6 @@ type TagRecord implements RecordInterface {
     locale: SiteLocale
     filter: PostModelFilter
   ): CollectionMetadata!
-  _allTagLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringNonNullMultiLocaleField!]
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -5366,8 +7403,7 @@ type TagRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   id: ItemId!
-  slug: String!
-  tag(
+  name(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
@@ -5376,17 +7412,11 @@ type TagRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): String!
+  slug: String!
 }
 
-type TeamSectionModelSubtitleField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-"""Block of type 👥 Team Section (team_section)"""
-type TeamSectionRecord implements RecordInterface {
+"""Block of type 👥 Team section (team_section_block)"""
+type TeamSectionBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -5405,11 +7435,9 @@ type TeamSectionRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  displayOptions: String!
   id: ItemId!
+  layout: String!
   showcasedMembers: [AuthorRecord!]!
-  subtitle: TeamSectionModelSubtitleField
-  title: String!
 }
 
 input TestimonialModelFilter {
@@ -5423,11 +7451,11 @@ input TestimonialModelFilter {
   _updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   _locales: LocalesFilter
+  name: StringFilter
+  picture: FileFilter
   rating: IntegerFilter
   review: StructuredTextFilter
-  reviewerName: StringFilter
-  reviewerPicture: FileFilter
-  reviewerTitle: StringFilter
+  role: StringFilter
   OR: [TestimonialModelFilter]
   AND: [TestimonialModelFilter]
 }
@@ -5451,12 +7479,12 @@ enum TestimonialModelOrderBy {
   _updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
+  name_ASC
+  name_DESC
   rating_ASC
   rating_DESC
-  reviewerName_ASC
-  reviewerName_DESC
-  reviewerTitle_ASC
-  reviewerTitle_DESC
+  role_ASC
+  role_DESC
 }
 
 type TestimonialModelReviewField {
@@ -5479,6 +7507,12 @@ type TestimonialRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): [TestimonialModelReviewFieldNonNullMultiLocaleField!]
+  _allRoleLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -5499,6 +7533,8 @@ type TestimonialRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   id: ItemId!
+  name: String!
+  picture: ImageFileField!
   rating: IntType!
   review(
     """The locale to use to fetch the field's content"""
@@ -5509,9 +7545,64 @@ type TestimonialRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): TestimonialModelReviewField!
-  reviewerName: String!
-  reviewerPicture: ImageFileField!
-  reviewerTitle: String
+  role(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+}
+
+"""Block of type 💬 Testimonials section (testimonial_section_block)"""
+type TestimonialSectionBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  id: ItemId!
+  layout: String!
+  testimonials: [TestimonialRecord!]!
+}
+
+"""Block of type 🕰️ Timeline section (timeline_section_block)"""
+type TimelineSectionBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  id: ItemId!
+  milestones: [MilestoneBlockRecord!]!
 }
 
 """Specifies how to filter by upload type"""
@@ -6084,15 +8175,15 @@ enum VideoMp4Res {
   high
 }
 
-type VideoSectionModelVideoSubheaderField {
+type VideoSectionBlockModelSubtitleField {
   blocks: [String!]!
   inlineBlocks: [String!]!
   links: [String!]!
   value: JsonField!
 }
 
-"""Block of type 📹 Video Section (video_section)"""
-type VideoSectionRecord implements RecordInterface {
+"""Block of type 📹 Video section (video_section_block)"""
+type VideoSectionBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -6112,10 +8203,10 @@ type VideoSectionRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   id: ItemId!
+  subtitle: VideoSectionBlockModelSubtitleField
+  thumbnail: ImageAltFileField!
+  title: String!
   video: VideoField!
-  videoHeader: String!
-  videoSubheader: VideoSectionModelVideoSubheaderField
-  videoThumbnail: ImageFileField!
 }
 
 type focalPoint {

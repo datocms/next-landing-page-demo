@@ -1,4 +1,4 @@
-import { CircleCheck, X } from 'lucide-react';
+import { CheckIcon, CloseIcon } from '@/components/ui/icons';
 import { uiString } from '@/lib/i18n/uiStrings';
 
 type Props = {
@@ -9,18 +9,16 @@ type Props = {
 /** The confirmation shown once the password prompt has turned Draft Mode on */
 const DraftModeEnabledToast = ({ locale, onDismiss }: Props) => {
   return (
-    <div role="alert" className="card flex items-start gap-3 p-5 shadow-pop">
-      <CircleCheck
-        className="mt-px size-5 shrink-0 text-success"
-        strokeWidth={1.75}
-        aria-hidden="true"
-      />
-
+    <div
+      role="alert"
+      className="flex items-start gap-3 rounded-card border border-line bg-surface p-4 shadow-float"
+    >
       <div className="min-w-0 flex-1">
-        <p className="font-medium text-ink">
+        <p className="flex items-center gap-2 text-small font-medium text-fg">
+          <CheckIcon className="size-4 shrink-0 text-success" />
           {uiString(locale, 'draftModeOn')}
         </p>
-        <p className="mt-1 text-small text-ink-2">
+        <p className="mt-1 pl-6 text-small text-fg-muted">
           {uiString(locale, 'draftModeOnBody')}
         </p>
       </div>
@@ -29,9 +27,9 @@ const DraftModeEnabledToast = ({ locale, onDismiss }: Props) => {
         type="button"
         onClick={onDismiss}
         aria-label={uiString(locale, 'dismiss')}
-        className="btn btn-ghost btn-icon hit-44 -mt-1 -mr-1.5 size-8"
+        className="hit-44 -mt-1 -mr-1 grid size-7 shrink-0 place-items-center rounded-[6px] text-fg-muted transition-colors duration-150 hover:bg-subtle hover:text-fg"
       >
-        <X strokeWidth={1.75} aria-hidden="true" />
+        <CloseIcon className="size-3.5" />
       </button>
     </div>
   );

@@ -1,12 +1,17 @@
+import { stripStega } from '@datocms/content-link';
 import { notFound } from 'next/navigation';
+import DatoImage from '@/components/datocms/DatoImage';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
-import AuthorAvatar from '@/components/posts/AuthorAvatar';
-import PostGrid from '@/components/posts/PostGrid';
+import { SharedElement } from '@/components/layout/PageTransition';
+import PostMosaic from '@/components/posts/PostMosaic';
 import PostsPageHeader from '@/components/posts/PostsPageHeader';
+import { tagPillClass } from '@/components/posts/PostTags';
+import Button from '@/components/ui/Button';
 import type { ContentComponent } from '@/lib/datocms/realtime/types';
 import { uiString } from '@/lib/i18n/uiStrings';
+import { areaLabels } from '@/utils/authorAreas';
+import { authorsUrl, authorUrl } from '@/utils/routes';
 import { hasStructuredText } from '@/utils/structuredText';
-import { toneClassFor } from '@/utils/tones';
 import type { PageProps, Query } from './meta';
 
 const Content: ContentComponent<PageProps, Query> = ({
@@ -20,56 +25,75 @@ const Content: ContentComponent<PageProps, Query> = ({
   const { locale } = globalPageProps.params;
   const { author } = data;
   const posts = author._allReferencingPosts;
-  const postCount = author._allReferencingPostsMeta.count;
   const portrait = author.picture?.responsiveImage;
+  const areasOfInterest = areaLabels(author.areasOfInterest);
 
   return (
     <>
       <PostsPageHeader
-        label={uiString(locale, 'author')}
         title={author.name}
-        tone={toneClassFor(author.name)}
+        lead={author.role}
         media={
           portrait ? (
-            // It sits on top of the header arches, which pass behind it
-            <AuthorAvatar
-              image={portrait}
-              sizes="144px"
-              ringName={author.name}
-              className="size-36 max-lg:size-24"
-              photoClassName="bg-white"
-            />
+            // 96px: larger than Avatar's sizes, so the round crop is drawn here.
+            // The portrait on the team section that opened this page travels here
+            <SharedElement
+              kind="portrait"
+              href={authorUrl(globalPageProps, globalPageProps.params.slug)}
+            >
+              <div className="relative size-24 overflow-hidden rounded-full bg-subtle ring-1 ring-line">
+                <DatoImage
+                  fragment={portrait}
+                  alt=""
+                  layout="fill"
+                  objectFit="cover"
+                  sizes="96px"
+                  priority
+                />
+              </div>
+            </SharedElement>
           ) : undefined
         }
       >
-        {author.bio && (
-          <p className="mt-3 text-lead text-ink-2">{author.bio}</p>
-        )}
         {hasStructuredText(author.description) && (
-          <div className="prose prose-sm mt-4 max-w-[62ch]">
+          <div className="mt-4 max-w-[40rem] text-body text-fg-muted [&_p+p]:mt-3">
             <DatoStructuredText data={author.description} />
           </div>
         )}
+        {areasOfInterest.length > 0 && (
+          <ul className="mt-6 flex flex-wrap justify-center gap-1.5">
+            {areasOfInterest.map((area) => (
+              <li key={stripStega(area)} className={tagPillClass}>
+                {area}
+              </li>
+            ))}
+          </ul>
+        )}
+        <Button
+          href={authorsUrl(globalPageProps)}
+          variant="secondary"
+          size="sm"
+          className="mt-8"
+        >
+          {uiString(locale, 'allAuthors')}
+        </Button>
       </PostsPageHeader>
 
       {posts.length > 0 && (
         <section
           aria-labelledby="author-posts-title"
-          className="container-page mt-16 pb-24 max-md:mt-12 max-md:pb-16"
+          className="container-page pt-16 lg:pt-24"
         >
-          <div className="mb-8 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 max-md:mb-6">
-            <h2 id="author-posts-title" className="text-h2 text-ink">
-              {/* The raw name goes in, so Content Link can still target it */}
-              {uiString(locale, 'postsBy', { name: author.name })}
-            </h2>
-            <p className="mono">
-              {uiString(locale, 'postCount', { n: postCount })}
-            </p>
-          </div>
-          <PostGrid
+          <h2 id="author-posts-title" className="mb-10 text-h3 lg:mb-12">
+            {/* The raw name goes in, so Content Link can still target it */}
+            {uiString(locale, 'postsBy', { name: author.name })}
+          </h2>
+          {/* Every post is the author's own: the bylines show the date only */}
+          <PostMosaic
             posts={posts}
             globalPageProps={globalPageProps}
-            prioritizeFirstRow
+            headingLevel="h3"
+            hideAuthor
           />
         </section>
       )}

@@ -1,16 +1,15 @@
 import { useId } from 'react';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
-import TwoTone from '@/components/ui/TwoTone';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
-import { cn } from '@/utils/cn';
 import {
   itemHeadingLevel,
   type SectionHeadingLevel,
 } from '@/utils/headingLevel';
 import { hasStructuredText } from '@/utils/structuredText';
+import { titleSize } from '@/utils/titleSize';
 import { AboutIntroFragment } from './fragment';
 import Introduction from './Introduction';
-import PhotoPlinth from './PhotoPlinth';
+import PhotoStrip from './PhotoStrip';
 
 type Props = {
   fragment: FragmentOf<typeof AboutIntroFragment>;
@@ -18,68 +17,61 @@ type Props = {
 };
 
 /**
- * Page opener in the hero's language: a label pill, a two-tone title and a
- * lead beside a threaded plinth holding the CMS photos as framed cards, then
- * the introduction as columns of points divided by hairlines.
+ * The About page opener: a centred header (the block's eyebrow in accent
+ * text, the title, the lead), the photos in a row of three and the
+ * introduction in three columns under them.
  */
 const AboutIntro = ({ fragment, as: Heading = 'h2' }: Props) => {
   const {
-    header,
-    subheader,
+    eyebrow,
+    title,
+    subtitle,
     images,
     introductionText: introduction,
-    preHeader,
   } = readFragment(AboutIntroFragment, fragment);
-  const headingId = `about-${useId()}`;
+  const headingId = useId();
   const leadsPage = Heading === 'h1';
+  const scale = title ? titleSize(title, leadsPage ? 'h1' : 'h2') : null;
 
   return (
     <section
-      className={
-        leadsPage ? 'pt-8 pb-16 md:pt-10 md:pb-20 lg:pt-12' : 'section'
-      }
-      aria-labelledby={header ? headingId : undefined}
+      aria-labelledby={title ? headingId : undefined}
+      className={leadsPage ? 'section-lead' : 'section'}
     >
       <div className="container-page">
-        <div className="grid items-center lg:grid-cols-12 lg:gap-x-6">
-          <div
-            className={cn(
-              'max-w-[620px] lg:col-span-6 lg:max-w-none',
-              !leadsPage && 'reveal',
-            )}
-          >
-            {preHeader && <p className="pill-label tone-2">{preHeader}</p>}
-            {header && (
-              <Heading
-                id={headingId}
-                // Both halves form one Visual Editing target (the stega payload rides in the second)
-                data-datocms-content-link-group
-                className={cn(
-                  'max-w-[588px] text-ink',
-                  leadsPage ? 'text-h1' : 'text-h2',
-                  preHeader && 'mt-5',
-                )}
-              >
-                <TwoTone text={header} lineBreak="always" keepHyphenatedWords />
-              </Heading>
-            )}
-            {hasStructuredText(subheader) && (
-              <div
-                data-hero-rise={leadsPage ? '' : undefined}
-                className="section-lead mt-4 [--d:0] [--lead-max:456px] md:mt-[18px]"
-              >
-                <DatoStructuredText data={subheader} />
-              </div>
-            )}
-          </div>
+        <header className="reveal mx-auto max-w-[44rem] text-center">
+          {eyebrow && (
+            <p className="mb-3 text-small font-medium text-accent-ink">
+              {eyebrow}
+            </p>
+          )}
+          {title && scale && (
+            <Heading
+              id={headingId}
+              data-long={scale.long}
+              className={scale.className}
+            >
+              {title}
+            </Heading>
+          )}
+          {hasStructuredText(subtitle) && (
+            <div className="mx-auto mt-4 max-w-[40rem] text-lead text-fg-muted [&_p]:text-balance [&_p+p]:mt-3">
+              <DatoStructuredText data={subtitle} />
+            </div>
+          )}
+        </header>
 
-          <PhotoPlinth images={images} leadsPage={leadsPage} />
-        </div>
+        <PhotoStrip
+          images={images}
+          leadsPage={leadsPage}
+          className="mt-12 lg:mt-16"
+        />
 
         {introduction && (
           <Introduction
             introduction={introduction}
             headingLevel={itemHeadingLevel(Heading)}
+            className="mt-12 lg:mt-16"
           />
         )}
       </div>

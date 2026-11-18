@@ -27,13 +27,31 @@ export const query = graphql(
         }
         name
         picture {
-          responsiveImage {
+          focalPoint {
+            x
+            y
+          }
+          responsiveImage(
+            imgixParams: {
+              w: "192"
+              h: "192"
+              fit: crop
+              crop: focalpoint
+              # The avatars are drawn as busts: small crops zoom in on the head
+              fpZ: 1.5
+              auto: format
+            }
+          ) {
             ...ResponsiveImageFragment
           }
         }
-        bio
+        role
         description {
           value
+        }
+        areasOfInterest {
+          id
+          label
         }
         _allReferencingPosts(
           filter: { title: { isBlank: "false" } }
@@ -44,12 +62,6 @@ export const query = graphql(
         ) {
           id
           ...PostExcerptFragment
-        }
-        _allReferencingPostsMeta(
-          locale: $locale
-          filter: { title: { isBlank: "false" } }
-        ) {
-          count
         }
       }
     }

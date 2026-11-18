@@ -1,7 +1,7 @@
 import type { ResultOf } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
-import { pageUrl } from '@/utils/routes';
+import { docsHomeUrl, pageUrl } from '@/utils/routes';
 import type { HeaderFragment } from './fragment';
 
 export type NavLink = {
@@ -17,13 +17,27 @@ export type NavItem =
 
 export type NavGroup = Extract<NavItem, { kind: 'group' }>;
 
+type Menu = ResultOf<typeof HeaderFragment>['menu'];
+
+/** What a menu item links to: a Page, or the Documentation Home */
+type MenuLink = Extract<
+  Menu[number],
+  { __typename: 'MenuItemBlockRecord' }
+>['link'];
+
+function linkUrl(link: MenuLink, globalPageProps: ResolvedGlobalPageProps) {
+  return link.__typename === 'DocumentationHomeRecord'
+    ? docsHomeUrl(globalPageProps)
+    : pageUrl(globalPageProps, link.slug);
+}
+
 /** Flattens the Layout menu (links and dropdowns) into locale-aware hrefs */
 export function buildNavItems(
-  menu: ResultOf<typeof HeaderFragment>['menu'] | undefined,
+  menu: Menu | undefined,
   globalPageProps: ResolvedGlobalPageProps,
 ): NavItem[] {
   return (menu ?? []).map((item) => {
-    if (item.__typename === 'MenuDropdownRecord') {
+    if (item.__typename === 'MenuDropdownBlockRecord') {
       return {
         kind: 'group',
         id: item.id,
@@ -32,7 +46,7 @@ export function buildNavItems(
         items: item.items.map((child) => ({
           id: child.id,
           title: child.title,
-          href: pageUrl(globalPageProps, child.page.slug),
+          href: linkUrl(child.link, globalPageProps),
         })),
       };
     }
@@ -41,7 +55,7 @@ export function buildNavItems(
       kind: 'link',
       id: item.id,
       title: item.title,
-      href: pageUrl(globalPageProps, item.page.slug),
+      href: linkUrl(item.link, globalPageProps),
     };
   });
 }

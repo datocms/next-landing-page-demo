@@ -1,30 +1,55 @@
 /**
- * Interface copy around CMS content (labels, counters, fallbacks): content
- * stays in DatoCMS, and only what no record can hold lives here. `en` defines
- * the keys, and every other locale must have them all.
+ * Interface copy around CMS content (labels, counters, fallbacks). The texts
+ * live in the Interface Text record in DatoCMS; `en` defines the keys and is
+ * the English fallback for any key the record leaves empty.
+ *
+ * uiString looks a locale's dictionary up in, in order:
+ * 1. the request store, filled on the server by primeUiStrings (React's
+ *    `cache()` memoises it per request; in the client build it does not
+ *    memoise, so this lookup simply misses there);
+ * 2. the registry, a module-level map that UiStringsProvider fills in the browser;
+ * 3. the English fallback.
  */
-import { de } from './de';
+import { cache } from 'react';
 import { en } from './en';
-import { es } from './es';
-import { fr } from './fr';
-import { it } from './it';
 import type { Dictionary, Entry, UiStringKey } from './types';
 
-const DICTIONARIES = { en, it, de, fr, es } satisfies Record<
-  string,
-  Dictionary
->;
+/** The dictionaries of the current server request */
+const getRequestStore = cache(() => new Map<string, Dictionary>());
 
-type UiLocale = keyof typeof DICTIONARIES;
+/** The dictionaries registered by UiStringsProvider */
+const registry = new Map<string, Dictionary>();
 
-/** The supported locale for a code ('it', 'it-CH'…); English for anything unknown or missing */
-export function resolveUiLocale(locale?: string | null): UiLocale {
-  const code = locale?.toLowerCase().split(/[-_]/)[0];
-  return code && code in DICTIONARIES ? (code as UiLocale) : 'en';
+/** The lowercased base language code: 'it-CH' becomes 'it' */
+function baseCode(locale?: string | null): string | undefined {
+  return locale?.toLowerCase().split(/[-_]/)[0] || undefined;
+}
+
+/** Stores the dictionary of `locale` in the request store or in the registry */
+export function registerUiStrings(
+  target: 'request' | 'registry',
+  locale: string,
+  dictionary: Dictionary,
+): void {
+  const code = baseCode(locale);
+  if (!code) return;
+  (target === 'request' ? getRequestStore() : registry).set(code, dictionary);
+}
+
+/** The registered dictionary for a code, if any */
+function findDictionary(code: string | undefined): Dictionary | undefined {
+  if (!code) return undefined;
+  return getRequestStore().get(code) ?? registry.get(code);
+}
+
+/** The language code of a registered dictionary ('it', 'it-CH'…); 'en' for anything unknown or missing */
+export function resolveUiLocale(locale?: string | null): string {
+  const code = baseCode(locale);
+  return code && findDictionary(code) ? code : 'en';
 }
 
 /** The entry's text, picking the plural form for `count` when it has one */
-function pickForm(entry: Entry, locale: UiLocale, count: number): string {
+function pickForm(entry: Entry, locale: string, count: number): string {
   if (typeof entry === 'string') return entry;
   return new Intl.PluralRules(locale).select(count) === 'one'
     ? entry.one
@@ -48,11 +73,8 @@ export function uiString(
   vars?: Record<string, string | number>,
 ): string {
   const uiLocale = resolveUiLocale(locale);
-  const template = pickForm(
-    DICTIONARIES[uiLocale][key],
-    uiLocale,
-    Number(vars?.n ?? 0),
-  );
+  const dictionary = findDictionary(uiLocale) ?? en;
+  const template = pickForm(dictionary[key], uiLocale, Number(vars?.n ?? 0));
 
   if (!vars) return template;
 

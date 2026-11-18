@@ -6,10 +6,10 @@ import { useLayoutEffect, useRef, useState } from 'react';
 const NAV_SLACK = 40;
 
 /**
- * The inline nav shows from 72rem, but the CMS decides how many items it
+ * The inline nav shows from 1024px, but the CMS decides how many items it
  * holds: when they don't fit, the header collapses to the menu button at
- * any width. While collapsed, the nav and the language pill stay laid out
- * (invisible, the pill out of flow) so the inline layout can still be
+ * any width. While collapsed, the nav and the language menu stay laid out
+ * (invisible, the menu out of flow) so the inline layout can still be
  * measured and restored as soon as it fits again.
  *
  * Returns the collapsed state and the refs of the four elements it measures.
@@ -27,10 +27,10 @@ export function useNavCollapse() {
     if (!nav || !list) return;
 
     const measure = () => {
-      // Below 72rem the nav is not rendered and the header is in its menu layout anyway
+      // Below 1024px the nav is not rendered and the header is in its menu layout anyway
       if (!nav.getClientRects().length) return;
       setCollapsed((wasCollapsed) => {
-        // Collapsed, the menu button sits where the language pill goes inline,
+        // Collapsed, the menu button sits where the language menu goes inline,
         // so the inline nav would be wider by the difference
         const widthGainedInline = wasCollapsed
           ? (menuButtonRef.current?.offsetWidth ?? 0) -

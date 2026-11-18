@@ -30,11 +30,11 @@ Before schema or content operations:
 - Docs home route: `app/[locale]/(docs-layout)/docs/`.
 - Docs page route: `app/[locale]/(docs-layout)/docs/[slug]/`.
 - Docs shell query and sidebar: `app/[locale]/(docs-layout)/meta.ts`.
-- Docs chrome: `components/docs/DocsShell/index.tsx` (`'use client'`), the top bar and the sticky sidebar rail from `lg`; the mobile drawer is `DocsNavDrawer.tsx` next to it. `app/[locale]/(docs-layout)/Content.tsx` renders the logo and the sidebar tree and passes them in as nodes (never functions).
+- Docs chrome: `components/docs/DocsShell/index.tsx` (`'use client'`), the top bar and the sticky sidebar rail from `lg`; the mobile drawer is `DocsDrawer.tsx` next to it. `app/[locale]/(docs-layout)/Content.tsx` renders the logo and the sidebar tree and passes them in as nodes (never functions).
 - Sidebar renderer: `components/docs/DocumentationSidebarItem.tsx`.
-- Featured docs cards: `components/docs/FeaturedDocumentationPages/**`. The "On this page" rail of a docs page is `components/ui/TableOfContents.tsx`.
-- Structured Text: the site-wide renderer is `components/datocms/DatoStructuredText`. The docs page `Content.tsx` adds the heading rule; the quote and code rules come from `longFormNodeRules` in `components/datocms/DatoStructuredText/longFormNodeRules.tsx`, shared with posts, legal and changelog pages. Long-form text is styled by `.prose` in `styles/components/prose.css`.
-- Long-form styles that utilities and primitives can't express go in `styles/areas/long-form.css`; the styling rules in the `landing-page-demo-sections` skill apply here too.
+- Featured docs cards: `components/docs/FeaturedDocumentationPages/**`. The "On this page" rail of a docs page is `components/ui/TableOfContents`.
+- Structured Text: the site-wide renderer is `components/datocms/DatoStructuredText`. The docs page `Content.tsx` adds the heading rule; the quote and code rules come from `longFormNodeRules` in `components/datocms/DatoStructuredText/longFormNodeRules.tsx`, shared with posts, legal and changelog pages. Long-form text is styled by `.prose` in `styles/prose.css`.
+- Long-form styles that utilities and primitives can't express go in `styles/prose.css`; the styling rules in the `landing-page-demo-sections` skill apply here too.
 - Interface copy that has no CMS field ("On this page", "Back to site", "Copy") comes from `uiString(locale, key)` in `@/lib/i18n/uiStrings` (rules in `landing-page-demo-sections`).
 
 ## Common workflows
@@ -52,7 +52,7 @@ Before schema or content operations:
 ### Change docs home
 
 1. Inspect the `documentation_home` singleton through MCP.
-2. Update title, subheader, logo, footer text, or featured pages (`featured_pages`) as requested.
+2. Update title, subtitle, logo, footer text, or featured pages (`featured_pages`) as requested.
 3. Keep featured pages linked to valid `documentation_page` records.
 4. Publish the singleton if the change should be public.
 5. Verify `/docs` and featured docs cards.

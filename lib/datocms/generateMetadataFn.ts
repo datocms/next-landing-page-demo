@@ -5,6 +5,7 @@ import {
   type TitleMetaLinkTag,
   toNextMetadata,
 } from 'react-datocms/seo';
+import { primeUiStrings } from '@/lib/i18n/uiStrings/load';
 import type {
   GlobalPageProps,
   ResolvedGlobalPageProps,
@@ -31,10 +32,12 @@ export function generateMetadataFn<
   return async function generateMetadata(
     asyncPageProps: GlobalPageProps,
   ): Promise<Metadata> {
-    const { variables, includeDrafts } = await resolveRouteContext(
+    const { pageProps, variables, includeDrafts } = await resolveRouteContext(
       asyncPageProps,
       options.buildVariables,
     );
+
+    await primeUiStrings(pageProps.params.locale, includeDrafts);
 
     const data = await executeQuery(options.query, {
       variables,

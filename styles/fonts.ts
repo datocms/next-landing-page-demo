@@ -1,38 +1,34 @@
-import {
-  Funnel_Display,
-  Funnel_Sans,
-  Spline_Sans_Mono,
-} from 'next/font/google';
+import { Geist_Mono, Inter } from 'next/font/google';
 
-// Every family here is variable, so no `weight` is passed. `subsets` only picks what
+// Both families are variable, so no `weight` is passed. `subsets` only picks what
 // is preloaded: every subset (latin-ext included) stays declared through
 // unicode-range and downloads when a page uses it. Latin covers en, it, de, fr and es.
-const display = Funnel_Display({
+
+// The one typeface of the site: text and headings
+const sans = Inter({
   subsets: ['latin'],
-  variable: '--font-funnel-display',
+  // The optical-size axis: headlines get Inter's tighter display shapes automatically
+  axes: ['opsz'],
+  variable: '--font-inter',
   display: 'swap',
 });
 
-const sans = Funnel_Sans({
-  subsets: ['latin'],
-  variable: '--font-funnel-sans',
-  display: 'swap',
-});
-
-// Only long-form emphasis (.prose em) uses the italic, so it loads on demand
-const sansItalic = Funnel_Sans({
+// Only emphasis in long-form text uses the italic, so it loads on demand
+const sansItalic = Inter({
   subsets: ['latin'],
   style: 'italic',
   preload: false,
-  variable: '--font-funnel-sans-italic',
+  variable: '--font-inter-italic',
   display: 'swap',
 });
 
-const mono = Spline_Sans_Mono({
+// Code blocks and inline code
+const code = Geist_Mono({
   subsets: ['latin'],
-  variable: '--font-spline-mono',
+  preload: false,
+  variable: '--font-code',
   display: 'swap',
 });
 
 /** Put on <html>: defines the font custom properties that styles/theme.css reads */
-export const fontVariables = `${display.variable} ${sans.variable} ${sansItalic.variable} ${mono.variable}`;
+export const fontVariables = `${sans.variable} ${sansItalic.variable} ${code.variable}`;

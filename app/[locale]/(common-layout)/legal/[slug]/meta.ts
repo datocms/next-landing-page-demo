@@ -28,6 +28,7 @@ export const query = graphql(
           ...TagFragment
         }
         title
+        updatedAt: _updatedAt
         content {
           value
         }

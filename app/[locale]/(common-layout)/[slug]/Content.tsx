@@ -1,28 +1,31 @@
-import { stripStega } from '@datocms/content-link';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
+import PostsPageHeader from '@/components/posts/PostsPageHeader';
 import AboutIntro from '@/components/sections/AboutIntro';
 import AllPostsSection from '@/components/sections/AllPostsSection';
 import BrandSection from '@/components/sections/BrandSection';
 import ChangelogSection from '@/components/sections/ChangelogSection';
+import CtaSection from '@/components/sections/CtaSection';
 import DetailSection from '@/components/sections/DetailSection';
 import FaqSection from '@/components/sections/FaqSection';
 import FeaturedPostsSection from '@/components/sections/FeaturedPostsSection';
 import FeatureListSection from '@/components/sections/FeatureListSection';
 import HeroSection from '@/components/sections/HeroSection';
+import IntegrationsSection from '@/components/sections/IntegrationsSection';
 import PricingComparisonSection from '@/components/sections/PricingComparisonSection';
 import PricingSection from '@/components/sections/PricingSection';
 import ReviewSection from '@/components/sections/ReviewSection';
 import StatsSection from '@/components/sections/StatsSection';
+import StepsSection from '@/components/sections/StepsSection';
 import TeamSection from '@/components/sections/TeamSection';
+import TimelineSection from '@/components/sections/TimelineSection';
 import VideoSection from '@/components/sections/VideoSection';
 import type { ContentComponent } from '@/lib/datocms/realtime/types';
-import { pageUrl } from '@/utils/routes';
 import type { PageProps, Query } from './meta';
 
 /**
  * A page is a stack of section blocks (the Page model's "Sections" field).
  * Each block type has its own component in components/sections/, which also
- * picks the block's layout from its display option field.
+ * picks the block's layout from its display options field.
  */
 const Content: ContentComponent<PageProps, Query> = ({
   data,
@@ -35,107 +38,109 @@ const Content: ContentComponent<PageProps, Query> = ({
 
   const { locale } = globalPageProps.params;
 
-  return page.sections.map((section, index) => {
-    // A section that opens a page without a hero carries the page's h1
-    const as = index === 0 ? 'h1' : 'h2';
+  // Sections have no headers of their own: a page that does not open with a
+  // hero, the about intro or the posts list shows its title as the h1 instead
+  const opener = page.sections[0]?.__typename;
+  const hasOwnTitle =
+    opener === 'HeroSectionBlockRecord' ||
+    opener === 'AboutIntroBlockRecord' ||
+    opener === 'AllPostsSectionBlockRecord';
+
+  const sections = page.sections.map((section, index) => {
+    // The opener that carries the page's title takes the h1
+    const as = hasOwnTitle && index === 0 ? 'h1' : 'h2';
     const key = section.id;
 
     switch (section.__typename) {
-      case 'HeroSectionRecord':
-        return <HeroSection key={key} fragment={section} />;
-      case 'FeatureListSectionRecord':
+      case 'HeroSectionBlockRecord':
+        return <HeroSection key={key} fragment={section} locale={locale} />;
+      case 'FeatureListSectionBlockRecord':
         return (
-          <FeatureListSection
-            key={key}
-            fragment={section}
-            locale={locale}
-            as={as}
-          />
+          <FeatureListSection key={key} fragment={section} locale={locale} />
         );
-      case 'VideoSectionRecord':
+      case 'VideoSectionBlockRecord':
         return (
           <VideoSection key={key} fragment={section} locale={locale} as={as} />
         );
-      case 'BrandSectionRecord':
+      case 'BrandSectionBlockRecord':
         return <BrandSection key={key} fragment={section} locale={locale} />;
-      case 'DetailSectionRecord':
+      case 'DetailSectionBlockRecord':
         return <DetailSection key={key} fragment={section} as={as} />;
-      case 'ReviewSectionRecord':
-        return (
-          <ReviewSection key={key} fragment={section} locale={locale} as={as} />
-        );
-      case 'PricingSectionRecord':
-        return (
-          <PricingSection
-            key={key}
-            fragment={section}
-            locale={locale}
-            as={as}
-          />
-        );
-      case 'PricingComparisonSectionRecord':
+      case 'TestimonialSectionBlockRecord':
+        return <ReviewSection key={key} fragment={section} locale={locale} />;
+      case 'PricingSectionBlockRecord':
+        return <PricingSection key={key} fragment={section} locale={locale} />;
+      case 'PricingComparisonSectionBlockRecord':
         return (
           <PricingComparisonSection
             key={key}
             fragment={section}
             locale={locale}
-            as={as}
           />
         );
-      case 'FeaturedPostsSectionRecord':
+      case 'FeaturedPostsSectionBlockRecord':
         return (
           <FeaturedPostsSection
             key={key}
             fragment={section}
             globalPageProps={globalPageProps}
-            as={as}
           />
         );
-      case 'TeamSectionRecord':
+      case 'TeamSectionBlockRecord':
         return (
           <TeamSection
             key={key}
             fragment={section}
             globalPageProps={globalPageProps}
-            as={as}
           />
         );
-      case 'FaqSectionRecord':
-        return <FaqSection key={key} fragment={section} as={as} />;
-      case 'StatsSectionRecord':
-        return <StatsSection key={key} fragment={section} as={as} />;
-      case 'AboutIntroRecord':
+      case 'FaqSectionBlockRecord':
+        return <FaqSection key={key} fragment={section} />;
+      case 'StatsSectionBlockRecord':
+        return <StatsSection key={key} fragment={section} locale={locale} />;
+      case 'StepsSectionBlockRecord':
+        return <StepsSection key={key} fragment={section} locale={locale} />;
+      case 'TimelineSectionBlockRecord':
+        return <TimelineSection key={key} fragment={section} />;
+      case 'IntegrationSectionBlockRecord':
+        return <IntegrationsSection key={key} fragment={section} />;
+      case 'CtaSectionBlockRecord':
+        return <CtaSection key={key} fragment={section} as={as} />;
+      case 'AboutIntroBlockRecord':
         return <AboutIntro key={key} fragment={section} as={as} />;
-      case 'ChangelogSectionRecord':
+      case 'ChangelogSectionBlockRecord':
         return (
           <ChangelogSection
             key={key}
             fragment={section}
             globalPageProps={globalPageProps}
-            as={as}
           />
         );
-      case 'AllPostsSectionRecord':
+      case 'AllPostsSectionBlockRecord':
         return (
           <AllPostsSection
             key={key}
             posts={data.allPosts}
             postCount={data._allPostsMeta.count}
-            pageLabel={page.label}
+            topics={data.topics.filter(
+              (topic) => topic._allReferencingPostsMeta.count > 0,
+            )}
+            pageTitle={page.title}
             globalPageProps={globalPageProps}
             as={as}
           />
-        );
-      case 'RedirectSectionRecord':
-        // A page made of a redirect block forwards to another page.
-        // stripStega: Content Link markers would end up in the URL
-        return redirect(
-          pageUrl(globalPageProps, stripStega(section.slugToRedirectTo)),
         );
       default:
         return null;
     }
   });
+
+  return (
+    <>
+      {!hasOwnTitle && <PostsPageHeader title={page.title} />}
+      {sections}
+    </>
+  );
 };
 
 export default Content;

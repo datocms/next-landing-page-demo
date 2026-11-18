@@ -1,3 +1,5 @@
+import { accentTokens } from '@/utils/accent';
+
 type Props = {
   r: number;
   g: number;
@@ -5,14 +7,18 @@ type Props = {
 };
 
 /**
- * Exposes Layout › Main color as --color-primary on the server, so the first
- * paint already uses it; every colour token in styles/tokens.css derives from
- * it.
+ * Writes the accent tokens for Layout › Main color on :root, on the server, so
+ * the first paint already uses them: the colour itself, the label colour that
+ * reads on it (black or white, from its WCAG luminance) and its hover fill.
+ * `--accent-ink` derives from `--accent` in styles/tokens.css, which also holds
+ * the defaults these replace.
  */
 const CustomColor = ({ r, g, b }: Props) => {
+  const { accent, onAccent, accentHover } = accentTokens({ r, g, b });
+
   return (
     <style href="custom-color" precedence="high">
-      {`:root { --color-primary: rgb(${r} ${g} ${b}); }`}
+      {`:root { --accent: ${accent}; --on-accent: ${onAccent}; --accent-hover: ${accentHover}; }`}
     </style>
   );
 };

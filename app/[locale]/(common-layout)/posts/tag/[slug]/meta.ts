@@ -24,7 +24,7 @@ export const query = graphql(
         seo: _seoMetaTags {
           ...TagFragment
         }
-        tag
+        name
         _allReferencingPosts(
           filter: { title: { isBlank: "false" } }
           orderBy: _createdAt_DESC
@@ -35,6 +35,16 @@ export const query = graphql(
           id
           ...PostExcerptFragment
         }
+      }
+      # The topic links at the top of the page: tags that have posts
+      topics: allTags(
+        orderBy: name_ASC
+        first: 100
+        locale: $locale
+        fallbackLocales: $fallbackLocales
+      ) {
+        name
+        slug
         _allReferencingPostsMeta(
           locale: $locale
           filter: { title: { isBlank: "false" } }

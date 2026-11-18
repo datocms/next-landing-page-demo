@@ -1,11 +1,15 @@
 import { notFound } from 'next/navigation';
-import PostGrid from '@/components/posts/PostGrid';
+import PostMosaic from '@/components/posts/PostMosaic';
 import PostsPageHeader from '@/components/posts/PostsPageHeader';
+import TopicLinks from '@/components/posts/TopicLinks';
 import type { ContentComponent } from '@/lib/datocms/realtime/types';
 import { uiString } from '@/lib/i18n/uiStrings';
-import { toneClassFor } from '@/utils/tones';
 import type { PageProps, Query } from './meta';
 
+/**
+ * A tag's page: the tag's name as the h1, the topic pills under it (this tag
+ * marked) to move between topics, then its posts in the blog's grid.
+ */
 const Content: ContentComponent<PageProps, Query> = ({
   data,
   ...globalPageProps
@@ -14,35 +18,40 @@ const Content: ContentComponent<PageProps, Query> = ({
     notFound();
   }
 
-  const { locale } = globalPageProps.params;
+  const { locale, slug } = globalPageProps.params;
   const posts = data.tag._allReferencingPosts;
-  const postCount = data.tag._allReferencingPostsMeta.count;
+  const topics = data.topics.filter(
+    (topic) => topic._allReferencingPostsMeta.count > 0,
+  );
 
   return (
     <>
       <PostsPageHeader
-        label={uiString(locale, 'tag')}
-        title={data.tag.tag}
+        title={data.tag.name}
         titleId="tag-title"
-        tone={toneClassFor(data.tag.tag)}
-        meta={uiString(locale, 'postCount', { n: postCount })}
-      />
+        lead={
+          posts.length === 0 ? uiString(locale, 'noTaggedPosts') : undefined
+        }
+      >
+        <TopicLinks
+          topics={topics}
+          globalPageProps={globalPageProps}
+          current={slug}
+          centered
+          className="mt-8 w-full"
+        />
+      </PostsPageHeader>
 
       <section
         aria-labelledby="tag-title"
-        className="container-page mt-12 pb-24 max-md:mt-8 max-md:pb-16"
+        className="container-page mt-12 lg:mt-16"
       >
-        {posts.length > 0 ? (
-          <PostGrid
+        {posts.length > 0 && (
+          <PostMosaic
             posts={posts}
             globalPageProps={globalPageProps}
-            headingLevel="h2"
             prioritizeFirstRow
           />
-        ) : (
-          <p className="card p-8 text-center text-body text-ink-2">
-            {uiString(locale, 'noTaggedPosts')}
-          </p>
         )}
       </section>
     </>

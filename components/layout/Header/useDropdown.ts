@@ -174,6 +174,16 @@ export function useDropdown({
   return { open: isOpen, rootProps, triggerProps, panelProps };
 }
 
-/** Shared open/closed classes for a `.menu-panel` (entry via @starting-style, exit fades) */
-export const panelStateClass = (open: boolean) =>
-  open ? 'block' : 'hidden opacity-0 duration-[120ms] ease-standard';
+/**
+ * A header menu panel: white, hairline frame, 8px radius and the float shadow,
+ * under its trigger; it opens with a short fade and rise (styles/motion.css
+ * .menu-in). Add the side it aligns to (`-left-2.5`, `right-0`)
+ */
+export const menuPanelClass = (open: boolean) =>
+  `absolute top-[calc(100%+6px)] z-60 min-w-52 rounded-control border border-line bg-surface p-1 shadow-float ${
+    open ? 'menu-in block' : 'hidden'
+  }`;
+
+/** A row of a header menu: muted, a grey fill on hover; the current page in the text colour and medium weight */
+export const menuItemClass =
+  'flex min-h-9 items-center rounded-[6px] px-3 text-small text-fg-muted whitespace-nowrap transition-colors duration-150 hover:bg-subtle hover:text-fg aria-[current]:font-medium aria-[current]:text-fg pointer-coarse:min-h-11';

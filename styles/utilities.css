@@ -1,420 +1,380 @@
-/* Custom Tailwind utilities (@utility): page containers, tones, gradients, shapes,
-   rings and shadows. Use them in class names like any built-in utility; Tailwind only
-   emits the ones the markup uses. */
+/* Custom utilities: the type tokens, the page container, the section rhythm, the
+   12-column grid and the card. They accept variants like any Tailwind utility (`lg:text-h2`). */
 
-/* ---------- Layout: containers, the page grid and section spacing ---------- */
+/* ---------- Type ----------
+   Each token is a size with its line height, weight and tracking. The tag is the
+   caller's choice (the `as` prop of SectionHeader and friends). */
 
+/* Landing hero h1 */
+@utility text-display {
+  font-size: clamp(2.5rem, 5.4vw, 4.125rem);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.052em;
+  /* A long title steps down (utils/titleSize.ts) */
+  &[data-long] {
+    font-size: clamp(2.25rem, 4.4vw, 3.375rem);
+    line-height: 1.03;
+  }
+}
+/* Page titles */
+@utility text-h1 {
+  font-size: clamp(2.125rem, 4vw, 3.25rem);
+  line-height: 1.03;
+  font-weight: 600;
+  letter-spacing: -0.048em;
+  &[data-long] {
+    font-size: clamp(1.875rem, 3.2vw, 2.625rem);
+    line-height: 1.06;
+  }
+}
+/* Section titles */
+@utility text-h2 {
+  font-size: clamp(1.875rem, 3.6vw, 3rem);
+  line-height: 1.03;
+  font-weight: 600;
+  letter-spacing: -0.048em;
+  &[data-long] {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1.06;
+  }
+}
+/* Item titles */
+@utility text-h3 {
+  font-size: 1.25rem;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.028em;
+}
+/* Subtitles */
+@utility text-lead {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: -0.006em;
+  @media (width >= 40rem) {
+    font-size: 1.125rem;
+  }
+}
+/* Text */
+@utility text-body {
+  font-size: 1rem;
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: -0.003em;
+}
+/* Meta, captions, UI labels (add `font-medium` when it names something) */
+@utility text-small {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+/* The smallest text: badges, table notes */
+@utility text-ui {
+  font-size: 0.84375rem;
+  line-height: 1.4;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+/* Code-like strings outside a code block */
+@utility text-machine {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* ---------- Layout ---------- */
+
+/* The page container: 1200px of content between two gutters */
 @utility container-page {
   width: 100%;
-  max-width: calc(var(--container) + 2 * var(--pad));
+  max-width: calc(var(--page-max) + 2 * var(--gutter));
   margin-inline: auto;
-  padding-inline: var(--pad);
+  padding-inline: var(--gutter);
 }
-@utility container-reading {
-  width: 100%;
-  max-width: calc(var(--container-reading) + 2 * var(--pad));
-  margin-inline: auto;
-  padding-inline: var(--pad);
+
+/* Section rhythm */
+@utility section {
+  padding-block: var(--section-space);
 }
-@utility grid-page {
+/* The block that opens a page under the header: a shorter top, the usual gap below */
+@utility section-lead {
+  padding-top: var(--page-top);
+  padding-bottom: var(--section-space);
+}
+
+/* One gap between any two neighbours, whatever they are. A plain section leaves
+   the gap below itself, so what follows never adds a second one: the next plain
+   section gives up its top padding, a tinted panel or the footer its top margin.
+   Tinted panels that follow each other sit one inset apart. Written outside the
+   utilities layer so the rhythm wins over a section's own utilities */
+main > .section:first-child:not(.band):not(.panel) {
+  padding-top: var(--page-top);
+}
+/* Under a page title (PostsPageHeader on a page without a hero) the first section
+   starts closer than a full section gap */
+main > header + .section:not(.band):not(.panel) {
+  padding-top: 3rem;
+  @media (width >= 64rem) {
+    padding-top: 4rem;
+  }
+}
+main
+  > :is(.section, .section-lead):not(.band):not(.panel)
+  + .section:not(.band):not(.panel) {
+  padding-top: 0;
+}
+main > :is(.band, .panel) + :is(.band, .panel) {
+  margin-top: var(--inset);
+}
+main
+  > :is(.section, .section-lead):not(.band):not(.panel)
+  + :is(.band, .panel) {
+  margin-top: 0;
+}
+/* The logo row tucks in closer under a panel (the hero) */
+main > .panel + .section[data-brands] {
+  padding-top: calc(var(--section-space) * 0.6);
+}
+/* The footer keeps a full gap above itself, unless what ends the page left one
+   (a plain section) or is a panel too (one inset; the closing panel joins it) */
+main:has(> :is(.band, .panel):not([data-closing]):last-child) + footer {
+  margin-top: var(--inset);
+}
+main:has(> :is(.section, .section-lead):not(.band):not(.panel):last-child)
+  + footer {
+  margin-top: 0;
+}
+
+/* 12 columns from 1024, 8 from 768, 4 below; gap 24px (16px below 768).
+   Children place themselves with col-span-* and lg:col-start-* */
+@utility grid-12 {
   display: grid;
-  column-gap: var(--gutter);
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--grid-gap);
   @media (width >= 48rem) {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+  @media (width >= 64rem) {
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 }
-@utility section {
-  padding-block: var(--section);
+
+/* Pulls a child of container-page out to the right edge of the viewport */
+@utility bleed-right {
+  margin-right: calc(var(--page-edge) * -1);
 }
 
-/* ---------- Type: mono metadata, uppercase labels, display numerals ---------- */
+/* ---------- Small helpers ---------- */
 
-@utility mono {
-  font-family: var(--font-mono);
-  font-size: var(--text-mono);
-  line-height: 1.2;
-  font-weight: 400;
-  color: var(--ink-3);
-  font-variant-numeric: tabular-nums;
-}
-@utility label {
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  line-height: 1;
-  font-weight: 400;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-}
-@utility num {
-  font-family: var(--font-display);
-  font-weight: 400;
-  letter-spacing: -0.03em;
-  font-variant-numeric: tabular-nums;
+/* A card: white with a hairline ring and the card radius (or --card-radius). No shadow:
+   depth comes from the tinted panels cards sit on */
+@utility card {
+  border: 1px solid var(--color-line);
+  border-radius: var(--card-radius, var(--radius-card));
+  background-color: var(--color-surface);
 }
 
-/* ---------- Tones ---------- */
-
-/* Six stops of the ONE hue. The bodies differ only in --tone-depth and --tone-glow-at (where
-   zone-glow puts its light). Each repeats the --tone formulas because a custom property is
-   computed where it is declared: setting --tone-depth alone would leave the inherited --tone
-   unchanged. Pick them with toneClass() / toneClassFor() / toneRamp() from @/utils/tones */
-@utility tone-0 {
-  --tone-depth: 0;
-  --tone-glow-at: 0% 0%;
-  --tone: color-mix(
-    in oklch,
-    var(--g-800) calc(var(--tone-depth) * 20%),
-    var(--g-500)
-  );
-  --tone-hi: color-mix(
-    in oklch,
-    var(--g-600) calc(var(--tone-depth) * 20%),
-    var(--g-300)
-  );
-  --tone-angle: calc(120deg + var(--tone-depth) * 30deg);
-  --tone-grad: linear-gradient(var(--tone-angle), var(--tone-hi), var(--tone));
-  --tone-wash: var(--g-100);
-  --tone-mark: var(--g-200);
-  --tone-text: var(--g-800);
-}
-@utility tone-1 {
-  --tone-depth: 1;
-  --tone-glow-at: 100% 0%;
-  --tone: color-mix(
-    in oklch,
-    var(--g-800) calc(var(--tone-depth) * 20%),
-    var(--g-500)
-  );
-  --tone-hi: color-mix(
-    in oklch,
-    var(--g-600) calc(var(--tone-depth) * 20%),
-    var(--g-300)
-  );
-  --tone-angle: calc(120deg + var(--tone-depth) * 30deg);
-  --tone-grad: linear-gradient(var(--tone-angle), var(--tone-hi), var(--tone));
-  --tone-wash: var(--g-100);
-  --tone-mark: var(--g-200);
-  --tone-text: var(--g-800);
-}
-@utility tone-2 {
-  --tone-depth: 2;
-  --tone-glow-at: 0% 100%;
-  --tone: color-mix(
-    in oklch,
-    var(--g-800) calc(var(--tone-depth) * 20%),
-    var(--g-500)
-  );
-  --tone-hi: color-mix(
-    in oklch,
-    var(--g-600) calc(var(--tone-depth) * 20%),
-    var(--g-300)
-  );
-  --tone-angle: calc(120deg + var(--tone-depth) * 30deg);
-  --tone-grad: linear-gradient(var(--tone-angle), var(--tone-hi), var(--tone));
-  --tone-wash: var(--g-100);
-  --tone-mark: var(--g-200);
-  --tone-text: var(--g-800);
-}
-@utility tone-3 {
-  --tone-depth: 3;
-  --tone-glow-at: 100% 100%;
-  --tone: color-mix(
-    in oklch,
-    var(--g-800) calc(var(--tone-depth) * 20%),
-    var(--g-500)
-  );
-  --tone-hi: color-mix(
-    in oklch,
-    var(--g-600) calc(var(--tone-depth) * 20%),
-    var(--g-300)
-  );
-  --tone-angle: calc(120deg + var(--tone-depth) * 30deg);
-  --tone-grad: linear-gradient(var(--tone-angle), var(--tone-hi), var(--tone));
-  --tone-wash: var(--g-100);
-  --tone-mark: var(--g-200);
-  --tone-text: var(--g-800);
-}
-@utility tone-4 {
-  --tone-depth: 4;
-  --tone-glow-at: 50% 0%;
-  --tone: color-mix(
-    in oklch,
-    var(--g-800) calc(var(--tone-depth) * 20%),
-    var(--g-500)
-  );
-  --tone-hi: color-mix(
-    in oklch,
-    var(--g-600) calc(var(--tone-depth) * 20%),
-    var(--g-300)
-  );
-  --tone-angle: calc(120deg + var(--tone-depth) * 30deg);
-  --tone-grad: linear-gradient(var(--tone-angle), var(--tone-hi), var(--tone));
-  --tone-wash: var(--g-100);
-  --tone-mark: var(--g-200);
-  --tone-text: var(--g-800);
-}
-@utility tone-5 {
-  --tone-depth: 5;
-  --tone-glow-at: 50% 100%;
-  --tone: color-mix(
-    in oklch,
-    var(--g-800) calc(var(--tone-depth) * 20%),
-    var(--g-500)
-  );
-  --tone-hi: color-mix(
-    in oklch,
-    var(--g-600) calc(var(--tone-depth) * 20%),
-    var(--g-300)
-  );
-  --tone-angle: calc(120deg + var(--tone-depth) * 30deg);
-  --tone-grad: linear-gradient(var(--tone-angle), var(--tone-hi), var(--tone));
-  --tone-wash: var(--g-100);
-  --tone-mark: var(--g-200);
-  --tone-text: var(--g-800);
+/* A tile: the pale tint instead of a border. Feature tiles, checklists, FAQ rows */
+@utility tile {
+  border-radius: var(--card-radius, var(--radius-card));
+  background-color: var(--color-subtle);
 }
 
-/* ---------- Gradients, dots and shapes ---------- */
-
-@utility bg-grad {
-  background-image: var(--grad);
-}
-@utility bg-grad-line {
-  background-image: var(--grad-line);
-}
-@utility bg-tone-grad {
-  background-image: var(--tone-grad);
-}
-/* Tone-gradient numerals, contrast-clamped (every stop L <= .60 so 44px text is >= 3:1 on white) */
-@utility text-tone-grad {
-  --tg-hi: oklch(from var(--tone-hi) min(l, 0.6) c h);
-  --tg-lo: oklch(from var(--tone) min(l, 0.5) c h);
-  color: var(--tone);
-  background-image: linear-gradient(180deg, var(--tg-hi) 8%, var(--tg-lo) 78%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  padding-bottom: 2px;
-  margin-bottom: -2px;
-}
-/* A 2px gradient rule */
-@utility hairline {
-  height: 2px;
-  background-image: var(--grad-line);
-}
-@utility dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  flex: none;
-  border-radius: 9999px;
-  background-image: var(--tone-grad);
-}
-/* A placeholder bar in the mini UIs and mock windows; set its width with w-* */
-@utility sk {
-  display: block;
-  height: 8px;
-  flex: none;
-  border-radius: 9999px;
-  background-color: var(--sk);
-}
-@utility shape-circle {
-  width: 10px;
-  height: 10px;
-  flex: none;
-  border-radius: 9999px;
-  background-image: var(--tone-grad);
-}
-@utility shape-square {
-  width: 10px;
-  height: 10px;
-  flex: none;
-  border-radius: 2px;
-  background-image: var(--tone-grad);
-}
-@utility shape-triangle {
-  width: 11px;
-  height: 10px;
-  flex: none;
-  background-image: var(--tone-grad);
-  clip-path: polygon(50% 0, 100% 100%, 0 100%);
-}
-
-/* ---------- Backgrounds ---------- */
-
-/* zone-glow: a tinted well lit from a corner or edge set by the tone (--tone-glow-at), for gallery and bento tiles.
-   dot-grid: a white canvas with a hairline dot grid */
-@utility zone-glow {
-  background:
-    radial-gradient(
-      85% 95% at var(--tone-glow-at, 0% 0%),
-      color-mix(in oklch, var(--g-100) 85%, transparent),
-      transparent 70%
-    ),
-    var(--bg-2);
-}
-@utility dot-grid {
-  background:
-    radial-gradient(circle at 7px 7px, var(--line) 1px, transparent 1.6px) 0 0 /
-    14px 14px,
-    var(--bg);
-}
-
-/* ---------- Rings ---------- */
-
-/* ring-mark and ring-progress are gradient rings cut out of a filled circle; --ring-w sets the
-   stroke. ring-progress fills to --p (motion.css plays ring-fill as it enters) */
-@utility ring-mark {
-  border-radius: 9999px;
-  background-image: var(--grad-ring);
-  -webkit-mask: radial-gradient(
-    farthest-side,
-    transparent calc(100% - var(--ring-w, 3px) - 0.5px),
-    #000 calc(100% - var(--ring-w, 3px))
-  );
-  mask: radial-gradient(
-    farthest-side,
-    transparent calc(100% - var(--ring-w, 3px) - 0.5px),
-    #000 calc(100% - var(--ring-w, 3px))
-  );
-}
-@utility ring-progress {
-  border-radius: 9999px;
-  background-image: conic-gradient(
-    from 0deg,
-    var(--g-200),
-    var(--grad-b) calc(var(--p, 100%) * 0.62),
-    var(--grad-c) var(--p, 100%),
-    var(--line) 0
-  );
-  -webkit-mask: radial-gradient(
-    farthest-side,
-    transparent calc(100% - var(--ring-w, 5px) - 0.5px),
-    #000 calc(100% - var(--ring-w, 5px))
-  );
-  mask: radial-gradient(
-    farthest-side,
-    transparent calc(100% - var(--ring-w, 5px) - 0.5px),
-    #000 calc(100% - var(--ring-w, 5px))
-  );
-}
-/* A tone-gradient ring 5px outside the element (avatars) */
-@utility ring-tone {
-  position: relative;
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -5px;
-    border-radius: 9999px;
-    pointer-events: none;
-    background-image: var(--tone-grad);
-    -webkit-mask: radial-gradient(
-      farthest-side,
-      transparent calc(100% - 2.5px),
-      #000 calc(100% - 2px)
-    );
-    mask: radial-gradient(
-      farthest-side,
-      transparent calc(100% - 2.5px),
-      #000 calc(100% - 2px)
-    );
-  }
-}
-/* A 2px gradient border around a white box */
-@utility ring-grad {
-  border: 2px solid transparent;
-  background:
-    linear-gradient(var(--bg), var(--bg)) padding-box,
-    var(--grad-border) border-box;
-}
-
-/* ---------- Shadows (the values live in tokens.css) ---------- */
-
-@utility shadow-xs {
-  box-shadow: var(--shadow-xs);
-}
-@utility shadow-card {
-  box-shadow: var(--card-shadow);
-}
-@utility shadow-pop {
-  box-shadow: var(--pop-shadow);
-}
-@utility shadow-thumb {
-  box-shadow: var(--thumb-shadow);
-}
-@utility shadow-feature {
-  box-shadow: var(--feature-shadow);
-}
-/* A drop-shadow filter, so cut-out shapes cast a shadow that follows their outline */
-@utility lift {
-  filter: var(--lift);
-}
-
-/* ---------- Helpers ---------- */
-
-@utility no-scrollbar {
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-/* Fades out the left and right edges (the logo marquee) */
-@utility mask-fade-x {
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent,
-    #000 12%,
-    #000 88%,
-    transparent
-  );
-  mask-image: linear-gradient(
-    90deg,
-    transparent,
-    #000 12%,
-    #000 88%,
-    transparent
-  );
-}
-/* Grows the hit area to at least 44×44 on touch screens without changing the layout */
-@utility hit-44 {
-  position: relative;
-  @media (pointer: coarse) {
-    &::after {
-      content: '';
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: max(100%, 44px);
-      height: max(100%, 44px);
-      translate: -50% -50%;
+/* A linked card answers the pointer: its border darkens (put it beside `card`) */
+@utility card-lift {
+  transition: border-color 0.15s linear;
+  @media (hover: hover) {
+    &:hover {
+      border-color: var(--color-line-strong);
     }
   }
 }
-/* The link's ::after covers its nearest positioned ancestor, so the whole card is clickable
-   and the focus ring goes round the card (--stretched-radius, --stretched-offset) */
-@utility stretched-link {
+
+/* Same answer for a card that is not a link (kept for the feature cards) */
+@utility card-hover-accent {
+  transition: border-color 0.15s linear;
+  @media (hover: hover) {
+    &:hover {
+      border-color: var(--color-line-strong);
+    }
+  }
+}
+
+/* A full-width rounded panel: it stops --inset short of the viewport on both sides.
+   The content inside still uses container-page */
+@utility panel {
+  margin-inline: var(--inset);
+  border-radius: var(--radius-frame);
+}
+/* The tinted panel (hero, reviews): one pale tint easing into a slightly deeper one */
+@utility panel-tint {
+  background-image: linear-gradient(165deg, var(--pale), var(--ice));
+}
+/* The dark panel (the closing call to action and footer) */
+@utility panel-ink {
+  background-image: linear-gradient(180deg, #0f1546, var(--color-ink));
+  color: #fff;
+  --focus-ring: #fff;
+  --focus-halo: var(--color-ink);
+}
+
+/* A quiet band behind a whole section (reviews, a feature list): the tinted panel */
+@utility band {
+  margin-inline: var(--inset);
+  border-radius: var(--radius-frame);
+  background-image: linear-gradient(180deg, var(--pale), var(--ice));
+}
+
+/* The hero: a wash of the accent (about 20% at its peak) and a faint line grid
+   behind its top, across the viewport (<main> clips the sideways overflow). The
+   wash reaches up behind the transparent header and fades out well before the hero ends.
+   z-index 1 lets the hero image's shadow fall over the section below */
+@utility hero-wash {
+  isolation: isolate;
+}
+
+/* Behind the hero image: a soft accent glow centred on its upper half, so the
+   image looks lit from behind. Goes on an unanimated wrapper of the frame */
+@utility hero-glow {
+  position: relative;
+}
+
+/* The hero image's frame: 8px of translucent white around the image (which takes
+   rounded-frame), a 24px outer radius, the ring and the accent-tinted shadow */
+@utility hero-frame {
+  border-radius: var(--radius-frame);
+  box-shadow:
+    0 0 0 1px rgb(16 24 40 / 0.08),
+    var(--shadow-float);
+}
+
+/* The hero's one load-time entrance: each part fades in and rises 12px, staggered
+   by --i (headline 0, lead 1, buttons 2, image 3). Off under reduced motion */
+@utility hero-enter {
+  animation: none;
+}
+
+/* The hero image: a 1px neutral ring and a deep shadow tinted with the accent.
+   Pair it with rounded-frame */
+@utility frame-hero {
+  box-shadow:
+    0 0 0 1px rgb(16 24 40 / 0.08),
+    var(--shadow-float);
+}
+
+/* A showcase photo or video (detail, video): the 1px ring and the float shadow.
+   Pair it with rounded-frame */
+@utility frame-media {
+  box-shadow: var(--shadow-glow);
+}
+
+/* The primary button's depth: a 1px highlight inside the top edge, a small accent-tinted
+   drop; on hover it lifts 1px and the drop deepens */
+@utility button-depth {
+  box-shadow: 0 14px 30px -14px var(--glow);
+  &:disabled,
+  &[aria-disabled='true'] {
+    box-shadow: none;
+  }
+}
+
+/* The footer's top edge: a faint accent wash that mirrors the hero, fading down over
+   the subtle background */
+@utility footer-wash {
+  background-image: none;
+}
+
+/* The highlighted plan: an accent edge (the border plus a 1px ring), a pale accent top
+   fading to white by 40%, and an accent-tinted lift */
+@utility plan-highlight {
+  border-color: var(--accent-edge);
+  box-shadow: 0 0 0 1px var(--accent-edge);
+}
+
+/* On a navy panel (the footer, a dark tile) the focus ring is light around a dark halo */
+@utility on-ink {
+  --focus-ring: var(--color-surface);
+  --focus-halo: var(--color-fg);
+}
+
+/* Extends a small control's hit area to 44px without changing its box */
+@utility hit-44 {
+  position: relative;
   &::after {
     content: '';
     position: absolute;
-    inset: 0;
-    border-radius: var(--stretched-radius, var(--radius-card));
-  }
-  &:focus-visible {
-    outline: none;
-  }
-  &:focus-visible::after {
-    outline: 2px solid var(--accent-solid);
-    outline-offset: var(--stretched-offset, 4px);
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    translate: -50% -50%;
   }
 }
-/* A <mark> whose band sweeps in as it scrolls into view (.prose mark does this already) */
-@utility mark-sweep {
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      animation: mark-sweep linear both;
-      animation-timeline: view();
-      animation-range: entry 10% cover 30%;
+
+/* A linked row or card underlines its title on hover: put `group` on the link and
+   `title-underline` on the title */
+@utility title-underline {
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: text-decoration-color 0.1s linear;
+  @media (hover: hover) {
+    .group:hover & {
+      text-decoration-color: currentColor;
     }
+  }
+}
+
+/* A row that drifts sideways in a loop (the feature cards): two identical tracks side by
+   side, each sliding left by its own width. It pauses under the pointer or keyboard
+   focus. On touch screens and under reduced motion there is no drift: the reader scrolls
+   the first track and the copy is hidden */
+@utility marquee {
+  --marquee-gap: 1rem;
+  display: flex;
+  gap: var(--marquee-gap);
+  overflow: hidden;
+  padding-block: 0.25rem;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 5%,
+    black 95%,
+    transparent
+  );
+  @media (hover: none), (prefers-reduced-motion: reduce) {
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: var(--gutter);
+    padding-inline: var(--gutter);
+    mask-image: none;
+    scrollbar-width: none;
+  }
+  &:hover .marquee-track,
+  &:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+}
+@utility marquee-track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: stretch;
+  gap: var(--marquee-gap);
+  animation: marquee-slide 48s linear infinite;
+  & > * {
+    scroll-snap-align: start;
+  }
+  @media (hover: none), (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+@utility marquee-copy {
+  @media (hover: none), (prefers-reduced-motion: reduce) {
+    display: none;
   }
 }

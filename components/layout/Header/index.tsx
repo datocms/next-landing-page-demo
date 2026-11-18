@@ -1,11 +1,11 @@
 'use client';
 
-import { isEmptyDocument } from 'datocms-structured-text-utils';
-import { Menu } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import MotionObserver from '@/components/motion/MotionObserver';
+import { MenuIcon } from '@/components/ui/icons';
 import {
   type FragmentOf,
   readFragment,
@@ -18,7 +18,6 @@ import DesktopNav from './DesktopNav';
 import { HeaderFragment } from './fragment';
 import LanguageSelector from './LanguageSelector';
 import MobileNav from './MobileNav';
-import NotificationStrip from './NotificationStrip';
 import { buildNavItems } from './navItems';
 import { useNavCollapse } from './useNavCollapse';
 
@@ -31,9 +30,9 @@ type Props = {
 const MOBILE_NAV_ID = 'mobile-nav';
 
 /**
- * The site header: skip link, dismissible announcement bar, then the logo,
- * the inline nav and the language selector, or the menu button that opens
- * the mobile menu when the nav doesn't fit
+ * The site header: skip link, then the
+ * sticky row with the logo, the CMS menu and the language menu, or the menu
+ * button that opens the navigation sheet when the menu doesn't fit
  */
 const Header = ({ globalPageProps, fragment, languages }: Props) => {
   const layout = readFragment(HeaderFragment, fragment);
@@ -42,40 +41,24 @@ const Header = ({ globalPageProps, fragment, languages }: Props) => {
   const homeHref = pageUrl(globalPageProps, 'home');
   const { locale } = globalPageProps.params;
 
-  const [notificationVisible, setNotificationVisible] = useState(
-    !isEmptyDocument(layout?.notification),
-  );
-  const notificationRef = useRef<HTMLElement>(null);
   const logoLinkRef = useRef<HTMLAnchorElement>(null);
-  const dismissNotification = () => {
-    setNotificationVisible(false);
-    // The dismiss button disappears: keep keyboard focus at the top of the page
-    logoLinkRef.current?.focus();
-  };
 
-  // The hairline under the header shows once the announcement has scrolled away
+  // At the top the header is transparent, so a hero panel shows through it; once the
+  // page has scrolled its white backing (a ::before, so only opacity animates) fades in
+  // with a hairline under it
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
-    // Re-run after a dismissal: the threshold drops to 0
-    const onScroll = () => {
-      const threshold = notificationVisible
-        ? (notificationRef.current?.offsetHeight ?? 0)
-        : 0;
-      setScrolled(window.scrollY > threshold);
-    };
+    const onScroll = () => setScrolled(window.scrollY > 0);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, [notificationVisible]);
+  }, []);
 
-  // Mobile menu, closed again on every route change
+  // Navigation sheet, closed again on every route change
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuTop, setMenuTop] = useState(0);
   const openMenu = () => {
-    // The sheet replicates the header exactly where it sits now (below the announcement when it is in view)
-    setMenuTop(
-      Math.max(0, notificationRef.current?.getBoundingClientRect().bottom ?? 0),
-    );
+    setMenuTop(0);
     setMenuOpen(true);
   };
   const closeMenu = useCallback(() => setMenuOpen(false), []);
@@ -88,13 +71,14 @@ const Header = ({ globalPageProps, fragment, languages }: Props) => {
   const { collapsed, navRef, listRef, languageRef, menuButtonRef } =
     useNavCollapse();
 
+  // The wordmark is an SVG about 28px tall; its own size keeps the slot from shifting
   const logo = layout?.logo.url ? (
     <Image
       src={layout.logo.url}
       alt=""
-      width={138}
-      height={27}
-      className="h-[22px] w-auto lg:h-6"
+      width={layout.logo.width ?? 111}
+      height={layout.logo.height ?? 28}
+      className="h-7 w-auto"
       preload
     />
   ) : null;
@@ -103,33 +87,23 @@ const Header = ({ globalPageProps, fragment, languages }: Props) => {
     <>
       <a
         href="#main"
-        className="btn btn-ink btn-sm fixed top-3 left-3 z-[60] not-focus:sr-only"
+        className="fixed top-3 left-3 z-70 inline-flex min-h-9 items-center rounded-control border border-line bg-surface px-3.5 text-small font-medium text-fg shadow-float not-focus:sr-only"
       >
         {uiString(locale, 'skipToContent')}
       </a>
 
-      {notificationVisible && (
-        <NotificationStrip
-          ref={notificationRef}
-          notification={layout?.notification}
-          globalPageProps={globalPageProps}
-          onDismiss={dismissNotification}
-        />
-      )}
-
-      {/* overflow-x-clip: however many items the CMS adds, nothing in the header can widen the page */}
       <header
-        className="site-header group/header overflow-x-clip"
+        className="group/header sticky top-0 z-50 h-(--header-h) before:pointer-events-none before:absolute before:inset-0 before:-z-10 before:bg-surface before:opacity-0 before:shadow-[0_1px_0_var(--color-line)] before:transition-opacity before:duration-300 before:ease-[cubic-bezier(0.2,0.7,0.2,1)] before:content-[''] data-[scrolled=true]:before:opacity-100"
         style={{ viewTransitionName: 'site-header' }}
         data-scrolled={scrolled}
         data-collapsed={collapsed}
       >
-        <div className="container-page flex h-full items-center gap-4 md:gap-5 xl:gap-7">
+        <div className="container-page flex h-full items-center gap-6">
           <Link
             ref={logoLinkRef}
             href={homeHref}
             aria-label={uiString(locale, 'home')}
-            className="hit-44 flex shrink-0 items-center rounded-lg"
+            className="flex shrink-0 items-center transition-[scale,opacity] duration-300 ease-[cubic-bezier(0.2,0.7,0.2,1)] hover:opacity-85 motion-safe:hover:scale-[1.03] motion-safe:active:scale-[0.98] motion-safe:active:duration-100"
           >
             {logo}
           </Link>
@@ -142,11 +116,11 @@ const Header = ({ globalPageProps, fragment, languages }: Props) => {
             locale={locale}
           />
 
-          <div className="relative z-10 ml-auto flex shrink-0 items-center gap-2">
+          <div className="relative z-10 ml-auto flex shrink-0 items-center">
             {languages.length > 1 && (
               <div
                 ref={languageRef}
-                className="hidden min-[72rem]:block group-data-[collapsed=true]/header:invisible group-data-[collapsed=true]/header:absolute group-data-[collapsed=true]/header:right-0"
+                className="hidden group-data-[collapsed=true]/header:invisible group-data-[collapsed=true]/header:absolute group-data-[collapsed=true]/header:right-0 lg:block"
               >
                 <LanguageSelector
                   globalPageProps={globalPageProps}
@@ -161,13 +135,16 @@ const Header = ({ globalPageProps, fragment, languages }: Props) => {
               aria-expanded={menuOpen}
               aria-controls={MOBILE_NAV_ID}
               onClick={openMenu}
-              className="btn btn-icon size-11 bg-well text-ink hover:bg-surface group-data-[collapsed=false]/header:min-[72rem]:hidden"
+              className="-mr-2.5 grid size-11 place-items-center rounded-full text-fg transition-colors duration-150 hover:bg-surface/70 group-data-[collapsed=false]/header:lg:hidden"
             >
-              <Menu className="size-5" strokeWidth={1.75} aria-hidden="true" />
+              <MenuIcon className="size-5" />
             </button>
           </div>
         </div>
       </header>
+
+      {/* The page's one reveal and loop observer (components/motion) */}
+      <MotionObserver />
 
       <MobileNav
         id={MOBILE_NAV_ID}
@@ -175,7 +152,6 @@ const Header = ({ globalPageProps, fragment, languages }: Props) => {
         onClose={closeMenu}
         collapsed={collapsed}
         top={menuTop}
-        scrolled={scrolled}
         items={navItems}
         pathname={pathname}
         logo={logo}

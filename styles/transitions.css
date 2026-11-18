@@ -1,0 +1,179 @@
+/* Page transitions: the browser's View Transition API, driven by React's <ViewTransition>
+   (components/layout/PageTransition.tsx decides which classes a navigation gets).
+
+   One rule throughout: the frame stays still and only what changed moves, briefly.
+   A page change is a quick plain crossfade: the old page fades out in 120ms, the new
+   one fades in over 180ms after 40ms. Opacity only; nothing slides.
+
+   Unlayered, like motion.css. Under reduced motion base.css zeroes every duration, so a
+   navigation simply happens; without view transitions none of this applies. */
+
+/* ---------- The frame ----------
+   The header (site-header), the Draft Mode control and the other named chrome are
+   captured on their own and drawn above the page, without animation: they do not move.
+   A rail on one side only (leaving or entering the docs) fades with the page.
+   docs-sidebar: reserved for the docs sidebar, should it ever sit inside a page. */
+::view-transition {
+  pointer-events: none;
+}
+::view-transition-group(site-strip),
+::view-transition-group(site-header),
+::view-transition-group(draft-control),
+::view-transition-group(changelog-rail),
+::view-transition-group(docs-sidebar) {
+  z-index: 100;
+  animation: none;
+}
+::view-transition-old(site-strip),
+::view-transition-old(site-header),
+::view-transition-old(draft-control),
+::view-transition-old(changelog-rail):not(:only-child),
+::view-transition-old(docs-sidebar):not(:only-child) {
+  display: none;
+}
+::view-transition-new(site-strip),
+::view-transition-new(site-header),
+::view-transition-new(draft-control),
+::view-transition-new(changelog-rail):not(:only-child),
+::view-transition-new(docs-sidebar):not(:only-child) {
+  animation: none;
+}
+/* The navigation sheet or docs drawer, fading out above the chrome */
+::view-transition-group(site-sheet) {
+  z-index: 101;
+}
+::view-transition-old(changelog-rail):only-child,
+::view-transition-old(docs-sidebar):only-child {
+  animation: vt-out 180ms ease-in both;
+}
+::view-transition-new(changelog-rail):only-child,
+::view-transition-new(docs-sidebar):only-child {
+  animation: vt-in 320ms var(--ease-calm) 60ms both;
+}
+
+/* ---------- Between two pages ----------
+   fade (the default), forward and back (a sequence: posts pages, releases, docs
+   pages): the same quick crossfade. The root (footer, announcement) keeps the same
+   timing, so the whole page changes at once.
+   language: the same page in another language, a plain crossfade. React does not animate
+   that root layout swap, so PageTransition starts it by hand and the whole page (the
+   `root` snapshot, header aside) crossfades with the same quick timing; the page-fade
+   classes are for a React that would animate it itself. */
+::view-transition-old(root),
+::view-transition-old(.page-exit),
+::view-transition-old(.page-exit-forward),
+::view-transition-old(.page-exit-back) {
+  animation: vt-out 120ms linear both;
+}
+::view-transition-new(root),
+::view-transition-new(.page-enter),
+::view-transition-new(.page-enter-forward),
+::view-transition-new(.page-enter-back) {
+  animation: vt-in 180ms ease-out 40ms both;
+}
+::view-transition-old(.page-fade-out) {
+  animation: vt-out 240ms ease both;
+}
+::view-transition-new(.page-fade-in) {
+  animation: vt-in 240ms ease both;
+}
+
+/* ---------- The thing you pressed ----------
+   A shared element (a post's cover, a release's tile, a member's portrait) travels from
+   where it was to where it is on the new page in 340ms, above the fading pages and below
+   the header. Both pictures fill the travelling frame, cropped, never stretched. */
+::view-transition-group(.share-cover),
+::view-transition-group(.share-portrait),
+::view-transition-group(.share-tile) {
+  z-index: 50;
+  animation-duration: 340ms;
+  animation-timing-function: var(--ease-calm);
+}
+::view-transition-old(.share-cover),
+::view-transition-new(.share-cover),
+::view-transition-old(.share-portrait),
+::view-transition-new(.share-portrait) {
+  height: 100%;
+  object-fit: cover;
+}
+/* A cover: the same photo in two crops (3:2 in the card, 16:10 on the post), so a
+   crossfade would show it twice, slightly apart. The picture as it was stays on top
+   and hands over to the new one underneath in the first 120ms; then only one travels */
+::view-transition-old(.share-cover) {
+  z-index: 1;
+  animation: vt-out 120ms ease both;
+}
+::view-transition-new(.share-cover) {
+  animation: none;
+}
+/* A portrait changes shape (a 4:5 photo, a round one): the browser's own crossfade
+   (plus-lighter, so no dip) */
+::view-transition-old(.share-portrait),
+::view-transition-new(.share-portrait) {
+  animation-duration: 340ms;
+  animation-timing-function: var(--ease-calm);
+}
+/* A tile: its text keeps its scale, pinned to the top; the frame clips it to the card's
+   corners while it grows or shrinks. The old content leaves first, the new one follows */
+::view-transition-group(.share-tile) {
+  overflow: clip;
+  border-radius: var(--radius-card);
+}
+::view-transition-old(.share-tile) {
+  animation: vt-out 160ms ease-in both;
+}
+::view-transition-new(.share-tile) {
+  animation: vt-in 260ms var(--ease-calm) 80ms both;
+}
+/* Only one end on screen (PageTransition drops the name of the other): it goes
+   with its page, like the rest of it */
+::view-transition-old(.share-cover):only-child,
+::view-transition-old(.share-portrait):only-child,
+::view-transition-old(.share-tile):only-child {
+  animation: vt-out 180ms ease-in both;
+}
+::view-transition-new(.share-cover):only-child,
+::view-transition-new(.share-portrait):only-child,
+::view-transition-new(.share-tile):only-child {
+  animation: vt-rise 320ms var(--ease-calm) 60ms both;
+}
+
+/* ---------- Load-time entrances ----------
+   The hero's arrival and the release tiles' rise play when a page is loaded. A page
+   reached by a navigation arrives through the transition instead, so they stay still
+   (PageTransition sets data-navigated on <html> at the first navigation). The hero's
+   product cards keep their slow float. */
+:root[data-navigated] :is(.arrive, .arrive-settle),
+:root[data-navigated]
+  .arrive-float
+  :is(.spark-line, .spark-fill, .bar, .meter) {
+  animation: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* Longhands: the play state stays motion.css's (paused off screen) */
+  :root[data-navigated] .arrive-float {
+    animation-name: motion-float;
+    animation-duration: var(--float-time, 14s);
+    animation-timing-function: ease-in-out;
+    animation-delay: 0s;
+    animation-iteration-count: infinite;
+    animation-fill-mode: none;
+  }
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vt-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes vt-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+}

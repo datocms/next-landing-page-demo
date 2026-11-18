@@ -1,0 +1,118 @@
+/* `cards`: the members as small cards around a hub (TeamCards.tsx). From 1024px they sit
+   on an ellipse (--x / --y, set per card) inside the tinted panel and hover on their own
+   slow rhythm; below, they stack in a grid. Transform and opacity only. */
+
+.stage {
+  position: relative;
+}
+
+@media (width >= 64rem) {
+  .stage {
+    height: 560px;
+  }
+  .card {
+    position: absolute;
+    left: calc(50% + var(--x));
+    top: calc(50% + var(--y));
+    width: 17rem;
+    translate: -50% -50%;
+  }
+}
+
+/* The links: a dotted line from the hub to each card, its dots flowing outwards */
+.lines {
+  display: none;
+}
+@media (width >= 64rem) {
+  .lines {
+    position: absolute;
+    inset: 0;
+    display: block;
+    pointer-events: none;
+  }
+  .lines svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .line {
+    stroke: rgb(74 108 247 / 0.45);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 0.1 9;
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (width >= 64rem) {
+  .line {
+    animation:
+      line-draw 900ms var(--ease-calm) calc(var(--i) * 90ms + 200ms) backwards,
+      line-flow 1.6s linear infinite;
+  }
+}
+@keyframes line-draw {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes line-flow {
+  to {
+    stroke-dashoffset: -9.1;
+  }
+}
+
+/* The hub: the site's faint rings around an accent disc */
+.hub {
+  display: none;
+}
+@media (width >= 64rem) {
+  .hub {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    display: grid;
+    place-items: center;
+    width: 88px;
+    height: 88px;
+    translate: -50% -50%;
+    border-radius: 999px;
+    background-image: linear-gradient(160deg, #6f8bfa, var(--color-accent));
+    box-shadow:
+      0 0 0 44px rgb(74 108 247 / 0.07),
+      0 0 0 104px rgb(74 108 247 / 0.05),
+      0 0 0 176px rgb(74 108 247 / 0.035),
+      0 24px 48px -16px rgb(74 108 247 / 0.6);
+  }
+  .hub::after {
+    content: '';
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: #fff;
+    opacity: 0.9;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (width >= 64rem) {
+  .hub {
+    animation: hub-breathe 6s ease-in-out infinite alternate;
+  }
+  .float {
+    animation: card-float var(--float-time, 9s) ease-in-out
+      var(--float-delay, 0s) infinite;
+  }
+}
+
+@keyframes card-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+@keyframes hub-breathe {
+  to {
+    scale: 1.06;
+  }
+}

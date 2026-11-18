@@ -42,7 +42,7 @@ export function recordToWebsiteRoute(
       return pageUrl(globalPageProps, 'home');
     case 'pricing_tier':
       return pageUrl(globalPageProps, 'pricing');
-    case 'change_log':
+    case 'changelog_entry':
       return changelogUrl(globalPageProps, slug);
     default:
       return null;

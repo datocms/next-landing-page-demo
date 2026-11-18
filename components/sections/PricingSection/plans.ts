@@ -1,7 +1,6 @@
 import { stripStega } from '@datocms/content-link';
-import { type Tone, toneRamp } from '@/utils/tones';
 
-type PlanWithFeatures = { id: string; planFeatures?: string | null };
+type PlanWithFeatures = { id: string; features: { label: string }[] };
 
 /** One line of a plan's feature list; `included: false` marks a feature only richer plans have */
 export type FeatureRow = { key: string; text: string; included: boolean };
@@ -10,18 +9,16 @@ export type FeatureRow = { key: string; text: string; included: boolean };
 export const comparableText = (text: string) =>
   stripStega(text).trim().toLowerCase();
 
-/** planFeatures is a comma separated string in the CMS ("Email support, Commercial use") */
-const splitFeatures = (planFeatures?: string | null) =>
-  planFeatures
-    ? planFeatures
-        .split(/\s*,\s*/)
-        .map((feature) => feature.trim())
-        .filter(Boolean)
-    : [];
+/** A plan's features: one Plan feature block each in the CMS */
+const featureLabels = (plan: PlanWithFeatures) =>
+  plan.features
+    .map((feature) => feature.label)
+    // In Draft Mode an empty label can still carry Content Link markers
+    .filter((label) => stripStega(label).trim());
 
 /** A plan's own features, all included */
 export const ownFeatureRows = (plan: PlanWithFeatures): FeatureRow[] =>
-  splitFeatures(plan.planFeatures).map((text) => ({
+  featureLabels(plan).map((text) => ({
     key: `${plan.id}-${comparableText(text)}`,
     text,
     included: true,
@@ -36,7 +33,7 @@ export const ownFeatureRows = (plan: PlanWithFeatures): FeatureRow[] =>
 export function planFeatureRows(plans: PlanWithFeatures[]): FeatureRow[][] {
   if (plans.length < 2) return plans.map(ownFeatureRows);
 
-  const featureLists = plans.map((plan) => splitFeatures(plan.planFeatures));
+  const featureLists = plans.map(featureLabels);
   // The longest list; on a tie the later plan (usually the higher tier)
   const richestIndex = featureLists.reduce(
     (best, list, i) => (list.length >= featureLists[best].length ? i : best),
@@ -66,23 +63,17 @@ export function planFeatureRows(plans: PlanWithFeatures[]): FeatureRow[][] {
   });
 }
 
-/** Without a highlight label: the second of two plans, else the middle one */
-const defaultHighlightIndex = (count: number) => {
-  if (count <= 1) return 0;
-  if (count === 2) return 1;
-  return Math.floor((count - 1) / 2);
-};
-
-/** The highlighted plan: the first one with a highlight label in the CMS */
+/** The highlighted plan: the first one with a highlight label in the CMS, or -1 when none has one */
 export const highlightedPlanIndex = (
   plans: { highlightLabel?: string | null }[],
-) => {
-  const labelled = plans.findIndex((plan) =>
-    stripStega(plan.highlightLabel ?? '').trim(),
-  );
-  return labelled === -1 ? defaultHighlightIndex(plans.length) : labelled;
-};
+) => plans.findIndex((plan) => stripStega(plan.highlightLabel ?? '').trim());
 
-/** Plan tones deepen left to right: three plans give tone-1, tone-3 and tone-5 */
-export const planTone = (index: number, count: number): Tone =>
-  toneRamp(index, count, 1, 5);
+/** "$399" in the page's number format ("399 $" in German); fractions keep two decimals */
+export const formatPrice = (amount: number, locale: string) =>
+  new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: 'USD',
+    currencyDisplay: 'narrowSymbol',
+    minimumFractionDigits: Number.isInteger(amount) ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(amount);

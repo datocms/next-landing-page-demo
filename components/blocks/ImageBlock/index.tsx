@@ -11,7 +11,26 @@ type Props = {
   priority?: boolean;
 } & Omit<ComponentPropsWithoutRef<'figure'>, 'children'>;
 
-/** In-article image, wider than the reading column, captioned with the image's title */
+/**
+ * A media block wider than the text column it sits in: up to 120px past it on
+ * each side, never closer than the page gutter to the viewport edge (so on
+ * phones it is as wide as the text). The column keeps its place
+ */
+export const BREAKOUT =
+  '[--bleed:clamp(0px,(100vw_-_2_*_var(--gutter)_-_100%)_/_2,120px)] -mx-(--bleed)';
+
+/**
+ * How wide a BREAKOUT image is drawn: the column (68ch, 684px) plus 240px from
+ * 1024px, the container width below
+ */
+export const BREAKOUT_SIZES =
+  '(min-width: 1024px) 924px, (min-width: 640px) calc(100vw - 48px), calc(100vw - 40px)';
+
+/**
+ * An image of the post body, in colour and at its own ratio (the media radius,
+ * nothing on top), a little wider than the text, captioned with the asset's
+ * title when it has one (the caption stays in the column)
+ */
 const ImageBlock = ({ fragment, priority, className, ...rest }: Props) => {
   const { image } = readFragment(ImageBlockFragment, fragment);
 
@@ -23,22 +42,19 @@ const ImageBlock = ({ fragment, priority, className, ...rest }: Props) => {
   );
 
   return (
-    <figure
-      className={cn('prose-block not-prose my-10 lg:-mx-20', className)}
-      {...rest}
-    >
-      {/* A capped 16:10 frame: landscape uploads fill it and portrait ones can't run tall */}
-      <div className="photo aspect-[16/10] max-h-[520px] rounded-card max-md:rounded-zone">
+    <figure className={cn('not-prose my-8 lg:my-12', className)} {...rest}>
+      <div className={cn('overflow-hidden rounded-media bg-subtle', BREAKOUT)}>
         <DatoImage
           fragment={image.responsiveImage}
-          layout="fill"
-          objectFit="cover"
-          objectPosition="50% 50%"
-          sizes="(min-width: 1024px) 840px, 100vw"
+          sizes={BREAKOUT_SIZES}
           priority={priority}
         />
       </div>
-      {title && <figcaption className="mono mt-3">{title}</figcaption>}
+      {title && (
+        <figcaption className="mt-3 text-small text-fg-muted">
+          {title}
+        </figcaption>
+      )}
     </figure>
   );
 };

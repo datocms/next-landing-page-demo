@@ -1,0 +1,110 @@
+/* The statement hero: a solid accent panel with three arches rising from its bottom edge */
+
+/* The accent, a step deeper so white copy reads (AA) on it, easing a touch deeper still */
+.panel {
+  background-color: var(--accent-deep);
+  background-image: linear-gradient(
+    180deg,
+    var(--accent-deep),
+    oklch(from var(--accent-deep) calc(l - 0.04) c h)
+  );
+}
+
+/* The three arches sit on the panel's bottom edge; the middle one is the tallest */
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  align-items: end;
+  gap: 20px;
+  height: 25rem;
+  @media (width >= 40rem) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr);
+    height: 27rem;
+  }
+  @media (width >= 64rem) {
+    gap: 28px;
+    height: 30rem;
+  }
+}
+
+.arch {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 999px 999px 0 0;
+}
+
+.side {
+  display: none;
+  height: 78%;
+  background-color: oklch(from var(--accent-deep) calc(l + 0.08) c h);
+  @media (width >= 40rem) {
+    display: block;
+  }
+}
+.blank {
+  opacity: 0.4;
+}
+
+/* The image inside a side arch drifts very slowly once it has arrived */
+.drift {
+  position: absolute;
+  inset: 0;
+}
+
+/* The middle arch: white, holding the highlight and the product cards */
+.middle {
+  display: flex;
+  height: 100%;
+  max-width: 24rem;
+  flex-direction: column;
+  align-items: center;
+  padding: 4.5rem 1.25rem 0;
+  background-color: var(--color-surface);
+  color: var(--color-fg);
+  box-shadow: 0 -30px 80px -30px rgb(9 14 52 / 0.45);
+  @media (width >= 40rem) {
+    max-width: none;
+    padding-inline: 1.5rem;
+  }
+  @media (width >= 64rem) {
+    padding: 5.5rem 2.75rem 0;
+  }
+}
+
+/* Two faint arch outlines behind the middle arch, larger and larger */
+.outline {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  translate: -50% 0;
+  border: 1px solid rgb(255 255 255 / 0.16);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+  pointer-events: none;
+}
+.outlineNear {
+  width: min(36rem, 92%);
+  height: 118%;
+}
+.outlineFar {
+  width: min(56rem, 140%);
+  height: 140%;
+  border-color: rgb(255 255 255 / 0.09);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .drift {
+    animation: arch-drift 40s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes arch-drift {
+  from {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.1) translate3d(0, -2%, 0);
+  }
+}

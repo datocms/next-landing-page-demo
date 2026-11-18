@@ -1,7 +1,7 @@
 'use client';
 
-import { Play } from 'lucide-react';
-import { type ReactNode, useState } from 'react';
+import { useState } from 'react';
+import { PlayIcon } from '@/components/ui/icons';
 import VideoModal, { type VideoProvider } from '@/components/ui/VideoModal';
 import { uiString } from '@/lib/i18n/uiStrings';
 
@@ -11,28 +11,20 @@ type Props = {
   provider: VideoProvider;
   /** Plain-text section title, used for the accessible names */
   title?: string;
-  /** Server-rendered poster and player chrome, painted under the button */
-  children?: ReactNode;
   locale: string;
 };
 
 /**
- * The play button covers the whole poster, so the frame is the target, and
- * opens the video dialog. The poster stays a sibling of the button (a button
- * may only hold phrasing content). Focus returns here when the dialog closes.
+ * The 76px white play button with a navy play icon in the middle of the poster,
+ * and the dialog it opens. It sits unpositioned inside the positioned frame: its
+ * ::before covers the whole frame, so a click anywhere on the poster plays the
+ * video too. Focus returns here when the dialog closes.
  */
-const VideoLauncher = ({
-  videoId,
-  provider,
-  title,
-  children,
-  locale,
-}: Props) => {
+const VideoLauncher = ({ videoId, provider, title, locale }: Props) => {
   const [isOpen, setOpen] = useState(false);
 
   return (
     <>
-      {children}
       <button
         type="button"
         onClick={() => setOpen(true)}
@@ -42,15 +34,9 @@ const VideoLauncher = ({
             : uiString(locale, 'playVideo')
         }
         aria-haspopup="dialog"
-        className="group absolute inset-0 z-[2] grid place-items-center rounded-[inherit] focus-visible:outline-none"
+        className="grid size-[76px] cursor-pointer place-items-center rounded-full bg-surface text-fg shadow-[0_12px_32px_rgb(9_14_52/0.35)] transition-colors duration-150 before:absolute before:inset-0 before:rounded-media before:content-[''] hover:bg-subtle"
       >
-        <span className="video-play btn btn-primary size-14 rounded-full p-0 transition-[scale,background-color,box-shadow] duration-250 ease-out-expo motion-safe:group-hover:scale-105 md:size-16">
-          <Play
-            aria-hidden="true"
-            strokeWidth={0}
-            className="size-4 translate-x-px fill-current md:size-[18px]"
-          />
-        </span>
+        <PlayIcon className="ml-0.5 size-6" />
       </button>
 
       <VideoModal

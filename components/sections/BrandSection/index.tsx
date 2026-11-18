@@ -2,27 +2,31 @@ import { stripStega } from '@datocms/content-link';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { BrandSectionFragment } from './fragment';
 import LogoGrid from './variants/LogoGrid';
-import LogoMarquee from './variants/LogoMarquee';
+import LogoRow from './variants/LogoRow';
 
 type Props = {
   fragment: FragmentOf<typeof BrandSectionFragment>;
   locale: string;
 };
 
-/** Renders the layout picked in the block's "Display options" field, or nothing without brands */
-const BrandSection = ({ fragment, locale }: Props) => {
-  const { displayOptions, brand } = readFragment(
-    BrandSectionFragment,
-    fragment,
-  );
-  if (brand.length === 0) return null;
+/** More logos than this no longer read as one band, so `row` becomes `grid` */
+const ROW_MAX = 12;
 
-  switch (stripStega(displayOptions)) {
-    case 'brand_cards':
-      return <LogoMarquee fragment={fragment} locale={locale} />;
-    default:
-      return <LogoGrid fragment={fragment} locale={locale} />;
-  }
+/**
+ * Renders the layout picked in the block's "Layout" field (`row`,
+ * also for unknown values, or `grid`), or nothing without brands
+ */
+const BrandSection = ({ fragment, locale }: Props) => {
+  const { layout, brands } = readFragment(BrandSectionFragment, fragment);
+  if (brands.length === 0) return null;
+
+  const wantsGrid = stripStega(layout ?? '').trim() === 'grid';
+
+  return wantsGrid || brands.length > ROW_MAX ? (
+    <LogoGrid fragment={fragment} locale={locale} />
+  ) : (
+    <LogoRow fragment={fragment} locale={locale} />
+  );
 };
 
 export default BrandSection;

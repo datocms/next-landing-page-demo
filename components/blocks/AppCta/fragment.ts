@@ -1,11 +1,11 @@
 import { graphql } from '@/lib/datocms/graphql';
 
 export const AppCtaFragment = graphql(/* GraphQL */ `
-  fragment AppCtaFragment on AppCtaRecord {
-    text {
+  fragment AppCtaFragment on AppCtaBlockRecord {
+    title
+    subtitle {
       value
     }
-    title
     googlePlayUrl
     appstoreUrl
   }

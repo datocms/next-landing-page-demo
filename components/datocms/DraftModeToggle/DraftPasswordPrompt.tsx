@@ -1,5 +1,5 @@
-import { Lock } from 'lucide-react';
 import { type FormEvent, useEffect, useId, useRef, useState } from 'react';
+import Button from '@/components/ui/Button';
 import { uiString } from '@/lib/i18n/uiStrings';
 
 type Props = {
@@ -56,24 +56,24 @@ const DraftPasswordPrompt = ({ id, locale, onCancel, onEnabled }: Props) => {
       role="dialog"
       aria-labelledby={titleId}
       aria-describedby={descriptionId}
-      className="card p-6 shadow-pop max-md:p-5"
+      className="rounded-card border border-line bg-surface p-5 shadow-float"
     >
-      <span className="icon-tile">
-        <Lock strokeWidth={1.75} aria-hidden="true" />
-      </span>
-      <h2 id={titleId} className="mt-4 text-h3 text-ink">
+      <h2 id={titleId} className="text-h3">
         {uiString(locale, 'authenticate')}
       </h2>
-      <p id={descriptionId} className="mt-1 text-small text-ink-2">
+      <p id={descriptionId} className="mt-1.5 text-small text-fg-muted">
         {hintBefore}
-        <code className="rounded-md border border-line bg-well px-1 py-px font-mono text-[12px] text-ink">
+        <code className="rounded-[4px] bg-subtle px-1 py-px font-mono text-[0.8125rem] text-fg ring-1 ring-line ring-inset">
           DRAFT_SECRET_TOKEN
         </code>
         {hintAfter}
       </p>
 
       <form className="mt-5" onSubmit={enableDraftMode}>
-        <label htmlFor={inputId} className="field-label">
+        <label
+          htmlFor={inputId}
+          className="mb-1.5 block text-small font-medium text-fg"
+        >
           {uiString(locale, 'password')}
         </label>
         <input
@@ -88,7 +88,7 @@ const DraftPasswordPrompt = ({ id, locale, onCancel, onEnabled }: Props) => {
           }}
           aria-invalid={hasError}
           aria-describedby={hasError ? errorId : undefined}
-          className="input"
+          className="h-10 w-full rounded-control border border-line-strong bg-surface px-3 text-body text-fg shadow-card transition-colors duration-150 hover:border-fg-faint focus:border-accent-line aria-invalid:border-danger"
         />
         <p
           id={errorId}
@@ -98,13 +98,13 @@ const DraftPasswordPrompt = ({ id, locale, onCancel, onEnabled }: Props) => {
           {hasError ? uiString(locale, 'wrongPassword') : ''}
         </p>
 
-        <div className="mt-6 flex justify-end gap-2">
-          <button type="button" className="btn btn-ghost" onClick={onCancel}>
+        <div className="mt-5 flex justify-end gap-2">
+          <Button variant="secondary" size="sm" onClick={onCancel}>
             {uiString(locale, 'cancel')}
-          </button>
-          <button type="submit" className="btn btn-primary">
+          </Button>
+          <Button type="submit" size="sm">
             {uiString(locale, 'authenticate')}
-          </button>
+          </Button>
         </div>
       </form>
     </div>

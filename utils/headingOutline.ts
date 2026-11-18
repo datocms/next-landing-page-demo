@@ -40,19 +40,22 @@ export function repeatsTitle(heading: Node, title: string) {
 }
 
 /**
- * The root-level headings that render as h2 (levels 1 and 2), minus `skip`,
- * each with a unique anchor id. Duplicate texts get -2, -3… suffixes. Shared
- * by the legal and docs pages and their "On this page" rails.
+ * The root-level headings that render as h2 (levels 1 and 2, or those
+ * `rendersAsH2` picks when the page maps levels itself), minus `skip`, each
+ * with a unique anchor id. Duplicate texts get -2, -3… suffixes. Shared by
+ * the legal and docs pages and their "On this page" rails.
  */
 export function headingOutline(
   rootChildren: readonly Node[],
   skip?: Node | null,
+  rendersAsH2: (node: Node & { level: number }) => boolean = (node) =>
+    node.level <= 2,
 ): OutlineHeading[] {
   const usedIds = new Set<string>();
   const headings: OutlineHeading[] = [];
 
   for (const node of rootChildren) {
-    if (node === skip || !isHeading(node) || node.level > 2) continue;
+    if (node === skip || !isHeading(node) || !rendersAsH2(node)) continue;
 
     const text = plainText(node);
     const baseId = slugify(text) || 'section';

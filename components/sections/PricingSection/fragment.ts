@@ -1,24 +1,26 @@
-import { graphql } from '@/lib/datocms/graphql';
+import { graphql, type ResultOf } from '@/lib/datocms/graphql';
 
 export const PricingSectionFragment = graphql(/* GraphQL */ `
-  fragment PricingSectionFragment on PricingSectionRecord {
-    pricingSectionHeader
-    pricingSectionSubheader {
-      value
-    }
-    displayOption
+  fragment PricingSectionFragment on PricingSectionBlockRecord {
+    layout
     plans {
       id
       yearlyPrice
       monthlyPrice
-      tierName
-      tierDescription {
+      name
+      description {
         value
       }
-      planFeatures
+      features {
+        id
+        label
+      }
       highlightLabel
       ctaLabel
       priceNote
     }
   }
 `);
+
+/** One plan of a pricing block, as every layout reads it */
+export type Plan = ResultOf<typeof PricingSectionFragment>['plans'][number];

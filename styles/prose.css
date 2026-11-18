@@ -1,0 +1,495 @@
+/* Long-form text (.prose) and code blocks (components/ui/CodeBlock). Posts, docs, legal
+   and changelog pages put `prose` on the wrapper of their Structured Text.
+   The rules sit in @layer components and every selector is wrapped in :where(), so any
+   utility on an element inside still wins, and nothing inside a `.not-prose` element is
+   styled (embedded blocks and code blocks use it).
+
+   Rhythm: one 20px step between blocks, more air above a heading than below it, so a
+   heading always reads as the start of what follows. Headings are semibold (600) and
+   tight, like the site's titles: 30, 22 and 18px. Body 17px at 1.7, meta 14px.
+   Quotes are pale tiles, code blocks navy. */
+
+@layer components {
+  .prose {
+    max-width: 68ch;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--color-fg);
+
+    /* ---------- Flow ---------- */
+    &
+      :where(
+        p,
+        ul,
+        ol,
+        dl,
+        blockquote,
+        table,
+        figure,
+        pre,
+        hr,
+        .prose-block
+      ):not(:where(.not-prose, .not-prose *)) {
+      margin-top: 1.25rem;
+    }
+
+    /* ---------- Headings ---------- */
+    & :where(h2, h3, h4, h5, h6):not(:where(.not-prose, .not-prose *)) {
+      font-weight: 600;
+      color: var(--color-fg);
+      /* In-page links land under the sticky header */
+      scroll-margin-top: calc(var(--header-h) + 2rem);
+    }
+    & :where(h2):not(:where(.not-prose, .not-prose *)) {
+      margin-top: 3rem;
+      font-size: clamp(1.5rem, 2.4vw, 1.875rem);
+      line-height: 1.15;
+      letter-spacing: -0.04em;
+    }
+    & :where(h3):not(:where(.not-prose, .not-prose *)) {
+      margin-top: 2.25rem;
+      font-size: 1.375rem;
+      line-height: 1.22;
+      letter-spacing: -0.035em;
+    }
+    & :where(h4, h5, h6):not(:where(.not-prose, .not-prose *)) {
+      margin-top: 1.75rem;
+      font-size: 1.125rem;
+      line-height: 1.4;
+      letter-spacing: -0.02em;
+    }
+    /* A subheading straight under its heading */
+    & :where(h2) + :where(h3, h4):not(:where(.not-prose, .not-prose *)),
+    & :where(h3) + :where(h4):not(:where(.not-prose, .not-prose *)) {
+      margin-top: 1.25rem;
+    }
+    /* Text sits close under its heading */
+    &
+      :where(h2, h3)
+      + :where(p, ul, ol, dl, pre, table):not(
+        :where(.not-prose, .not-prose *)
+      ) {
+      margin-top: 0.75rem;
+    }
+    &
+      :where(h4, h5, h6)
+      + :where(p, ul, ol, dl, pre, table):not(
+        :where(.not-prose, .not-prose *)
+      ) {
+      margin-top: 0.375rem;
+    }
+
+    /* ---------- Inline ---------- */
+    /* Links: the accent as text (accent-ink is AA on white and on subtle), underlined;
+       the underline darkens to the text colour on hover */
+    & :where(a):not(:where(.not-prose, .not-prose *)) {
+      color: var(--accent-ink);
+      font-weight: 500;
+      text-decoration-line: underline;
+      text-decoration-thickness: 1px;
+      text-decoration-color: color-mix(
+        in srgb,
+        var(--accent-ink) 40%,
+        transparent
+      );
+      text-underline-offset: 3px;
+      transition: text-decoration-color 0.15s linear;
+    }
+    @media (hover: hover) {
+      & :where(a):not(:where(.not-prose, .not-prose *)):hover {
+        text-decoration-color: currentColor;
+      }
+    }
+    & :where(strong, b):not(:where(.not-prose, .not-prose *)) {
+      font-weight: 600;
+    }
+    /* Underlined text is not a link: ink, and a faint, lower line */
+    & :where(u):not(:where(.not-prose, .not-prose *)) {
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+      text-decoration-color: var(--color-fg-faint);
+    }
+    /* Inline code: the mono face on a subtle well with a hairline, a step smaller so it
+       sits in the line */
+    & :where(code):not(:where(pre *, .not-prose, .not-prose *)) {
+      padding: 0.1em 0.4em;
+      border-radius: 6px;
+      background-color: var(--color-subtle);
+      font-family: var(--font-mono);
+      font-size: 0.875em;
+      /* A long path or URL breaks instead of pushing the column wider */
+      overflow-wrap: anywhere;
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
+    }
+    & :where(a code, h2 code, h3 code):not(:where(.not-prose, .not-prose *)) {
+      color: inherit;
+    }
+
+    /* ---------- Lists ---------- */
+    /* The browser's disc bullets and numbers, in the faint grey, hanging in the gutter */
+    & :where(ul):not(:where(.not-prose, .not-prose *)) {
+      list-style: disc;
+      padding-left: 1.25em;
+    }
+    & :where(ol):not(:where(.not-prose, .not-prose *)) {
+      list-style: decimal;
+      padding-left: 1.5em;
+    }
+    & :where(li):not(:where(.not-prose, .not-prose *)) {
+      padding-left: 0.25em;
+    }
+    & :where(li + li):not(:where(.not-prose, .not-prose *)) {
+      margin-top: 0.5rem;
+    }
+    & :where(li):not(:where(.not-prose, .not-prose *))::marker {
+      color: var(--color-fg-faint);
+    }
+    & :where(ol > li):not(:where(.not-prose, .not-prose *))::marker {
+      font-variant-numeric: tabular-nums;
+    }
+    /* Structured Text wraps list items in paragraphs: they keep the item's spacing */
+    & :where(li > p, li > ul, li > ol):not(:where(.not-prose, .not-prose *)) {
+      margin-top: 0.5rem;
+    }
+    /* A definition list: the term in medium weight, the description under it */
+    & :where(dt):not(:where(.not-prose, .not-prose *)) {
+      font-weight: 500;
+    }
+    & :where(dd + dt):not(:where(.not-prose, .not-prose *)) {
+      margin-top: 1rem;
+    }
+
+    /* ---------- Quotes ---------- */
+    /* A pale tile (the subtle tint, 20px radius) with the text in navy, a step
+       larger; the attribution smaller and muted under it */
+    & :where(blockquote):not(:where(.not-prose, .not-prose *)) {
+      margin-block: 2rem;
+      padding: 1.5rem 1.75rem;
+      border-radius: 20px;
+      background-color: var(--color-subtle);
+      font-size: 1.125rem;
+      line-height: 1.6;
+      letter-spacing: -0.01em;
+      color: var(--color-fg);
+    }
+    & :where(blockquote p + p):not(:where(.not-prose, .not-prose *)) {
+      margin-top: 0.75rem;
+    }
+    &
+      :where(blockquote footer, blockquote cite):not(
+        :where(.not-prose, .not-prose *)
+      ) {
+      display: block;
+      margin-top: 0.75rem;
+      font-family: var(--font-sans);
+      font-style: normal;
+      font-size: 0.875rem;
+      line-height: 1.45;
+      letter-spacing: 0;
+      color: var(--color-fg-muted);
+    }
+
+    /* ---------- Media ---------- */
+    & :where(hr):not(:where(.not-prose, .not-prose *)) {
+      margin-block: 2.5rem;
+      border: 0;
+      border-top: 1px solid var(--color-line);
+    }
+    & :where(img, video, iframe):not(:where(.not-prose, .not-prose *)) {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--radius-media);
+    }
+    & :where(figure):not(:where(.not-prose, .not-prose *)) {
+      margin-block: 2rem;
+    }
+    & :where(figcaption):not(:where(.not-prose, .not-prose *)) {
+      margin-top: 0.625rem;
+      font-size: 0.875rem;
+      line-height: 1.45;
+      color: var(--color-fg-muted);
+    }
+
+    /* ---------- Tables ---------- */
+    /* Hairlines between rows, a darker one under the head (medium weight), figures that
+       line up. A table
+       wider than the column scrolls inside its own frame: a wrapper div when the markup
+       has one, the table itself on phones otherwise */
+    & :where(table):not(:where(.not-prose, .not-prose *)) {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      line-height: 1.45;
+      font-variant-numeric: tabular-nums;
+    }
+    & :where(div:has(> table)):not(:where(.not-prose, .not-prose *)) {
+      margin-top: 1.25rem;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+    }
+    & :where(div > table):not(:where(.not-prose, .not-prose *)) {
+      margin-top: 0;
+    }
+    @media (width < 40rem) {
+      & :where(table):not(:where(.not-prose, .not-prose *)) {
+        display: block;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+      }
+      /* Cells keep their line and the table scrolls, instead of squeezing every column */
+      & :where(th, td):not(:where(.not-prose, .not-prose *)) {
+        white-space: nowrap;
+      }
+    }
+    & :where(th, td):not(:where(.not-prose, .not-prose *)) {
+      padding: 0.625rem 1.25rem 0.625rem 0;
+      border-bottom: 1px solid var(--color-line);
+      text-align: left;
+      vertical-align: top;
+    }
+    &
+      :where(th:last-child, td:last-child):not(
+        :where(.not-prose, .not-prose *)
+      ) {
+      padding-right: 0;
+    }
+    & :where(th):not(:where(.not-prose, .not-prose *)) {
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    & :where(thead th):not(:where(.not-prose, .not-prose *)) {
+      vertical-align: bottom;
+      border-bottom-color: var(--color-line-strong);
+    }
+    & :where(td code):not(:where(.not-prose, .not-prose *)) {
+      overflow-wrap: normal;
+      white-space: nowrap;
+    }
+
+    /* ---------- Flush starts ----------
+       Last, so they beat every margin above: the first block of the text (at any depth:
+       Structured Text adds a wrapper) and the first block inside a quote, a list item or a
+       table cell start flush */
+    & :where(* > :first-child):where(.prose > *, .prose > * > *),
+    &
+      :where(
+        blockquote > :first-child,
+        li > :first-child,
+        figure > :first-child
+      ),
+    & :where(th > :first-child, td > :first-child) {
+      margin-top: 0;
+    }
+  }
+
+  /* ---------- Documentation bodies (.prose-docs, beside .prose) ----------
+     Only the docs pages carry this class; posts, legal and changelog pages are untouched.
+     A chapter (h2) opens under a hairline, so a long page reads as a run of sections;
+     highlighted text is a soft accent pill; quotes are callouts: a tint tile with a
+     small accent square before the text; list markers take the accent. */
+  .prose-docs {
+    & :where(h2):not(:where(.not-prose, .not-prose *)) {
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--color-line);
+      @media (width >= 48rem) {
+        margin-top: 3.5rem;
+        padding-top: 2.5rem;
+      }
+    }
+    /* The intro's first heading needs no rule above it */
+    & :where(* > h2:first-child):not(:where(.not-prose, .not-prose *)) {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+    }
+    & :where(mark):not(:where(.not-prose, .not-prose *)) {
+      padding: 0.1em 0.35em;
+      border-radius: 6px;
+      background-color: var(--color-tint);
+      color: var(--accent-ink);
+      font-weight: 500;
+    }
+    & :where(ul > li):not(:where(.not-prose, .not-prose *))::marker {
+      color: var(--accent-line);
+    }
+    & :where(ol > li):not(:where(.not-prose, .not-prose *))::marker {
+      color: var(--accent-ink);
+      font-weight: 600;
+    }
+    & :where(code):not(:where(pre *, .not-prose, .not-prose *)) {
+      box-shadow: inset 0 0 0 1px var(--color-line);
+    }
+    & :where(blockquote):not(:where(.not-prose, .not-prose *)) {
+      position: relative;
+      padding: 1.25rem 1.5rem 1.25rem 3.25rem;
+      border-radius: var(--radius-tile);
+      background-color: var(--color-tint);
+      font-size: 1rem;
+      line-height: 1.65;
+      letter-spacing: -0.003em;
+    }
+    & :where(blockquote):not(:where(.not-prose, .not-prose *))::before {
+      content: '';
+      position: absolute;
+      top: 1.6rem;
+      left: 1.5rem;
+      width: 0.625rem;
+      height: 0.625rem;
+      border-radius: 3px;
+      background-color: var(--color-accent);
+      transform: rotate(45deg);
+    }
+  }
+
+  /* ---------- Code blocks ----------
+     react-syntax-highlighter with useInlineStyles={false} renders bare hljs-* classes. The
+     block is navy (bg-ink) and the theme nearly monochrome: pale text, one dimmed grey
+     for what you read past (comments, punctuation of markup, attribute names), weight
+     for keywords, and a pale tint of the accent for one token class only: strings */
+  .code-block {
+    & .hljs-comment,
+    & .hljs-quote,
+    & .hljs-meta,
+    & .hljs-attr,
+    & .hljs-attribute,
+    & .hljs-tag,
+    & .hljs-punctuation {
+      color: rgb(255 255 255 / 0.55);
+    }
+    & .hljs-string,
+    & .hljs-regexp,
+    & .hljs-template-tag,
+    & .hljs-meta .hljs-string {
+      color: var(--accent-line);
+    }
+    & .hljs-keyword,
+    & .hljs-selector-tag,
+    & .hljs-built_in,
+    & .hljs-literal,
+    & .hljs-type,
+    & .hljs-name {
+      font-weight: 600;
+    }
+    /* A tag's name in ink inside its muted brackets */
+    & .hljs-tag .hljs-name {
+      color: #fff;
+    }
+    & .hljs-title,
+    & .hljs-section,
+    & .hljs-selector-class,
+    & .hljs-selector-id {
+      font-weight: 500;
+    }
+    & .hljs-deletion {
+      text-decoration: line-through;
+    }
+    /* A line listed in CodeBlock's highlight prop: a slightly lighter well and a pale
+       accent rule, bled into the block's 20px side padding */
+    & .is-highlighted {
+      display: block;
+      margin-inline: -20px;
+      padding-inline: 18px 20px;
+      border-left: 2px solid var(--accent-line);
+      background-color: rgb(255 255 255 / 0.07);
+    }
+  }
+
+  /* Release notes (.prose-changelog beside .prose). The page cuts the notes at every
+     top heading, and each chapter is its own box and row: its heading on the left,
+     staying in view only while its own changes scroll by, and one pale card on the
+     right that lists them, a hairline between one change and the next: the name in
+     semibold, the detail in muted text under it. No bullets, no rules between
+     chapters. Below 768px the heading sits above its card */
+  .prose-changelog {
+    max-width: none;
+
+    & :where(hr) {
+      display: none;
+    }
+    /* One chapter after another */
+    & > :where(div + div) {
+      margin-top: 2.75rem;
+    }
+    & :where(h2):not(:where(.not-prose, .not-prose *)) {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+      font-size: 1.375rem;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+    }
+    & :where(ul):not(:where(ul ul, .not-prose, .not-prose *)) {
+      margin-top: 1rem;
+      padding: 0.375rem 1.5rem;
+      border-radius: 1.5rem;
+      background-color: var(--pale);
+      list-style: none;
+    }
+    & :where(ul):not(:where(ul ul, .not-prose, .not-prose *)) > :where(li) {
+      margin-top: 0;
+      padding: 1.125rem 0;
+    }
+    &
+      :where(ul):not(:where(ul ul, .not-prose, .not-prose *))
+      > :where(li + li) {
+      border-top: 1px solid rgb(from var(--accent) r g b / 0.14);
+    }
+    &
+      :where(ul):not(:where(ul ul, .not-prose, .not-prose *))
+      > :where(li)
+      > :where(p) {
+      margin-top: 0;
+      font-weight: 600;
+      color: var(--color-fg);
+    }
+    & :where(ul ul):not(:where(.not-prose, .not-prose *)) {
+      margin-top: 0.25rem;
+      padding-left: 0;
+      list-style: none;
+    }
+    & :where(ul ul > li):not(:where(.not-prose, .not-prose *)) {
+      padding-left: 0;
+      font-size: 0.96875rem;
+      line-height: 1.6;
+      color: var(--color-fg-muted);
+    }
+    & :where(ul ul > li > p):not(:where(.not-prose, .not-prose *)) {
+      margin-top: 0;
+    }
+
+    @media (width >= 48rem) {
+      & > :where(div) > :where(div) {
+        grid-column: 2;
+      }
+      & > :where(div) > :where(div) > :where(:first-child) {
+        margin-top: 0;
+      }
+      /* The heading stays in view, but never leaves its own chapter */
+      & > :where(div) > :where(div:has(> h2)) {
+        grid-column: 1;
+        position: sticky;
+        top: calc(var(--header-h) + 1.5rem);
+      }
+      /* Level with the first change's name inside the card beside it */
+      &
+        > :where(div)
+        > :where(div:has(> h2):has(+ div > ul:first-child))
+        > :where(h2) {
+        padding-top: 1.375rem;
+      }
+      /* A chapter (the rules above place its two parts): its heading's text on the left, its changes on the right */
+      & > :where(div) {
+        display: grid;
+        grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+        column-gap: 2.5rem;
+        align-items: start;
+      }
+      & > :where(div + div) {
+        margin-top: 2rem;
+      }
+    }
+  }
+}

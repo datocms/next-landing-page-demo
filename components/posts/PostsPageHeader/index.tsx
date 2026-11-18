@@ -1,65 +1,40 @@
 import type { ReactNode } from 'react';
-import { Threads } from '@/components/ui/Ornaments';
-import { cn } from '@/utils/cn';
-import type { Tone } from '@/utils/tones';
-import { headerArches } from './headerArches';
+import { titleSize } from '@/utils/titleSize';
 
 type Props = {
-  /** Small label pill above the title ("Blog", "Tag", "Author") */
-  label: string;
-  /** The page h1 */
-  title: ReactNode;
+  /** The page h1: a raw CMS string (Content Link stays on it) or an interface string */
+  title: string;
   /** Id on the h1, for aria-labelledby on the section that follows */
   titleId?: string;
-  /** A mono line under the title (post count, page) */
-  meta?: ReactNode;
-  /** Tone of the label dot (the tag page passes its tag's tone) */
-  tone?: Tone;
-  /** Right-hand media (the author portrait); it sits over the arches */
+  /** One line under the title in fg-muted, at lead size (a post count, a role) */
+  lead?: ReactNode;
+  /** Above the title (the author's portrait) */
   media?: ReactNode;
-  /** Extra copy under the title (author bio and description) */
+  /** More copy under the lead (the author's bio and areas) */
   children?: ReactNode;
 };
 
 /**
- * The blog's page opener: a tinted well with the page label, a two-line-max
- * h1 and a mono meta line, framed on the right by nested accent arches.
- * Used by the posts index and its pages, the tag pages and the author pages.
+ * The opener of the blog's list pages (posts index and its pages, tag and
+ * author pages): a centred h1 with a muted line under it.
  */
-const PostsPageHeader = ({
-  label,
-  title,
-  titleId,
-  meta,
-  tone,
-  media,
-  children,
-}: Props) => (
-  <header className="container-page pt-8 max-md:pt-6">
-    <div className="well grid min-h-[232px] items-center gap-y-6 px-14 py-12 max-lg:px-8 max-lg:py-10 max-md:min-h-0 max-md:px-5 max-md:py-7 lg:grid-cols-12 lg:gap-x-6">
-      {/* A fixed-height box capped at 46% of the well: taller copy never makes the arches grow toward it */}
-      <Threads
-        shape={headerArches}
-        className="top-auto left-auto h-[240px] w-[min(600px,46%)] opacity-[.62] max-lg:hidden"
-      />
-      <div className="min-w-0 lg:col-span-6">
-        <p className={cn('pill-label', tone ?? 'tone-0')}>{label}</p>
-        <h1
-          id={titleId}
-          className="mt-4 -ms-[0.03em] text-balance text-h1 text-ink"
-        >
+const PostsPageHeader = ({ title, titleId, lead, media, children }: Props) => {
+  const scale = titleSize(title, 'h1');
+
+  return (
+    <header className="container-page pt-(--page-top) text-center">
+      <div className="mx-auto flex max-w-[44rem] flex-col items-center">
+        {media && <div className="mb-6">{media}</div>}
+        <h1 id={titleId} data-long={scale.long} className={scale.className}>
           {title}
         </h1>
-        {meta && <p className="mono mt-3">{meta}</p>}
+        {lead && (
+          <p className="mt-4 max-w-[40rem] text-lead text-fg-muted">{lead}</p>
+        )}
         {children}
       </div>
-      {media && (
-        <div className="max-lg:order-first lg:col-span-5 lg:col-start-8 lg:justify-self-center">
-          {media}
-        </div>
-      )}
-    </div>
-  </header>
-);
+    </header>
+  );
+};
 
 export default PostsPageHeader;

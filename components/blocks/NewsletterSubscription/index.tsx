@@ -1,14 +1,11 @@
 import { type ComponentPropsWithoutRef, useId } from 'react';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
-import { Threads } from '@/components/ui/Ornaments';
-import TwoTone from '@/components/ui/TwoTone';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import { hasStructuredText } from '@/utils/structuredText';
 import { NewsletterSubscriptionFragment } from './fragment';
 import NewsletterForm from './NewsletterForm';
-import { newsletterArches } from './newsletterArches';
 
 type Props = {
   fragment: FragmentOf<typeof NewsletterSubscriptionFragment>;
@@ -17,10 +14,10 @@ type Props = {
 } & Omit<ComponentPropsWithoutRef<'aside'>, 'children'>;
 
 /**
- * In-article newsletter sign-up: a well with arch threads in a lane the copy
- * and the form never enter. There is no endpoint, so the form only confirms
- * inline (see NewsletterForm). The title is a <p>, not a heading, so it stays
- * out of the article outline.
+ * The newsletter sign-up in a post: title, text and a labelled email field
+ * with its button, on a pale tile. There is no endpoint, so the form only
+ * confirms inline (see NewsletterForm). The title is a <p>, not a heading,
+ * so it stays out of the article outline.
  */
 const NewsletterSubscriptionBlock = ({
   fragment,
@@ -38,34 +35,19 @@ const NewsletterSubscriptionBlock = ({
     <aside
       {...rest}
       aria-labelledby={title ? titleId : undefined}
-      className={cn(
-        'prose-block not-prose reveal well px-9 py-9 max-md:px-5 max-md:py-7',
-        className,
-      )}
+      className={cn('not-prose tile my-10 p-6 sm:p-8', className)}
     >
-      <Threads
-        shape={newsletterArches}
-        className="top-auto left-auto hidden h-[200px] w-[360px] opacity-50 md:block rtl:right-auto rtl:left-0 rtl:-scale-x-100"
-      />
+      {title && (
+        <p id={titleId} className="max-w-[32ch] text-h3">
+          {title}
+        </p>
+      )}
 
-      <div className="relative max-w-[360px]">
-        {title && (
-          // One Visual Editing target for both halves of the split title
-          <p
-            id={titleId}
-            data-datocms-content-link-group
-            className="max-w-[22ch] text-h3-lg text-ink"
-          >
-            <TwoTone text={title} lineBreak="always" />
-          </p>
-        )}
-
-        {hasStructuredText(subtitle) && (
-          <div className="mt-2 text-body text-ink-2 [&_a]:text-ink [&_a]:underline [&_a]:decoration-accent-solid/45 [&_a]:underline-offset-[3px] [&_p+p]:mt-2 [&_strong]:font-medium [&_strong]:text-ink">
-            <DatoStructuredText data={subtitle} />
-          </div>
-        )}
-      </div>
+      {hasStructuredText(subtitle) && (
+        <div className="mt-2 max-w-[52ch] text-body text-fg-muted [&_a]:text-accent-ink [&_a]:underline [&_a]:underline-offset-[3px] [&_p+p]:mt-3 [&_strong]:font-semibold [&_strong]:text-fg">
+          <DatoStructuredText data={subtitle} />
+        </div>
+      )}
 
       <NewsletterForm
         buttonLabel={buttonLabel}

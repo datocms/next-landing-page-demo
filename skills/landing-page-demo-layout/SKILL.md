@@ -32,12 +32,12 @@ Before schema or content operations:
 - `<html>` is rendered by `app/[locale]/layout.tsx`, with `lang` from the locale and the fonts from `styles/fonts.ts`. `app/layout.tsx` only passes children through, and `app/not-found.tsx` renders its own `<html>` for URLs no route matches. Switching locale swaps the root layout, so it is a full page load.
 - Header components: `components/layout/Header/**` (`index.tsx` with `DesktopNav`, `MobileNav` and its `MobileLanguageList`, `NotificationStrip` and `LanguageSelector`; the menu items are built in `navItems.ts`).
 - Footer components: `components/layout/Footer/**` (the footer and its language list, `FooterLanguages`). Header and footer share the language links from `components/layout/useLanguageLinks.ts`.
-- Accent color component: `components/layout/CustomColor.tsx`. It renders `--color-primary` on the server, and every color derives from it through the runtime tokens in `styles/tokens.css` (tokens and rules: "Styling sections" in `landing-page-demo-sections`). Components never use the raw color, hex values or palette classes, so any brand color re-tints the whole shell.
-- Design tokens and shared primitives (`site-header`, `menu-panel`, `menu-item`, `btn-*`, `link`, `label`, `mono`, `hairline`, `card`, `float`): `styles/tokens.css`, `styles/utilities.css` and `styles/components/*.css`, all imported by `styles/global.css`. Shell-only rules go in `styles/areas/shell.css`. The site is light only: the announcement is a white strip with a gradient `hairline`, and there are no dark bands. Section-level styling rules (tokens, primitives, white-only exceptions, motion) are in the `landing-page-demo-sections` skill and apply to the shell too.
+- Accent color component: `components/layout/CustomColor.tsx`. It renders `--accent` on the server, and every accent color derives from it through the runtime tokens in `styles/tokens.css` (tokens and rules: "Styling sections" in `landing-page-demo-sections`). Components never use the raw color, hex values or palette classes, so any brand color re-tints the whole shell.
+- Design tokens and shared primitives: `styles/theme.css`, `styles/tokens.css`, `styles/utilities.css` and `styles/base.css`, all imported by `styles/global.css`, plus the `components/ui/` primitives (`Button`, `AppLink`, `TextLink`, icons). The shell is styled with utilities in its own components. The site is light only: the announcement is a `subtle` strip under a hairline border. Section-level styling rules (tokens, primitives, motion) are in the `landing-page-demo-sections` skill and apply to the shell too.
 - Shell copy that has no CMS field (footer column headings such as Legal, Social and Language, the 404 page) comes from `uiString(locale, key)` in `@/lib/i18n/uiStrings` (rules in `landing-page-demo-sections`).
 - DatoCMS singleton: `layout`.
 - Layout fields include `logo`, `main_color`, `notification`, `menu`, `footer_logo`, `footer_subtitle`, `social_media_links`, and `footer_links`.
-- Menu blocks are `menu_item` and `menu_dropdown`; social link blocks are `social_media_icon`.
+- Menu blocks are `menu_item` and `menu_dropdown`; a `menu_item` links (`link`) to a Page or to the Documentation Home. Social link blocks are `social_media_icon`.
 
 ## Common workflows
 
@@ -62,7 +62,7 @@ Before schema or content operations:
 ### Adjust navigation or footer
 
 1. For navigation, inspect `layout.menu`, `menu_item`, and `menu_dropdown` records.
-2. Keep menu links route-aware through `pageUrl` from `utils/routes.ts`.
+2. Keep menu links route-aware through `utils/routes.ts`: `pageUrl` for a Page, `docsHomeUrl` for the Documentation Home (see `navItems.ts`).
 3. For footer work, inspect `footer_logo`, `footer_subtitle`, `social_media_links`, and `footer_links`.
 4. Keep legal footer links pointed at `/legal/[slug]` (`legalPageUrl`) unless route behavior changes too.
 5. Preserve item order unless the user requests a reorder.

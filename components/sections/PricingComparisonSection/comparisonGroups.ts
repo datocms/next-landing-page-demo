@@ -27,16 +27,16 @@ export type ComparisonGroup = {
  * plans have; a plan without a row gets an empty cell.
  */
 export function comparisonGroups(
-  plans: { id: string; planLimits: Limit[] }[],
+  plans: { id: string; limits: Limit[] }[],
 ): ComparisonGroup[] {
   const byRichness = [...plans].sort(
-    (a, b) => b.planLimits.length - a.planLimits.length,
+    (a, b) => b.limits.length - a.limits.length,
   );
   const groups = new Map<string, ComparisonGroup>();
   const seenRows = new Set<string>();
 
   for (const plan of byRichness) {
-    for (const limit of plan.planLimits) {
+    for (const limit of plan.limits) {
       const groupKey = comparableText(limit.group);
       const labelKey = comparableText(limit.label);
       const rowKey = `${groupKey}/${labelKey}`;
@@ -52,7 +52,7 @@ export function comparisonGroups(
         key: rowKey,
         label: limit.label,
         cells: plans.map((column) =>
-          column.planLimits.find(
+          column.limits.find(
             (other) =>
               comparableText(other.group) === groupKey &&
               comparableText(other.label) === labelKey,

@@ -2,16 +2,20 @@ import { PostExcerptFragment } from '@/components/posts/PostExcerpt/fragment';
 import { AboutIntroFragment } from '@/components/sections/AboutIntro/fragment';
 import { BrandSectionFragment } from '@/components/sections/BrandSection/fragment';
 import { ChangelogSectionFragment } from '@/components/sections/ChangelogSection/fragment';
+import { CtaSectionFragment } from '@/components/sections/CtaSection/fragment';
 import { DetailSectionFragment } from '@/components/sections/DetailSection/fragment';
 import { FaqSectionFragment } from '@/components/sections/FaqSection/fragment';
 import { FeaturedPostsSectionFragment } from '@/components/sections/FeaturedPostsSection/fragment';
 import { FeatureListSectionFragment } from '@/components/sections/FeatureListSection/fragment';
 import { HeroSectionFragment } from '@/components/sections/HeroSection/fragment';
+import { IntegrationsSectionFragment } from '@/components/sections/IntegrationsSection/fragment';
 import { PricingComparisonSectionFragment } from '@/components/sections/PricingComparisonSection/fragment';
 import { PricingSectionFragment } from '@/components/sections/PricingSection/fragment';
 import { ReviewSectionFragment } from '@/components/sections/ReviewSection/fragment';
 import { StatsSectionFragment } from '@/components/sections/StatsSection/fragment';
+import { StepsSectionFragment } from '@/components/sections/StepsSection/fragment';
 import { TeamSectionFragment } from '@/components/sections/TeamSection/fragment';
+import { TimelineSectionFragment } from '@/components/sections/TimelineSection/fragment';
 import { VideoSectionFragment } from '@/components/sections/VideoSection/fragment';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import {
@@ -50,6 +54,7 @@ export const query = graphql(
           }
           ...AboutIntroFragment
           ...ChangelogSectionFragment
+          ...CtaSectionFragment
           ...StatsSectionFragment
           ...TeamSectionFragment
           ...FaqSectionFragment
@@ -62,11 +67,11 @@ export const query = graphql(
           ...BrandSectionFragment
           ...FeaturedPostsSectionFragment
           ...FeatureListSectionFragment
-          ... on RedirectSectionRecord {
-            slugToRedirectTo
-          }
+          ...StepsSectionFragment
+          ...IntegrationsSectionFragment
+          ...TimelineSectionFragment
         }
-        label
+        title
       }
       allPosts(
         filter: { title: { isBlank: "false" } }
@@ -81,12 +86,29 @@ export const query = graphql(
       _allPostsMeta(locale: $locale, filter: { title: { isBlank: "false" } }) {
         count
       }
+      # Every tag with posts, for the row of topics on the posts page
+      topics: allTags(
+        orderBy: name_ASC
+        first: 100
+        locale: $locale
+        fallbackLocales: $fallbackLocales
+      ) {
+        name
+        slug
+        _allReferencingPostsMeta(
+          locale: $locale
+          filter: { title: { isBlank: "false" } }
+        ) {
+          count
+        }
+      }
     }
   `,
   [
     TagFragment,
     AboutIntroFragment,
     ChangelogSectionFragment,
+    CtaSectionFragment,
     StatsSectionFragment,
     TeamSectionFragment,
     FaqSectionFragment,
@@ -99,6 +121,9 @@ export const query = graphql(
     BrandSectionFragment,
     FeaturedPostsSectionFragment,
     FeatureListSectionFragment,
+    StepsSectionFragment,
+    IntegrationsSectionFragment,
+    TimelineSectionFragment,
     PostExcerptFragment,
   ],
 );

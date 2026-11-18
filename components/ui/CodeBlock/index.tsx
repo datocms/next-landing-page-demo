@@ -7,6 +7,7 @@ import json from 'react-syntax-highlighter/dist/esm/languages/hljs/json';
 import typescript from 'react-syntax-highlighter/dist/esm/languages/hljs/typescript';
 import xml from 'react-syntax-highlighter/dist/esm/languages/hljs/xml';
 import { uiString } from '@/lib/i18n/uiStrings';
+import { cn } from '@/utils/cn';
 import CopyButton from './CopyButton';
 
 // The light build ships only the grammars registered here. Any other language
@@ -24,6 +25,11 @@ type Props = {
   /** Zero-based line indexes to highlight, counted from the original first line */
   highlight?: readonly number[] | null;
   locale: string;
+  /**
+   * `docs`: the documentation's block: the language as a small mono pill, a
+   * copy button with a glyph that turns into a check, roomier padding
+   */
+  variant?: 'default' | 'docs';
 };
 
 /** CMS language names (and common aliases) → a registered grammar */
@@ -34,6 +40,8 @@ const GRAMMAR_BY_LANGUAGE = new Map<string, string>([
   ['zsh', 'bash'],
   ['console', 'bash'],
   ['css', 'css'],
+  ['scss', 'css'],
+  ['sass', 'css'],
   ['javascript', 'javascript'],
   ['js', 'javascript'],
   ['jsx', 'javascript'],
@@ -49,11 +57,20 @@ const GRAMMAR_BY_LANGUAGE = new Map<string, string>([
 ]);
 
 /**
- * A code window for long-form content (docs, posts, legal and changelog
- * entries): a tinted bar with window dots, a mono language label and the copy
- * action, over highlighted code that scrolls sideways inside the window.
+ * A code block for long-form content (docs, posts, legal and changelog
+ * entries): pale mono text on navy (bg-ink) with the tile radius; a bar on
+ * top with the language as small dimmed text when the CMS names one and a
+ * "Copy" button. Long lines scroll sideways inside the
+ * block. The monochrome syntax theme is in styles/prose.css.
  */
-const CodeBlock = ({ code, language, highlight, locale }: Props) => {
+const CodeBlock = ({
+  code,
+  language,
+  highlight,
+  locale,
+  variant = 'default',
+}: Props) => {
+  const docs = variant === 'docs';
   // Drop blank lines around the snippet; highlight indexes count from the
   // original first line, so they are shifted by the lines removed on top
   const leadingBlankLines = code.match(/^\n*/)?.[0].length ?? 0;
@@ -64,20 +81,39 @@ const CodeBlock = ({ code, language, highlight, locale }: Props) => {
   const grammar = GRAMMAR_BY_LANGUAGE.get(languageKey) ?? 'text';
 
   return (
-    <div className="code-block not-prose my-7 overflow-hidden rounded-zone border border-line bg-white shadow-xs">
-      <div className="flex h-10 items-center gap-3 border-b border-line bg-well ps-4 pe-1.5 pointer-coarse:h-12">
-        <span aria-hidden="true" className="window-dots">
-          <i />
-          <i />
-          <i />
-        </span>
-        <span className="mono">{language || 'code'}</span>
+    <div
+      className={cn(
+        'code-block not-prose on-ink my-8 overflow-hidden bg-ink text-surface',
+        docs ? 'rounded-[20px]' : 'rounded-tile',
+      )}
+    >
+      <div
+        className={cn(
+          'flex items-center justify-between gap-3 border-surface/10 border-b',
+          docs
+            ? 'h-12 ps-4 pe-2 pointer-coarse:h-14'
+            : 'h-10 ps-5 pe-1.5 pointer-coarse:h-12',
+        )}
+      >
+        {languageKey ? (
+          <span
+            className={cn(
+              docs
+                ? 'inline-flex h-6 items-center rounded-chip bg-surface/8 px-2.5 font-mono text-[0.75rem] text-surface/75'
+                : 'text-ui text-surface/60',
+            )}
+          >
+            {language}
+          </span>
+        ) : (
+          <span />
+        )}
         <CopyButton
           code={stripStega(trimmedCode)}
           label={uiString(locale, 'copy')}
           copiedLabel={uiString(locale, 'copied')}
           accessibleLabel={uiString(locale, 'copyCode')}
-          className="ms-auto"
+          withIcon={docs}
         />
       </div>
       <SyntaxHighlighter
@@ -91,8 +127,12 @@ const CodeBlock = ({ code, language, highlight, locale }: Props) => {
             ? 'is-highlighted'
             : undefined,
         })}
-        className="m-0 overflow-x-auto bg-white px-5 py-4 font-mono text-[13px] leading-[1.7] text-ink"
+        className={cn(
+          'm-0 overflow-x-auto overscroll-x-contain font-mono leading-[1.7] text-surface/90 focus-visible:-outline-offset-2',
+          docs ? 'px-5 py-5 text-[0.875rem]' : 'px-5 py-4 text-small',
+        )}
         codeTagProps={{ className: 'block min-w-max' }}
+        tabIndex={0}
       >
         {trimmedCode}
       </SyntaxHighlighter>

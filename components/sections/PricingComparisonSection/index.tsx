@@ -1,25 +1,28 @@
-import { Check, Minus } from 'lucide-react';
-import { useId } from 'react';
-import Price from '@/components/sections/PricingSection/Price';
-import { highlightedPlanIndex } from '@/components/sections/PricingSection/plans';
-import SectionTitle from '@/components/ui/SectionTitle';
+import {
+  formatPrice,
+  highlightedPlanIndex,
+} from '@/components/sections/PricingSection/plans';
+import { CheckIcon, DashIcon } from '@/components/ui/icons';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
-import type { SectionHeadingLevel } from '@/utils/headingLevel';
 import { type ComparisonRow, comparisonGroups } from './comparisonGroups';
 import { PricingComparisonSectionFragment } from './fragment';
 
 type Props = {
   fragment: FragmentOf<typeof PricingComparisonSectionFragment>;
   locale: string;
-  as?: SectionHeadingLevel;
 };
 
 /** Cell padding, shared by every column so the rows line up */
-const CELL = 'px-5 md:px-6';
+const CELL = 'px-2 sm:px-4 md:px-6';
+/** Up to this many plans the table fits a 360px phone; more scroll sideways */
+const FIT_MAX = 3;
+/** The feature column stays put while the plans scroll sideways */
+const STICKY_COLUMN =
+  'sticky left-0 z-[1] bg-surface pl-3 hyphens-auto [overflow-wrap:anywhere] sm:pl-4 md:pl-6';
 
-/** A check for a plain yes, a dash when the plan lacks the row, else the CMS value */
+/** An accent check for a plain yes, a dash when the plan lacks the row, else the CMS value */
 const CellValue = ({
   limit,
   locale,
@@ -29,148 +32,134 @@ const CellValue = ({
 }) => {
   if (!limit) {
     return (
-      <span className="inline-grid size-5 place-items-center rounded-full bg-well text-ink-3 ring-1 ring-line ring-inset">
-        <Minus aria-hidden="true" className="size-3" strokeWidth={3} />
+      <>
+        <DashIcon className="size-4 text-fg-faint" />
         <span className="sr-only">{uiString(locale, 'excluded')}</span>
-      </span>
+      </>
     );
   }
-
   if (!limit.value) {
     return (
-      <span className="inline-grid size-5 place-items-center rounded-full bg-accent-wash text-accent-solid">
-        <Check aria-hidden="true" className="size-3" strokeWidth={3} />
+      <>
+        <CheckIcon className="size-4 text-accent-ink" />
         <span className="sr-only">{uiString(locale, 'included')}</span>
-      </span>
+      </>
     );
   }
-
-  return <span className="font-medium text-ink">{limit.value}</span>;
+  return <span>{limit.value}</span>;
 };
 
 /**
- * The plan-by-plan comparison table of a pricing page: one column per plan
- * (name, monthly price, button) and the plans' limits as rows, grouped by
- * their CMS group (Usage, Security…). The highlighted plan's column is
- * tinted. When it does not fit, the table scrolls sideways with the feature
- * column pinned.
+ * The plan comparison of a pricing page: a real table, one column per plan,
+ * the plans' limits as rows under bold group rows, in a 28px hairline card;
+ * the highlighted plan's column sits on the pale tint. The feature column
+ * is sticky. Up to three plans fit a 360px phone (tighter cells, smaller text);
+ * with more, the table scrolls sideways inside its frame.
+ * From 1024px the frame no longer scrolls, so the row of plan names can stick
+ * under the site header while the visitor reads down.
  */
-const PricingComparisonSection = ({ fragment, locale, as = 'h2' }: Props) => {
-  const {
-    comparisonHeader: header,
-    comparisonSubheader: subheader,
-    plans,
-  } = readFragment(PricingComparisonSectionFragment, fragment);
-  const uid = useId();
+const PricingComparisonSection = ({ fragment, locale }: Props) => {
+  const { plans } = readFragment(PricingComparisonSectionFragment, fragment);
 
   const groups = comparisonGroups(plans);
   if (!plans.length || !groups.length) return null;
-
-  const highlightedIndex = highlightedPlanIndex(plans);
-  const headingId = `${uid}-compare`;
-  const tintHighlighted = (column: number) =>
-    column === highlightedIndex && 'bg-well';
+  const fits = plans.length <= FIT_MAX;
+  const highlighted = highlightedPlanIndex(plans);
+  /** The highlighted plan's column sits on the pale tint, from its header to the last row */
+  const columnFill = (i: number) => (i === highlighted ? 'bg-subtle' : '');
 
   return (
-    <section
-      className="section"
-      aria-labelledby={header ? headingId : undefined}
-      aria-label={header ? undefined : uiString(locale, 'comparePlans')}
-    >
+    <section className="section" aria-label={uiString(locale, 'comparePlans')}>
       <div className="container-page">
-        <SectionTitle
-          id={headingId}
-          title={header}
-          paragraph={subheader}
-          align="center"
-          as={as}
-          h1Size="page"
-        />
-
-        {/* The reveal stays outside the scroll container */}
-        <div className="reveal">
-          <div className="overflow-x-auto rounded-card border border-line bg-white">
-            <table className="w-full min-w-[680px] border-collapse text-start">
-              <thead>
-                <tr>
+        <div className="reveal card overflow-x-auto lg:overflow-visible">
+          <table
+            className={cn(
+              'w-full table-fixed border-separate border-spacing-0 text-left text-ui sm:text-small',
+              !fits && 'min-w-[34rem]',
+            )}
+          >
+            <thead>
+              <tr>
+                <th
+                  scope="col"
+                  className={cn(
+                    CELL,
+                    STICKY_COLUMN,
+                    fits ? 'w-[28%]' : 'w-36',
+                    'rounded-tl-card sm:w-[34%] pt-6 pb-5 text-left align-bottom font-normal lg:top-(--header-h) lg:z-[2]',
+                    'shadow-[inset_0_-1px_0_var(--color-line)]',
+                  )}
+                >
+                  <span className="sr-only">{uiString(locale, 'feature')}</span>
+                </th>
+                {plans.map((plan, i) => (
                   <th
+                    key={plan.id}
                     scope="col"
                     className={cn(
                       CELL,
-                      'sticky start-0 z-10 w-[31%] bg-white py-6 text-start align-bottom',
+                      i === highlighted ? 'bg-subtle' : 'bg-surface',
+                      'pt-6 pb-5 text-left align-bottom font-normal lg:sticky lg:top-(--header-h) lg:z-[1]',
+                      'shadow-[inset_0_-1px_0_var(--color-line)]',
+                      i === plans.length - 1 && 'rounded-tr-card',
                     )}
                   >
-                    <span className="label">{uiString(locale, 'feature')}</span>
+                    <span
+                      className={cn(
+                        'block text-small font-semibold tracking-[-0.02em] sm:text-h3',
+                        i === highlighted && 'text-accent-ink',
+                      )}
+                    >
+                      {plan.name}
+                    </span>
+                    <span className="mt-0.5 block text-fg-muted sm:whitespace-nowrap">
+                      {/* On phones the period goes under the price, the same in every column */}
+                      <span className="block sm:inline">
+                        {formatPrice(plan.monthlyPrice, locale)}
+                      </span>{' '}
+                      {uiString(locale, 'perMonth')}
+                    </span>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+
+            {groups.map((group, g) => (
+              <tbody key={group.key}>
+                <tr>
+                  <th
+                    scope="rowgroup"
+                    // No fill and no wrapping: a long group name runs over the empty cells beside it
+                    className={cn(
+                      CELL,
+                      'sticky left-0 z-[1] whitespace-nowrap pt-6 pb-2.5 pl-3 text-left font-semibold sm:pl-4 md:pl-6',
+                      g > 0 && 'border-line border-t',
+                    )}
+                  >
+                    {group.name}
                   </th>
                   {plans.map((plan, i) => (
-                    <th
+                    <td
                       key={plan.id}
-                      scope="col"
                       className={cn(
-                        CELL,
-                        'py-6 text-start align-top font-normal',
-                        tintHighlighted(i),
+                        columnFill(i),
+                        g > 0 && 'border-line border-t',
                       )}
-                    >
-                      <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                        <span className="font-medium text-[1.0625rem] text-ink">
-                          {plan.tierName}
-                        </span>
-                        {i === highlightedIndex && plan.highlightLabel && (
-                          <span className="badge badge-accent h-6 px-2.5 text-[12px]">
-                            {plan.highlightLabel}
-                          </span>
-                        )}
-                      </span>
-                      <Price
-                        className="mt-3"
-                        size="md"
-                        monthly={plan.monthlyPrice}
-                        locale={locale}
-                      />
-                      <button
-                        type="button"
-                        className={cn(
-                          'btn btn-sm mt-4 w-full',
-                          i === highlightedIndex
-                            ? 'btn-primary'
-                            : 'btn-secondary',
-                        )}
-                      >
-                        {plan.ctaLabel || uiString(locale, 'startFreeTrial')}
-                      </button>
-                    </th>
+                    />
                   ))}
                 </tr>
-              </thead>
-
-              {groups.map((group) => (
-                <tbody key={group.key}>
-                  <tr className="border-line border-t">
-                    <th
-                      scope="rowgroup"
-                      className={cn(
-                        CELL,
-                        'sticky start-0 bg-white pt-7 pb-2.5 text-start',
-                      )}
-                    >
-                      <span className="label">{group.name}</span>
-                    </th>
-                    {plans.map((plan, i) => (
-                      <td
-                        key={plan.id}
-                        aria-hidden="true"
-                        className={tintHighlighted(i) || undefined}
-                      />
-                    ))}
-                  </tr>
-                  {group.rows.map((row) => (
-                    <tr key={row.key} className="border-line border-t">
+                {group.rows.map((row, r) => {
+                  const isLast =
+                    g === groups.length - 1 && r === group.rows.length - 1;
+                  return (
+                    <tr key={row.key}>
                       <th
                         scope="row"
                         className={cn(
                           CELL,
-                          'sticky start-0 bg-white py-3.5 text-start font-normal text-small text-ink-2',
+                          STICKY_COLUMN,
+                          'border-line border-t py-3.5 text-left font-normal text-fg-muted',
+                          isLast && 'rounded-bl-card',
                         )}
                       >
                         {row.label}
@@ -180,19 +169,24 @@ const PricingComparisonSection = ({ fragment, locale, as = 'h2' }: Props) => {
                           key={plans[i].id}
                           className={cn(
                             CELL,
-                            'py-3.5 text-small',
-                            tintHighlighted(i),
+                            columnFill(i),
+                            'border-line border-t py-3.5 align-middle tabular-nums',
+                            isLast &&
+                              i === plans.length - 1 &&
+                              'rounded-br-card',
                           )}
                         >
-                          <CellValue limit={limit} locale={locale} />
+                          <span className="flex min-h-[1lh] items-center">
+                            <CellValue limit={limit} locale={locale} />
+                          </span>
                         </td>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              ))}
-            </table>
-          </div>
+                  );
+                })}
+              </tbody>
+            ))}
+          </table>
         </div>
       </div>
     </section>

@@ -1,42 +1,55 @@
 'use client';
 
-import { ArrowLeft, Menu } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { type ReactNode, useCallback, useRef, useState } from 'react';
 import PageTransition from '@/components/layout/PageTransition';
+import { CaretIcon } from '@/components/ui/icons';
+import type { SiteLocale } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
-import DocsNavDrawer from './DocsNavDrawer';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
+import { docsHomeUrl, pageUrl } from '@/utils/routes';
+import DocsNav from '../DocsNav';
+import { DocsTreeContext, type DocsTreePage } from '../docsTree';
+import DocsDrawer from './DocsDrawer';
 
 type Props = {
-  /** Logo + "Docs" badge link, shown in the top bar and in the mobile drawer */
-  brand: ReactNode;
-  /** The documentation tree, shown in the sticky rail (lg) and the mobile drawer */
-  nav: ReactNode;
-  siteHref: string;
+  globalPageProps: ResolvedGlobalPageProps;
+  /** The documentation home's logo (the wordmark) */
+  logo?: { url: string; width?: number | null; height?: number | null } | null;
+  /** The documentation tree */
+  pages: readonly DocsTreePage[];
   footerText?: string | null;
-  locale: string;
+  languages: SiteLocale[];
   children: ReactNode;
 };
 
-const DRAWER_ID = 'docs-nav-drawer';
+const DRAWER_ID = 'docs-nav';
 
-/** Docs chrome: the top bar, the sticky nav rail from lg, and the same nav in a drawer below lg */
+/**
+ * The documentation chrome under the site header (which the layout renders,
+ * with its pill menu): the tree in a sticky sidebar from 1024px; below, a slim
+ * sticky bar under the header whose button opens the tree in a sheet; and the
+ * content column with the docs footer line.
+ */
 const DocsShell = ({
-  brand,
-  nav,
-  siteHref,
+  globalPageProps,
+  logo,
+  pages,
   footerText,
-  locale,
+  languages,
   children,
 }: Props) => {
   const pathname = usePathname();
+  const { locale } = globalPageProps.params;
+  const siteHref = pageUrl(globalPageProps, 'home');
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const closeDrawer = useCallback(() => setDrawerOpen(false), []);
-  // `site-sheet` only on the page the drawer was shown on: a route change starting while it is open or
-  // fading out draws it above the page, and the new page never has it
+  // `site-sheet` only on the page the drawer was opened on: a route change
+  // starting while it is open draws it above the page, the new page never has it
   const [drawerShownOn, setDrawerShownOn] = useState<string>();
 
   // Close the drawer on every route change
@@ -46,76 +59,75 @@ const DocsShell = ({
     setDrawerOpen(false);
   }
 
+  // Rendered twice: in the header and, at the same place, in the drawer
+  const brand = (
+    <Link
+      href={docsHomeUrl(globalPageProps)}
+      aria-label={uiString(locale, 'docsHome')}
+      className="flex shrink-0 items-center gap-2.5"
+    >
+      {logo?.url && (
+        <Image
+          src={logo.url}
+          alt=""
+          width={logo.width || 111}
+          height={logo.height || 28}
+          className="h-7 w-auto"
+          preload
+        />
+      )}
+      <span className="inline-flex min-h-6 items-center rounded-chip bg-subtle px-2.5 text-[0.78125rem] font-semibold text-accent-ink">
+        {uiString(locale, 'docsBadge')}
+      </span>
+    </Link>
+  );
+
   return (
-    <>
-      <a
-        href="#main"
-        className="btn btn-ink btn-sm fixed top-3 left-3 z-[60] not-focus:sr-only"
-      >
-        {uiString(locale, 'skipToContent')}
-      </a>
-
-      <header
-        className="site-header"
-        style={{ viewTransitionName: 'site-header' }}
-        data-scrolled="true"
-      >
-        <div className="flex h-full items-center gap-4 px-(--pad)">
-          {brand}
-
-          <div className="ml-auto flex items-center gap-2">
-            <Link
-              href={siteHref}
-              className="btn btn-secondary btn-sm max-sm:hidden"
-            >
-              <ArrowLeft
-                strokeWidth={1.75}
-                aria-hidden="true"
-                className="btn-arrow-back rtl:rotate-180"
-              />
-              {uiString(locale, 'backToSite')}
-            </Link>
-            <button
-              ref={menuButtonRef}
-              type="button"
-              aria-label={uiString(locale, 'openDocsMenu')}
-              aria-expanded={drawerOpen}
-              aria-controls={DRAWER_ID}
-              onClick={() => {
-                setDrawerShownOn(pathname);
-                setDrawerOpen(true);
-              }}
-              className="btn btn-icon size-11 rounded-full bg-well text-ink hover:bg-surface lg:hidden [&_svg]:size-5"
-            >
-              <Menu strokeWidth={1.75} aria-hidden="true" />
-            </button>
-          </div>
+    <DocsTreeContext value={pages}>
+      {/* Below 1024px: the way into the topic tree, pinned under the site header */}
+      <div className="sticky top-(--header-h) z-40 border-line border-b bg-surface lg:hidden">
+        <div className="container-page flex h-12 items-center">
+          <button
+            ref={menuButtonRef}
+            type="button"
+            aria-expanded={drawerOpen}
+            aria-controls={DRAWER_ID}
+            onClick={() => {
+              setDrawerShownOn(pathname);
+              setDrawerOpen(true);
+            }}
+            className="-ml-3 inline-flex min-h-10 items-center gap-1.5 rounded-full px-3 font-medium text-fg text-small transition-colors duration-150 hover:bg-subtle"
+          >
+            {uiString(locale, 'allTopics')}
+            <CaretIcon className="size-3.5 text-fg-muted" />
+          </button>
         </div>
-      </header>
+      </div>
 
       {/* Pages fade inside it; this one fades when the layout itself is swapped (the site, another language) */}
       <PageTransition>
-        <div className="lg:grid lg:min-h-[calc(100svh-var(--header-h))] lg:grid-cols-[17rem_minmax(0,1fr)]">
-          {/* The tinted column runs the full height of the page; the tree sticks inside it */}
-          <div className="hidden border-e border-line bg-well lg:block">
-            <div className="sticky top-(--header-h) flex h-[calc(100svh-var(--header-h))] flex-col overflow-y-auto overscroll-contain py-6 ps-[calc(var(--pad)-12px)] pe-3 [--row-hover:var(--bg)]">
-              {nav}
-              {/* The site has no footer here: this line is the page's contentinfo landmark */}
-              {footerText && (
-                <footer className="mt-auto ps-3 pt-10 text-caption text-ink-3">
-                  <p>{footerText}</p>
-                </footer>
-              )}
+        <div className="container-page lg:grid lg:grid-cols-[14.5rem_minmax(0,1fr)] lg:gap-x-12 xl:grid-cols-[15.5rem_minmax(0,1fr)] xl:gap-x-16">
+          <aside className="max-lg:hidden">
+            {/* The tree scrolls inside the sidebar; the side padding keeps the focus ring clear of the clip */}
+            <div className="sticky top-(--header-h) -mx-3 max-h-[calc(100svh-var(--header-h))] overflow-y-auto overscroll-contain px-3 pt-8 pb-16">
+              <DocsNav globalPageProps={globalPageProps} size="rail" />
             </div>
-          </div>
+          </aside>
 
-          <main id="main" tabIndex={-1} className="min-w-0 outline-none">
-            {children}
-          </main>
+          <div className="flex min-h-[calc(100svh-var(--header-h))] min-w-0 flex-col">
+            <main id="main" tabIndex={-1} className="flex-1 outline-none">
+              {children}
+            </main>
+            {footerText && (
+              <footer className="mt-20 border-line border-t py-8 text-small text-fg-muted">
+                <p>{footerText}</p>
+              </footer>
+            )}
+          </div>
         </div>
       </PageTransition>
 
-      <DocsNavDrawer
+      <DocsDrawer
         id={DRAWER_ID}
         open={drawerOpen}
         onClose={closeDrawer}
@@ -124,12 +136,11 @@ const DocsShell = ({
           drawerShownOn === pathname ? 'site-sheet' : undefined
         }
         brand={brand}
-        nav={nav}
         siteHref={siteHref}
-        footerText={footerText}
-        locale={locale}
+        globalPageProps={globalPageProps}
+        languages={languages}
       />
-    </>
+    </DocsTreeContext>
   );
 };
 

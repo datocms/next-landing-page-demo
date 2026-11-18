@@ -1,6 +1,5 @@
 'use client';
 
-import { X } from 'lucide-react';
 import Link from 'next/link';
 import {
   type CSSProperties,
@@ -10,6 +9,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { CloseIcon } from '@/components/ui/icons';
 import type { SiteLocale } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
@@ -23,10 +23,8 @@ type Props = {
   onClose: () => void;
   /** The header has handed its inline nav over to the menu button at a desktop width */
   collapsed: boolean;
-  /** Where the header sits when the menu opens (below the announcement while it is in view) */
+  /** Where the header sits when the sheet opens, from the top of the viewport */
   top: number;
-  /** Mirrors the header's hairline state, so the replicated header row matches it */
-  scrolled: boolean;
   items: NavItem[];
   pathname: string;
   logo: ReactNode;
@@ -35,15 +33,15 @@ type Props = {
   languages: SiteLocale[];
 };
 
-/** Same breakpoint as the header's inline nav (`min-[72rem]`) */
-const DESKTOP_QUERY = '(min-width: 72rem)';
+/** Same breakpoint as the header's inline nav (`lg`) */
+const DESKTOP_QUERY = '(min-width: 64rem)';
 
 /**
- * Menu sheet below 72rem (and wider while the header is collapsed), built on
- * a modal <dialog> so the page is inert, focus stays inside, Escape closes it
- * natively and focus returns to the menu button. It replicates the header row
- * where the header sits (the logo and the close button stay put), then shows
- * a rounded white sheet over a soft white scrim.
+ * The navigation sheet, below 1024px (and wider while the header is
+ * collapsed), built on a modal <dialog>: the page is inert, focus stays
+ * inside, Escape closes it natively and focus returns to the menu button. It
+ * is a white sheet from where the header sits to the bottom of the screen,
+ * and it repeats the header row, so the logo and the button do not move.
  */
 const MobileNav = ({
   id,
@@ -51,7 +49,6 @@ const MobileNav = ({
   onClose,
   collapsed,
   top,
-  scrolled,
   items,
   pathname,
   logo,
@@ -61,13 +58,11 @@ const MobileNav = ({
 }: Props) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const sheetRef = useRef<HTMLElement>(null);
-  const headerRowRef = useRef<HTMLDivElement>(null);
+  const sheetRef = useRef<HTMLDivElement>(null);
   const { locale } = globalPageProps.params;
   const languageHeadingId = `${id}-language`;
 
-  // `site-sheet` draws the fading sheet above the page during a route change; it is off while open,
-  // so the scrim keeps its blur
+  // `site-sheet` draws the fading sheet above the page during a route change
   const [openedOnPathname, setOpenedOnPathname] = useState<string>();
   if (open && openedOnPathname !== pathname) setOpenedOnPathname(pathname);
   const keepSheetAboveExitingPage = !open && openedOnPathname === pathname;
@@ -96,7 +91,7 @@ const MobileNav = ({
     };
   }, [open]);
 
-  // Close once the header shows its inline nav: the viewport grew past 72rem, or the items fit again
+  // Close once the header shows its inline nav: the viewport grew past 1024px, or the items fit again
   useEffect(() => {
     if (!open) return;
 
@@ -109,19 +104,13 @@ const MobileNav = ({
     return () => desktop.removeEventListener('change', onChange);
   }, [open, onClose, collapsed]);
 
-  // A press on the scrim (or on the announcement showing above the header row) closes the menu
+  // A press outside the sheet closes the menu
   const closeOnOutsideClick = (event: MouseEvent<HTMLDialogElement>) => {
-    const target = event.target as Node;
-    if (
-      !sheetRef.current?.contains(target) &&
-      !headerRowRef.current?.contains(target)
-    ) {
-      onClose();
-    }
+    if (!sheetRef.current?.contains(event.target as Node)) onClose();
   };
 
   return (
-    // biome-ignore lint/a11y/useKeyWithClickEvents: Escape closes the dialog natively; the click only adds scrim dismissal
+    // biome-ignore lint/a11y/useKeyWithClickEvents: Escape closes the dialog natively; the click only adds outside dismissal
     <dialog
       ref={dialogRef}
       id={id}
@@ -136,51 +125,50 @@ const MobileNav = ({
             : undefined,
         } as CSSProperties
       }
-      className="fixed inset-0 m-0 size-full max-h-none max-w-none overflow-hidden border-0 bg-transparent p-0 text-ink opacity-0 transition-[opacity,overlay,display] transition-discrete duration-[120ms] ease-standard backdrop:bg-transparent open:opacity-100 open:duration-[180ms] open:ease-out-quint starting:open:opacity-0"
+      className="fixed inset-0 m-0 size-full max-h-none max-w-none overflow-hidden border-0 bg-transparent p-0 text-fg opacity-0 transition-[opacity,overlay,display] transition-discrete duration-100 ease-linear backdrop:bg-transparent open:opacity-100 starting:open:opacity-0"
     >
-      <div className="flex h-full flex-col pt-(--sheet-top)">
-        {/* The header row, where the real header sits, so nothing moves when the menu opens */}
-        <div
-          ref={headerRowRef}
-          className="site-header relative shrink-0"
-          data-scrolled={scrolled}
-        >
-          <div className="container-page flex h-full items-center justify-between gap-4">
-            <Link
-              href={homeHref}
-              aria-label={uiString(locale, 'home')}
-              onClick={onClose}
-              className="hit-44 flex shrink-0 items-center rounded-lg"
-            >
-              {logo}
-            </Link>
-            <button
-              ref={closeButtonRef}
-              type="button"
-              aria-label={uiString(locale, 'closeMenu')}
-              onClick={onClose}
-              className="btn btn-icon size-11 bg-well text-ink hover:bg-surface"
-            >
-              <X className="size-5" strokeWidth={1.75} aria-hidden="true" />
-            </button>
-          </div>
+      <div
+        ref={sheetRef}
+        className="mt-(--sheet-top) flex h-[calc(100%-var(--sheet-top))] flex-col bg-surface"
+      >
+        {/* The header row, where the real header sits, so nothing moves when the sheet opens */}
+        <div className="container-page flex h-(--header-h) shrink-0 items-center justify-between gap-4 border-line border-b">
+          <Link
+            href={homeHref}
+            aria-label={uiString(locale, 'home')}
+            onClick={onClose}
+            className="flex shrink-0 items-center"
+          >
+            {logo}
+          </Link>
+          <button
+            ref={closeButtonRef}
+            type="button"
+            aria-label={uiString(locale, 'closeMenu')}
+            onClick={onClose}
+            className="-mr-2.5 grid size-11 place-items-center rounded-control transition-colors duration-150 hover:bg-subtle"
+          >
+            <CloseIcon className="size-5" />
+          </button>
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-white/60 p-2 backdrop-blur-[6px]">
-          <nav
-            ref={sheetRef}
-            aria-label={uiString(locale, 'mainNavigation')}
-            className="rounded-[24px] bg-white p-2 shadow-card transition-[translate] duration-[180ms] ease-out-quint motion-safe:starting:-translate-y-2"
-          >
-            <MobileNavItems
-              items={items}
-              pathname={pathname}
-              onNavigate={onClose}
-            />
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+          {/* The links fade and rise in as the sheet opens; the header row above stays put */}
+          <div className="container-page pt-3 pb-10 transition-[opacity,translate] duration-300 ease-[cubic-bezier(0.2,0.7,0.2,1)] starting:translate-y-1.5 starting:opacity-0">
+            <nav aria-label={uiString(locale, 'mainNavigation')}>
+              <MobileNavItems
+                items={items}
+                pathname={pathname}
+                onNavigate={onClose}
+              />
+            </nav>
 
             {languages.length > 1 && (
-              <div className="mt-2 border-line border-t px-2.5 pt-4 pb-2.5">
-                <p id={languageHeadingId} className="mono mb-3 ml-2">
+              <div className="pt-8">
+                <p
+                  id={languageHeadingId}
+                  className="mb-1 text-small font-medium text-fg"
+                >
                   {uiString(locale, 'language')}
                 </p>
                 <MobileLanguageList
@@ -191,7 +179,7 @@ const MobileNav = ({
                 />
               </div>
             )}
-          </nav>
+          </div>
         </div>
       </div>
     </dialog>

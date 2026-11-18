@@ -1,0 +1,265 @@
+/* The site's motion. One idea carried through: things settle into place once, and the
+   big fills breathe very slowly. Transform and opacity only (and stroke-dashoffset for
+   a chart line drawing itself); no layout properties, no filters, no JavaScript per frame.
+
+   Everything here sits inside `prefers-reduced-motion: no-preference`, so readers who ask
+   for less motion get the still page (base.css also zeroes every duration).
+
+   Unlayered on purpose: a revealing element's transition must win over the element's own
+   transition utilities while it plays. components/motion/MotionObserver.tsx removes the
+   state attribute once it is over, so the element's own transitions come back. */
+
+:root {
+  /* The one curve every arrival and response uses: quick out of the gate, a long calm landing */
+  --ease-calm: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ---------- Reveal ----------
+     Put `reveal` on anything that should settle in as it enters the view. The server
+     HTML carries no state, so without JavaScript everything is simply visible.
+     MotionObserver marks only what is still below the fold once the page has loaded
+     `data-reveal="waiting"`, then `in` as it scrolls into view; items entering
+     together get a 60ms stagger through --reveal-delay. */
+  .reveal[data-reveal='waiting'] {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  .reveal[data-reveal='in'] {
+    transition:
+      opacity 600ms var(--ease-calm) var(--reveal-delay, 0ms),
+      transform 700ms var(--ease-calm) var(--reveal-delay, 0ms);
+  }
+
+  /* ---------- Arrival ----------
+     The page opener's one entrance on load (the hero): each part fades in and rises,
+     after --arrive. CSS only, so it plays even before hydration and ends visible
+     without JavaScript. `backwards` fill: once over, the element is back to its own styles */
+  .arrive {
+    animation: motion-rise 700ms var(--ease-calm) var(--arrive, 0ms) backwards;
+  }
+  /* A FAQ answer swapped in beside its question list */
+  .faq-tab-in {
+    animation: motion-rise 450ms var(--ease-calm) backwards;
+  }
+  /* Its panel's two shapes: they shrink back into their corners and grow out again */
+  .faq-shape-in {
+    animation: motion-shape 650ms var(--ease-calm) var(--shape-delay, 0ms)
+      backwards;
+  }
+  /* The hero's capsules: a longer, softer settle */
+  .arrive-settle {
+    animation: motion-settle 700ms var(--ease-calm) var(--arrive, 0ms) backwards;
+  }
+  /* The hero's floating product cards: they pop in one after another, then hover a few
+     pixels on their own slow rhythm (translate, so it composes with the arrival's transform) */
+  .arrive-float {
+    animation:
+      motion-pop 650ms var(--ease-calm) var(--arrive, 0ms) backwards,
+      motion-float var(--float-time, 14s) ease-in-out
+      calc(var(--arrive, 0ms) + 650ms) infinite;
+  }
+
+  /* ---------- Loops ----------
+     The quiet "alive" layer: rings that breathe a few percent over half a minute.
+     MotionObserver pauses a loop while it is off screen (data-offscreen). */
+  .breathe {
+    animation: motion-breathe var(--loop-time, 32s) ease-in-out
+      var(--loop-delay, 0s) infinite alternate;
+  }
+  /* The same, for rings drawn as a ::after (the featured plan) */
+  .breathe-after::after {
+    animation: motion-breathe var(--loop-time, 32s) ease-in-out
+      var(--loop-delay, 0s) infinite alternate;
+  }
+  .loop[data-offscreen],
+  .loop[data-offscreen]::after {
+    animation-play-state: paused;
+  }
+
+  /* ---------- Charts that draw themselves once ----------
+     In the hero (inside .arrive-float) and in any revealing tile: the line draws from
+     the left, its fill fades in under it, bars grow from their base and meters from
+     their start. pathLength="1" on the line makes the dash maths size-independent. */
+  .arrive-float .spark-line,
+  .reveal[data-reveal='in'] .spark-line {
+    animation: motion-draw 1100ms var(--ease-calm)
+      calc(var(--arrive, 0ms) + var(--reveal-delay, 0ms) + 250ms) backwards;
+  }
+  .arrive-float .spark-fill,
+  .reveal[data-reveal='in'] .spark-fill {
+    animation: motion-fade 700ms var(--ease-calm)
+      calc(var(--arrive, 0ms) + var(--reveal-delay, 0ms) + 650ms) backwards;
+  }
+  .arrive-float .bar,
+  .reveal[data-reveal='in'] .bar {
+    transform-origin: 50% 100%;
+    animation: motion-grow-y 650ms var(--ease-calm)
+      calc(
+        var(--arrive, 0ms) +
+        var(--reveal-delay, 0ms) +
+        200ms +
+        var(--i, 0) *
+        55ms
+      )
+      backwards;
+  }
+  .arrive-float .meter,
+  .reveal[data-reveal='in'] .meter {
+    transform-origin: 0 50%;
+    animation: motion-grow-x 700ms var(--ease-calm)
+      calc(
+        var(--arrive, 0ms) +
+        var(--reveal-delay, 0ms) +
+        200ms +
+        var(--i, 0) *
+        70ms
+      )
+      backwards;
+  }
+
+  /* ---------- Figures that count up once ----------
+     components/motion/CountUp.tsx sets each digit as its real (transparent) character
+     with a reel of 0 to 9 drawn over it, turned to the digit. While its tile waits
+     below the fold the reels sit at 0; when it reveals they roll up to the figure,
+     left to right. */
+  .reveal[data-reveal='waiting'] .count-digit::before {
+    transform: translateY(0);
+  }
+  .reveal[data-reveal='in'] .count-digit::before {
+    transition: transform 900ms var(--ease-calm)
+      calc(var(--reveal-delay, 0ms) + 150ms + var(--k, 0) * 70ms);
+  }
+
+  /* Prices on the billing switch: the figure that leaves lifts out quickly, the
+     one that arrives rises in right after it, upwards for yearly and back down
+     for monthly. Plans follow each other by --plan-i. Visibility waits for the
+     fade, so the hidden figure is never read or selected */
+  [data-price] {
+    transition:
+      opacity 320ms var(--ease-calm),
+      translate 320ms var(--ease-calm),
+      visibility 320ms;
+    transition-delay: calc(var(--plan-i, 0) * 45ms + 90ms);
+  }
+  [data-period='yearly'] [data-price='monthly'],
+  [data-period='monthly'] [data-price='yearly'] {
+    opacity: 0;
+    transition-duration: 140ms;
+    transition-timing-function: ease-in;
+    transition-delay: calc(var(--plan-i, 0) * 45ms);
+  }
+  [data-period='yearly'] [data-price='monthly'] {
+    translate: 0 -0.625rem;
+  }
+  [data-period='monthly'] [data-price='yearly'] {
+    translate: 0 0.625rem;
+  }
+
+  /* Header menus open with a short fade and rise */
+  .menu-in {
+    animation: motion-menu 180ms var(--ease-calm);
+  }
+}
+
+/* The odometer digit (see CountUp): the character keeps the width, baseline and
+   text (it is only made see-through, so it is still read and copied); the reel over it
+   shows the figure. clip-path, not overflow, so the baseline stays where it was */
+.count-digit {
+  position: relative;
+  display: inline-block;
+  -webkit-text-fill-color: transparent;
+  clip-path: inset(0 -0.2em);
+}
+.count-digit::before {
+  content: '0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9';
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-text-fill-color: currentColor;
+  white-space: pre;
+  transform: translateY(calc(var(--d, 0) * -1lh));
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-tab-in,
+  .faq-shape-in,
+  .arrive,
+  .arrive-settle,
+  .arrive-float,
+  .breathe,
+  .breathe-after::after,
+  .menu-in {
+    animation: none;
+  }
+}
+
+@keyframes motion-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+}
+@keyframes motion-settle {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0) scale(0.97);
+  }
+}
+@keyframes motion-shape {
+  from {
+    transform: scale(0.72);
+  }
+}
+@keyframes motion-pop {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.96);
+  }
+}
+@keyframes motion-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 var(--float-y, -5px);
+  }
+}
+@keyframes motion-breathe {
+  to {
+    transform: scale(var(--loop-scale, 1.04)) rotate(var(--loop-turn, 0deg));
+  }
+}
+@keyframes motion-draw {
+  from {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes motion-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes motion-grow-y {
+  from {
+    transform: scaleY(0);
+  }
+}
+@keyframes motion-grow-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+@keyframes motion-menu {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -4px, 0);
+  }
+}

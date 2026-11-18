@@ -1,18 +1,13 @@
 import { graphql } from '@/lib/datocms/graphql';
 
 export const PricingComparisonSectionFragment = graphql(/* GraphQL */ `
-  fragment PricingComparisonSectionFragment on PricingComparisonSectionRecord {
-    comparisonHeader
-    comparisonSubheader {
-      value
-    }
+  fragment PricingComparisonSectionFragment on PricingComparisonSectionBlockRecord {
     plans {
       id
-      tierName
+      name
       monthlyPrice
       highlightLabel
-      ctaLabel
-      planLimits {
+      limits {
         id
         group
         label

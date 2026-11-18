@@ -4,31 +4,36 @@ export const HeaderFragment = graphql(/* GraphQL */ `
   fragment HeaderFragment on LayoutRecord {
     logo {
       url
+      width
+      height
     }
     menu {
-      ... on MenuItemRecord {
+      ... on MenuItemBlockRecord {
         id
         title
         __typename
-        page {
-          slug
+        link {
+          __typename
+          ... on PageRecord {
+            slug
+          }
         }
       }
-      ... on MenuDropdownRecord {
+      ... on MenuDropdownBlockRecord {
         id
         title
         __typename
         items {
           id
           title
-          page {
-            slug
+          link {
+            __typename
+            ... on PageRecord {
+              slug
+            }
           }
         }
       }
-    }
-    notification {
-      value
     }
   }
 `);

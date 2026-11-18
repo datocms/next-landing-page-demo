@@ -1,3 +1,4 @@
+import { HeaderFragment } from '@/components/layout/Header/fragment';
 import {
   graphql,
   type ResultOf,
@@ -12,9 +13,11 @@ export type PageProps = ResolvedGlobalPageProps & {
 /*
  * The sidebar tree is handed to a client component, so everything selected
  * here ends up in every docs page's client payload: select only what the
- * sidebar renders (id, slug, title), four levels deep.
+ * sidebar and the previous/next links render (id, slug, title), four levels
+ * deep. The locales feed the language menu; the layout, the site header.
  */
-export const query = graphql(/* GraphQL */ `
+export const query = graphql(
+  /* GraphQL */ `
   query DocumentationSidebarQuery(
     $locale: SiteLocale
     $fallbackLocales: [SiteLocale!]
@@ -56,8 +59,16 @@ export const query = graphql(/* GraphQL */ `
         height
       }
     }
+    layout(locale: $locale, fallbackLocales: $fallbackLocales) {
+      ...HeaderFragment
+    }
+    _site {
+      locales
+    }
   }
-`);
+`,
+  [HeaderFragment],
+);
 
 export type Query = ResultOf<typeof query>;
 export type Variables = VariablesOf<typeof query>;

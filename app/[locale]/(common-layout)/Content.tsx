@@ -18,7 +18,8 @@ const Content: ContentComponent<PageProps, Query> = ({
       />
       {/* Pages fade inside it; this one fades when the layout itself is swapped (docs, another language) */}
       <PageTransition>
-        <main id="main" className="min-h-[60svh]">
+        {/* overflow-x-clip: whatever a block does, the page never scrolls sideways */}
+        <main id="main" className="min-h-[60svh] overflow-x-clip">
           {children}
         </main>
         <Footer

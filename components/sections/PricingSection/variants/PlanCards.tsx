@@ -1,167 +1,129 @@
-import { useId } from 'react';
-import DatoStructuredText from '@/components/datocms/DatoStructuredText';
-import BillingPeriodProvider from '@/components/sections/PricingSection/BillingPeriodProvider';
-import BillingToggle from '@/components/sections/PricingSection/BillingToggle';
-import { PricingSectionFragment } from '@/components/sections/PricingSection/fragment';
-import PlanFeature from '@/components/sections/PricingSection/PlanFeature';
-import PlanName from '@/components/sections/PricingSection/PlanName';
-import Price from '@/components/sections/PricingSection/Price';
-import {
-  highlightedPlanIndex,
-  planFeatureRows,
-  planTone,
-} from '@/components/sections/PricingSection/plans';
-import SectionTitle from '@/components/ui/SectionTitle';
-import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { type CSSProperties, useId } from 'react';
+import Chip from '@/components/ui/Chip';
 import { cn } from '@/utils/cn';
+import type { Plan } from '../fragment';
 import {
-  itemHeadingLevel,
-  type SectionHeadingLevel,
-} from '@/utils/headingLevel';
+  FeatureList,
+  MUTED,
+  PlanButton,
+  PlanDescription,
+  Price,
+} from '../PlanParts';
+import { ownFeatureRows } from '../plans';
 
 type Props = {
-  fragment: FragmentOf<typeof PricingSectionFragment>;
+  plans: Plan[];
+  highlighted: number;
   locale: string;
-  as?: SectionHeadingLevel;
 };
 
-/* Up to four plans share one row and its tracks (subgrid) so the parts line up */
-const ONE_ROW =
-  'lg:auto-cols-fr lg:grid-flow-col lg:grid-rows-[auto_auto_auto_auto_1fr] lg:gap-y-0';
-const GRID_BY_COUNT: Record<number, string> = {
-  1: `max-w-[400px] sm:max-lg:max-w-[816px] ${ONE_ROW}`,
-  2: `max-w-[520px] sm:max-w-[816px] ${ONE_ROW}`,
-  3: `max-sm:max-w-[520px] ${ONE_ROW}`,
-  4: `max-sm:max-w-[520px] ${ONE_ROW}`,
+/** Columns by plan count: one column on phones, side by side once each card has room */
+const COLUMNS: Record<number, string> = {
+  1: 'mx-auto max-w-[28rem]',
+  2: 'mx-auto max-w-[52rem] md:grid-cols-2',
+  3: 'mx-auto max-w-[32rem] lg:max-w-none lg:grid-cols-3',
+  4: 'md:grid-cols-2 xl:grid-cols-4',
 };
-const GRID_WRAP = 'max-sm:max-w-[520px] lg:grid-cols-3';
 
-/** Default variant: a row of white plan cards under a centred head with the billing toggle */
-const PlanCards = ({ fragment, locale, as = 'h2' }: Props) => {
-  const {
-    pricingSectionHeader: header,
-    pricingSectionSubheader: subheader,
-    plans,
-  } = readFragment(PricingSectionFragment, fragment);
+/** The featured plan's quiet corner mark: three translucent white rings around a 150px circle, clipped by the card */
+const RINGS =
+  "after:pointer-events-none after:absolute after:-top-[70px] after:-right-[70px] after:-z-10 after:size-[150px] after:rounded-full after:content-[''] after:shadow-[0_0_0_44px_rgb(255_255_255/0.08),0_0_0_92px_rgb(255_255_255/0.05),0_0_0_144px_rgb(255_255_255/0.03)]";
+
+/**
+ * `cards`: one card per plan, white with a hairline ring. The cards share
+ * their rows (subgrid), so names, prices, buttons and feature lists line up
+ * and every card is as tall as the tallest. The highlighted plan is a solid
+ * accent fill with white text, the accent glow under it, a translucent white
+ * badge and three faint rings in its top-right corner, which breathe slowly.
+ * The cards settle in side by side as they enter the view.
+ */
+const PlanCards = ({ plans, highlighted, locale }: Props) => {
   const uid = useId();
 
-  const PlanHeading = itemHeadingLevel(as);
-  const count = plans.length;
-  const oneRow = count <= 4;
-  const highlightedIndex = highlightedPlanIndex(plans);
-  const featureRows = planFeatureRows(plans);
-  const headingId = `${uid}-pricing`;
-
   return (
-    <section
-      id="pricing"
-      className="section"
-      aria-labelledby={header ? headingId : undefined}
-      aria-label={header ? undefined : uiString(locale, 'pricing')}
-    >
-      <BillingPeriodProvider className="container-page" locale={locale}>
-        <SectionTitle
-          id={headingId}
-          title={header}
-          paragraph={subheader}
-          align="center"
-          as={as}
-          h1Size="page"
-        >
-          <BillingToggle className="max-md:-mt-1 max-md:h-11" locale={locale} />
-        </SectionTitle>
+    <div className={cn('grid gap-[18px]', COLUMNS[plans.length] ?? COLUMNS[4])}>
+      {plans.map((plan, i) => {
+        const isHighlighted = i === highlighted;
+        const tone = isHighlighted ? 'accent' : 'default';
+        const headingId = `${uid}-${i}`;
 
-        <div
-          className={cn(
-            'reveal-stagger mx-auto grid gap-4',
-            GRID_BY_COUNT[count] ?? GRID_WRAP,
-          )}
-        >
-          {plans.map((plan, i) => {
-            const isHighlighted = i === highlightedIndex;
-            const planHeadingId = `${uid}-plan-${i}`;
-            const features = featureRows[i];
+        return (
+          <article
+            key={plan.id}
+            aria-labelledby={headingId}
+            className={cn(
+              'reveal relative isolate row-span-5 grid grid-rows-subgrid gap-y-0 overflow-hidden rounded-[30px] border p-7 md:p-[34px]',
+              isHighlighted
+                ? cn(
+                    'border-transparent bg-accent text-on-accent shadow-glow [--focus-halo:var(--accent)] [--focus-ring:var(--on-accent)]',
+                    RINGS,
+                    'breathe-after loop [--loop-scale:1.07] [--loop-time:36s]',
+                  )
+                : 'border-line bg-surface',
+            )}
+          >
+            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-2">
+              <h2 id={headingId} className="text-h3">
+                {plan.name}
+              </h2>
+              {isHighlighted && plan.highlightLabel && (
+                <Chip tone="inverse">{plan.highlightLabel}</Chip>
+              )}
+            </div>
 
-            return (
-              <article
-                key={plan.id}
-                aria-labelledby={planHeadingId}
-                className={cn(
-                  'card sm:max-lg:grid sm:max-lg:grid-cols-2 sm:max-lg:grid-rows-[auto_auto_1fr] sm:max-lg:items-start sm:max-lg:gap-x-10',
-                  oneRow
-                    ? 'lg:row-span-5 lg:grid lg:grid-rows-subgrid'
-                    : 'lg:flex lg:flex-col',
-                  isHighlighted
-                    ? 'ring-grad p-[27px] shadow-feature max-md:p-[23px]'
-                    : 'p-7 max-md:p-6',
-                )}
-              >
-                <div className="sm:max-lg:col-start-1">
-                  <div className="flex items-center gap-2.5">
-                    <PlanName
-                      headingLevel={PlanHeading}
-                      id={planHeadingId}
-                      tone={planTone(i, count)}
-                    >
-                      {plan.tierName}
-                    </PlanName>
-                    {isHighlighted && plan.highlightLabel && (
-                      <span className="badge badge-accent ms-auto h-7 px-3 text-[12.5px]">
-                        {plan.highlightLabel}
-                      </span>
-                    )}
-                  </div>
-                  <div className="mt-2 text-body text-ink-2 leading-[1.55] lg:min-h-[4.65em] [&_p+p]:mt-2">
-                    <DatoStructuredText data={plan.tierDescription} />
-                  </div>
-                </div>
+            <div>
+              <PlanDescription
+                plan={plan}
+                tone={tone}
+                className="mt-2 text-small"
+              />
+            </div>
 
-                {/* One element, so the subgrid keeps one row for the price */}
-                <div className="mt-5 sm:max-lg:col-start-1">
-                  <Price
-                    monthly={plan.monthlyPrice}
-                    yearly={plan.yearlyPrice}
-                    locale={locale}
-                  />
-                  {plan.priceNote && (
-                    <p className="mt-2 text-small text-ink-3">
-                      {plan.priceNote}
-                    </p>
-                  )}
-                </div>
+            <div
+              className="mt-[22px]"
+              // The prices change one plan after the other (styles/motion.css)
+              style={{ '--plan-i': i } as CSSProperties}
+            >
+              <Price
+                monthly={plan.monthlyPrice}
+                yearly={plan.yearlyPrice}
+                locale={locale}
+                tone={tone}
+              />
+              {plan.priceNote && (
+                <p className={cn('mt-2 text-[0.875rem]', MUTED[tone])}>
+                  {plan.priceNote}
+                </p>
+              )}
+            </div>
 
-                <button
-                  type="button"
-                  className={cn(
-                    'btn mt-5 w-full sm:max-lg:col-start-1',
-                    isHighlighted ? 'btn-primary' : 'btn-secondary',
-                  )}
-                >
-                  {plan.ctaLabel || uiString(locale, 'startFreeTrial')}
-                </button>
+            <div className="mt-[26px]">
+              <PlanButton
+                plan={plan}
+                primary={false}
+                locale={locale}
+                size="lg"
+                className="w-full"
+              />
+            </div>
 
-                {features.length > 0 ? (
-                  <ul className="mt-5 grid content-start border-line border-t pt-4 sm:max-lg:col-start-2 sm:max-lg:row-span-3 sm:max-lg:row-start-1 sm:max-lg:mt-0 sm:max-lg:border-t-0 sm:max-lg:border-l sm:max-lg:pt-0 sm:max-lg:pl-8">
-                    {features.map((feature) => (
-                      <PlanFeature
-                        key={feature.key}
-                        text={feature.text}
-                        included={feature.included}
-                        locale={locale}
-                      />
-                    ))}
-                  </ul>
-                ) : (
-                  // Keeps the subgrid's fifth row so the cards stay the same height
-                  <div aria-hidden="true" />
-                )}
-              </article>
-            );
-          })}
-        </div>
-      </BillingPeriodProvider>
-    </section>
+            <div
+              className={cn(
+                'mt-7 border-t pt-[26px]',
+                isHighlighted ? 'border-on-accent/20' : 'border-line',
+              )}
+            >
+              <FeatureList
+                rows={ownFeatureRows(plan)}
+                locale={locale}
+                tone={tone}
+                className="text-small"
+              />
+            </div>
+          </article>
+        );
+      })}
+    </div>
   );
 };
 
