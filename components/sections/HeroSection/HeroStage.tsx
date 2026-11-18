@@ -34,18 +34,21 @@ const CAPSULE =
 const FLOAT = 'arrive-float loop absolute z-10 rounded-[18px] shadow-float';
 
 // Where the first, second and third card sit on the stage, and how wide; then when it
-// arrives and its own slow hover (styles/motion.css .arrive-float), so no two move together
+// arrives and its own slow hover (styles/motion.css .arrive-float), so no two move together.
+// Below 1024px the stage stands alone under the copy, so the capsules and the pill move
+// 75px left to sit on its centre line and the last card hangs out as far as the first
 const SLOTS = [
   'top-[92px] left-[-40px] w-[272px] [--arrive:560ms] [--float-time:15s] [--float-y:-6px]',
   'top-[424px] left-[-8px] w-[284px] [--arrive:700ms] [--float-time:19s] [--float-y:-5px]',
-  'top-[512px] left-[308px] w-[272px] [--arrive:840ms] [--float-time:17s] [--float-y:-7px]',
+  'top-[512px] left-[308px] w-[272px] max-lg:left-[348px] [--arrive:840ms] [--float-time:17s] [--float-y:-7px]',
 ];
 
 /**
  * The picture beside the hero copy: the block's images as two tall capsules,
  * with small pieces of the product floating over them. It is drawn on a fixed
- * 580 by 650 stage and scaled down as a whole on smaller screens, so the
- * composition never reflows. Decorative: hidden from assistive technology.
+ * 580 by 650 stage and scaled down as a whole on smaller screens (to 80% from
+ * 1024 to 1279px, so the copy beside it keeps room), so the composition never
+ * reflows. Decorative: hidden from assistive technology.
  *
  * Motion (styles/motion.css), once on load: the capsules settle, the live
  * status and the cards pop in one after another and their charts draw; after
@@ -63,7 +66,7 @@ const HeroStage = ({
   <div
     aria-hidden="true"
     className={cn(
-      'relative mx-auto h-[650px] w-[580px] shrink-0 select-none text-[12.5px] leading-[1.45] [zoom:0.5] min-[420px]:[zoom:0.62] sm:[zoom:0.9] lg:[zoom:1]',
+      'relative mx-auto h-[650px] w-[580px] shrink-0 select-none text-[12.5px] leading-[1.45] [zoom:0.43] min-[375px]:[zoom:0.5] min-[420px]:[zoom:0.56] sm:[zoom:0.7] lg:[zoom:0.8] xl:[zoom:1]',
       className,
     )}
   >
@@ -73,7 +76,7 @@ const HeroStage = ({
     <div
       className={cn(
         CAPSULE,
-        'arrive-settle top-[30px] left-[150px] h-[596px] w-[250px] [--arrive:120ms]',
+        'arrive-settle top-[30px] left-[150px] max-lg:left-[75px] h-[596px] w-[250px] [--arrive:120ms]',
       )}
     >
       <DatoImage
@@ -90,7 +93,7 @@ const HeroStage = ({
       <div
         className={cn(
           CAPSULE,
-          'arrive-settle top-[122px] left-[422px] h-[412px] w-[158px] [--arrive:260ms]',
+          'arrive-settle top-[122px] left-[422px] max-lg:left-[347px] h-[412px] w-[158px] [--arrive:260ms]',
         )}
       >
         <DatoImage
@@ -109,7 +112,7 @@ const HeroStage = ({
       <div
         className={cn(
           FLOAT,
-          '[--arrive:440ms] [--float-time:21s] [--float-y:-4px] top-[-4px] left-[300px] flex h-10 items-center gap-2 rounded-full bg-surface pr-4 pl-2.5 font-semibold whitespace-nowrap text-fg',
+          '[--arrive:440ms] [--float-time:21s] [--float-y:-4px] top-[-4px] left-[300px] max-lg:left-[225px] flex h-10 items-center gap-2 rounded-full bg-surface pr-4 pl-2.5 font-semibold whitespace-nowrap text-fg',
         )}
       >
         <span className="grid size-5 shrink-0 place-items-center rounded-full bg-accent text-on-accent">
