@@ -1,12 +1,13 @@
 import type { RawApiTypes } from '@datocms/cma-client-node';
 import type { NextRequest } from 'next/server';
 import { hasBearerToken, withCORS } from '@/app/api/utils';
+import { isApiToken } from '@/lib/datocms/apiToken';
 import type { SiteLocale } from '@/lib/datocms/graphql';
 import { recordToWebsiteRoute } from '@/lib/datocms/recordInfo';
 import { websiteBaseUrl } from '@/lib/websiteBaseUrl';
 
 /*
- * The Web Previews plugin calls this endpoint (configured by /api/post-install)
+ * The Web Previews plugin calls this endpoint (configured by try.datocms.com)
  * whenever an editor opens a record in DatoCMS, and shows the links it returns
  * in the record's sidebar.
  */
@@ -27,15 +28,24 @@ export async function POST(request: NextRequest) {
 
   const { item, itemType, locale }: PreviewLinksRequest = await request.json();
 
-  const url = recordToWebsiteRoute(
+  // try.datocms.com puts the demo project's API token in this endpoint's URL
+  const apiToken =
+    request.nextUrl.searchParams.get('datocmsApiToken') ?? undefined;
+  if (!isApiToken(apiToken))
+    return new Response('Missing datocmsApiToken', withCORS({ status: 422 }));
+
+  const route = recordToWebsiteRoute(
     itemType.attributes.api_key,
     item.attributes.slug as string,
     locale,
   );
 
-  if (!url) {
+  if (!route) {
     return Response.json({ previewLinks: [] }, withCORS());
   }
+
+  // The token in front of the page picks the project (see proxy.ts)
+  const url = `/${apiToken}${route}`;
 
   const previewLinks = [];
 

@@ -10,6 +10,8 @@
 
 # A Company Website Demo using Next.js 16 and DatoCMS
 
+> **This branch powers the demo projects of [try.datocms.com](https://try.datocms.com).** One deployment serves every demo project: the project's API token arrives in the first segment of the URL (`/<token>/en/home`), `proxy.ts` moves it to a cookie, and every query uses it (`lib/datocms/apiToken.ts`). Nothing is cached or prerendered, and there is no post-install step, because try.datocms.com sets up each project itself. To start your own project, use the `main` branch.
+
 This example showcases a TypeScript Next.js 16 website with App Router (app) — using [DatoCMS](https://www.datocms.com/) as the data source.
 
 ## Next.js 16 Features

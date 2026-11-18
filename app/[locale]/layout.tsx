@@ -40,6 +40,10 @@ const query = graphql(
 );
 
 // Every page gets the favicon set in the DatoCMS project settings
+// Every page reads the visitor's API token from the request (see
+// lib/datocms/apiToken.ts), so none can be rendered ahead of time
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata() {
   const { isEnabled: isDraft } = await draftMode();
   const data = await executeQuery(query, { includeDrafts: isDraft });

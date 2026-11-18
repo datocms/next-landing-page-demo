@@ -3,12 +3,13 @@ import { parseHTML } from 'linkedom';
 import { cookies, draftMode } from 'next/headers';
 import type { NextRequest } from 'next/server';
 import { hasBearerToken, withCORS } from '@/app/api/utils';
+import { API_TOKEN_HEADER, isApiToken } from '@/lib/datocms/apiToken';
 import type { SiteLocale } from '@/lib/datocms/graphql';
 import { recordToWebsiteRoute } from '@/lib/datocms/recordInfo';
 
 /*
  * The SEO/Readability Analysis plugin calls this endpoint (configured by
- * /api/post-install) while an editor works on a record: it finds the record's
+ * try.datocms.com) while an editor works on a record: it finds the record's
  * page, renders it with the draft content, and returns the page's HTML, title
  * and description for the plugin to analyze.
  */
@@ -25,6 +26,8 @@ export async function GET(request: NextRequest) {
   const itemTypeApiKey = searchParams.get('itemTypeApiKey');
   const locale = searchParams.get('locale');
   const sandboxEnvironmentId = searchParams.get('sandboxEnvironmentId');
+  // try.datocms.com puts the demo project's API token in this endpoint's URL
+  const apiToken = searchParams.get('datocmsApiToken') ?? undefined;
 
   if (!hasBearerToken(request, process.env.SEO_SECRET_TOKEN))
     return new Response('Invalid token', withCORS({ status: 401 }));
@@ -35,7 +38,8 @@ export async function GET(request: NextRequest) {
       !itemTypeApiKey ||
       !itemTypeId ||
       !locale ||
-      !sandboxEnvironmentId
+      !sandboxEnvironmentId ||
+      !isApiToken(apiToken)
     ) {
       return new Response(
         'Missing required parameters!',
@@ -45,7 +49,7 @@ export async function GET(request: NextRequest) {
 
     // Read the record from the environment the editor is working in
     const client = buildClient({
-      apiToken: process.env.DATOCMS_CMA_TOKEN || '',
+      apiToken,
       environment: sandboxEnvironmentId,
     });
 
@@ -72,7 +76,7 @@ export async function GET(request: NextRequest) {
 
     const cookieStore = await cookies();
     const pageResponse = await fetch(new URL(permalink, request.url), {
-      headers: { cookie: cookieStore.toString() },
+      headers: { cookie: cookieStore.toString(), [API_TOKEN_HEADER]: apiToken },
     });
 
     draft.disable();

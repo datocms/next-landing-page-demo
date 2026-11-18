@@ -5,6 +5,7 @@ import type {
   GlobalPageProps,
   ResolvedGlobalPageProps,
 } from '@/utils/globalPageProps';
+import { getApiToken, getBaseEditingUrl } from '../apiToken';
 import { executeQuery } from '../executeQuery';
 import { type BuildVariablesFn, resolveRouteContext } from '../routeContext';
 import type { ContentComponent, RealtimeComponent } from './types';
@@ -31,7 +32,7 @@ type Options<PageProps extends ResolvedGlobalPageProps, Result, Variables> = {
  *
  * It runs the route's query, then renders:
  * - with Draft Mode off: `contentComponent` on the server, with the published
- *   content, cached until DatoCMS reports a change;
+ *   content;
  * - with Draft Mode on: `realtimeComponent`, a client component that receives
  *   draft content and re-renders through the Real-time Updates API as editors
  *   type, without a page reload.
@@ -56,6 +57,10 @@ export function generatePageComponent<
     });
 
     const { realtimeComponent: RealTime, contentComponent: Content } = options;
+    const apiToken = includeDrafts ? await getApiToken() : undefined;
+    const baseEditingUrl = apiToken
+      ? await getBaseEditingUrl(apiToken)
+      : undefined;
 
     // Subscribes with the same draft settings executeQuery used to fetch `data`
     const page = includeDrafts ? (
@@ -64,11 +69,11 @@ export function generatePageComponent<
         query={options.query}
         variables={variables}
         initialData={data}
-        token={process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!}
+        token={apiToken!}
         includeDrafts
         excludeInvalid
-        contentLink="v1"
-        baseEditingUrl={process.env.DATOCMS_BASE_EDITING_URL}
+        contentLink={baseEditingUrl ? 'v1' : undefined}
+        baseEditingUrl={baseEditingUrl}
       />
     ) : (
       <Content {...pageProps} data={data} />

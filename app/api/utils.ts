@@ -1,4 +1,4 @@
-/** Whether the request carries `Authorization: Bearer <secret>`, as /api/post-install configures every webhook and plugin */
+/** Whether the request carries `Authorization: Bearer <secret>`, as try.datocms.com configures every plugin */
 export function hasBearerToken(request: Request, secret: string | undefined) {
   const token = request.headers.get('authorization')?.replace(/^Bearer /, '');
   return Boolean(token) && token === secret;

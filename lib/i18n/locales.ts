@@ -10,9 +10,9 @@ const query = graphql(/* GraphQL */ `
   }
 `);
 
-/** The locales enabled in the DatoCMS project, in the order set in its settings */
-export async function getAvailableLocales() {
-  const { _site } = await executeQuery(query);
+/** The locales enabled in the DatoCMS project, in the order set in its settings (the request's project, or the token's) */
+export async function getAvailableLocales(apiToken?: string) {
+  const { _site } = await executeQuery(query, { apiToken });
   return _site.locales;
 }
 
