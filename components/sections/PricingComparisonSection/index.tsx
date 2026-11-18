@@ -3,6 +3,11 @@ import {
   highlightedPlanIndex,
 } from '@/components/sections/PricingSection/plans';
 import { CheckIcon, DashIcon } from '@/components/ui/icons';
+import {
+  ancestorEditUrl,
+  fieldEditUrl,
+  siblingEditUrl,
+} from '@/lib/datocms/contentLink';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
@@ -71,7 +76,7 @@ const PricingComparisonSection = ({ fragment, locale }: Props) => {
   return (
     <section className="section" aria-label={uiString(locale, 'comparePlans')}>
       <div className="container-page">
-        <div className="reveal card overflow-x-auto lg:overflow-visible">
+        <div className="card overflow-x-auto lg:overflow-visible">
           <table
             className={cn(
               'w-full table-fixed border-separate border-spacing-0 text-left text-ui sm:text-small',
@@ -112,7 +117,13 @@ const PricingComparisonSection = ({ fragment, locale }: Props) => {
                     >
                       {plan.name}
                     </span>
-                    <span className="mt-0.5 block text-fg-muted sm:whitespace-nowrap">
+                    <span
+                      data-datocms-content-link-url={fieldEditUrl(
+                        plan.name,
+                        'monthly_price',
+                      )}
+                      className="mt-0.5 block text-fg-muted sm:whitespace-nowrap"
+                    >
                       {/* On phones the period goes under the price, the same in every column */}
                       <span className="block sm:inline">
                         {formatPrice(plan.monthlyPrice, locale)}
@@ -167,6 +178,19 @@ const PricingComparisonSection = ({ fragment, locale }: Props) => {
                       {row.cells.map((limit, i) => (
                         <td
                           key={plans[i].id}
+                          // The plan's own row (its value, or its label for a
+                          // plain yes), else the plan's limits, where it is added
+                          data-datocms-content-link-url={
+                            limit
+                              ? siblingEditUrl(
+                                  limit.label,
+                                  limit.value ? 'value' : 'label',
+                                )
+                              : (ancestorEditUrl(
+                                  plans[i].limits[0]?.label,
+                                  2,
+                                ) ?? fieldEditUrl(plans[i].name))
+                          }
                           className={cn(
                             CELL,
                             columnFill(i),

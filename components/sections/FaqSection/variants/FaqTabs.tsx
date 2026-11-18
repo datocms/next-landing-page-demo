@@ -1,7 +1,6 @@
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { FaqSectionFragment } from '../fragment';
-import SettleIn from '../SettleIn';
 import AccordionList from './AccordionList';
 import TabsList from './TabsList';
 
@@ -25,14 +24,14 @@ const FaqTabs = ({ fragment }: Props) => {
 
   return (
     <section className="section">
-      <SettleIn className="container-page">
+      <div className="container-page">
         <div className="max-lg:hidden">
           <TabsList items={items} />
         </div>
         <div className="lg:hidden">
           <AccordionList items={items} />
         </div>
-      </SettleIn>
+      </div>
     </section>
   );
 };

@@ -6,6 +6,7 @@ import { longFormNodeRules } from '@/components/datocms/DatoStructuredText/longF
 import TableOfContents, {
   MIN_TOC_HEADINGS,
 } from '@/components/ui/TableOfContents';
+import { fieldEditUrl } from '@/lib/datocms/contentLink';
 import type { ContentComponent } from '@/lib/datocms/realtime/types';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { bodyHeadingTag } from '@/utils/headingLevel';
@@ -50,15 +51,28 @@ const Content: ContentComponent<PageProps, Query> = ({
         {updated && (
           <p className="mt-4 text-small text-fg-muted">
             {uiString(locale, 'lastUpdated')}{' '}
-            <time dateTime={updated.iso}>{updated.label}</time>
+            <time
+              dateTime={updated.iso}
+              data-datocms-content-link-url={fieldEditUrl(title)}
+            >
+              {updated.label}
+            </time>
           </p>
         )}
       </header>
 
       {/* The text in the centred reading column; from 1280px the "On this page" list sits beside it */}
       <div className="mt-12 lg:mt-16 xl:grid xl:grid-cols-[minmax(0,1fr)_68ch_minmax(0,1fr)] xl:gap-x-12">
-        {/* Rich text wraps list items in <p>: keep those items as tight as plain ones */}
-        <div className="prose mx-auto w-full max-w-measure min-w-0 [&_li>p]:mt-0 xl:col-start-2">
+        {/* Rich text wraps list items in <p>: keep those items as tight as plain ones.
+            Content Link: the field's only marker can sit on the skipped opening
+            heading, so the text opens the content field itself */}
+        <div
+          data-datocms-content-link-url={fieldEditUrl(
+            title,
+            'content.{locale}',
+          )}
+          className="prose mx-auto w-full max-w-measure min-w-0 [&_li>p]:mt-0 xl:col-start-2"
+        >
           <DatoStructuredText
             data={content}
             customNodeRules={[

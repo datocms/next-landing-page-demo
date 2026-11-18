@@ -1,5 +1,6 @@
 import { stripStega } from '@datocms/content-link';
 import Image from 'next/image';
+import { altWithMarker } from '@/lib/datocms/contentLink';
 import type { ResultOf } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
@@ -29,7 +30,7 @@ const BrandLogo = ({ brand, locale, className }: Props) => {
     <Image
       src={brand.logo.url}
       // Inside a link the link carries the name
-      alt={href ? '' : name}
+      alt={altWithMarker(href ? '' : name, brand.logo.alt)}
       width={brand.logo.width ?? 120}
       height={brand.logo.height ?? 28}
       sizes="160px"

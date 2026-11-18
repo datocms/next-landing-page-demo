@@ -7,7 +7,6 @@ import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
 import { hasStructuredText } from '@/utils/structuredText';
 import { StepsSectionFragment } from './fragment';
-import SettleIn from './SettleIn';
 import StepsRail from './variants/StepsRail';
 
 type Props = {
@@ -57,7 +56,7 @@ const StepsSection = ({ fragment, locale }: Props) => {
 
   return (
     <section className="section">
-      <SettleIn className="container-page">
+      <div className="container-page">
         {steps.length > 0 && (
           <ol
             style={{ '--cols': cols } as CSSProperties}
@@ -72,8 +71,6 @@ const StepsSection = ({ fragment, locale }: Props) => {
               return (
                 <li
                   key={step.id}
-                  data-settle-item=""
-                  style={{ '--i': index } as CSSProperties}
                   className={cn(
                     'relative flex flex-col gap-7 rounded-card p-6 sm:p-7 md:grid md:grid-cols-2 md:items-center md:gap-8 xl:grid-cols-1 xl:items-stretch xl:gap-7',
                     anyCard && 'xl:row-span-2 xl:grid-rows-subgrid',
@@ -131,7 +128,7 @@ const StepsSection = ({ fragment, locale }: Props) => {
             })}
           </ol>
         )}
-      </SettleIn>
+      </div>
     </section>
   );
 };

@@ -3,6 +3,7 @@ import {
   Image as ReactDatocmsImage,
 } from 'react-datocms/image';
 import { RSCImage } from 'react-datocms/rsc-image';
+import { altWithMarker } from '@/lib/datocms/contentLink';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { ResponsiveImageFragment } from './fragment';
 
@@ -10,7 +11,11 @@ type ImageProps = Omit<ImagePropTypes, 'data'>;
 
 type Props = ImageProps & {
   fragment: FragmentOf<typeof ResponsiveImageFragment>;
-  /** Replaces the asset's alt text: pass "" when the image repeats text next to it (an avatar beside a name) */
+  /**
+   * Replaces the asset's alt text: pass "" when the image repeats text next to
+   * it (an avatar beside a name). In Draft Mode the asset alt's invisible
+   * Content Link marker is kept, so the image still opens its field.
+   */
   alt?: string;
 };
 
@@ -37,14 +42,18 @@ export default function DatoImage({ fragment, alt, ...rest }: Props) {
   return (
     <ReactDatocmsImage
       {...withFillPlaceholder(rest)}
-      data={alt === undefined ? data : { ...data, alt }}
+      data={
+        alt === undefined
+          ? data
+          : { ...data, alt: altWithMarker(alt, data.alt) }
+      }
     />
   );
 }
 
 type InlineProps = {
   fragment: FragmentOf<typeof ResponsiveImageFragment>;
-  /** Replaces the asset's alt text; "" for a decorative image */
+  /** Replaces the asset's alt text; "" for a decorative image (keeps the Content Link marker) */
   alt?: string;
   /** The HTML `sizes` of the frame, for example "32px" */
   sizes: string;
@@ -66,7 +75,11 @@ export function DatoInlineImage({
   const data = readFragment(ResponsiveImageFragment, fragment);
   return (
     <RSCImage
-      data={alt === undefined ? data : { ...data, alt }}
+      data={
+        alt === undefined
+          ? data
+          : { ...data, alt: altWithMarker(alt, data.alt) }
+      }
       sizes={sizes}
       priority={priority}
       pictureStyle={{ display: 'contents' }}

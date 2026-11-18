@@ -5,7 +5,6 @@ import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
 import styles from '../FaqSection.module.css';
 import FloatingMarks from '../FloatingMarks';
-import SettleIn from '../SettleIn';
 
 type Props = {
   fragment: FragmentOf<typeof FaqSectionFragment>;
@@ -34,7 +33,7 @@ const FaqColumns = ({ fragment }: Props) => {
   return (
     <section className={cn(styles.root, 'section relative isolate')}>
       <FloatingMarks layout="columns" />
-      <SettleIn className="container-page">
+      <div className="container-page">
         <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-12">
           {questions.map((question, index) => {
             const alone =
@@ -45,7 +44,6 @@ const FaqColumns = ({ fragment }: Props) => {
                 key={question.id}
                 style={{ '--i': index } as CSSProperties}
                 className={cn(
-                  styles.settleItem,
                   styles.tile,
                   'flex gap-5 rounded-card p-6 sm:p-8',
                   PATTERN[index % PATTERN.length],
@@ -73,7 +71,7 @@ const FaqColumns = ({ fragment }: Props) => {
             );
           })}
         </ul>
-      </SettleIn>
+      </div>
     </section>
   );
 };

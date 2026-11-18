@@ -36,6 +36,7 @@ export const FeatureListSectionFragment = graphql(
         # SVG icons have no responsiveImage: they are drawn from their url
         icon {
           url
+          alt
           format
           width
           height

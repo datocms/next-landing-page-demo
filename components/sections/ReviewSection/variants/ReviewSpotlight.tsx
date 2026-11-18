@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import DatoImage from '@/components/datocms/DatoImage';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import Rating from '@/components/ui/Rating';
+import { fieldEditUrl } from '@/lib/datocms/contentLink';
 import { cn } from '@/utils/cn';
 import ReviewPerson from '../ReviewPerson';
 import { type Reviews, readTestimonial } from '../testimonial';
@@ -36,7 +37,7 @@ const QuoteTile = ({
   return (
     <figure
       className={cn(
-        'reveal flex flex-col rounded-card p-6 sm:p-8',
+        'flex flex-col rounded-card p-6 sm:p-8',
         large && 'lg:p-12',
         fill === 'ink' && 'on-ink bg-ink text-surface',
         fill === 'tint' && 'bg-tint text-fg',
@@ -47,6 +48,7 @@ const QuoteTile = ({
       {rating ? (
         <Rating
           value={rating}
+          editUrl={fieldEditUrl(name, 'rating')}
           locale={locale}
           tone={dark ? 'light' : 'default'}
         />
@@ -123,7 +125,7 @@ const ReviewSpotlight = ({
         </QuoteTile>
         <div
           aria-hidden="true"
-          className="reveal relative min-h-[20rem] overflow-hidden rounded-t-full rounded-b-card bg-tint [--reveal-delay:80ms] max-lg:mx-auto max-lg:w-[min(18rem,70%)]"
+          className="relative min-h-[20rem] overflow-hidden rounded-t-full rounded-b-card bg-tint max-lg:mx-auto max-lg:w-[min(18rem,70%)]"
         >
           {photo && (
             <DatoImage
@@ -148,7 +150,7 @@ const ReviewSpotlight = ({
                 review={review}
                 locale={locale}
                 fill={index === 0 ? 'ink' : 'subtle'}
-                className="[--reveal-delay:160ms]"
+                className=""
               />
             ))}
           </div>

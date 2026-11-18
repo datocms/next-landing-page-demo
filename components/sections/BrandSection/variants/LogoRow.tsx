@@ -24,7 +24,7 @@ const LogoRow = ({ fragment, locale }: Props) => {
     >
       <ul className="grid grid-cols-2 items-center justify-items-center gap-x-6 gap-y-8 sm:grid-cols-3 lg:flex lg:justify-between lg:gap-x-8">
         {brands.map((brand) => (
-          <li key={brand.id} className="reveal flex min-w-0 items-center">
+          <li key={brand.id} className="flex min-w-0 items-center">
             <BrandLogo
               brand={brand}
               locale={locale}

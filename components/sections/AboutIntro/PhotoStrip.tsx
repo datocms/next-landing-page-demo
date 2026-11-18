@@ -46,7 +46,6 @@ const PhotoStrip = ({ images, leadsPage, className }: Props) => {
                 : '(min-width: 1264px) 588px, (min-width: 640px) 50vw, 100vw'
             }
             className={cn(
-              'reveal',
               (index === 0 && three) || photos.length === 1
                 ? 'max-sm:col-span-2'
                 : undefined,

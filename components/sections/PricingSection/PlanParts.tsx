@@ -1,6 +1,7 @@
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import Button from '@/components/ui/Button';
 import { CheckIcon, DashIcon } from '@/components/ui/icons';
+import { fieldEditUrl } from '@/lib/datocms/contentLink';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import { hasStructuredText } from '@/utils/structuredText';
@@ -18,6 +19,8 @@ export const MUTED: Record<PlanTone, string> = {
 
 type PriceProps = {
   monthly: number;
+  /** The plan's name: in Draft Mode each figure opens its price field (Content Link) */
+  source?: string;
   /** When set, the price follows the nearest BillingScope */
   yearly?: number | null;
   locale: string;
@@ -42,9 +45,11 @@ const Figure = ({
   tone,
   size,
   swaps = false,
+  source,
   className,
 }: {
   amount: number;
+  source?: string;
   period: 'perMonth' | 'perYear';
   /** The plan has both prices, so this figure trades places with the other one */
   swaps?: boolean;
@@ -54,6 +59,10 @@ const Figure = ({
   className?: string;
 }) => (
   <span
+    data-datocms-content-link-url={fieldEditUrl(
+      source,
+      period === 'perYear' ? 'yearly_price' : 'monthly_price',
+    )}
     // styles/motion.css: the figure that leaves lifts out, the one that arrives rises in
     data-price={
       swaps ? (period === 'perYear' ? 'yearly' : 'monthly') : undefined
@@ -88,12 +97,14 @@ export const Price = ({
   locale,
   tone = 'default',
   size = 'lg',
+  source,
   className,
 }: PriceProps) => (
   <p className={cn('grid', className)}>
     <Figure
       amount={monthly}
       period="perMonth"
+      source={source}
       locale={locale}
       tone={tone}
       size={size}
@@ -108,6 +119,7 @@ export const Price = ({
       <Figure
         amount={yearly}
         period="perYear"
+        source={source}
         locale={locale}
         tone={tone}
         size={size}
@@ -198,6 +210,7 @@ export const FeatureList = ({
       {rows.map((row) => (
         <li
           key={row.key}
+          data-datocms-content-link-url={row.editUrl}
           className={cn('flex gap-2.5', !row.included && MUTED[tone])}
         >
           <span

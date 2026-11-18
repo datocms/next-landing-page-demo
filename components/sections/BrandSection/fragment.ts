@@ -9,6 +9,7 @@ export const BrandSectionFragment = graphql(/* GraphQL */ `
       id
       logo {
         url
+        alt
         width
         height
         format

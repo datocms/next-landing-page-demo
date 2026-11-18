@@ -45,9 +45,7 @@ const DetailSection = ({ fragment, as = 'h2' }: Props) => {
       className="section"
     >
       <div className="container-page grid items-center gap-y-10 lg:grid-cols-2 lg:gap-x-[88px]">
-        <div
-          className={cn('reveal min-w-0', photo && !imageAtEnd && 'lg:order-2')}
-        >
+        <div className={cn('min-w-0', photo && !imageAtEnd && 'lg:order-2')}>
           <DetailText
             details={details}
             as={as}
@@ -62,7 +60,7 @@ const DetailSection = ({ fragment, as = 'h2' }: Props) => {
             radius="large"
             focalPoint={image.focalPoint}
             sizes="(min-width: 1184px) 580px, (min-width: 1024px) 50vw, 100vw"
-            className={cn('reveal frame-media', !imageAtEnd && 'lg:order-1')}
+            className={cn('frame-media', !imageAtEnd && 'lg:order-1')}
           />
         )}
       </div>

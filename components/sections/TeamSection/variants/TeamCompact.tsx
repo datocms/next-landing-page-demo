@@ -29,7 +29,7 @@ const TeamCompact = ({ fragment, globalPageProps }: Props) => {
       <div className="container-page">
         <ul className="grid gap-[18px] md:grid-cols-2 lg:grid-cols-3">
           {members.map((member) => (
-            <li key={member.id} className="reveal">
+            <li key={member.id}>
               <AppLink
                 href={authorUrl(globalPageProps, member.slug)}
                 className="tile group flex h-full items-center gap-4 p-5 transition-[background-color,translate] duration-200 ease-[cubic-bezier(0.2,0.7,0.2,1)] hover:bg-tint motion-safe:hover:-translate-y-0.5"

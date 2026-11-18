@@ -7,6 +7,7 @@ export const FooterFragment = graphql(/* GraphQL */ `
     }
     footerLogo {
       url
+      alt
       height
       width
     }
@@ -16,6 +17,7 @@ export const FooterFragment = graphql(/* GraphQL */ `
       id
       icon {
         url
+        alt
       }
     }
     footerLinks {

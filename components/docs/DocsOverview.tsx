@@ -37,7 +37,7 @@ function flatten(
  * The shape of the documentation on its home page: one white card per
  * top-level section: a numbered square, the section's title and description,
  * and beside it (under it on phones) every page of the section as a row that
- * answers the pointer with an arrow, in two columns from 640px. The cards settle in as they enter the view.
+ * answers the pointer with an arrow, in two columns from 640px.
  */
 const DocsOverview = ({ sections, globalPageProps, className }: Props) => {
   if (!sections.length) return null;
@@ -47,7 +47,7 @@ const DocsOverview = ({ sections, globalPageProps, className }: Props) => {
     <section aria-labelledby="docs-overview-title" className={className}>
       <h2
         id="docs-overview-title"
-        className="reveal font-semibold text-[clamp(1.5rem,2.2vw,1.875rem)] leading-[1.1] tracking-[-0.04em]"
+        className="font-semibold text-[clamp(1.5rem,2.2vw,1.875rem)] leading-[1.1] tracking-[-0.04em]"
       >
         {uiString(locale, 'documentation')}
       </h2>
@@ -60,7 +60,7 @@ const DocsOverview = ({ sections, globalPageProps, className }: Props) => {
           return (
             <li
               key={section.id}
-              className="reveal card grid gap-1 p-2 sm:p-3 md:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] md:gap-4"
+              className="card grid gap-1 p-2 sm:p-3 md:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] md:gap-4"
             >
               <AppLink
                 href={docsPageUrl(globalPageProps, section.slug)}

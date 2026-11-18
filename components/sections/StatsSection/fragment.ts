@@ -9,6 +9,7 @@ export const StatsSectionFragment = graphql(/* GraphQL */ `
       quantity
       icon {
         url
+        alt
         width
         height
       }

@@ -1,12 +1,14 @@
 import Image from 'next/image';
 import { DatoInlineImage } from '@/components/datocms/DatoImage';
 import type { ResponsiveImageFragment } from '@/components/datocms/DatoImage/fragment';
+import { altWithMarker } from '@/lib/datocms/contentLink';
 import type { FragmentOf } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
 
 /** A CMS icon as the Features block queries it */
 export type CmsIcon = {
   url: string;
+  alt?: string | null;
   format?: string | null;
   width?: number | null;
   height?: number | null;
@@ -54,7 +56,7 @@ const FeatureIcon = ({ icon, size = 'md', className }: Props) => {
       ) : (
         <Image
           src={icon.url}
-          alt=""
+          alt={altWithMarker('', icon.alt)}
           width={icon.width ?? 26}
           height={icon.height ?? 26}
           className={cn(

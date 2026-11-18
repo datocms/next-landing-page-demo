@@ -9,6 +9,7 @@ export const IntegrationsSectionFragment = graphql(/* GraphQL */ `
       # one-colour SVGs, drawn as a mask so they take the text colour
       icon {
         url
+        alt
         width
         height
       }

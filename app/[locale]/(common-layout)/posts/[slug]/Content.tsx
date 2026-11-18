@@ -99,7 +99,11 @@ const Content: ContentComponent<PageProps, Query> = ({
           <div className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-ui text-fg-muted">
             <Byline author={author} href={authorHref} />
             {post._publishedAt && (
-              <PostDate date={post._publishedAt} locale={locale} />
+              <PostDate
+                date={post._publishedAt}
+                locale={locale}
+                source={post.title}
+              />
             )}
           </div>
         </header>

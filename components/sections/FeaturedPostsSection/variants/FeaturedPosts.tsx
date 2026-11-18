@@ -31,7 +31,7 @@ const FeaturedPosts = ({
           variant="featured"
           sizes={FEATURED_SIZES}
           headingLevel={headingLevel}
-          className="reveal lg:col-span-8"
+          className="lg:col-span-8"
         />
         {side.length > 0 && (
           <div className="grid gap-x-7 gap-y-12 md:grid-cols-2 lg:col-span-4 lg:grid-cols-1 lg:content-start lg:gap-y-10">
@@ -43,7 +43,6 @@ const FeaturedPosts = ({
                 variant="small"
                 sizes={SMALL_SIZES}
                 headingLevel={headingLevel}
-                className="reveal"
               />
             ))}
           </div>
@@ -54,7 +53,7 @@ const FeaturedPosts = ({
           posts={rest}
           globalPageProps={globalPageProps}
           headingLevel={headingLevel}
-          className="reveal mt-14"
+          className="mt-14"
         />
       )}
     </>

@@ -44,11 +44,11 @@ const CtaSplit = ({ fragment, as: Heading = 'h2' }: Props) => {
         <Heading
           id={headingId}
           data-long={scale.long}
-          className={`reveal ${scale.className} max-w-[14ch]`}
+          className={`${scale.className} max-w-[14ch]`}
         >
           {title}
         </Heading>
-        <div className="reveal [--reveal-delay:120ms]">
+        <div>
           {hasStructuredText(subtitle) && (
             <div className="max-w-[28rem] text-lead text-surface/70 [&_p+p]:mt-3">
               <DatoStructuredText data={subtitle} />

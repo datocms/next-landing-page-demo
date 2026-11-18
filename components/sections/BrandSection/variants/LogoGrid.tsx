@@ -44,7 +44,7 @@ const LogoGrid = ({ fragment, locale }: Props) => {
         {brands.map((brand) => (
           <li
             key={brand.id}
-            className="reveal flex h-20 w-[calc((100%-(var(--per)-1)*0.625rem)/var(--per))] min-w-0 items-center justify-center rounded-[20px] bg-subtle px-4 sm:h-24 sm:px-6"
+            className="flex h-20 w-[calc((100%-(var(--per)-1)*0.625rem)/var(--per))] min-w-0 items-center justify-center rounded-[20px] bg-subtle px-4 sm:h-24 sm:px-6"
           >
             <BrandLogo
               brand={brand}

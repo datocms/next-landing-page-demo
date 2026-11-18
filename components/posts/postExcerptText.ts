@@ -1,4 +1,5 @@
 import { isParagraph } from 'datocms-structured-text-utils';
+import { fieldEditUrl } from '@/lib/datocms/contentLink';
 import {
   rootNodes,
   type StructuredTextField,
@@ -31,4 +32,22 @@ export function postExcerptText(
     },
   });
   return hasText(text) ? text : null;
+}
+
+/**
+ * The Content Link target of the excerpt postExcerptText picks: the SEO
+ * description or the body, opened from the post's title marker. Neither
+ * carries a marker of its own (SEO fields never do, and a body's only marker
+ * sits on its last paragraph).
+ */
+export function postExcerptEditUrl(
+  title: string | null | undefined,
+  description: string | null | undefined,
+): string | undefined {
+  const fromSeo =
+    hasText(description) && !isRedundantExcerpt(title, description);
+  return fieldEditUrl(
+    title,
+    fromSeo ? 'seo_meta.{locale}' : 'content.{locale}',
+  );
 }

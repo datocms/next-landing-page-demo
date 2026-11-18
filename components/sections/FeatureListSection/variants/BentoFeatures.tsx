@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import ProductCard from '@/components/product/ProductCard';
 import { FeatureListSectionFragment } from '@/components/sections/FeatureListSection/fragment';
+import { stegaOnly } from '@/lib/datocms/contentLink';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
 import { hasStructuredText } from '@/utils/structuredText';
@@ -66,7 +67,7 @@ const BentoFeatures = ({ fragment, locale }: Props) => {
               <li
                 key={feature.id}
                 className={cn(
-                  'reveal group/tile relative flex flex-col overflow-hidden rounded-card p-6',
+                  'group/tile relative flex flex-col overflow-hidden rounded-card p-6',
                   FILL[tone],
                 )}
               >
@@ -124,6 +125,9 @@ const BentoFeatures = ({ fragment, locale }: Props) => {
                         ))}
                         {/* The icon is used as a mask, so it takes the chip's colour whatever its own */}
                         <span
+                          data-datocms-content-link-source={
+                            stegaOnly(feature.icon.alt) || undefined
+                          }
                           className="relative size-6 bg-current"
                           style={{
                             mask: `url("${feature.icon.url}") center / contain no-repeat`,

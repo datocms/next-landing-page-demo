@@ -2,6 +2,7 @@ import { stripStega } from '@datocms/content-link';
 import { useId } from 'react';
 import Photo from '@/components/ui/Photo';
 import SectionHeader from '@/components/ui/SectionHeader';
+import { siblingEditUrl } from '@/lib/datocms/contentLink';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import type { SectionHeadingLevel } from '@/utils/headingLevel';
 import { VideoSectionFragment } from './fragment';
@@ -52,11 +53,10 @@ const VideoSection = ({ fragment, as = 'h2', locale }: Props) => {
           subtitle={subtitle}
           align="left"
           gap="none"
-          className="reveal"
         />
 
         {/* The frame is the positioned box the play button's hit area fills */}
-        <div className="reveal frame-media relative isolate grid aspect-video place-items-center overflow-hidden rounded-media bg-tint">
+        <div className="frame-media relative isolate grid aspect-video place-items-center overflow-hidden rounded-media bg-tint">
           <div className="absolute inset-0 -z-10">
             {thumbnail?.responsiveImage ? (
               <Photo
@@ -72,6 +72,7 @@ const VideoSection = ({ fragment, as = 'h2', locale }: Props) => {
                 <img
                   src={fallbackPoster}
                   alt=""
+                  data-datocms-content-link-url={siblingEditUrl(title, 'video')}
                   loading="lazy"
                   className="size-full object-cover"
                 />

@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import MotionObserver from '@/components/motion/MotionObserver';
 import { MenuIcon } from '@/components/ui/icons';
+import { altWithMarker } from '@/lib/datocms/contentLink';
 import {
   type FragmentOf,
   readFragment,
@@ -75,7 +76,7 @@ const Header = ({ globalPageProps, fragment, languages }: Props) => {
   const logo = layout?.logo.url ? (
     <Image
       src={layout.logo.url}
-      alt=""
+      alt={altWithMarker('', layout.logo.alt)}
       width={layout.logo.width ?? 111}
       height={layout.logo.height ?? 28}
       className="h-7 w-auto"
@@ -143,7 +144,7 @@ const Header = ({ globalPageProps, fragment, languages }: Props) => {
         </div>
       </header>
 
-      {/* The page's one reveal and loop observer (components/motion) */}
+      {/* Pauses the slow loops while they are off screen (components/motion) */}
       <MotionObserver />
 
       <MobileNav

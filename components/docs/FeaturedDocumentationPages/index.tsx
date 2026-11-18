@@ -54,8 +54,7 @@ const DISC: Record<Tone, string> = {
  * fills (accent, pale, tint, navy): the section a page belongs to as a small
  * label, an arrow on a disc, then the title large and its one-line description.
  * Wide and narrow tiles alternate from 768px (one column below). The strong
- * tiles carry the site's faint corner rings. The tiles settle in as they enter
- * the view; under the pointer a tile lifts 2px and its arrow slides on.
+ * tiles carry the site's faint corner rings. Under the pointer a tile lifts 2px and its arrow slides on.
  */
 const FeaturedDocumentationPages = ({
   fragment,
@@ -73,7 +72,7 @@ const FeaturedDocumentationPages = ({
     <section aria-labelledby="featured-docs-title" className={className}>
       <h2
         id="featured-docs-title"
-        className="reveal font-semibold text-[clamp(1.5rem,2.2vw,1.875rem)] leading-[1.1] tracking-[-0.04em]"
+        className="font-semibold text-[clamp(1.5rem,2.2vw,1.875rem)] leading-[1.1] tracking-[-0.04em]"
       >
         {uiString(globalPageProps.params.locale, 'featuredPages')}
       </h2>
@@ -84,7 +83,7 @@ const FeaturedDocumentationPages = ({
           const wide = span !== 'md:col-span-2';
 
           return (
-            <li key={page.id} className={cn('reveal', span)}>
+            <li key={page.id} className={span}>
               <AppLink
                 href={docsPageUrl(globalPageProps, page.slug)}
                 className={cn(

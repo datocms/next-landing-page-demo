@@ -52,7 +52,7 @@ const PricingSection = ({ fragment, locale }: Props) => {
         {hasYearly && (
           <div
             className={cn(
-              'reveal mb-10 flex lg:mb-14',
+              'mb-10 flex lg:mb-14',
               // The mosaic page's tabs line up on the left, like its hero
               layout === 'tabs' ? 'justify-start' : 'justify-center',
             )}

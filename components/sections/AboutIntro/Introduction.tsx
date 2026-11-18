@@ -39,7 +39,7 @@ const Introduction = ({
 
   if (pointGroups.length < 2) {
     return (
-      <div className={cn('reveal prose mx-auto', className)}>
+      <div className={cn('prose mx-auto', className)}>
         <DatoStructuredText
           data={introduction}
           customNodeRules={[
@@ -61,7 +61,7 @@ const Introduction = ({
     // makes the lead and every column one target
     <div data-datocms-content-link-group className={className}>
       {leadGroup && (
-        <div className="reveal prose mx-auto mb-12 text-center text-lead text-fg-muted">
+        <div className="prose mx-auto mb-12 text-center text-lead text-fg-muted">
           <StructuredText data={asValue(leadGroup.nodes)} />
         </div>
       )}
@@ -76,7 +76,7 @@ const Introduction = ({
         {pointGroups.map((group) => (
           <li
             key={group.key}
-            className="reveal tile p-6 text-small md:p-7 [&_p]:mt-2 [&_p]:max-w-[44ch] [&_p]:text-fg-muted [&_p+p]:mt-2"
+            className="tile p-6 text-small md:p-7 [&_p]:mt-2 [&_p]:max-w-[44ch] [&_p]:text-fg-muted [&_p+p]:mt-2"
           >
             <StructuredText
               data={asValue(group.nodes)}

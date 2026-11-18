@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
+import { altWithMarker } from '@/lib/datocms/contentLink';
 import {
   type FragmentOf,
   readFragment,
@@ -98,7 +99,7 @@ const Footer = ({ fragment, languages, globalPageProps }: Props) => {
               >
                 <Image
                   src={layout.footerLogo.url}
-                  alt=""
+                  alt={altWithMarker('', layout.footerLogo.alt)}
                   className="h-7 w-auto"
                   width={layout.footerLogo.width ?? 111}
                   height={layout.footerLogo.height ?? 28}
@@ -164,7 +165,7 @@ const Footer = ({ fragment, languages, globalPageProps }: Props) => {
                         {socialMedia.icon?.url && (
                           <Image
                             src={socialMedia.icon.url}
-                            alt=""
+                            alt={altWithMarker('', socialMedia.icon.alt)}
                             width={16}
                             height={16}
                             className="size-4 shrink-0 object-contain opacity-70 brightness-0 invert"

@@ -48,7 +48,7 @@ const Content: ContentComponent<PageProps, Query> = ({
             return (
               <li
                 key={author.id}
-                className="reveal group relative grid grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-x-4 gap-y-5 rounded-card bg-subtle p-5 transition-colors duration-200 hover:bg-tint sm:grid-cols-[5rem_minmax(0,1fr)] sm:gap-x-5 sm:p-6"
+                className="group relative grid grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-x-4 gap-y-5 rounded-card bg-subtle p-5 transition-colors duration-200 hover:bg-tint sm:grid-cols-[5rem_minmax(0,1fr)] sm:gap-x-5 sm:p-6"
               >
                 <SharedElement kind="portrait" href={href}>
                   <div className="overflow-hidden rounded-full ring-4 ring-surface">

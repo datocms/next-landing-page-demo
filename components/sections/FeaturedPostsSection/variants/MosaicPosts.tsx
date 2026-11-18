@@ -1,10 +1,12 @@
-import type { CSSProperties } from 'react';
 import DatoImage from '@/components/datocms/DatoImage';
 import { PostExcerptFragment } from '@/components/posts/PostExcerpt/fragment';
 import PostLink from '@/components/posts/PostLink';
 import PostMeta from '@/components/posts/PostMeta';
 import PostTitle from '@/components/posts/PostTitle';
-import { postExcerptText } from '@/components/posts/postExcerptText';
+import {
+  postExcerptEditUrl,
+  postExcerptText,
+} from '@/components/posts/postExcerptText';
 import { readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
 import type { VariantProps } from './types';
@@ -43,7 +45,7 @@ const MosaicPosts = ({
         side.length > 0 && 'lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]',
       )}
     >
-      <article className="reveal">
+      <article>
         <PostLink
           slug={lead.slug}
           globalPageProps={globalPageProps}
@@ -74,13 +76,20 @@ const MosaicPosts = ({
               />
             </Heading>
             {excerpt && (
-              <p className="mt-3 line-clamp-2 max-w-[56ch] text-fg-muted text-small">
+              <p
+                data-datocms-content-link-url={postExcerptEditUrl(
+                  lead.title,
+                  lead.seoMeta?.description,
+                )}
+                className="mt-3 line-clamp-2 max-w-[56ch] text-fg-muted text-small"
+              >
                 {excerpt}
               </p>
             )}
             <PostMeta
               locale={locale}
               date={lead._publishedAt}
+              source={lead.title}
               author={lead.author}
               className="mt-auto pt-6"
             />
@@ -96,13 +105,7 @@ const MosaicPosts = ({
             const tone = tones[index];
             const text = postExcerptText(title, seoMeta?.description, content);
             return (
-              <article
-                key={post.id}
-                style={
-                  { '--reveal-delay': `${(index + 1) * 90}ms` } as CSSProperties
-                }
-                className="reveal"
-              >
+              <article key={post.id}>
                 <PostLink
                   slug={slug}
                   globalPageProps={globalPageProps}
@@ -127,6 +130,10 @@ const MosaicPosts = ({
                   </Heading>
                   {text && (
                     <p
+                      data-datocms-content-link-url={postExcerptEditUrl(
+                        title,
+                        seoMeta?.description,
+                      )}
                       className={cn(
                         'mt-2 line-clamp-2 text-small',
                         tone === 'ink' ? 'text-surface/70' : 'text-fg-muted',
@@ -138,6 +145,7 @@ const MosaicPosts = ({
                   <PostMeta
                     locale={locale}
                     date={_publishedAt}
+                    source={title}
                     author={author}
                     className={cn(
                       'mt-auto pt-6',

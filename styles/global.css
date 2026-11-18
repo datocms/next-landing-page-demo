@@ -18,7 +18,7 @@
 /* Long-form text and code blocks, in @layer components (utilities still win) */
 @import './prose.css';
 
-/* Motion: reveals, the hero's arrival, the slow loops (off under reduced motion) */
+/* Motion: the hero's arrival on load and the slow loops (off under reduced motion) */
 @import './motion.css';
 
 /* The landing variations: each carries its hero's shapes and colours down the page */

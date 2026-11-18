@@ -1,10 +1,9 @@
 /* Motion for the FAQ section: the drifting question marks behind it, the
-   settle-in when it enters the view, the accordion's open and close, and the
+   accordion's open and close, and the
    tilt of the "?" chips. Everything is off under reduced motion. */
 
 .root {
   --faq-ease: cubic-bezier(0.4, 0, 0.2, 1);
-  --faq-settle-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 /* ---------- Drifting question marks ---------- */
@@ -89,39 +88,6 @@
   }
   to {
     translate: 0 calc(var(--dy, -12px) * 4);
-  }
-}
-
-/* ---------- Settle-in ---------- */
-
-/* Set by SettleIn: `waiting` while the section is below the view, `in` once it
-   has entered. Each item fades and rises 8px, staggered by its --i */
-.settle[data-settle='waiting'] .settleItem {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-.settle[data-settle='in'] .settleItem {
-  animation: faq-settle 560ms var(--faq-settle-ease) backwards;
-  animation-delay: calc(min(var(--i, 0), 8) * 50ms);
-}
-
-@keyframes faq-settle {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .settle[data-settle] .settleItem {
-    opacity: 1;
-    transform: none;
-    animation: none;
   }
 }
 

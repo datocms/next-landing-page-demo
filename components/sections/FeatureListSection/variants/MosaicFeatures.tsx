@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
 import FeatureDescription from '../FeatureDescription';
@@ -20,7 +20,7 @@ const ShapeTile = ({
   <li
     aria-hidden="true"
     className={cn(
-      'reveal relative min-h-44 overflow-hidden rounded-card max-md:hidden',
+      'relative min-h-44 overflow-hidden rounded-card max-md:hidden',
       kind === 'sun' ? 'bg-accent' : 'bg-ink',
       className,
     )}
@@ -52,8 +52,7 @@ const MosaicFeatures = ({ fragment }: Props) => {
     items.push(
       <li
         key={feature.id}
-        style={{ '--reveal-delay': `${(index % 4) * 70}ms` } as CSSProperties}
-        className="reveal flex min-h-44 flex-col rounded-card bg-subtle p-6 sm:p-7"
+        className="flex min-h-44 flex-col rounded-card bg-subtle p-6 sm:p-7"
       >
         <FeatureIcon icon={feature.icon} className="bg-surface!" />
         <h2 className="mt-auto pt-8 text-h3">{feature.title}</h2>

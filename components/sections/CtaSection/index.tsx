@@ -19,8 +19,7 @@ type Props = {
  * `centered` (the default; `split` and `arch` are in variants/): the closing call to action, a title, one line and the buttons, centred on
  * the navy panel. As the last block of a page it joins the footer, which is the
  * same navy, into one panel (`data-closing` tells the footer). Faint rings
- * breathe in its top-right corner (the footer answers them bottom-left), and
- * the copy settles in as it enters the view.
+ * breathe in its top-right corner (the footer answers them bottom-left).
  */
 const CtaSection = ({ fragment, as: Heading = 'h2' }: Props) => {
   const headingId = useId();
@@ -48,12 +47,12 @@ const CtaSection = ({ fragment, as: Heading = 'h2' }: Props) => {
         <Heading
           id={headingId}
           data-long={scale.long}
-          className={`reveal ${scale.className} max-w-[20ch]`}
+          className={`${scale.className} max-w-[20ch]`}
         >
           {title}
         </Heading>
         {hasStructuredText(subtitle) && (
-          <div className="reveal mt-4 max-w-[36rem] text-lead text-surface/70 [&_p+p]:mt-3">
+          <div className="mt-4 max-w-[36rem] text-lead text-surface/70 [&_p+p]:mt-3">
             <DatoStructuredText data={subtitle} />
           </div>
         )}
@@ -62,7 +61,7 @@ const CtaSection = ({ fragment, as: Heading = 'h2' }: Props) => {
           size="lg"
           align="center"
           tone="dark"
-          className="reveal mt-8 w-full max-sm:flex-col max-sm:[&>a]:w-full"
+          className="mt-8 w-full max-sm:flex-col max-sm:[&>a]:w-full"
         />
       </div>
     </section>

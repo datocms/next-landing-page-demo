@@ -1,9 +1,31 @@
 import { stripStega } from '@datocms/content-link';
+import {
+  ancestorEditUrl,
+  fieldEditUrl,
+  siblingEditUrl,
+} from '@/lib/datocms/contentLink';
 
-type PlanWithFeatures = { id: string; features: { label: string }[] };
+type PlanWithFeatures = {
+  id: string;
+  name?: string;
+  features: { label: string }[];
+};
 
-/** One line of a plan's feature list; `included: false` marks a feature only richer plans have */
-export type FeatureRow = { key: string; text: string; included: boolean };
+/**
+ * One line of a plan's feature list; `included: false` marks a feature only
+ * richer plans have. `editUrl` is its Content Link target in Draft Mode: the
+ * feature's label, or for a missing feature the plan's feature list.
+ */
+export type FeatureRow = {
+  key: string;
+  text: string;
+  included: boolean;
+  editUrl?: string;
+};
+
+/** Where a feature the plan lacks is added: its feature list, else the plan */
+const featureListEditUrl = (plan: PlanWithFeatures) =>
+  ancestorEditUrl(plan.features[0]?.label, 2) ?? fieldEditUrl(plan.name);
 
 /** The visible text of a feature or limit, for matching it across plans */
 export const comparableText = (text: string) =>
@@ -22,6 +44,7 @@ export const ownFeatureRows = (plan: PlanWithFeatures): FeatureRow[] =>
     key: `${plan.id}-${comparableText(text)}`,
     text,
     included: true,
+    editUrl: siblingEditUrl(text, 'label'),
   }));
 
 /**
@@ -58,6 +81,10 @@ export function planFeatureRows(plans: PlanWithFeatures[]): FeatureRow[][] {
         // Borrowed text from another record loses its stega (it would point at the wrong record)
         text: ownText ?? stripStega(richestText),
         included: ownText !== undefined,
+        editUrl:
+          ownText !== undefined
+            ? siblingEditUrl(ownText, 'label')
+            : featureListEditUrl(plans[i]),
       };
     });
   });

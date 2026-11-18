@@ -68,6 +68,7 @@ const PostRows = ({
                 <PostMeta
                   locale={locale}
                   date={_publishedAt}
+                  source={title}
                   author={author}
                   className="mt-3"
                 />

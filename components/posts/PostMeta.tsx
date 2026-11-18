@@ -1,6 +1,7 @@
 import type { ResponsiveImageFragment } from '@/components/datocms/DatoImage/fragment';
 import AppLink from '@/components/ui/AppLink';
 import Avatar, { type AvatarSize } from '@/components/ui/Avatar';
+import { fieldEditUrl } from '@/lib/datocms/contentLink';
 import type { FragmentOf } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
 import { formatDate } from '@/utils/formatDate';
@@ -16,15 +17,22 @@ export type PostAuthor = {
 export const PostDate = ({
   date,
   locale,
+  source,
   className,
 }: {
   date: string;
   locale: string;
+  /** The post's title: in Draft Mode the date opens the post (it is a publication date, not a field) */
+  source?: string;
   className?: string;
 }) => {
   const { iso, label } = formatDate(date, locale);
   return (
-    <time dateTime={iso} className={cn('whitespace-nowrap', className)}>
+    <time
+      dateTime={iso}
+      data-datocms-content-link-url={fieldEditUrl(source)}
+      className={cn('whitespace-nowrap', className)}
+    >
       {label}
     </time>
   );
@@ -83,6 +91,8 @@ type Props = {
   /** Raw CMS date or datetime */
   date?: string | null;
   author?: PostAuthor | null;
+  /** The post's title, for the date's Content Link target */
+  source?: string;
   /** Placement only */
   className?: string;
 };
@@ -91,7 +101,7 @@ type Props = {
  * The byline of every post listing: the author's 26px round photo, the name
  * in navy (13.5px medium), then the date, muted. Renders nothing when both are missing.
  */
-const PostMeta = ({ locale, date, author, className }: Props) => {
+const PostMeta = ({ locale, date, author, source, className }: Props) => {
   if (!date && !author) return null;
 
   return (
@@ -102,7 +112,7 @@ const PostMeta = ({ locale, date, author, className }: Props) => {
       )}
     >
       {author && <Byline author={author} />}
-      {date && <PostDate date={date} locale={locale} />}
+      {date && <PostDate date={date} locale={locale} source={source} />}
     </div>
   );
 };

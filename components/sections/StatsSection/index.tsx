@@ -1,6 +1,6 @@
 import { stripStega } from '@datocms/content-link';
 import type { CSSProperties } from 'react';
-import CountUp from '@/components/motion/CountUp';
+import { siblingEditUrl, stegaOnly } from '@/lib/datocms/contentLink';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
 import { formatFigure } from './figures';
@@ -70,7 +70,7 @@ const StatsSection = ({ fragment, locale }: Props) => {
                 <li
                   key={stat.id}
                   className={cn(
-                    'reveal relative flex min-h-[9.5rem] flex-col justify-between gap-6 overflow-hidden rounded-card p-5 max-lg:last:odd:col-span-2 sm:min-h-[14.5rem] sm:gap-8 sm:p-7',
+                    'relative flex min-h-[9.5rem] flex-col justify-between gap-6 overflow-hidden rounded-card p-5 max-lg:last:odd:col-span-2 sm:min-h-[14.5rem] sm:gap-8 sm:p-7',
                     FILL[tone],
                   )}
                 >
@@ -99,6 +99,9 @@ const StatsSection = ({ fragment, locale }: Props) => {
                       >
                         {/* The icon is used as a mask, so it takes the chip's colour whatever its own */}
                         <span
+                          data-datocms-content-link-source={
+                            stegaOnly(stat.icon.alt) || undefined
+                          }
                           className="size-5 bg-current"
                           style={{
                             mask: `url("${stat.icon.url}") center / contain no-repeat`,
@@ -111,8 +114,14 @@ const StatsSection = ({ fragment, locale }: Props) => {
                     )}
                   </div>
                   <div className="relative">
-                    <p className="whitespace-nowrap font-semibold text-[1.75rem] tabular-nums sm:text-[clamp(2.5rem,4.1vw,3.5rem)] leading-none tracking-[-0.055em]">
-                      <CountUp text={formatFigure(stat.quantity, locale)} />
+                    <p
+                      data-datocms-content-link-url={siblingEditUrl(
+                        stat.label,
+                        'quantity',
+                      )}
+                      className="whitespace-nowrap font-semibold text-[1.75rem] tabular-nums sm:text-[clamp(2.5rem,4.1vw,3.5rem)] leading-none tracking-[-0.055em]"
+                    >
+                      {formatFigure(stat.quantity, locale)}
                     </p>
                     <p
                       className={cn(

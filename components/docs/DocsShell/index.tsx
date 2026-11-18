@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { type ReactNode, useCallback, useRef, useState } from 'react';
 import PageTransition from '@/components/layout/PageTransition';
 import { CaretIcon } from '@/components/ui/icons';
+import { altWithMarker } from '@/lib/datocms/contentLink';
 import type { SiteLocale } from '@/lib/datocms/graphql';
 import { uiString } from '@/lib/i18n/uiStrings';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
@@ -17,7 +18,12 @@ import DocsDrawer from './DocsDrawer';
 type Props = {
   globalPageProps: ResolvedGlobalPageProps;
   /** The documentation home's logo (the wordmark) */
-  logo?: { url: string; width?: number | null; height?: number | null } | null;
+  logo?: {
+    url: string;
+    alt?: string | null;
+    width?: number | null;
+    height?: number | null;
+  } | null;
   /** The documentation tree */
   pages: readonly DocsTreePage[];
   footerText?: string | null;
@@ -69,7 +75,7 @@ const DocsShell = ({
       {logo?.url && (
         <Image
           src={logo.url}
-          alt=""
+          alt={altWithMarker('', logo.alt)}
           width={logo.width || 111}
           height={logo.height || 28}
           className="h-7 w-auto"

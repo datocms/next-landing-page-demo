@@ -55,6 +55,7 @@ export const query = graphql(
       footerText
       logo {
         url
+        alt
         width
         height
       }

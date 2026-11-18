@@ -91,9 +91,7 @@ const TeamCards = ({ fragment, globalPageProps }: Props) => {
               </svg>
             </li>
           )}
-          {orbit && (
-            <li aria-hidden="true" className={`${styles.hub} reveal`} />
-          )}
+          {orbit && <li aria-hidden="true" className={`${styles.hub}`} />}
           {members.map((member, index) => {
             const href = authorUrl(globalPageProps, member.slug);
             const style = {
@@ -107,7 +105,7 @@ const TeamCards = ({ fragment, globalPageProps }: Props) => {
               <li
                 key={member.id}
                 style={style}
-                className={orbit ? `${styles.card} reveal` : 'reveal'}
+                className={orbit ? styles.card : undefined}
               >
                 <div className={styles.float}>
                   <AppLink

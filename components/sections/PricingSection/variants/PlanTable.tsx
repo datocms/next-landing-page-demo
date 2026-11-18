@@ -46,6 +46,7 @@ const PlanHead = ({
       )}
       <div style={{ '--plan-i': index } as CSSProperties} className="mt-4">
         <Price
+          source={plan.name}
           monthly={plan.monthlyPrice}
           yearly={plan.yearlyPrice}
           locale={locale}
@@ -103,7 +104,7 @@ const PlanTable = ({ plans, highlighted, locale }: Props) => {
           <li
             key={plan.id}
             className={cn(
-              'reveal flex flex-col rounded-t-full rounded-b-card px-6 pt-20 pb-7 sm:px-8',
+              'flex flex-col rounded-t-full rounded-b-card px-6 pt-20 pb-7 sm:px-8',
               isHighlighted
                 ? 'on-ink bg-(--accent-deep) text-on-accent'
                 : 'bg-subtle',
@@ -159,7 +160,7 @@ const PlanTable = ({ plans, highlighted, locale }: Props) => {
         style={{
           gridTemplateColumns: `minmax(0,1.15fr) repeat(${plans.length}, minmax(0,1fr))`,
         }}
-        className="reveal grid border-separate gap-x-4 max-lg:hidden xl:gap-x-5"
+        className="grid border-separate gap-x-4 max-lg:hidden xl:gap-x-5"
       >
         <caption className="sr-only">{uiString(locale, 'plans')}</caption>
         <thead className="contents">
@@ -191,16 +192,26 @@ const PlanTable = ({ plans, highlighted, locale }: Props) => {
             <tr key={feature.key} className="contents">
               <th
                 scope="row"
+                // A feature the highlighted plan lacks shows borrowed text: it
+                // opens the feature in a plan that has it
+                data-datocms-content-link-url={
+                  feature.included
+                    ? undefined
+                    : rowsByPlan
+                        .map((rows) => rows[r])
+                        .find((row) => row.included)?.editUrl
+                }
                 className="flex items-center border-line border-t py-3.5 text-left font-medium text-[0.9375rem]"
               >
                 {feature.text}
               </th>
               {plans.map((plan, i) => {
-                const included = rowsByPlan[i][r].included;
+                const { included, editUrl } = rowsByPlan[i][r];
                 const onAccent = i === highlighted;
                 return (
                   <td
                     key={plan.id}
+                    data-datocms-content-link-url={editUrl}
                     className={cn('grid place-items-center py-3.5', fill(i))}
                   >
                     {included ? (

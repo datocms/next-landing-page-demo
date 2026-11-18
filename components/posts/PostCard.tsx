@@ -8,7 +8,7 @@ import PostLink, { postPath } from './PostLink';
 import PostMeta from './PostMeta';
 import PostTags from './PostTags';
 import PostTitle from './PostTitle';
-import { postExcerptText } from './postExcerptText';
+import { postExcerptEditUrl, postExcerptText } from './postExcerptText';
 
 export type PostCardVariant = 'card' | 'featured' | 'small';
 
@@ -106,13 +106,20 @@ const PostCard = ({
             />
           </Heading>
           {excerpt && (
-            <p className="mt-3 line-clamp-3 max-w-[60ch] text-body text-fg-muted">
+            <p
+              data-datocms-content-link-url={postExcerptEditUrl(
+                title,
+                seoMeta?.description,
+              )}
+              className="mt-3 line-clamp-3 max-w-[60ch] text-body text-fg-muted"
+            >
               {excerpt}
             </p>
           )}
           <PostMeta
             locale={locale}
             date={_publishedAt}
+            source={title}
             author={hideAuthor ? null : author}
             className={featured ? 'mt-5' : 'mt-3.5'}
           />

@@ -1,6 +1,6 @@
 import { stripStega } from '@datocms/content-link';
 import type { CSSProperties } from 'react';
-import SettleIn from '@/components/sections/StepsSection/SettleIn';
+import { stegaOnly } from '@/lib/datocms/contentLink';
 import {
   type FragmentOf,
   type ResultOf,
@@ -36,6 +36,9 @@ const Pill = ({ integration }: { integration: Integration }) => {
       >
         {url && (
           <span
+            data-datocms-content-link-source={
+              stegaOnly(integration.icon?.alt) || undefined
+            }
             className="size-5 bg-current"
             style={{
               mask: `url("${url}") center / contain no-repeat`,
@@ -79,7 +82,7 @@ const IntegrationsSection = ({ fragment }: Props) => {
 
   return (
     <section className="section">
-      <SettleIn>
+      <div>
         {rows.length > 0 && (
           <div className={styles.rows}>
             {rows.map((row, rowIndex) => {
@@ -105,9 +108,7 @@ const IntegrationsSection = ({ fragment }: Props) => {
               return (
                 <div
                   key={row[0].id}
-                  data-settle-item=""
                   data-reverse={rowIndex % 2 === 1 ? '' : undefined}
-                  style={{ '--i': rowIndex } as CSSProperties}
                   className={styles.row}
                 >
                   <div
@@ -148,7 +149,7 @@ const IntegrationsSection = ({ fragment }: Props) => {
             })}
           </div>
         )}
-      </SettleIn>
+      </div>
     </section>
   );
 };

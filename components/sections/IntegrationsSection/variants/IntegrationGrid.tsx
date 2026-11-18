@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import { stegaOnly } from '@/lib/datocms/contentLink';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
 import { IntegrationsSectionFragment } from '../fragment';
@@ -34,17 +34,17 @@ const IntegrationGrid = ({ fragment }: Props) => {
             return (
               <li
                 key={integration.id}
-                style={
-                  { '--reveal-delay': `${(index % 5) * 60}ms` } as CSSProperties
-                }
                 className={cn(
-                  'reveal flex aspect-[5/4] flex-col justify-between rounded-card p-5 sm:p-6',
+                  'flex aspect-[5/4] flex-col justify-between rounded-card p-5 sm:p-6',
                   fill(index),
                 )}
               >
                 <span aria-hidden="true" className="block size-8">
                   {url && (
                     <span
+                      data-datocms-content-link-source={
+                        stegaOnly(integration.icon?.alt) || undefined
+                      }
                       className="block size-full bg-current"
                       style={{
                         mask: `url("${url}") left top / contain no-repeat`,

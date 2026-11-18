@@ -52,7 +52,7 @@ const PlanCards = ({ plans, highlighted, locale }: Props) => {
             key={plan.id}
             aria-labelledby={headingId}
             className={cn(
-              'reveal relative isolate row-span-5 grid grid-rows-subgrid gap-y-0 overflow-hidden rounded-[30px] border p-7 md:p-[34px]',
+              'relative isolate row-span-5 grid grid-rows-subgrid gap-y-0 overflow-hidden rounded-[30px] border p-7 md:p-[34px]',
               isHighlighted
                 ? cn(
                     'border-transparent bg-accent text-on-accent shadow-glow [--focus-halo:var(--accent)] [--focus-ring:var(--on-accent)]',
@@ -85,6 +85,7 @@ const PlanCards = ({ plans, highlighted, locale }: Props) => {
               style={{ '--plan-i': i } as CSSProperties}
             >
               <Price
+                source={plan.name}
                 monthly={plan.monthlyPrice}
                 yearly={plan.yearlyPrice}
                 locale={locale}

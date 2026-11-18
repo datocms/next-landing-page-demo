@@ -1,5 +1,6 @@
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import Rating from '@/components/ui/Rating';
+import { fieldEditUrl } from '@/lib/datocms/contentLink';
 import { cn } from '@/utils/cn';
 import ReviewPerson from './ReviewPerson';
 import { type Reviews, readTestimonial } from './testimonial';
@@ -30,7 +31,13 @@ const ReviewCard = ({ review, locale, className }: Props) => {
         className,
       )}
     >
-      {rating ? <Rating value={rating} locale={locale} /> : null}
+      {rating ? (
+        <Rating
+          value={rating}
+          editUrl={fieldEditUrl(name, 'rating')}
+          locale={locale}
+        />
+      ) : null}
       <blockquote
         className={cn(
           'flex-1 font-medium text-[1.1875rem] text-fg leading-[1.42] tracking-[-0.018em] [&_p+p]:mt-3',

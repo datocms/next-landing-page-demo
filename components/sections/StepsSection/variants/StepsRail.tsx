@@ -4,7 +4,6 @@ import ProductCard from '@/components/product/ProductCard';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { hasStructuredText } from '@/utils/structuredText';
 import { StepsSectionFragment } from '../fragment';
-import SettleIn from '../SettleIn';
 import styles from './StepsRail.module.css';
 
 type Props = {
@@ -24,18 +23,13 @@ const StepsRail = ({ fragment, locale }: Props) => {
 
   return (
     <section className="section">
-      <SettleIn className="container-page">
+      <div className="container-page">
         <ol
           style={{ '--cols': steps.length } as CSSProperties}
           className={styles.rail}
         >
           {steps.map((step, index) => (
-            <li
-              key={step.id}
-              data-settle-item=""
-              style={{ '--i': index } as CSSProperties}
-              className={styles.step}
-            >
+            <li key={step.id} className={styles.step}>
               <span aria-hidden="true" className={styles.disc}>
                 {index + 1}
               </span>
@@ -57,7 +51,7 @@ const StepsRail = ({ fragment, locale }: Props) => {
             </li>
           ))}
         </ol>
-      </SettleIn>
+      </div>
     </section>
   );
 };

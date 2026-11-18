@@ -54,7 +54,6 @@ const AccordionList = ({ items, settleFrom = 0 }: Props) => {
             data-open={open || undefined}
             style={{ '--i': settleFrom + index } as CSSProperties}
             className={cn(
-              styles.settleItem,
               'group rounded-[20px] border border-transparent bg-subtle transition-[background-color,border-color,box-shadow] duration-300 not-data-open:hover:bg-tint data-open:border-line data-open:bg-surface data-open:shadow-[0_40px_60px_-44px_var(--glow)]',
             )}
           >

@@ -11,6 +11,7 @@ import { ArrowRightIcon } from '@/components/ui/icons';
 import TableOfContents, {
   MIN_TOC_HEADINGS,
 } from '@/components/ui/TableOfContents';
+import { fieldEditUrl } from '@/lib/datocms/contentLink';
 import type { ContentComponent } from '@/lib/datocms/realtime/types';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
@@ -154,7 +155,15 @@ const Content: ContentComponent<PageProps, Query> = ({
         )}
       >
         <article className="min-w-0 max-w-measure">
-          <div className="prose prose-docs">
+          <div
+            // Content Link: the field's only marker can sit on the skipped
+            // opening heading, so the text opens the content field itself
+            data-datocms-content-link-url={fieldEditUrl(
+              title,
+              'content.{locale}',
+            )}
+            className="prose prose-docs"
+          >
             <DatoStructuredText
               data={content}
               customNodeRules={[

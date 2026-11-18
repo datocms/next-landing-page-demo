@@ -19,7 +19,7 @@ const ListFeatures = ({ fragment }: Props) => {
         {features.length > 0 && (
           <ul className="grid gap-x-8 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => (
-              <li key={feature.id} className="reveal border-line border-t py-6">
+              <li key={feature.id} className="border-line border-t py-6">
                 <FeatureItem feature={feature} layout="inline" />
               </li>
             ))}

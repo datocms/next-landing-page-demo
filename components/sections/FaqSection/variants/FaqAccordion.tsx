@@ -4,7 +4,6 @@ import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
 import styles from '../FaqSection.module.css';
 import FloatingMarks from '../FloatingMarks';
-import SettleIn from '../SettleIn';
 import AccordionList from './AccordionList';
 
 type Props = {
@@ -24,7 +23,7 @@ const FaqAccordion = ({ fragment }: Props) => {
   return (
     <section className={cn(styles.root, 'section relative isolate')}>
       <FloatingMarks layout="accordion" />
-      <SettleIn className="container-page">
+      <div className="container-page">
         <div className="mx-auto max-w-[56rem]">
           <AccordionList
             items={questions.map((question) => ({
@@ -34,7 +33,7 @@ const FaqAccordion = ({ fragment }: Props) => {
             }))}
           />
         </div>
-      </SettleIn>
+      </div>
     </section>
   );
 };

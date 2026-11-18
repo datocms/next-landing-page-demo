@@ -10,7 +10,7 @@ import PostLink, { postPath } from './PostLink';
 import PostMeta from './PostMeta';
 import PostTags from './PostTags';
 import PostTitle from './PostTitle';
-import { postExcerptText } from './postExcerptText';
+import { postExcerptEditUrl, postExcerptText } from './postExcerptText';
 
 type Post = FragmentOf<typeof PostExcerptFragment> & { id: string };
 
@@ -120,13 +120,20 @@ const WidePost = ({
             />
           </Heading>
           {excerpt && (
-            <p className="mt-3 line-clamp-3 text-body text-fg-muted max-lg:hidden">
+            <p
+              data-datocms-content-link-url={postExcerptEditUrl(
+                title,
+                seoMeta?.description,
+              )}
+              className="mt-3 line-clamp-3 text-body text-fg-muted max-lg:hidden"
+            >
               {excerpt}
             </p>
           )}
           <PostMeta
             locale={locale}
             date={_publishedAt}
+            source={title}
             author={hideAuthor ? null : author}
             className="mt-3.5 lg:mt-5"
           />

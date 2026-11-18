@@ -14,6 +14,7 @@ import VersionName from '@/components/sections/ChangelogSection/VersionName';
 import AppLink from '@/components/ui/AppLink';
 import Chip from '@/components/ui/Chip';
 import { ArrowRightIcon } from '@/components/ui/icons';
+import { fieldEditUrl } from '@/lib/datocms/contentLink';
 import type { ContentComponent } from '@/lib/datocms/realtime/types';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
@@ -171,7 +172,15 @@ const Content: ContentComponent<PageProps, Query> = ({
               )}
             >
               {`${uiString(locale, 'released')} `}
-              <time dateTime={released.iso}>{released.label}</time>
+              <time
+                dateTime={released.iso}
+                data-datocms-content-link-url={fieldEditUrl(
+                  changelogEntry.versionName,
+                  'time_of_release',
+                )}
+              >
+                {released.label}
+              </time>
             </p>
           )}
         </header>
@@ -179,7 +188,16 @@ const Content: ContentComponent<PageProps, Query> = ({
 
       {/* As wide as the release's panel above: chapter names on the left, their changes on the right */}
       <div className="mx-auto max-w-[60rem]">
-        <div className="prose prose-changelog mt-12 lg:mt-16">
+        <div
+          // Content Link: the notes' only marker can sit on a part the page
+          // leaves out, so the text opens the content field itself
+          data-datocms-content-link-url={fieldEditUrl(
+            changelogEntry.versionName,
+            'content.{locale}',
+            locale,
+          )}
+          className="prose prose-changelog mt-12 lg:mt-16"
+        >
           {chapters.map(({ heading, body }, position) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: the chapters follow the notes' order
             <div key={position}>
@@ -236,6 +254,10 @@ const Content: ContentComponent<PageProps, Query> = ({
                     {release.date && (
                       <time
                         dateTime={release.date.iso}
+                        data-datocms-content-link-url={fieldEditUrl(
+                          release.versionName,
+                          'time_of_release',
+                        )}
                         className="mt-2 block text-small text-fg-muted tabular-nums"
                       >
                         {release.date.label}

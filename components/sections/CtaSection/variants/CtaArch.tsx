@@ -41,7 +41,7 @@ const CtaArch = ({ fragment, as: Heading = 'h2' }: Props) => {
           aria-hidden="true"
           className="pointer-events-none absolute bottom-0 left-1/2 -z-10 h-[100%] w-[min(46rem,120%)] -translate-x-1/2 rounded-t-full border border-[rgb(255_255_255/0.16)] border-b-0"
         />
-        <div className="reveal flex w-full max-w-[40rem] flex-col items-center rounded-t-[999px] bg-surface px-6 pt-24 pb-14 text-center text-fg sm:px-12 sm:pt-28 lg:pt-32 lg:pb-16">
+        <div className="flex w-full max-w-[40rem] flex-col items-center rounded-t-[999px] bg-surface px-6 pt-24 pb-14 text-center text-fg sm:px-12 sm:pt-28 lg:pt-32 lg:pb-16">
           <Heading
             id={headingId}
             data-long={scale.long}

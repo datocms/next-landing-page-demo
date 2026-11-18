@@ -4,7 +4,6 @@ import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { cn } from '@/utils/cn';
 import { hasStructuredText } from '@/utils/structuredText';
 import { TimelineSectionFragment } from './fragment';
-import styles from './timeline.module.css';
 
 type Props = {
   fragment: FragmentOf<typeof TimelineSectionFragment>;
@@ -21,10 +20,6 @@ const MAX_IN_ROW = 5;
  * with the title and the text. The newest stop is where the company stands
  * now: its dot is the accent with a soft halo, its period is set in the accent
  * and its tile takes the stronger tint.
- *
- * Motion: the stops settle in with the shared reveal; the line
- * draws itself once from the first stop and each dot pops in as the line
- * reaches it (timeline.module.css).
  */
 const TimelineSection = ({ fragment }: Props) => {
   const { milestones } = readFragment(TimelineSectionFragment, fragment);
@@ -37,21 +32,18 @@ const TimelineSection = ({ fragment }: Props) => {
     <section className="section">
       <div className="container-page">
         {milestones.length > 0 && (
-          <div className={cn('relative', inRow && styles.row)}>
+          <div className={'relative'}>
             {/* The line: a spine through the dots' centres, or from 1024px a
                 rule across the row from the first dot onwards */}
             <span
               aria-hidden="true"
               className={cn(
-                styles.track,
-                'reveal pointer-events-none absolute top-5 bottom-2 left-[11px] w-0.5',
+                'pointer-events-none absolute top-5 bottom-2 left-[11px] w-0.5',
                 inRow &&
                   'lg:top-[calc(5.5rem-1px)] lg:right-0 lg:bottom-auto lg:left-3 lg:h-0.5 lg:w-auto',
               )}
             >
-              <span
-                className={cn(styles.line, 'block size-full bg-line-strong')}
-              />
+              <span className="block size-full bg-line-strong" />
             </span>
             <ol
               style={{ '--n': milestones.length } as CSSProperties}
@@ -67,10 +59,8 @@ const TimelineSection = ({ fragment }: Props) => {
                 return (
                   <li
                     key={milestone.id}
-                    style={{ '--i': index } as CSSProperties}
                     className={cn(
-                      styles.stop,
-                      'reveal relative flex flex-col pl-11 sm:pl-14',
+                      'relative flex flex-col pl-11 sm:pl-14',
                       inRow && 'lg:pl-0',
                     )}
                   >
@@ -94,7 +84,6 @@ const TimelineSection = ({ fragment }: Props) => {
                     >
                       <span
                         className={cn(
-                          styles.dot,
                           'block rounded-full',
                           newest
                             ? 'size-4 bg-accent shadow-[0_0_0_6px_var(--color-accent-soft)]'

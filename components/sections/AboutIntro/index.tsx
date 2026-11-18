@@ -39,7 +39,7 @@ const AboutIntro = ({ fragment, as: Heading = 'h2' }: Props) => {
       className={leadsPage ? 'section-lead' : 'section'}
     >
       <div className="container-page">
-        <header className="reveal mx-auto max-w-[44rem] text-center">
+        <header className="mx-auto max-w-[44rem] text-center">
           {eyebrow && (
             <p className="mb-3 text-small font-medium text-accent-ink">
               {eyebrow}

@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import Rating from '@/components/ui/Rating';
+import { fieldEditUrl } from '@/lib/datocms/contentLink';
 import { uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import ReviewPerson from '../ReviewPerson';
@@ -74,7 +75,13 @@ const WallCard = ({
         'flex flex-col rounded-card bg-surface p-[22px] shadow-soft sm:p-6',
       )}
     >
-      {rating ? <Rating value={rating} locale={locale} /> : null}
+      {rating ? (
+        <Rating
+          value={rating}
+          editUrl={fieldEditUrl(name, 'rating')}
+          locale={locale}
+        />
+      ) : null}
       <blockquote
         className={cn(
           'font-medium text-[0.96875rem] text-fg leading-[1.48] tracking-[-0.012em] sm:text-[1.03125rem] [&_p+p]:mt-2.5',

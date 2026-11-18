@@ -66,6 +66,7 @@ export const IconCardFragment = graphql(/* GraphQL */ `
     text
     icon {
       url
+      alt
     }
   }
 `);

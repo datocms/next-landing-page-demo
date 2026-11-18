@@ -10,7 +10,7 @@ import PostLink, { postPath } from './PostLink';
 import PostMeta from './PostMeta';
 import PostTags from './PostTags';
 import PostTitle from './PostTitle';
-import { postExcerptText } from './postExcerptText';
+import { postExcerptEditUrl, postExcerptText } from './postExcerptText';
 
 type Props = {
   fragment: FragmentOf<typeof PostExcerptFragment>;
@@ -82,13 +82,20 @@ const PostFeature = ({
               />
             </Heading>
             {excerpt && (
-              <p className="mt-4 line-clamp-4 text-lead text-fg-muted lg:mt-5">
+              <p
+                data-datocms-content-link-url={postExcerptEditUrl(
+                  title,
+                  seoMeta?.description,
+                )}
+                className="mt-4 line-clamp-4 text-lead text-fg-muted lg:mt-5"
+              >
                 {excerpt}
               </p>
             )}
             <PostMeta
               locale={locale}
               date={_publishedAt}
+              source={title}
               author={author}
               className="mt-6 lg:mt-8"
             />

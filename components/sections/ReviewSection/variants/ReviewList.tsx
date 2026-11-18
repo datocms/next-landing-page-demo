@@ -1,7 +1,7 @@
-import type { CSSProperties } from 'react';
 import DatoImage from '@/components/datocms/DatoImage';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import Rating from '@/components/ui/Rating';
+import { fieldEditUrl } from '@/lib/datocms/contentLink';
 import { cn } from '@/utils/cn';
 import { type Reviews, readTestimonial } from '../testimonial';
 
@@ -20,7 +20,7 @@ const ReviewList = ({
   locale: string;
 }) => (
   <ul className="grid gap-x-10 gap-y-16 md:grid-cols-2 lg:grid-cols-3">
-    {reviews.map((review, index) => {
+    {reviews.map((review) => {
       const {
         name,
         role,
@@ -31,11 +31,7 @@ const ReviewList = ({
       const focal = portrait?.focalPoint;
 
       return (
-        <li
-          key={review.id}
-          style={{ '--reveal-delay': `${(index % 3) * 90}ms` } as CSSProperties}
-          className="reveal"
-        >
+        <li key={review.id}>
           <figure className="flex h-full flex-col items-center text-center">
             <div
               aria-hidden="true"
@@ -57,6 +53,7 @@ const ReviewList = ({
             {rating ? (
               <Rating
                 value={rating}
+                editUrl={fieldEditUrl(name, 'rating')}
                 locale={locale}
                 tone="light"
                 className="mt-7"

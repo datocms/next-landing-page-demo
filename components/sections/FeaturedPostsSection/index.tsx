@@ -51,12 +51,9 @@ const FeaturedPostsSection = ({ fragment, globalPageProps }: Props) => {
     <section aria-label={uiString(locale, 'featuredPosts')} className="section">
       <div className="container-page">
         {layout === 'list' ? (
-          <PostRows
-            {...variantProps}
-            className="reveal mx-auto max-w-[56rem]"
-          />
+          <PostRows {...variantProps} className="mx-auto max-w-[56rem]" />
         ) : layout === 'grid' ? (
-          <PostGrid {...variantProps} className="reveal" />
+          <PostGrid {...variantProps} />
         ) : layout === 'mosaic' ? (
           <MosaicPosts {...variantProps} />
         ) : (
@@ -65,7 +62,7 @@ const FeaturedPostsSection = ({ fragment, globalPageProps }: Props) => {
 
         <p
           className={cn(
-            'reveal mt-12 lg:mt-14',
+            'mt-12 lg:mt-14',
             layout === 'mosaic' ? 'text-left' : 'text-center',
           )}
         >

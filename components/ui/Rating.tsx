@@ -9,6 +9,8 @@ type Props = {
   locale: string;
   /** light: white stars, for an accent or navy fill */
   tone?: 'default' | 'light';
+  /** Content Link target in Draft Mode: the record's rating field */
+  editUrl?: string;
   /** Placement only */
   className?: string;
 };
@@ -19,12 +21,16 @@ const Rating = ({
   max = 5,
   locale,
   tone = 'default',
+  editUrl,
   className,
 }: Props) => {
   const filled = Math.max(0, Math.min(max, Math.round(value)));
 
   return (
-    <span className={cn('inline-flex items-center gap-[2px]', className)}>
+    <span
+      data-datocms-content-link-url={editUrl}
+      className={cn('inline-flex items-center gap-[2px]', className)}
+    >
       {Array.from({ length: max }, (_, index) => (
         <StarIcon
           // biome-ignore lint/suspicious/noArrayIndexKey: a fixed row of identical stars

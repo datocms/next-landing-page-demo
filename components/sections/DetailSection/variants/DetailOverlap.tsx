@@ -44,7 +44,7 @@ const DetailOverlap = ({ fragment, as = 'h2' }: Props) => {
       >
         <div
           className={cn(
-            'reveal flex min-w-0 items-center rounded-card bg-subtle p-7 sm:p-10 lg:p-14',
+            'flex min-w-0 items-center rounded-card bg-subtle p-7 sm:p-10 lg:p-14',
             !imageAtEnd && 'lg:order-2',
             photo && 'max-lg:order-2',
           )}
@@ -62,7 +62,7 @@ const DetailOverlap = ({ fragment, as = 'h2' }: Props) => {
           <div
             aria-hidden="true"
             className={cn(
-              'reveal relative min-h-[18rem] overflow-hidden rounded-card bg-tint max-lg:order-1 sm:min-h-[24rem] [--reveal-delay:80ms]',
+              'relative min-h-[18rem] overflow-hidden rounded-card bg-tint max-lg:order-1 sm:min-h-[24rem]',
               imageAtEnd
                 ? 'rounded-tr-[min(16rem,50%)]'
                 : 'rounded-tl-[min(16rem,50%)] lg:order-1',

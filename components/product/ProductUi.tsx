@@ -5,7 +5,7 @@ import { cn } from '@/utils/cn';
  * Small decorative pieces of the product's interface, drawn in markup: a chart
  * line, a row of bars, a change pill. The product cards compose
  * them with the texts and figures that come from the CMS. The line, the bars
- * and the meters draw themselves once when their card arrives or reveals
+ * and the meters draw themselves once when their hero card arrives
  * (styles/motion.css: spark-line, spark-fill, bar, meter).
  */
 

@@ -4,6 +4,7 @@ export const HeaderFragment = graphql(/* GraphQL */ `
   fragment HeaderFragment on LayoutRecord {
     logo {
       url
+      alt
       width
       height
     }

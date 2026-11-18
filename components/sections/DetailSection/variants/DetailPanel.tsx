@@ -39,7 +39,7 @@ const DetailPanel = ({ fragment, as = 'h2' }: Props) => {
       <div className="container-page grid gap-x-16 lg:min-h-[40rem] lg:grid-cols-2">
         <div
           className={cn(
-            'reveal flex min-w-0 items-center pt-14 sm:pt-16 lg:py-24',
+            'flex min-w-0 items-center pt-14 sm:pt-16 lg:py-24',
             !photo && 'pb-14 sm:pb-16',
             !imageAtEnd && 'lg:order-2',
           )}
@@ -62,7 +62,7 @@ const DetailPanel = ({ fragment, as = 'h2' }: Props) => {
             <span className="absolute bottom-0 left-1/2 -z-10 h-[calc(100%-4.75rem)] w-[min(27rem,82%)] -translate-x-1/2 rounded-t-full border border-[color:var(--accent-line)] border-b-0" />
             <div
               data-detail-image=""
-              className="reveal relative h-[24rem] w-[min(21rem,72%)] overflow-hidden rounded-t-full bg-tint sm:h-[28rem] lg:h-[32rem]"
+              className="relative h-[24rem] w-[min(21rem,72%)] overflow-hidden rounded-t-full bg-tint sm:h-[28rem] lg:h-[32rem]"
             >
               <DatoImage
                 fragment={photo}

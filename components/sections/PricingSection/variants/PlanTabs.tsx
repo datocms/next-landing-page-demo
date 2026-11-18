@@ -1,5 +1,6 @@
 import { useId } from 'react';
 import Chip from '@/components/ui/Chip';
+import { fieldEditUrl } from '@/lib/datocms/contentLink';
 import { uiString } from '@/lib/i18n/uiStrings';
 import type { Plan } from '../fragment';
 import { FeatureList, PlanButton, PlanDescription, Price } from '../PlanParts';
@@ -20,6 +21,7 @@ const TabFace = ({ plan, locale }: { plan: Plan; locale: string }) => (
     </span>
     <span className="text-[0.9375rem] tabular-nums opacity-75">
       <span
+        data-datocms-content-link-url={fieldEditUrl(plan.name, 'monthly_price')}
         className={
           plan.yearlyPrice != null
             ? 'group-data-[period=yearly]/billing:hidden'
@@ -29,7 +31,13 @@ const TabFace = ({ plan, locale }: { plan: Plan; locale: string }) => (
         {formatPrice(plan.monthlyPrice, locale)} {uiString(locale, 'perMonth')}
       </span>
       {plan.yearlyPrice != null && (
-        <span className="hidden group-data-[period=yearly]/billing:inline">
+        <span
+          data-datocms-content-link-url={fieldEditUrl(
+            plan.name,
+            'yearly_price',
+          )}
+          className="hidden group-data-[period=yearly]/billing:inline"
+        >
           {formatPrice(plan.yearlyPrice, locale)} {uiString(locale, 'perYear')}
         </span>
       )}
@@ -51,7 +59,7 @@ const PlanTabs = ({ plans, highlighted, locale }: Props) => {
   const featureRows = planFeatureRows(plans);
 
   return (
-    <div className="reveal">
+    <div>
       <TabList
         label={uiString(locale, 'plans')}
         idPrefix={uid}
@@ -78,6 +86,7 @@ const PlanTabs = ({ plans, highlighted, locale }: Props) => {
               />
               <Price
                 className="mt-6"
+                source={plan.name}
                 monthly={plan.monthlyPrice}
                 yearly={plan.yearlyPrice}
                 locale={locale}
