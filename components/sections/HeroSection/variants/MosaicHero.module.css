@@ -1,0 +1,163 @@
+/* The mosaic hero's tiles: images and flat shapes on one grid (areas a to g) */
+
+.mosaic {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: 15rem 8.5rem 8.5rem auto;
+  grid-template-areas:
+    'a a'
+    'b e'
+    'c e'
+    'd d';
+  @media (width >= 40rem) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: 10rem 10rem 11rem;
+    grid-template-areas:
+      'a a b e'
+      'a a c e'
+      'd d f g';
+  }
+  @media (width >= 64rem) {
+    gap: 12px;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-rows: 11.5rem 11.5rem;
+    grid-template-areas:
+      'a a b c e f'
+      'a a d d e g';
+  }
+}
+
+.tile {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+}
+
+/* The image, its top-left corner a quarter circle */
+.a {
+  grid-area: a;
+  border-top-left-radius: 50% 50%;
+}
+@media (width < 40rem) {
+  .a {
+    border-top-left-radius: 7.5rem;
+  }
+}
+.b {
+  grid-area: b;
+}
+.c {
+  grid-area: c;
+}
+.d {
+  grid-area: d;
+}
+/* The secondary image as an arch */
+.e {
+  grid-area: e;
+  border-top-left-radius: 999px;
+  border-top-right-radius: 999px;
+}
+.f {
+  grid-area: f;
+  display: none;
+  @media (width >= 40rem) {
+    display: block;
+  }
+}
+.g {
+  grid-area: g;
+  display: none;
+  @media (width >= 40rem) {
+    display: flex;
+  }
+}
+
+/* B: a white half disc rising from the accent tile's bottom edge */
+.sun {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 70%;
+  aspect-ratio: 2 / 1;
+  translate: -50% 18%;
+  border-radius: 999px 999px 0 0;
+  background-color: var(--color-surface);
+}
+
+/* C: a navy quarter circle growing out of the pale tile's bottom-right corner */
+.quarter {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 72%;
+  aspect-ratio: 1;
+  border-top-left-radius: 100%;
+  background-color: var(--color-ink);
+  transform-origin: 100% 100%;
+}
+
+/* F: an accent disc slowly circling the navy tile's centre */
+.orbit {
+  position: absolute;
+  inset: 22%;
+}
+.moon {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 44%;
+  aspect-ratio: 1;
+  translate: -50% 0;
+  border-radius: 999px;
+  background-color: var(--accent);
+}
+
+/* G: an accent ring in the pale tile's top-right corner */
+.ring {
+  position: absolute;
+  right: -26%;
+  bottom: -34%;
+  width: 78%;
+  aspect-ratio: 1;
+  border: 14px solid var(--accent);
+  border-radius: 999px;
+  opacity: 0.9;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sun {
+    animation: mosaic-rise 14s ease-in-out infinite alternate;
+  }
+  .quarter {
+    animation: mosaic-grow 18s ease-in-out infinite alternate;
+  }
+  .orbit {
+    animation: mosaic-turn 26s linear infinite;
+  }
+  .ring {
+    animation: mosaic-drift 20s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes mosaic-rise {
+  to {
+    translate: -50% -8%;
+  }
+}
+@keyframes mosaic-grow {
+  to {
+    transform: scale(1.18);
+  }
+}
+@keyframes mosaic-turn {
+  to {
+    transform: rotate(1turn);
+  }
+}
+@keyframes mosaic-drift {
+  to {
+    translate: -14% 12%;
+  }
+}

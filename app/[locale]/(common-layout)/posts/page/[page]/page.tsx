@@ -1,19 +1,32 @@
-import { generateWrapper } from '@/components/WithRealTimeUpdates/generateWrapper';
-import type { BuildVariablesFn } from '@/components/WithRealTimeUpdates/types';
+import { notFound } from 'next/navigation';
+import { POSTS_PER_PAGE } from '@/components/posts/postsPagination';
+import { generatePageComponent } from '@/lib/datocms/realtime/generatePageComponent';
+import type { BuildVariablesFn } from '@/lib/datocms/routeContext';
+import { postPageParams } from '@/lib/datocms/staticParams';
 import Content from './Content';
+import { type PageProps, type Query, query, type Variables } from './meta';
 import RealTime from './RealTime';
-import { type PageProps, type Query, type Variables, query } from './meta';
+
+/** Prerendered at build time (lib/datocms/staticParams.ts); a newer record renders on its first visit */
+export const generateStaticParams = () => postPageParams();
 
 const buildVariables: BuildVariablesFn<PageProps, Variables> = ({
   params,
   fallbackLocale,
-}) => ({
-  locale: params.locale,
-  fallbackLocale: [fallbackLocale],
-  skip: (params.page - 1) * 9,
-});
+}) => {
+  // Only canonical page numbers: abc, 0, 02 or 1.5 is a 404, not a query the API rejects
+  if (!/^[1-9]\d*$/.test(params.page)) notFound();
+  const page = Number(params.page);
 
-const Page = generateWrapper<PageProps, Query, Variables>({
+  return {
+    locale: params.locale,
+    fallbackLocales: [fallbackLocale],
+    postsPerPage: POSTS_PER_PAGE,
+    skip: (page - 1) * POSTS_PER_PAGE,
+  };
+};
+
+const Page = generatePageComponent<PageProps, Query, Variables>({
   query,
   buildVariables,
   contentComponent: Content,

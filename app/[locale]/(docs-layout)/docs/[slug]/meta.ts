@@ -1,8 +1,9 @@
+import { TagFragment } from '@/lib/datocms/commonFragments';
 import {
-  DocumentationPageDocument,
-  type DocumentationPageQuery,
-  type DocumentationPageQueryVariables,
-} from '@/graphql/types/graphql';
+  graphql,
+  type ResultOf,
+  type VariablesOf,
+} from '@/lib/datocms/graphql';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 
 export type PageProps = ResolvedGlobalPageProps & {
@@ -11,7 +12,54 @@ export type PageProps = ResolvedGlobalPageProps & {
   };
 };
 
-export type Query = DocumentationPageQuery;
-export type Variables = DocumentationPageQueryVariables;
+export const query = graphql(
+  /* GraphQL */ `
+    query DocumentationPageQuery(
+      $slug: String
+      $locale: SiteLocale
+      $fallbackLocales: [SiteLocale!]
+    ) {
+      documentationPage(
+        filter: { slug: { eq: $slug } }
+        locale: $locale
+        fallbackLocales: $fallbackLocales
+      ) {
+        seo: _seoMetaTags {
+          ...TagFragment
+        }
+        title
+        subtitle
+        # The way up for the breadcrumb (the tree is four levels deep)
+        parent {
+          id
+          slug
+          title
+          parent {
+            id
+            slug
+            title
+            parent {
+              id
+              slug
+              title
+            }
+          }
+        }
+        # The subtopics, listed at the end of the page
+        children {
+          id
+          slug
+          title
+          subtitle
+        }
+        content {
+          value
+        }
+      }
+    }
+  `,
+  [TagFragment],
+);
 
-export const query = DocumentationPageDocument;
+export type Query = ResultOf<typeof query>;
+export type Variables = VariablesOf<typeof query>;

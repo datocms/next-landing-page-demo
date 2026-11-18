@@ -1,0 +1,63 @@
+/* The changelog's motion: all of it is off under reduced motion, and none of it loops.
+
+   .enter: a load-time entrance (the newest release's tile, a release page's header):
+   it fades in and rises 16px once, after --delay. Only on a page load: after a
+   navigation the page transition brings it in.
+
+   .item: a release of the timeline. RevealList marks the ones below the fold
+   data-reveal="waiting" once the page has loaded; each fades in and rises as it
+   enters the view, and its dot grows onto the spine.
+
+   .spine: a segment of the timeline's spine, drawn down from its dot as it scrolls
+   into view (scroll-driven, where the browser supports it; drawn in full elsewhere). */
+
+@media (prefers-reduced-motion: no-preference) {
+  .enter {
+    animation: rise 560ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: var(--delay, 0ms);
+  }
+  /* Reached by a navigation, the tile arrives through the page transition (it may be
+     the shared element travelling there): no second entrance */
+  :root[data-navigated] .enter {
+    animation: none;
+  }
+
+  .item {
+    transition:
+      opacity 520ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      transform 520ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .item[data-reveal='waiting'] {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+
+  .dot {
+    transition: transform 400ms cubic-bezier(0.2, 0.7, 0.2, 1) 160ms;
+  }
+  .item[data-reveal='waiting'] .dot {
+    transform: scale(0.2);
+  }
+
+  @supports (animation-timeline: view()) {
+    .spine {
+      transform-origin: top;
+      animation: draw linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 55%;
+    }
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@keyframes draw {
+  from {
+    transform: scaleY(0);
+  }
+}

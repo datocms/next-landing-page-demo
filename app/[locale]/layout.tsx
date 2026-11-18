@@ -1,51 +1,91 @@
-import getAvailableLocales from '@/app/i18n/settings';
-import ContentLink from '@/components/ContentLink';
-import CustomColor from '@/components/CustomColor';
-import ScrollToTop from '@/components/ScrollToTop';
-import { LayoutDocument, type SiteLocale } from '@/graphql/types/graphql';
-import type { GlobalPageProps } from '@/utils/globalPageProps';
-import queryDatoCMS from '@/utils/queryDatoCMS';
+import '@/styles/global.css';
 import { draftMode } from 'next/headers';
-import { notFound } from 'next/navigation';
 import { toNextMetadata } from 'react-datocms/seo';
+import ContentLink from '@/components/datocms/ContentLink';
+import DraftModeToggle from '@/components/datocms/DraftModeToggle';
+import UiStringsProvider from '@/components/i18n/UiStringsProvider';
+import CustomColor from '@/components/layout/CustomColor';
+import InstantHistoryScroll from '@/components/layout/InstantHistoryScroll';
+import { TagFragment } from '@/lib/datocms/commonFragments';
+import { executeQuery } from '@/lib/datocms/executeQuery';
+import { graphql } from '@/lib/datocms/graphql';
+import { toLanguageTag } from '@/lib/i18n/languageTag';
+import { requireSiteLocale } from '@/lib/i18n/locales';
+import { primeUiStrings } from '@/lib/i18n/uiStrings/load';
+import { fontVariables } from '@/styles/fonts';
+import type { GlobalPageProps } from '@/utils/globalPageProps';
 
-type Params = GlobalPageProps & {
+type Props = GlobalPageProps & {
   children: React.ReactNode;
 };
 
+const query = graphql(
+  /* GraphQL */ `
+    query LocaleLayoutQuery {
+      _site {
+        faviconMetaTags {
+          ...TagFragment
+        }
+      }
+      layout {
+        mainColor {
+          red
+          blue
+          green
+        }
+      }
+    }
+  `,
+  [TagFragment],
+);
+
+// Every page gets the favicon set in the DatoCMS project settings
 export async function generateMetadata() {
   const { isEnabled: isDraft } = await draftMode();
-  const data = await queryDatoCMS(LayoutDocument, {}, isDraft);
+  const data = await executeQuery(query, { includeDrafts: isDraft });
   return toNextMetadata(data._site.faviconMetaTags);
 }
 
-export default async function RootLayout({ children, params }: Params) {
+/**
+ * Validates the locale and renders <html lang> for it, with what every page
+ * shares: the accent color, the Draft Mode toggle and, in Draft Mode, Content Link
+ */
+export default async function LocaleLayout({ children, params }: Props) {
   const { isEnabled: isDraft } = await draftMode();
-  const rawParams = await params;
-  const allLocales: string[] = await getAvailableLocales();
+  const locale = await requireSiteLocale((await params).locale);
 
-  // Only try to match against valid locales for this site, not any random string
-  if (!allLocales.includes(rawParams.locale)) {
-    notFound();
-  }
-
-  // Cast to SiteLocale after validation
-  const resolvedParams = {
-    locale: rawParams.locale as SiteLocale,
-  };
-
-  const data = await queryDatoCMS(LayoutDocument, {}, isDraft);
+  const data = await executeQuery(query, { includeDrafts: isDraft });
+  // Fills the request store, and hands the same texts to the browser through the provider
+  const dictionary = await primeUiStrings(locale, isDraft);
 
   return (
-    <>
-      <CustomColor
-        r={data.layout?.mainColor.red || 74}
-        g={data.layout?.mainColor.green || 247}
-        b={data.layout?.mainColor.blue || 108}
-      />
-      {isDraft && <ContentLink />}
-      {children}
-      <ScrollToTop globalPageProps={{ params: resolvedParams }} isDraft={isDraft} />
-    </>
+    <html
+      lang={toLanguageTag(locale)}
+      className={fontVariables}
+      // Browser extensions add their own classes and attributes to <html> before React loads;
+      // this only silences the mismatch warning for this one element, not for its children
+      suppressHydrationWarning
+      // Next scrolls to the top inside the navigation commit only with this attribute; never remove it
+      data-scroll-behavior="smooth"
+      // Inline on purpose: React drops the root from a route's view transition when only the page
+      // boundaries changed, so the footer and the announcement would pop over the fading page.
+      // Named here, they crossfade instead (React only cancels an empty inline name)
+      style={{ viewTransitionName: 'root' }}
+    >
+      <body className="font-sans">
+        {/* Without a Layout record, the default accent of styles/tokens.css (#4a6cf7) */}
+        <CustomColor
+          r={data.layout?.mainColor.red ?? 74}
+          g={data.layout?.mainColor.green ?? 108}
+          b={data.layout?.mainColor.blue ?? 247}
+        />
+        {isDraft && <ContentLink />}
+        <UiStringsProvider locale={locale} dictionary={dictionary}>
+          {children}
+          <DraftModeToggle isDraft={isDraft} locale={locale} />
+        </UiStringsProvider>
+        <InstantHistoryScroll />
+      </body>
+    </html>
   );
 }

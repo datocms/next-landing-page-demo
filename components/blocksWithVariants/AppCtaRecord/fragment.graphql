@@ -1,6 +1,0 @@
-fragment CtaAppBlock on AppCtaRecord {
-  text
-  title
-  googlePlayUrl
-  appstoreUrl
-}

@@ -1,6 +1,6 @@
 'use client';
 
-import { generateRealtimeComponent } from '@/components/WithRealTimeUpdates/generateRealtime';
+import { generateRealtimeComponent } from '@/lib/datocms/realtime/generateRealtimeComponent';
 import Content from './Content';
 import type { PageProps, Query, Variables } from './meta';
 

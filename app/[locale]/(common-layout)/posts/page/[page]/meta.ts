@@ -1,17 +1,59 @@
+import { PostExcerptFragment } from '@/components/posts/PostExcerpt/fragment';
 import {
-  PostsDocument,
-  type PostsQuery,
-  type PostsQueryVariables,
-} from '@/graphql/types/graphql';
+  graphql,
+  type ResultOf,
+  type VariablesOf,
+} from '@/lib/datocms/graphql';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 
 export type PageProps = ResolvedGlobalPageProps & {
   params: {
-    page: number;
+    page: string;
   };
 };
 
-export type Query = PostsQuery;
-export type Variables = PostsQueryVariables;
+export const query = graphql(
+  /* GraphQL */ `
+    query PostsQuery(
+      $locale: SiteLocale
+      $fallbackLocales: [SiteLocale!]
+      $postsPerPage: IntType
+      $skip: IntType = "0"
+    ) {
+      allPosts(
+        filter: { title: { isBlank: "false" } }
+        orderBy: _createdAt_DESC
+        first: $postsPerPage
+        locale: $locale
+        fallbackLocales: $fallbackLocales
+        skip: $skip
+      ) {
+        id
+        ...PostExcerptFragment
+      }
+      _allPostsMeta(locale: $locale, filter: { title: { isBlank: "false" } }) {
+        count
+      }
+      # The topic links at the top of the page: tags that have posts
+      topics: allTags(
+        orderBy: name_ASC
+        first: 100
+        locale: $locale
+        fallbackLocales: $fallbackLocales
+      ) {
+        name
+        slug
+        _allReferencingPostsMeta(
+          locale: $locale
+          filter: { title: { isBlank: "false" } }
+        ) {
+          count
+        }
+      }
+    }
+  `,
+  [PostExcerptFragment],
+);
 
-export const query = PostsDocument;
+export type Query = ResultOf<typeof query>;
+export type Variables = VariablesOf<typeof query>;

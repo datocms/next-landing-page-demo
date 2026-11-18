@@ -1,9 +1,16 @@
-import PostExcerpt from '@/components/PostExcerpt';
-import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
 import { notFound } from 'next/navigation';
+import PostMosaic from '@/components/posts/PostMosaic';
+import PostsPageHeader from '@/components/posts/PostsPageHeader';
+import TopicLinks from '@/components/posts/TopicLinks';
+import type { ContentComponent } from '@/lib/datocms/realtime/types';
+import { uiString } from '@/lib/i18n/uiStrings';
 import type { PageProps, Query } from './meta';
 
-const Content: ContentPage<PageProps, Query> = ({
+/**
+ * A tag's page: the tag's name as the h1, the topic pills under it (this tag
+ * marked) to move between topics, then its posts in the blog's grid.
+ */
+const Content: ContentComponent<PageProps, Query> = ({
   data,
   ...globalPageProps
 }) => {
@@ -11,48 +18,43 @@ const Content: ContentPage<PageProps, Query> = ({
     notFound();
   }
 
+  const { locale, slug } = globalPageProps.params;
+  const posts = data.tag._allReferencingPosts;
+  const topics = data.topics.filter(
+    (topic) => topic._allReferencingPostsMeta.count > 0,
+  );
+
   return (
-    <section className="py-[32px]">
-      <div className="width-full flex items-center justify-center gap-4">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth="1.5"
-          stroke="currentColor"
-          className="h-16 w-16 stroke-primary opacity-90"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M6 6h.008v.008H6V6z"
-          />
-        </svg>
-        <h1 className="my-24 text-center text-2xl font-semibold text-gray-800 dark:text-white lg:text-4xl">
-          {data.tag.tag}
-        </h1>
-      </div>
+    <>
+      <PostsPageHeader
+        title={data.tag.name}
+        titleId="tag-title"
+        lead={
+          posts.length === 0 ? uiString(locale, 'noTaggedPosts') : undefined
+        }
+      >
+        <TopicLinks
+          topics={topics}
+          globalPageProps={globalPageProps}
+          current={slug}
+          centered
+          className="mt-8 w-full"
+        />
+      </PostsPageHeader>
 
-      <div className="container">
-        <div className="-mx-4 flex flex-wrap justify-center">
-          {data.tag._allReferencingPosts.map((post) => (
-            <div
-              key={post.id}
-              className="mb-10 w-full px-4 md:w-2/3 lg:w-1/2 xl:w-1/3"
-            >
-              <PostExcerpt fragment={post} globalPageProps={globalPageProps} />
-            </div>
-          ))}
-        </div>
-
-        <div className="-mx-4 flex flex-wrap" />
-      </div>
-    </section>
+      <section
+        aria-labelledby="tag-title"
+        className="container-page mt-12 lg:mt-16"
+      >
+        {posts.length > 0 && (
+          <PostMosaic
+            posts={posts}
+            globalPageProps={globalPageProps}
+            prioritizeFirstRow
+          />
+        )}
+      </section>
+    </>
   );
 };
 

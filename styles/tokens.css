@@ -1,0 +1,72 @@
+/* Runtime tokens on :root: the accent, the page measures and the section rhythm. */
+
+@layer base {
+  :root {
+    /* Accent. These three are the defaults: on every page inside a locale,
+       components/layout/CustomColor.tsx overrides them with Layout › Main color and the
+       label colour and hover fill it computes from it */
+    --accent: #4a6cf7;
+    --on-accent: #fff;
+    --accent-hover: #4361de;
+    /* The accent as text: the same hue, dark enough for AA on white and on subtle. A
+       pale accent (a pastel) keeps some colour once darkened instead of turning grey */
+    --accent-ink: oklch(
+      from var(--accent) min(l, 0.5) min(calc(c * 1.8), max(c, 0.14)) h
+    );
+    /* The accent as a pale tint and as a border: fixed lightness, so a pastel accent
+       and a dark one both give a tint that shows on white */
+    --accent-soft: oklch(from var(--accent) 0.955 min(calc(c * 0.3), 0.045) h);
+    --accent-line: oklch(from var(--accent) 0.82 min(calc(c * 0.6), 0.1) h);
+    /* The accent as a 2px edge (the highlighted plan, the selected tab): the colour
+       itself, darkened only when it is too pale to show on white */
+    --accent-edge: oklch(from var(--accent) min(l, 0.7) c h);
+
+    /* Two tints of the accent's hue at fixed lightness, so any accent gives a pale page
+       colour: --pale for tiles and wells, --ice for the panels and selected pills */
+    --pale: oklch(from var(--accent) 0.972 0.018 calc(h - 10));
+    --ice: oklch(from var(--accent) 0.94 0.035 h);
+    /* The accent as a solid panel behind white copy: the colour, darkened only as far
+       as white text needs for AA (the statement hero, its page's closing panel) */
+    --accent-deep: oklch(from var(--accent) min(l, 0.52) c h);
+    /* The accent as a deep, half-transparent shadow colour */
+    --glow: oklch(from var(--accent) 0.4 0.2 h / 0.5);
+
+    /* Page: the container holds 1136px of content between two gutters. The full-width
+       rounded panels (hero, tinted bands, closing panel) stop --inset short of the viewport */
+    --page-max: 1136px;
+    --gutter: 20px;
+    --inset: 8px;
+    --grid-gap: 16px;
+    /* From the viewport edge to the content edge: what a full-bleed child has to cross */
+    --page-edge: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
+    --header-h: 72px;
+
+    /* Section rhythm (the `section` utility) */
+    --section-space: clamp(4rem, 7.5vw, 6.5rem);
+    /* From the header to the first thing on a page that opens with plain content */
+    --page-top: 3.5rem;
+
+    /* Focus ring: the accent as text, around a halo of the surface */
+    --focus-ring: var(--accent-ink);
+    --focus-halo: var(--color-surface);
+  }
+  @media (width >= 40rem) {
+    :root {
+      --gutter: 24px;
+    }
+  }
+  @media (width >= 48rem) {
+    :root {
+      --grid-gap: 24px;
+    }
+  }
+  @media (width >= 64rem) {
+    :root {
+      --gutter: 40px;
+      --inset: 12px;
+      --page-top: 5rem;
+      --grid-gap: 32px;
+      --header-h: 88px;
+    }
+  }
+}

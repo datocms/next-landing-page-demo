@@ -1,0 +1,380 @@
+/* Custom utilities: the type tokens, the page container, the section rhythm, the
+   12-column grid and the card. They accept variants like any Tailwind utility (`lg:text-h2`). */
+
+/* ---------- Type ----------
+   Each token is a size with its line height, weight and tracking. The tag is the
+   caller's choice (the `as` prop of SectionHeader and friends). */
+
+/* Landing hero h1 */
+@utility text-display {
+  font-size: clamp(2.5rem, 5.4vw, 4.125rem);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.052em;
+  /* A long title steps down (utils/titleSize.ts) */
+  &[data-long] {
+    font-size: clamp(2.25rem, 4.4vw, 3.375rem);
+    line-height: 1.03;
+  }
+}
+/* Page titles */
+@utility text-h1 {
+  font-size: clamp(2.125rem, 4vw, 3.25rem);
+  line-height: 1.03;
+  font-weight: 600;
+  letter-spacing: -0.048em;
+  &[data-long] {
+    font-size: clamp(1.875rem, 3.2vw, 2.625rem);
+    line-height: 1.06;
+  }
+}
+/* Section titles */
+@utility text-h2 {
+  font-size: clamp(1.875rem, 3.6vw, 3rem);
+  line-height: 1.03;
+  font-weight: 600;
+  letter-spacing: -0.048em;
+  &[data-long] {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1.06;
+  }
+}
+/* Item titles */
+@utility text-h3 {
+  font-size: 1.25rem;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.028em;
+}
+/* Subtitles */
+@utility text-lead {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: -0.006em;
+  @media (width >= 40rem) {
+    font-size: 1.125rem;
+  }
+}
+/* Text */
+@utility text-body {
+  font-size: 1rem;
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: -0.003em;
+}
+/* Meta, captions, UI labels (add `font-medium` when it names something) */
+@utility text-small {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+/* The smallest text: badges, table notes */
+@utility text-ui {
+  font-size: 0.84375rem;
+  line-height: 1.4;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+/* Code-like strings outside a code block */
+@utility text-machine {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* ---------- Layout ---------- */
+
+/* The page container: 1200px of content between two gutters */
+@utility container-page {
+  width: 100%;
+  max-width: calc(var(--page-max) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Section rhythm */
+@utility section {
+  padding-block: var(--section-space);
+}
+/* The block that opens a page under the header: a shorter top, the usual gap below */
+@utility section-lead {
+  padding-top: var(--page-top);
+  padding-bottom: var(--section-space);
+}
+
+/* One gap between any two neighbours, whatever they are. A plain section leaves
+   the gap below itself, so what follows never adds a second one: the next plain
+   section gives up its top padding, a tinted panel or the footer its top margin.
+   Tinted panels that follow each other sit one inset apart. Written outside the
+   utilities layer so the rhythm wins over a section's own utilities */
+main > .section:first-child:not(.band):not(.panel) {
+  padding-top: var(--page-top);
+}
+/* Under a page title (PostsPageHeader on a page without a hero) the first section
+   starts closer than a full section gap */
+main > header + .section:not(.band):not(.panel) {
+  padding-top: 3rem;
+  @media (width >= 64rem) {
+    padding-top: 4rem;
+  }
+}
+main
+  > :is(.section, .section-lead):not(.band):not(.panel)
+  + .section:not(.band):not(.panel) {
+  padding-top: 0;
+}
+main > :is(.band, .panel) + :is(.band, .panel) {
+  margin-top: var(--inset);
+}
+main
+  > :is(.section, .section-lead):not(.band):not(.panel)
+  + :is(.band, .panel) {
+  margin-top: 0;
+}
+/* The logo row tucks in closer under a panel (the hero) */
+main > .panel + .section[data-brands] {
+  padding-top: calc(var(--section-space) * 0.6);
+}
+/* The footer keeps a full gap above itself, unless what ends the page left one
+   (a plain section) or is a panel too (one inset; the closing panel joins it) */
+main:has(> :is(.band, .panel):not([data-closing]):last-child) + footer {
+  margin-top: var(--inset);
+}
+main:has(> :is(.section, .section-lead):not(.band):not(.panel):last-child)
+  + footer {
+  margin-top: 0;
+}
+
+/* 12 columns from 1024, 8 from 768, 4 below; gap 24px (16px below 768).
+   Children place themselves with col-span-* and lg:col-start-* */
+@utility grid-12 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--grid-gap);
+  @media (width >= 48rem) {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+  @media (width >= 64rem) {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+/* Pulls a child of container-page out to the right edge of the viewport */
+@utility bleed-right {
+  margin-right: calc(var(--page-edge) * -1);
+}
+
+/* ---------- Small helpers ---------- */
+
+/* A card: white with a hairline ring and the card radius (or --card-radius). No shadow:
+   depth comes from the tinted panels cards sit on */
+@utility card {
+  border: 1px solid var(--color-line);
+  border-radius: var(--card-radius, var(--radius-card));
+  background-color: var(--color-surface);
+}
+
+/* A tile: the pale tint instead of a border. Feature tiles, checklists, FAQ rows */
+@utility tile {
+  border-radius: var(--card-radius, var(--radius-card));
+  background-color: var(--color-subtle);
+}
+
+/* A linked card answers the pointer: its border darkens (put it beside `card`) */
+@utility card-lift {
+  transition: border-color 0.15s linear;
+  @media (hover: hover) {
+    &:hover {
+      border-color: var(--color-line-strong);
+    }
+  }
+}
+
+/* Same answer for a card that is not a link (kept for the feature cards) */
+@utility card-hover-accent {
+  transition: border-color 0.15s linear;
+  @media (hover: hover) {
+    &:hover {
+      border-color: var(--color-line-strong);
+    }
+  }
+}
+
+/* A full-width rounded panel: it stops --inset short of the viewport on both sides.
+   The content inside still uses container-page */
+@utility panel {
+  margin-inline: var(--inset);
+  border-radius: var(--radius-frame);
+}
+/* The tinted panel (hero, reviews): one pale tint easing into a slightly deeper one */
+@utility panel-tint {
+  background-image: linear-gradient(165deg, var(--pale), var(--ice));
+}
+/* The dark panel (the closing call to action and footer) */
+@utility panel-ink {
+  background-image: linear-gradient(180deg, #0f1546, var(--color-ink));
+  color: #fff;
+  --focus-ring: #fff;
+  --focus-halo: var(--color-ink);
+}
+
+/* A quiet band behind a whole section (reviews, a feature list): the tinted panel */
+@utility band {
+  margin-inline: var(--inset);
+  border-radius: var(--radius-frame);
+  background-image: linear-gradient(180deg, var(--pale), var(--ice));
+}
+
+/* The hero: a wash of the accent (about 20% at its peak) and a faint line grid
+   behind its top, across the viewport (<main> clips the sideways overflow). The
+   wash reaches up behind the transparent header and fades out well before the hero ends.
+   z-index 1 lets the hero image's shadow fall over the section below */
+@utility hero-wash {
+  isolation: isolate;
+}
+
+/* Behind the hero image: a soft accent glow centred on its upper half, so the
+   image looks lit from behind. Goes on an unanimated wrapper of the frame */
+@utility hero-glow {
+  position: relative;
+}
+
+/* The hero image's frame: 8px of translucent white around the image (which takes
+   rounded-frame), a 24px outer radius, the ring and the accent-tinted shadow */
+@utility hero-frame {
+  border-radius: var(--radius-frame);
+  box-shadow:
+    0 0 0 1px rgb(16 24 40 / 0.08),
+    var(--shadow-float);
+}
+
+/* The hero's one load-time entrance: each part fades in and rises 12px, staggered
+   by --i (headline 0, lead 1, buttons 2, image 3). Off under reduced motion */
+@utility hero-enter {
+  animation: none;
+}
+
+/* The hero image: a 1px neutral ring and a deep shadow tinted with the accent.
+   Pair it with rounded-frame */
+@utility frame-hero {
+  box-shadow:
+    0 0 0 1px rgb(16 24 40 / 0.08),
+    var(--shadow-float);
+}
+
+/* A showcase photo or video (detail, video): the 1px ring and the float shadow.
+   Pair it with rounded-frame */
+@utility frame-media {
+  box-shadow: var(--shadow-glow);
+}
+
+/* The primary button's depth: a 1px highlight inside the top edge, a small accent-tinted
+   drop; on hover it lifts 1px and the drop deepens */
+@utility button-depth {
+  box-shadow: 0 14px 30px -14px var(--glow);
+  &:disabled,
+  &[aria-disabled='true'] {
+    box-shadow: none;
+  }
+}
+
+/* The footer's top edge: a faint accent wash that mirrors the hero, fading down over
+   the subtle background */
+@utility footer-wash {
+  background-image: none;
+}
+
+/* The highlighted plan: an accent edge (the border plus a 1px ring), a pale accent top
+   fading to white by 40%, and an accent-tinted lift */
+@utility plan-highlight {
+  border-color: var(--accent-edge);
+  box-shadow: 0 0 0 1px var(--accent-edge);
+}
+
+/* On a navy panel (the footer, a dark tile) the focus ring is light around a dark halo */
+@utility on-ink {
+  --focus-ring: var(--color-surface);
+  --focus-halo: var(--color-fg);
+}
+
+/* Extends a small control's hit area to 44px without changing its box */
+@utility hit-44 {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    translate: -50% -50%;
+  }
+}
+
+/* A linked row or card underlines its title on hover: put `group` on the link and
+   `title-underline` on the title */
+@utility title-underline {
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: text-decoration-color 0.1s linear;
+  @media (hover: hover) {
+    .group:hover & {
+      text-decoration-color: currentColor;
+    }
+  }
+}
+
+/* A row that drifts sideways in a loop (the feature cards): two identical tracks side by
+   side, each sliding left by its own width. It pauses under the pointer or keyboard
+   focus. On touch screens and under reduced motion there is no drift: the reader scrolls
+   the first track and the copy is hidden */
+@utility marquee {
+  --marquee-gap: 1rem;
+  display: flex;
+  gap: var(--marquee-gap);
+  overflow: hidden;
+  padding-block: 0.25rem;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 5%,
+    black 95%,
+    transparent
+  );
+  @media (hover: none), (prefers-reduced-motion: reduce) {
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: var(--gutter);
+    padding-inline: var(--gutter);
+    mask-image: none;
+    scrollbar-width: none;
+  }
+  &:hover .marquee-track,
+  &:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+}
+@utility marquee-track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: stretch;
+  gap: var(--marquee-gap);
+  animation: marquee-slide 48s linear infinite;
+  & > * {
+    scroll-snap-align: start;
+  }
+  @media (hover: none), (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+@utility marquee-copy {
+  @media (hover: none), (prefers-reduced-motion: reduce) {
+    display: none;
+  }
+}

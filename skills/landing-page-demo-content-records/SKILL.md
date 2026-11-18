@@ -5,7 +5,7 @@ description: >-
   that feed current routes and sections but are not layout, docs, or section
   wiring: blog posts, authors, tags, testimonials, pricing tiers, changelog
   entries, and legal pages. Covers post, author, tag, testimonial, pricing_tier,
-  change_log, and legal_page records; /posts, /posts/[slug], /posts/author/[slug],
+  changelog_entry, and legal_page records; /posts, /posts/[slug], /posts/author/[slug],
   /posts/tag/[slug], /legal/[slug], /changelog/[slug], PostExcerpt, and section
   fragments that link these records. Do not use for shared layout, docs pages,
   new section components, new route-backed types, preview mapping, or generic
@@ -26,13 +26,20 @@ Before schema or content operations:
 
 ## Existing content surfaces
 
-- Posts: `post` records feed `/posts`, `/posts/[slug]`, featured posts sections, all-posts sections, author pages, and tag pages.
+- Posts: `post` records feed `/posts` (the `posts` Page and its all-posts section, then `/posts/page/[page]`), `/posts/[slug]`, featured posts sections, author pages, and tag pages.
 - Authors: `author` records feed `/posts/author/[slug]` and post bylines.
 - Tags: `tag` records feed `/posts/tag/[slug]` and post grouping.
 - Testimonials: `testimonial` records feed `review_section` blocks.
-- Pricing tiers: `pricing_tier` records feed `pricing_section` blocks.
-- Changelog entries: `change_log` records feed `changelog_section` blocks and `/changelog/[slug]`.
+- Pricing tiers: `pricing_tier` records (and their `plan_limit` blocks) feed `pricing_section` and `pricing_comparison_section` blocks.
+- Changelog entries: `changelog_entry` records feed `changelog_section` blocks and `/changelog/[slug]`.
 - Legal pages: `legal_page` records feed `/legal/[slug]` and `layout.footer_links`.
+
+## Rendering these records
+
+- Posts index, tag and author pages open with `components/posts/PostsPageHeader` (h1, lead line, optional portrait); post cards are `components/posts/PostCard` (its data comes from the `PostExcerpt` fragment), laid out by `PostGrid` or `PostRows`; the posts index pages end with `Pagination` (`POSTS_PER_PAGE` in `components/posts/postsPagination.ts`). Covers, bylines and meta rows (`PostCover`, `PostMeta`, with `Avatar` from `components/ui/`) also live in `components/posts/`. Post bodies are rendered by `PostBody.tsx` in the post route, and the blocks they embed live in `components/blocks/`.
+- Legal pages build their "On this page" rail with `components/ui/TableOfContents` and derive heading ids with `utils/headingOutline.ts`. Posts, legal, changelog and docs share the quote and code rules of `components/datocms/DatoStructuredText/longFormNodeRules.tsx` and the `.prose` styles in `styles/prose.css`.
+- Follow the styling rules in the `landing-page-demo-sections` skill: tokens and primitives only, no raw colors, the accent derived from `--accent`.
+- Interface copy that has no CMS field ("Latest posts", "Posts by {name}", "{n} posts", "Page {page} of {total}", the empty tag state) comes from `uiString(locale, key, vars?)` in `@/lib/i18n/uiStrings` (rules in `landing-page-demo-sections`).
 
 ## Common workflows
 
@@ -49,9 +56,9 @@ Before schema or content operations:
 ### Change how existing records render
 
 1. Confirm the request changes an existing content surface, not a new section type or new route.
-2. Update the closest existing query, fragment, or component.
-3. Preserve current pagination and locale-aware links.
-4. Regenerate GraphQL types after query changes.
+2. Update the closest existing query, fragment, or component (Structured Text fields: see "Styling sections" in `landing-page-demo-sections`).
+3. Preserve current pagination and locale-aware links (built with `utils/routes.ts`).
+4. Query types are inferred by gql.tada; run `npm run generate-schema` only after DatoCMS schema changes.
 5. Verify the route and any section that consumes the record.
 
 ### Add a content record to an existing section or layout field
@@ -76,4 +83,4 @@ Before schema or content operations:
 - Published records appear in the intended route or section.
 - Draft/live preview keeps working for draft-enabled records.
 - Pagination still works for post listing changes.
-- GraphQL type generation and build pass after code changes.
+- `npm run lint` (including `gql.tada check`) and build pass after code changes.

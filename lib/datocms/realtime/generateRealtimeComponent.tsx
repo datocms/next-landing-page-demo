@@ -1,0 +1,33 @@
+import { useQuerySubscription } from 'react-datocms/use-query-subscription';
+import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
+import type { ContentComponent, RealtimeComponent } from './types';
+
+/**
+ * Builds the client component a route renders in Draft Mode (its RealTime.tsx).
+ *
+ * It subscribes to DatoCMS's Real-time Updates API with the same query the
+ * page ran on the server, starts from that server result, and re-renders
+ * `contentComponent` every time an editor changes the draft content.
+ */
+export function generateRealtimeComponent<
+  PageProps extends ResolvedGlobalPageProps,
+  Result = unknown,
+  Variables = Record<string, unknown>,
+>({
+  contentComponent: Content,
+}: {
+  contentComponent: ContentComponent<PageProps, Result>;
+}) {
+  const RealTime: RealtimeComponent<PageProps, Result, Variables> = ({
+    pageProps,
+    ...subscriptionOptions
+  }) => {
+    const { data } = useQuerySubscription(subscriptionOptions);
+
+    if (!data) return null;
+
+    return <Content {...pageProps} data={data} />;
+  };
+
+  return RealTime;
+}

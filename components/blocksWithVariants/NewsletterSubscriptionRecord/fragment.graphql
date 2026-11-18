@@ -1,5 +1,0 @@
-fragment NewsletterSubscription on NewsletterSubscriptionRecord {
-  buttonLabel
-  subtitle
-  title
-}

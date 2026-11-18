@@ -1,16 +1,20 @@
-import { generateMetadataFn } from '@/components/WithRealTimeUpdates/generateMetadataFn';
-import { generateWrapper } from '@/components/WithRealTimeUpdates/generateWrapper';
-import type { BuildVariablesFn } from '@/components/WithRealTimeUpdates/types';
+import { generateMetadataFn } from '@/lib/datocms/generateMetadataFn';
+import { generatePageComponent } from '@/lib/datocms/realtime/generatePageComponent';
+import type { BuildVariablesFn } from '@/lib/datocms/routeContext';
+import { slugParams } from '@/lib/datocms/staticParams';
 import Content from './Content';
+import { type PageProps, type Query, query, type Variables } from './meta';
 import RealTime from './RealTime';
-import { type PageProps, type Query, type Variables, query } from './meta';
+
+/** Prerendered at build time (lib/datocms/staticParams.ts); a newer record renders on its first visit */
+export const generateStaticParams = () => slugParams('docs');
 
 const buildVariables: BuildVariablesFn<PageProps, Variables> = ({
   params,
   fallbackLocale,
 }) => ({
   locale: params.locale,
-  fallbackLocale: [fallbackLocale],
+  fallbackLocales: [fallbackLocale],
   slug: params.slug,
 });
 
@@ -18,17 +22,13 @@ export const generateMetadata = generateMetadataFn<PageProps, Query, Variables>(
   {
     query,
     buildVariables,
-    generate: (data) => data.documentationPage?.seo,
+    pickSeoMetaTags: (data) => data.documentationPage?.seo,
   },
 );
 
-const Page = generateWrapper<PageProps, Query, Variables>({
+const Page = generatePageComponent<PageProps, Query, Variables>({
   query,
-  buildVariables: ({ params, fallbackLocale }) => ({
-    locale: params.locale,
-    fallbackLocale: [fallbackLocale],
-    slug: params.slug,
-  }),
+  buildVariables,
   contentComponent: Content,
   realtimeComponent: RealTime,
 });

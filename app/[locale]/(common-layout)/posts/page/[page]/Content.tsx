@@ -1,59 +1,67 @@
-import PageIndicatorList from '@/components/PageIndicatorList';
-import PostExcerpt from '@/components/PostExcerpt';
-import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
-import { buildUrl } from '@/utils/globalPageProps';
 import { notFound } from 'next/navigation';
+import Pagination from '@/components/posts/Pagination';
+import PostMosaic from '@/components/posts/PostMosaic';
+import { postsPageCount } from '@/components/posts/postsPagination';
+import TopicLinks from '@/components/posts/TopicLinks';
+import type { ContentComponent } from '@/lib/datocms/realtime/types';
+import { uiString } from '@/lib/i18n/uiStrings';
 import type { PageProps, Query } from './meta';
 
-const Content: ContentPage<PageProps, Query> = ({
+/**
+ * A further page of the blog index: the topic pills, then the posts in the
+ * grid with its wide tiles (no leading post here) and the pagination. The
+ * title is the h1 for screen readers and search engines only, like on /posts.
+ */
+const Content: ContentComponent<PageProps, Query> = ({
   data,
   ...globalPageProps
 }) => {
-  const { page } = globalPageProps.params;
+  const { locale } = globalPageProps.params;
+  const page = Number(globalPageProps.params.page);
 
   if (data.allPosts.length === 0) {
     notFound();
   }
 
-  return (
-    <section className="pb-[120px] pt-[120px]">
-      <div className="container">
-        <div className="-mx-4 flex flex-wrap justify-center">
-          {data.allPosts.map((post) => (
-            <div
-              key={post.id}
-              className="mb-10 w-full px-4 md:w-2/3 lg:w-1/2 xl:w-1/3"
-            >
-              <PostExcerpt fragment={post} globalPageProps={globalPageProps} />
-            </div>
-          ))}
-        </div>
+  const postCount = data._allPostsMeta.count;
+  const pageCount = postsPageCount(postCount);
+  const title = uiString(locale, 'latestPosts');
+  const pageText = uiString(locale, 'pageOf', { page, total: pageCount });
+  const topics = data.topics.filter(
+    (topic) => topic._allReferencingPostsMeta.count > 0,
+  );
 
-        <div className=" -mx-4 flex flex-wrap">
-          <div className="w-full px-4">
-            <ul className="flex items-center justify-center pt-8">
-              <li className="mx-1">
-                <a
-                  href={
-                    page - 1 === 1
-                      ? buildUrl(globalPageProps, '/posts')
-                      : buildUrl(globalPageProps, `/posts/page/${page - 1}`)
-                  }
-                  className="flex h-9 min-w-[36px] items-center justify-center rounded-md bg-body-color bg-opacity-[15%] px-4 text-sm text-body-color transition hover:bg-primary hover:bg-opacity-100 hover:text-white"
-                >
-                  Prev
-                </a>
-              </li>
-              <PageIndicatorList
-                globalPageProps={globalPageProps}
-                postCount={data._allPostsMeta.count}
-                page={page}
-              />
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
+  return (
+    <>
+      {/* This route has no page record (and so no SEO tags): React hoists this title into <head> */}
+      <title>{`${title}, ${pageText}`}</title>
+
+      <section
+        aria-labelledby="posts-title"
+        className="container-page pt-(--page-top)"
+      >
+        <h1 id="posts-title" className="sr-only">
+          {`${title}, ${pageText}`}
+        </h1>
+        <TopicLinks
+          topics={topics}
+          globalPageProps={globalPageProps}
+          current="all"
+        />
+        <PostMosaic
+          posts={data.allPosts}
+          globalPageProps={globalPageProps}
+          prioritizeFirstRow
+          className="mt-10 lg:mt-14"
+        />
+        <Pagination
+          page={page}
+          postCount={postCount}
+          globalPageProps={globalPageProps}
+          className="mt-16"
+        />
+      </section>
+    </>
   );
 };
 

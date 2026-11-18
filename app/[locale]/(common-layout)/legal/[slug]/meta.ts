@@ -1,8 +1,9 @@
+import { TagFragment } from '@/lib/datocms/commonFragments';
 import {
-  LegalDocument,
-  type LegalQuery,
-  type LegalQueryVariables,
-} from '@/graphql/types/graphql';
+  graphql,
+  type ResultOf,
+  type VariablesOf,
+} from '@/lib/datocms/graphql';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 
 export type PageProps = ResolvedGlobalPageProps & {
@@ -11,7 +12,31 @@ export type PageProps = ResolvedGlobalPageProps & {
   };
 };
 
-export type Query = LegalQuery;
-export type Variables = LegalQueryVariables;
+export const query = graphql(
+  /* GraphQL */ `
+    query LegalQuery(
+      $slug: String
+      $locale: SiteLocale
+      $fallbackLocales: [SiteLocale!]
+    ) {
+      legalPage(
+        filter: { slug: { eq: $slug } }
+        locale: $locale
+        fallbackLocales: $fallbackLocales
+      ) {
+        seo: _seoMetaTags {
+          ...TagFragment
+        }
+        title
+        updatedAt: _updatedAt
+        content {
+          value
+        }
+      }
+    }
+  `,
+  [TagFragment],
+);
 
-export const query = LegalDocument;
+export type Query = ResultOf<typeof query>;
+export type Variables = VariablesOf<typeof query>;

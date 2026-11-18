@@ -1,0 +1,159 @@
+/* `wall`: a window onto a plane of testimonial cards that drifts up and to the left.
+
+   The plane is two identical tiles side by side (2 × 5 columns), so moving it left by
+   half its width (-50% of its own box) brings it back to the start. Vertically each
+   column holds the same run of cards (the same testimonials, rotated), so all columns are
+   exactly one run tall: that run is the plane's box, and moving up by its height (-100%)
+   loops too. The cards that fill the window past the run's end hang below it (`.tail`).
+   The two axes are two nested animations, so each keeps its own calm speed. */
+
+.window {
+  --card-w: 264px;
+  --gap: 14px;
+  --stagger: 9px;
+  /* The plane's tile is 5 columns wide: the window never shows more than that */
+  max-width: calc(5 * (var(--card-w) + var(--gap)));
+  margin-inline: auto;
+  border-radius: var(--radius-card);
+  /* Click and drag moves the plane (WallWindow.tsx); a vertical swipe still scrolls the page */
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+
+  @media (width >= 40rem) {
+    --card-w: 300px;
+    --gap: 18px;
+    --stagger: 12px;
+  }
+  @media (width >= 64rem) {
+    --card-w: 324px;
+    --gap: 20px;
+    --stagger: 15px;
+  }
+}
+
+/* What shows: clipped (`clip` so focus never scrolls it), the four edges faded out */
+.mask {
+  height: 440px;
+  overflow: clip;
+  container-type: inline-size;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
+    linear-gradient(to bottom, transparent, #000 13%, #000 87%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
+    linear-gradient(to bottom, transparent, #000 13%, #000 87%, transparent);
+  mask-composite: intersect;
+
+  @media (width >= 40rem) {
+    height: 520px;
+  }
+  @media (width >= 64rem) {
+    height: 600px;
+  }
+}
+
+/* Horizontal drift: the two tiles' width is this box, one tile is -50% */
+.driftX {
+  width: max-content;
+  /* Starts with the window centred on the first tile, so the still plane is cut evenly
+     on both sides; the window (at most one tile wide) stays inside the two tiles */
+  margin-left: calc(
+    (100cqw - 5 * (var(--card-w) + var(--gap)) + var(--gap)) /
+    2
+  );
+  animation: wall-x var(--wall-x-duration, 80s) linear infinite;
+}
+
+/* Vertical drift: this box is one run of cards tall */
+.driftY {
+  display: flex;
+  align-items: flex-start;
+  animation: wall-y var(--wall-y-duration, 84s) linear infinite;
+}
+
+.window[data-dragging] {
+  cursor: grabbing;
+}
+
+/* Paused under the pointer, with keyboard focus inside, while dragged, off screen or in
+   a hidden tab */
+.window:hover :is(.driftX, .driftY),
+.window:focus-within :is(.driftX, .driftY),
+.window[data-dragging] :is(.driftX, .driftY),
+.window[data-paused] :is(.driftX, .driftY) {
+  animation-play-state: paused;
+}
+
+/* A column, raised by its own offset so the cards read as a field, not a table */
+.column {
+  position: relative;
+  flex: none;
+  width: var(--card-w);
+  margin-right: var(--gap);
+  translate: 0 calc(var(--offset) * var(--stagger) * -1);
+}
+/* The column holding the grown card paints over its neighbours */
+.column:focus-within {
+  z-index: 1;
+}
+
+/* The cards after the run's end: the run's first cards again, hanging below it */
+.tail {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+}
+
+.slot {
+  margin-bottom: var(--gap);
+}
+
+.card {
+  position: relative;
+  transition:
+    transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.card:focus-within {
+  z-index: 1;
+  transform: scale(1.08);
+  box-shadow: 0 36px 60px -28px rgb(9 14 52 / 0.38);
+}
+/* No card grows under a hand that is moving the plane */
+@media (hover: hover) {
+  .window:not([data-dragging]) .column:hover {
+    z-index: 1;
+  }
+  .window:not([data-dragging]) .card:hover {
+    z-index: 1;
+    transform: scale(1.08);
+    box-shadow: 0 36px 60px -28px rgb(9 14 52 / 0.38);
+  }
+}
+
+/* Reduced motion: the plane stands still (a drag still moves it, WallWindow.tsx); a card
+   still grows, without easing */
+@media (prefers-reduced-motion: reduce) {
+  .driftX,
+  .driftY {
+    animation: none;
+  }
+  .card {
+    transition: none;
+  }
+}
+
+@keyframes wall-x {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+@keyframes wall-y {
+  to {
+    transform: translate3d(0, -100%, 0);
+  }
+}

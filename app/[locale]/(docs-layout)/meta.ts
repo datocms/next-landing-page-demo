@@ -1,15 +1,74 @@
+import { HeaderFragment } from '@/components/layout/Header/fragment';
 import {
-  DocumentationSidebarDocument,
-  type DocumentationSidebarQuery,
-  type DocumentationSidebarQueryVariables,
-} from '@/graphql/types/graphql';
+  graphql,
+  type ResultOf,
+  type VariablesOf,
+} from '@/lib/datocms/graphql';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 
 export type PageProps = ResolvedGlobalPageProps & {
   children: React.ReactNode;
 };
 
-export type Query = DocumentationSidebarQuery;
-export type Variables = DocumentationSidebarQueryVariables;
+/*
+ * The sidebar tree is handed to a client component, so everything selected
+ * here ends up in every docs page's client payload: select only what the
+ * sidebar and the previous/next links render (id, slug, title), four levels
+ * deep. The locales feed the language menu; the layout, the site header.
+ */
+export const query = graphql(
+  /* GraphQL */ `
+  query DocumentationSidebarQuery(
+    $locale: SiteLocale
+    $fallbackLocales: [SiteLocale!]
+  ) {
+    allDocumentationPages(
+      filter: { parent: { exists: "false" } }
+      locale: $locale
+      fallbackLocales: $fallbackLocales
+    ) {
+      id
+      slug
+      title
+      children {
+        id
+        slug
+        title
+        children {
+          id
+          slug
+          title
+          children {
+            id
+            slug
+            title
+            children {
+              id
+              slug
+              title
+            }
+          }
+        }
+      }
+    }
+    documentationHome(locale: $locale, fallbackLocales: $fallbackLocales) {
+      footerText
+      logo {
+        url
+        width
+        height
+      }
+    }
+    layout(locale: $locale, fallbackLocales: $fallbackLocales) {
+      ...HeaderFragment
+    }
+    _site {
+      locales
+    }
+  }
+`,
+  [HeaderFragment],
+);
 
-export const query = DocumentationSidebarDocument;
+export type Query = ResultOf<typeof query>;
+export type Variables = VariablesOf<typeof query>;

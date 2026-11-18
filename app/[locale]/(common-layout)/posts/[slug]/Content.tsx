@@ -1,28 +1,50 @@
-import QuoteBlock from '@/components/QuoteBlock';
-import SharePost from '@/components/SharePost';
-import CTAAppBlock from '@/components/blocksWithVariants/AppCtaRecord/CTAAppBlock';
-import CTABlock from '@/components/blocksWithVariants/CtaButtonWithImageRecord/CTABlock';
-import NewsletterCTABlock from '@/components/blocksWithVariants/NewsletterSubscriptionRecord/NewsletterCTABlock';
-import TagButton from '@/components/blocksWithVariants/TagButton';
-
-import DatoImage from '@/components/DatoImage';
-import DatoStructuredText from '@/components/DatoStructuredText';
-import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
-import DateIcon from '@/components/svgs/DateIcon';
-import { buildUrl } from '@/utils/globalPageProps';
-import transformDate from '@/utils/transformDate';
-import {
-  isBlockquote,
-  isHeading,
-  isLink,
-  isParagraph,
-} from 'datocms-structured-text-utils';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { renderNodeRule } from 'react-datocms/structured-text';
+import { BREAKOUT, BREAKOUT_SIZES } from '@/components/blocks/ImageBlock';
+import DatoStructuredText from '@/components/datocms/DatoStructuredText';
+import { SharedElement } from '@/components/layout/PageTransition';
+import PostGrid from '@/components/posts/PostGrid';
+import { Byline, PostDate } from '@/components/posts/PostMeta';
+import SharePost from '@/components/posts/SharePost';
+import TagLink from '@/components/posts/TagLink';
+import AppLink from '@/components/ui/AppLink';
+import Avatar from '@/components/ui/Avatar';
+import Photo from '@/components/ui/Photo';
+import SectionHeader from '@/components/ui/SectionHeader';
+import TableOfContents, {
+  MIN_TOC_HEADINGS,
+} from '@/components/ui/TableOfContents';
+import type { ContentComponent } from '@/lib/datocms/realtime/types';
+import { uiString } from '@/lib/i18n/uiStrings';
+import { websiteBaseUrl } from '@/lib/websiteBaseUrl';
+import { cn } from '@/utils/cn';
+import { headingOutline } from '@/utils/headingOutline';
+import { authorUrl, postUrl } from '@/utils/routes';
+import { hasStructuredText, rootNodes } from '@/utils/structuredText';
+import { titleSize } from '@/utils/titleSize';
 import type { PageProps, Query } from './meta';
+import PostBody from './PostBody';
 
-const Content: ContentPage<PageProps, Query> = ({
+/**
+ * The reading column: 68ch, centred. The cover and the body's images reach
+ * 120px past it on each side (BREAKOUT).
+ */
+const COLUMN = 'mx-auto w-full max-w-measure';
+
+/**
+ * From 1440px, with enough headings, the "On this page" list sits to the right
+ * of the text, clear of the wider images: the body's grid reaches out to the
+ * page gutters and the text column keeps its place in the middle; the 152px
+ * gap is the images' 120px and 32px of air. Narrower screens have no room
+ * beside the images, so the list is left out there.
+ */
+const WITH_TOC =
+  'min-[90rem]:-mx-[calc(var(--page-edge)-var(--gutter))] min-[90rem]:grid min-[90rem]:grid-cols-[minmax(0,1fr)_68ch_minmax(0,1fr)] min-[90rem]:gap-x-[152px]';
+
+/** The author's name as a link: underlined on hover */
+const NAME_LINK =
+  'underline decoration-transparent decoration-1 underline-offset-[3px] transition-colors duration-150 hover:decoration-current';
+
+const Content: ContentComponent<PageProps, Query> = ({
   data,
   ...globalPageProps
 }) => {
@@ -30,216 +52,152 @@ const Content: ContentPage<PageProps, Query> = ({
     notFound();
   }
 
-  return (
-    <section className="mt-40 pb-[120px]">
-      <div className="container">
-        <div className="-mx-4 flex flex-wrap justify-center">
-          <div className="w-full px-4 lg:w-8/12">
-            <div>
-              <h2 className="mb-8 text-3xl font-bold leading-tight text-black dark:text-white sm:text-4xl sm:leading-tight">
-                {data.post.title}
-              </h2>
-              <div className="mb-10 flex items-center justify-between border-b border-body-color border-opacity-10 pb-4 dark:border-white dark:border-opacity-10">
-                <div className="flex flex-col items-start md:flex-row md:items-center">
-                  <Link
-                    href={buildUrl(
-                      globalPageProps,
-                      `/posts/author/${data.post.author.slug}`,
-                    )}
-                    className="mb-5 mr-10 flex items-center"
-                  >
-                    <div className="mr-4">
-                      <div className="relative h-10 w-10 overflow-hidden rounded-full">
-                        <DatoImage
-                          className="h-full w-full object-cover"
-                          fragment={data.post.author.picture.responsiveImage}
-                        />
-                      </div>
-                    </div>
-                    <div className="w-full">
-                      <h4 className="mb-1 text-base font-medium text-body-color">
-                        <span>{data.post.author.name}</span>
-                      </h4>
-                      <p className="text-xs text-body-color">
-                        {data.post.author.bio}
-                      </p>
-                    </div>
-                  </Link>
-                  {data.post._publishedAt && (
-                    <div className="mb-5 flex items-center">
-                      <p className="mr-5 flex items-center text-base font-medium text-body-color">
-                        {DateIcon}
-                        {transformDate(data.post._publishedAt)}
-                      </p>
-                    </div>
-                  )}
-                </div>
-                <div className="mb-5">
-                  <a
-                    href={buildUrl(
-                      globalPageProps,
-                      `/posts/tag/${data.post.tags[0].slug}`,
-                    )}
-                    className="inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white"
-                  >
-                    {data.post.tags[0].tag}
-                  </a>
-                </div>
-              </div>
-              <div>
-                <DatoStructuredText
-                  data={data.post.content}
-                  renderBlock={({ record }) => {
-                    switch (record.__typename) {
-                      case 'ImageBlockRecord': {
-                        return (
-                          <div key={record.id} className="relative mb-16 mt-16 overflow-hidden rounded-md shadow-md sm:h-[300px] md:h-[400px]">
-                            <DatoImage
-                              fragment={record.image.responsiveImage}
-                              layout="fill"
-                              objectFit="cover"
-                              objectPosition="50% 50%"
-                            />
-                          </div>
-                        );
-                      }
-                      case 'NewsletterSubscriptionRecord': {
-                        return <NewsletterCTABlock key={record.id} fragment={record} />;
-                      }
-                      case 'CtaButtonWithImageRecord': {
-                        return <CTABlock key={record.id} fragment={record} />;
-                      }
-                      case 'AppCtaRecord': {
-                        return <CTAAppBlock key={record.id} fragment={record} />;
-                      }
-                      default:
-                        return null;
-                    }
-                  }}
-                  renderLinkToRecord={({
-                    record,
-                    children,
-                    transformedMeta,
-                  }) => {
-                    switch (record.__typename) {
-                      case 'PostRecord':
-                        return (
-                          <Link
-                            key={record.id}
-                            {...transformedMeta}
-                            href={buildUrl(
-                              globalPageProps,
-                              `/posts/${record.slug}`,
-                            )}
-                            className="text-base font-medium leading-relaxed text-body-color underline sm:text-lg sm:leading-relaxed"
-                          >
-                            {children}
-                          </Link>
-                        );
-                      default:
-                        return null;
-                    }
-                  }}
-                  renderInlineRecord={({ record }) => {
-                    switch (record.__typename) {
-                      case 'PostRecord': {
-                        return (
-                          <Link
-                            key={record.id}
-                            href={buildUrl(
-                              globalPageProps,
-                              `/posts/${record.slug}`,
-                            )}
-                            className="underline"
-                          >
-                            {record.title}
-                          </Link>
-                        );
-                      }
-                      default:
-                        return null;
-                    }
-                  }}
-                  customNodeRules={[
-                    renderNodeRule(isHeading, ({ children, key }) => {
-                      return (
-                        <h3
-                          className="mb-4 mt-9 text-xl font-bold text-black dark:text-white sm:text-2xl lg:text-xl xl:text-2xl"
-                          key={key}
-                        >
-                          {children}
-                        </h3>
-                      );
-                    }),
-                    renderNodeRule(isParagraph, ({ children, key }) => {
-                      return (
-                        <div
-                          className="text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed"
-                          key={key}
-                        >
-                          {children}
-                        </div>
-                      );
-                    }),
-                    renderNodeRule(isLink, ({ node, children, key }) => {
-                      const attributeObject =
-                        node.meta?.reduce(
-                          (acc, { id, value }) => {
-                            acc[id] = value;
-                            return acc;
-                          },
-                          {} as Record<string, string>,
-                        ) || {};
+  const { locale } = globalPageProps.params;
+  const { post, morePosts } = data;
+  const { author } = post;
+  const authorHref = authorUrl(globalPageProps, author.slug);
+  // The query doesn't select the slug: the route param is the same value
+  const postPath = postUrl(globalPageProps, globalPageProps.params.slug);
+  // websiteBaseUrl is undefined in the Draft Mode client tree: SharePost then uses the browser address
+  const shareUrl = websiteBaseUrl
+    ? new URL(postPath, websiteBaseUrl).href
+    : undefined;
+  const scale = titleSize(post.title, 'h1');
 
-                      return (
-                        <a
-                          className="text-base font-medium leading-relaxed text-body-color underline sm:text-lg sm:leading-relaxed"
-                          href={node.url}
-                          key={key}
-                          {...attributeObject}
-                        >
-                          {children}
-                        </a>
-                      );
-                    }),
-                    renderNodeRule(isBlockquote, ({ children, key }) => {
-                      return <QuoteBlock key={key}>{children}</QuoteBlock>;
-                    }),
-                  ]}
-                />
-                <div className="mt-16 items-center justify-between sm:flex">
-                  <div className="mb-5">
-                    <h5 className="mb-3 text-sm font-medium text-body-color">
-                      Post Tags :
-                    </h5>
-                    <div className="flex items-center">
-                      {data.post.tags.map((tag) => {
-                        return (
-                          <TagButton
-                            key={tag.id}
-                            tag={tag.tag}
-                            globalPageProps={globalPageProps}
-                            slug={tag.slug}
-                          />
-                        );
-                      })}
-                    </div>
-                  </div>
-                  <div className="mb-5">
-                    <h5 className="mb-3 text-sm font-medium text-body-color sm:text-right">
-                      Share this post :
-                    </h5>
-                    <div className="flex items-center sm:justify-end">
-                      <SharePost />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+  // The h2s get anchor ids and, when there are enough, an "On this page" list
+  const headings = headingOutline(rootNodes(post.content.value));
+  const anchorIds = new Map(headings.map(({ node, id }) => [node, id]));
+  const showToc = headings.length >= MIN_TOC_HEADINGS;
+
+  return (
+    <>
+      <article className="container-page pt-(--page-top)">
+        <header className={COLUMN}>
+          {post.tags.length > 0 && (
+            <ul
+              aria-label={uiString(locale, 'tags')}
+              className="flex flex-wrap gap-1.5"
+            >
+              {post.tags.map((tag) => (
+                <li key={tag.id}>
+                  <TagLink
+                    tag={tag.name}
+                    slug={tag.slug}
+                    globalPageProps={globalPageProps}
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
+          <h1
+            data-long={scale.long}
+            className={cn(scale.className, post.tags.length > 0 && 'mt-5')}
+          >
+            {post.title}
+          </h1>
+          {/* The byline of every post listing: the 26px photo, the name, the date */}
+          <div className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-ui text-fg-muted">
+            <Byline author={author} href={authorHref} />
+            {post._publishedAt && (
+              <PostDate date={post._publishedAt} locale={locale} />
+            )}
           </div>
+        </header>
+
+        {post.coverImage?.responsiveImage && (
+          <div className={cn(COLUMN, 'mt-10 lg:mt-14')}>
+            {/* The cover of the card that opened this post travels here */}
+            <SharedElement kind="cover" href={postPath}>
+              <Photo
+                image={post.coverImage.responsiveImage}
+                frame="cover"
+                focalPoint={post.coverImage.focalPoint}
+                sizes={BREAKOUT_SIZES}
+                priority
+                alt=""
+                className={cn(BREAKOUT, 'w-auto!')}
+              />
+            </SharedElement>
+          </div>
+        )}
+
+        <div className={cn('mt-10 lg:mt-14', showToc && WITH_TOC)}>
+          <div className={cn(COLUMN, showToc && 'min-[90rem]:col-start-2')}>
+            <div className="prose">
+              <PostBody
+                content={post.content}
+                globalPageProps={globalPageProps}
+                anchorIds={anchorIds}
+                coverImageId={
+                  post.coverImage?.responsiveImage ? post.coverImage.id : null
+                }
+              />
+            </div>
+
+            <div className="mt-14 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-line pt-6">
+              <span className="text-small text-fg-muted">
+                {uiString(locale, 'share')}
+              </span>
+              <SharePost
+                url={shareUrl}
+                labels={{
+                  share: uiString(locale, 'shareOther'),
+                  copyLink: uiString(locale, 'copyLink'),
+                  copied: uiString(locale, 'copied'),
+                  shareOn: uiString(locale, 'shareOn'),
+                }}
+              />
+            </div>
+
+            <aside
+              aria-label={uiString(locale, 'writtenBy')}
+              className="tile mt-8 flex gap-4 p-6 sm:gap-5 sm:p-8"
+            >
+              <Avatar
+                image={author.picture?.responsiveImage}
+                name={author.name}
+                size={56}
+              />
+              <div className="min-w-0">
+                <p className="text-body font-semibold">
+                  <AppLink href={authorHref} className={NAME_LINK}>
+                    {author.name}
+                  </AppLink>
+                </p>
+                {author.role && (
+                  <p className="text-small text-fg-muted">{author.role}</p>
+                )}
+                {hasStructuredText(author.description) && (
+                  <div className="mt-3 text-small text-fg-muted [&_p+p]:mt-2">
+                    <DatoStructuredText data={author.description} />
+                  </div>
+                )}
+              </div>
+            </aside>
+          </div>
+
+          {showToc && (
+            <TableOfContents
+              headings={headings}
+              locale={locale}
+              className="hidden min-[90rem]:col-start-3 min-[90rem]:block"
+            />
+          )}
         </div>
-      </div>
-    </section>
+      </article>
+
+      {morePosts.length > 0 && (
+        <section aria-labelledby="more-posts-title" className="section">
+          <div className="container-page">
+            <SectionHeader
+              id="more-posts-title"
+              title={uiString(locale, 'morePosts')}
+            />
+            <PostGrid posts={morePosts} globalPageProps={globalPageProps} />
+          </div>
+        </section>
+      )}
+    </>
   );
 };
 

@@ -1,0 +1,153 @@
+/* Element defaults: typography, the focus ring, selection, highlighted text, the
+   page fade between routes, the reduced-motion reset and a Draft Mode fix. */
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-line);
+  }
+  html {
+    color-scheme: light;
+    background-color: var(--color-surface);
+    color: var(--color-fg);
+    /* The sticky header (64px) plus air, for in-page links */
+    scroll-padding-top: 80px;
+    -webkit-text-size-adjust: 100%;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    font-synthesis: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* A long CMS word or URL breaks instead of pushing the page sideways */
+    overflow-wrap: break-word;
+  }
+  /* Headlines hyphenate with the page language (<html lang>). Page and section titles
+     balance their lines; smaller headings only avoid a lone last word */
+  :where(h1, h2, h3, h4, h5, h6) {
+    hyphens: auto;
+    hyphenate-limit-chars: 10 4 4;
+  }
+  :where(h1, h2) {
+    text-wrap: balance;
+  }
+  :where(h3, h4, h5, h6, p, li, figcaption, blockquote, dd, summary) {
+    text-wrap: pretty;
+  }
+  /* The italic is its own font file, loaded only when a page uses it (styles/fonts.ts) */
+  :where(em, i, cite, dfn) {
+    font-family: var(--font-inter-italic), var(--font-sans);
+    font-style: italic;
+  }
+  :where(b, strong) {
+    font-weight: 600;
+  }
+  ::selection {
+    background-color: var(--accent-soft);
+    color: var(--color-fg);
+  }
+
+  /* Focus ring: a 2px outline around a 2px halo of the surface */
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px var(--focus-halo);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-fg-muted);
+    opacity: 1;
+  }
+  button:not(:disabled),
+  [role='button']:not(:disabled),
+  summary,
+  label:has(input[type='radio'], input[type='checkbox']) {
+    cursor: pointer;
+  }
+  summary {
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  hr {
+    border: 0;
+    border-top: 1px solid var(--color-line);
+  }
+  /* A page is a stack of blocks an editor can reorder: whatever a block positions
+     absolutely stays inside that block, never over its neighbours */
+  :where(main section) {
+    position: relative;
+  }
+  /* Highlighted text in rich text: a tint of the accent behind the words, as the
+     original template drew it (the accent at 20%, slightly rounded) */
+  mark {
+    padding: 0.125rem 0.25rem;
+    border-radius: 2px;
+    background-color: color-mix(in srgb, var(--accent) 20%, transparent);
+    color: inherit;
+    box-decoration-break: clone;
+  }
+
+  /* Route changes (view transitions): styles/transitions.css */
+
+  /* Reduced-motion reset. !important inside @layer base beats every normal declaration in later
+     layers. Biome needs one suppression comment directly above each declaration. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after,
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      /* biome-ignore lint/complexity/noImportantStyles: reduced-motion reset must beat every component */
+      animation-duration: 0s !important;
+      /* biome-ignore lint/complexity/noImportantStyles: reduced-motion reset must beat every component */
+      animation-delay: 0s !important;
+      /* biome-ignore lint/complexity/noImportantStyles: reduced-motion reset must beat every component */
+      transition-duration: 0s !important;
+      /* biome-ignore lint/complexity/noImportantStyles: reduced-motion reset must beat every component */
+      transition-delay: 0s !important;
+      /* biome-ignore lint/complexity/noImportantStyles: reduced-motion reset must beat every component */
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Unlayered, so components, utilities and inline styles can all use them */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+/* The hero entrance (the hero-enter utility) */
+@keyframes marquee-slide {
+  to {
+    translate: calc(-100% - var(--marquee-gap)) 0;
+  }
+}
+
+/* Draft Mode: elements whose text carries Content Link's invisible stega markers */
+[data-datocms-contains-stega] {
+  /* biome-ignore lint/complexity/noImportantStyles: stega-encoded strings must keep their exact letter-spacing */
+  letter-spacing: 0 !important;
+}

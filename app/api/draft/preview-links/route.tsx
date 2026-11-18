@@ -1,105 +1,60 @@
-import {
-  type ResolvedGlobalPageProps,
-  buildUrl,
-} from '@/utils/globalPageProps';
-import type { SchemaTypes } from '@datocms/cma-client-node';
+import type { RawApiTypes } from '@datocms/cma-client-node';
 import type { NextRequest } from 'next/server';
+import { hasBearerToken, withCORS } from '@/app/api/utils';
+import type { SiteLocale } from '@/lib/datocms/graphql';
+import { recordToWebsiteRoute } from '@/lib/datocms/recordInfo';
+import { websiteBaseUrl } from '@/lib/websiteBaseUrl';
 
-const websiteBaseUrl = (
-  process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? // Vercel auto-populates this environment variable
-      `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : // Netlify auto-populates this environment variable
-      process.env.URL
-) as string;
+/*
+ * The Web Previews plugin calls this endpoint (configured by /api/post-install)
+ * whenever an editor opens a record in DatoCMS, and shows the links it returns
+ * in the record's sidebar.
+ */
 
-// This function knows how to convert a DatoCMS record
-// into a canonical URL within the website
-const generatePreviewUrl = (
-  item: SchemaTypes.Item,
-  itemType: SchemaTypes.ItemType,
-  globalPageProps: ResolvedGlobalPageProps
-) => {
-  switch (itemType.attributes.api_key) {
-    case 'page':
-      return buildUrl(globalPageProps, `/${item.attributes.slug}`);
-    case 'post':
-      return buildUrl(globalPageProps, `/posts/${item.attributes.slug}`);
-    case 'tag':
-      return buildUrl(globalPageProps, `/posts/tag/${item.attributes.slug}`);
-    case 'author':
-      return buildUrl(globalPageProps, `/posts/author/${item.attributes.slug}`);
-    case 'legal_page':
-      return buildUrl(globalPageProps, `/legal/${item.attributes.slug}`);
-    case 'header':
-      return buildUrl(globalPageProps, '/home');
-    case 'documentation_home':
-      return buildUrl(globalPageProps, '/docs');
-    case 'documentation_page':
-      return buildUrl(globalPageProps, `/docs/${item.attributes.slug}`);
-    case 'layout':
-      return buildUrl(globalPageProps, '/home');
-    case 'footer':
-      return buildUrl(globalPageProps, '/home');
-    case 'pricing_tier':
-      return buildUrl(globalPageProps, '/pricing');
-    case 'change_log':
-      return buildUrl(globalPageProps, '/changelog');
-  }
+type PreviewLinksRequest = {
+  item: RawApiTypes.Item;
+  itemType: RawApiTypes.ItemType;
+  locale: SiteLocale;
 };
 
-const responseDefaults: ResponseInit = {
-  status: 200,
-  headers: {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Content-Type': 'application/json',
-  },
-};
-
-// Setup CORS permissions
-export async function OPTIONS(request: NextRequest) {
-  return new Response('OK', responseDefaults);
+export async function OPTIONS() {
+  return new Response('OK', withCORS());
 }
 
 export async function POST(request: NextRequest) {
-  // The token is sent by the plugin as a request header (see /api/post-install)
-  const token = request.headers.get('authorization')?.replace(/^Bearer /, '');
+  if (!hasBearerToken(request, process.env.DRAFT_SECRET_TOKEN))
+    return new Response('Invalid token', withCORS({ status: 401 }));
 
-  if (!token || token !== process.env.DRAFT_SECRET_TOKEN)
-    return new Response('Invalid token', { ...responseDefaults, status: 401 });
+  const { item, itemType, locale }: PreviewLinksRequest = await request.json();
 
-  // The Web Previews plugin sends the record and model for which the user wants a preview,
-  // along with information about which locale they are currently viewing in the interface
-  const { item, itemType, locale } = await request.json();
+  const url = recordToWebsiteRoute(
+    itemType.attributes.api_key,
+    item.attributes.slug as string,
+    locale,
+  );
 
-  // We can use this info to generate the frontend URL associated
-  const url = generatePreviewUrl(item, itemType, { params: { locale } });
-
-  // If we don't have an URL for the record, simply return an empty array
   if (!url) {
-    return Response.json({ previewLinks: [] }, responseDefaults);
+    return Response.json({ previewLinks: [] }, withCORS());
   }
 
   const previewLinks = [];
 
-  // If status is not published, it means that it has a current version that's different from the published one!
+  // A record that isn't published (a draft, or published with newer changes)
+  // has a draft version: the link turns Draft Mode on and redirects to the page.
+  // A browser opens it and can't send headers, so the token is in the URL
   if (item.meta.status !== 'published')
-    // Generate a URL that initially enters Next.js Draft Mode, and then redirects to the desired URL
     previewLinks.push({
       label: 'Draft version',
-      // Opened by a browser, where we cannot set headers
-      url: `${websiteBaseUrl}/api/draft/enable?token=${token}&redirect=${url}`,
+      url: `${websiteBaseUrl}/api/draft/enable?token=${encodeURIComponent(process.env.DRAFT_SECRET_TOKEN as string)}&redirect=${encodeURIComponent(url)}`,
     });
 
-  // If status is not draft, it means that it has a published version!
+  // A record that isn't a draft has a published version: the link turns Draft
+  // Mode off and redirects to the page
   if (item.meta.status !== 'draft')
-    // Generate a URL that first exits from Next.js Draft Mode, and then redirects to the desired URL.
     previewLinks.push({
       label: 'Published version',
-      url: `${websiteBaseUrl}/api/draft/disable?redirect=${url}`,
+      url: `${websiteBaseUrl}/api/draft/disable?redirect=${encodeURIComponent(url)}`,
     });
 
-  return Response.json({ previewLinks }, responseDefaults);
+  return Response.json({ previewLinks }, withCORS());
 }

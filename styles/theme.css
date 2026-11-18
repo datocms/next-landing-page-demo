@@ -1,0 +1,93 @@
+/* Tailwind theme: the static design tokens Tailwind turns into utilities. Every default
+   palette, radius, shadow, text size and breakpoint is cleared first, so only the roles
+   below exist: `bg-surface`, `text-fg-muted`, `rounded-card`, `shadow-card`…
+   Type tokens (text-display … text-small) set several properties at once, so they are
+   utilities of their own in utilities.css. */
+
+@theme static {
+  /* Colour: token names are roles. Transparent, current and inherit stay available */
+  --color-*: initial;
+  --color-surface: #fff; /* the page, cards */
+  --color-fg: #090e34; /* text: the navy of the logo */
+  --color-fg-muted: #565b78; /* secondary text: AA on surface, subtle and tint */
+  --color-fg-faint: #9296ad; /* placeholders, disabled, decorative marks */
+  --color-ink: #090e34; /* the dark panels (closing panel, a dark tile) */
+  --color-line: #e3e5ef; /* borders and hairlines */
+  --color-line-strong: #d2d5e2; /* input borders, hovered borders */
+  --color-success: #13754a; /* "included" checks, positive states */
+  --color-success-soft: #e4f6ec; /* the fill behind a positive figure */
+  --color-danger: #dc2626; /* form errors */
+
+  /* Breakpoints */
+  --breakpoint-*: initial;
+  --breakpoint-sm: 40rem; /* 640 */
+  --breakpoint-md: 48rem; /* 768 */
+  --breakpoint-lg: 64rem; /* 1024 */
+  --breakpoint-xl: 80rem; /* 1280 */
+
+  /* Widths: max-w-page is the page container, max-w-measure the longest line of text */
+  --container-*: initial;
+  --container-page: 70rem;
+  --container-measure: 68ch;
+
+  /* Radii, by role. Avatars use rounded-full */
+  --radius-*: initial;
+  --radius-chip: 999px; /* chips and badges are pills (buttons use rounded-full) */
+  --radius-control: 14px; /* inputs, menus, small controls */
+  --radius-tile: 16px; /* small cards inside a card, code blocks */
+  --radius-card: 28px; /* cards and tiles */
+  --radius-frame: 36px; /* the full-width panels: hero, tinted bands, the closing panel */
+  --radius-media: 24px; /* photographs, video, covers */
+
+  /* Shadows: a faint one under cards and buttons, a deeper one under menus and the hero image */
+  --shadow-*: initial;
+  --shadow-card: 0 1px 2px rgb(9 14 52 / 0.05);
+  /* A white card resting on a tinted panel */
+  --shadow-soft: 0 30px 50px -40px rgb(9 14 52 / 0.3);
+  /* What floats: menus, and the small product cards over the hero images */
+  --shadow-float:
+    0 0 0 1px rgb(9 14 52 / 0.06), 0 40px 70px -30px rgb(9 14 52 / 0.5);
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --blur-*: initial;
+
+  /* Type: no default scale. Weights the type tokens use, for the rare override */
+  --text-*: initial;
+  --font-weight-*: initial;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500; /* labels, nav items, buttons */
+  --font-weight-semibold: 600; /* headings, item titles */
+  --font-weight-label: 500; /* alias of medium: a small text that names something */
+
+  --animate-*: initial;
+}
+
+/* Names that point at runtime variables: the fonts (styles/fonts.ts puts them on <html>)
+   and the accent (tokens.css, overridden by components/layout/CustomColor.tsx) */
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-code), ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --color-subtle: var(
+    --pale
+  ); /* quiet tiles, wells, code: the accent's hue, nearly white */
+  --color-tint: var(
+    --ice
+  ); /* a stronger tint: the hero panel, selected pills, tags */
+  --color-star: var(--accent); /* rating stars */
+  --shadow-glow: 0 60px 100px -48px var(--glow); /* under a photograph or the featured plan */
+
+  --color-accent: var(--accent); /* primary buttons, selected states */
+  --color-on-accent: var(--on-accent); /* text on an accent fill */
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-ink: var(
+    --accent-ink
+  ); /* the accent as text: links, small labels */
+  --color-accent-soft: var(
+    --accent-soft
+  ); /* a pale tint: badges, icon tiles, selected rows */
+  --color-accent-line: var(--accent-line); /* a border in the accent's hue */
+  --color-accent-edge: var(
+    --accent-edge
+  ); /* a 2px accent border that shows even for a pale accent */
+}

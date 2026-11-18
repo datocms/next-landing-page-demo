@@ -1,11 +1,20 @@
-import DatoImage from '@/components/DatoImage';
-import PostExcerpt from '@/components/PostExcerpt';
-import type { ContentPage } from '@/components/WithRealTimeUpdates/types';
+import { stripStega } from '@datocms/content-link';
 import { notFound } from 'next/navigation';
-import ReactMarkdown from 'react-markdown';
+import DatoImage from '@/components/datocms/DatoImage';
+import DatoStructuredText from '@/components/datocms/DatoStructuredText';
+import { SharedElement } from '@/components/layout/PageTransition';
+import PostMosaic from '@/components/posts/PostMosaic';
+import PostsPageHeader from '@/components/posts/PostsPageHeader';
+import { tagPillClass } from '@/components/posts/PostTags';
+import Button from '@/components/ui/Button';
+import type { ContentComponent } from '@/lib/datocms/realtime/types';
+import { uiString } from '@/lib/i18n/uiStrings';
+import { areaLabels } from '@/utils/authorAreas';
+import { authorsUrl, authorUrl } from '@/utils/routes';
+import { hasStructuredText } from '@/utils/structuredText';
 import type { PageProps, Query } from './meta';
 
-const Content: ContentPage<PageProps, Query> = ({
+const Content: ContentComponent<PageProps, Query> = ({
   data,
   ...globalPageProps
 }) => {
@@ -13,49 +22,82 @@ const Content: ContentPage<PageProps, Query> = ({
     notFound();
   }
 
+  const { locale } = globalPageProps.params;
+  const { author } = data;
+  const posts = author._allReferencingPosts;
+  const portrait = author.picture?.responsiveImage;
+  const areasOfInterest = areaLabels(author.areasOfInterest);
+
   return (
-    <section className="mt-16 flex flex-col items-center justify-center py-[32px]">
-      <section className="px-auto mx-auto mb-8 flex items-center justify-center bg-white px-16 dark:bg-gray-900">
-        <div className="py-10">
-          <div className="flex flex-col items-center justify-center gap-8 p-4 text-center md:flex-row md:text-start">
-            <div className="relative aspect-square w-56 overflow-hidden rounded-xl drop-shadow-xl">
-              <DatoImage
-                className="h-full w-full object-cover"
-                layout="fill"
-                objectFit="cover"
-                objectPosition="top"
-                fragment={data.author.picture.responsiveImage}
-              />
-            </div>
-            <div className="xl:mx-4 xl:w-1/2">
-              <h1 className="text-2xl font-semibold capitalize text-gray-800 dark:text-white lg:text-3xl">
-                {data.author.name}
-              </h1>
-              <p className="text-base text-body-color">{data.author.bio}</p>
-
-              <div className="mt-4 max-w-2xl text-gray-500 dark:text-gray-300">
-                <ReactMarkdown>{data.author.description}</ReactMarkdown>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="container">
-        <div className="-mx-4 flex flex-wrap justify-center">
-          {data.author._allReferencingPosts.map((post) => (
-            <div
-              key={post.id}
-              className="mb-10 w-full px-4 md:w-2/3 lg:w-1/2 xl:w-1/3"
+    <>
+      <PostsPageHeader
+        title={author.name}
+        lead={author.role}
+        media={
+          portrait ? (
+            // 96px: larger than Avatar's sizes, so the round crop is drawn here.
+            // The portrait on the team section that opened this page travels here
+            <SharedElement
+              kind="portrait"
+              href={authorUrl(globalPageProps, globalPageProps.params.slug)}
             >
-              <PostExcerpt fragment={post} globalPageProps={globalPageProps} />
-            </div>
-          ))}
-        </div>
+              <div className="relative size-24 overflow-hidden rounded-full bg-subtle ring-1 ring-line">
+                <DatoImage
+                  fragment={portrait}
+                  alt=""
+                  layout="fill"
+                  objectFit="cover"
+                  sizes="96px"
+                  priority
+                />
+              </div>
+            </SharedElement>
+          ) : undefined
+        }
+      >
+        {hasStructuredText(author.description) && (
+          <div className="mt-4 max-w-[40rem] text-body text-fg-muted [&_p+p]:mt-3">
+            <DatoStructuredText data={author.description} />
+          </div>
+        )}
+        {areasOfInterest.length > 0 && (
+          <ul className="mt-6 flex flex-wrap justify-center gap-1.5">
+            {areasOfInterest.map((area) => (
+              <li key={stripStega(area)} className={tagPillClass}>
+                {area}
+              </li>
+            ))}
+          </ul>
+        )}
+        <Button
+          href={authorsUrl(globalPageProps)}
+          variant="secondary"
+          size="sm"
+          className="mt-8"
+        >
+          {uiString(locale, 'allAuthors')}
+        </Button>
+      </PostsPageHeader>
 
-        <div className=" -mx-4 flex flex-wrap" />
-      </div>
-    </section>
+      {posts.length > 0 && (
+        <section
+          aria-labelledby="author-posts-title"
+          className="container-page pt-16 lg:pt-24"
+        >
+          <h2 id="author-posts-title" className="mb-10 text-h3 lg:mb-12">
+            {/* The raw name goes in, so Content Link can still target it */}
+            {uiString(locale, 'postsBy', { name: author.name })}
+          </h2>
+          {/* Every post is the author's own: the bylines show the date only */}
+          <PostMosaic
+            posts={posts}
+            globalPageProps={globalPageProps}
+            headingLevel="h3"
+            hideAuthor
+          />
+        </section>
+      )}
+    </>
   );
 };
 

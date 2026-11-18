@@ -1,42 +1,27 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.6.4/schema.json",
-  "organizeImports": {
-    "enabled": true
-  },
+  "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "files": {
-    "ignore": [".next", "graphql/types"]
+    "includes": [
+      "**",
+      "!!**/.next",
+      "!next-env.d.ts",
+      "!lib/datocms/graphql-env.d.ts",
+      "!schema.graphql"
+    ]
   },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
-      "suspicious": {
-        "noExplicitAny": "warn",
-        "noArrayIndexKey": "warn"
-      },
-      "correctness": {
-        "useExhaustiveDependencies": "warn"
-      },
-      "performance": {
-        "noDelete": "warn"
-      },
-      "security": {
-        "noDangerouslySetInnerHtml": "warn"
-      },
+      "preset": "recommended",
       "style": {
         "noNonNullAssertion": "warn"
       },
-      "complexity": {
-        "noBannedTypes": "warn"
-      },
-      "a11y": {
-        "useKeyWithClickEvents": "warn",
-        "noSvgWithoutTitle": "warn",
-        "useAltText": "warn",
-        "useValidAnchor": "warn",
-        "useAnchorContent": "warn",
-        "useMediaCaption": "warn",
-        "useIframeTitle": "warn"
+      "correctness": {
+        "noUnknownProperty": {
+          "level": "error",
+          "options": { "ignore": ["timeline-trigger", "animation-trigger"] }
+        }
       }
     }
   },
@@ -45,6 +30,14 @@
     "indentStyle": "space"
   },
   "javascript": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    },
     "formatter": {
       "quoteStyle": "single"
     }

@@ -1,40 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+/*
+ * The site stylesheet. Tailwind CSS 4 is configured in CSS: this file sets the
+ * cascade layer order and imports everything else.
+ *
+ * Design language: a white page, neutral greys and one accent, set in DatoCMS
+ * (Layout › Main color). Components are styled with utilities; global CSS only
+ * holds what utilities can't express. Light mode only.
+ */
+@layer theme, base, components, utilities;
+@import 'tailwindcss';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Foundation: the Tailwind theme, runtime tokens, element defaults and custom utilities */
+@import './theme.css';
+@import './tokens.css';
+@import './base.css';
+@import './utilities.css';
 
-@layer base {
-  :root {
-    --color-primary: #4a6cf7;
-  }
-  body {
-    font-family: 'Inter', sans-serif;
-  }
-}
+/* Long-form text and code blocks, in @layer components (utilities still win) */
+@import './prose.css';
 
-@layer components {
-  input[type='checkbox']:checked ~ label span svg {
-    @apply inline-flex;
-  }
+/* Motion: reveals, the hero's arrival, the slow loops (off under reduced motion) */
+@import './motion.css';
 
-  .sticky .header-logo {
-    @apply py-5 lg:py-2;
-  }
+/* The landing variations: each carries its hero's shapes and colours down the page */
+@import './page-tones.css';
 
-  .sticky .menu-scroll.active {
-    @apply opacity-70;
-  }
+/* Page transitions: what moves between two pages (after motion.css: it quiets the load-time entrances) */
+@import './transitions.css';
 
-  input#togglePlan:checked ~ .dot {
-    @apply translate-x-full;
-  }
-
-  input#checkboxLabel:checked ~ .box span {
-    @apply opacity-100;
-  }
-}
-
-[data-datocms-contains-stega] {
-  letter-spacing: 0 !important;
-}
+/* The skills' Markdown (also reachable through the .claude/skills symlinks) names
+   classes in prose; it must not generate CSS */
+@source not '../skills';
+@source not '../.claude';

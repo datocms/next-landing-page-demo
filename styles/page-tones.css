@@ -1,0 +1,48 @@
+/*
+ * The landing variations. A page whose hero is `statement` or `mosaic` carries
+ * that hero's shape onto its photos, so it reads as one site of its own. Keyed
+ * on the hero's data-hero, so the sections themselves stay unaware. The
+ * sections' own layouts (the arch and split closing panels, the figures, the
+ * rail…) are picked per block in DatoCMS.
+ */
+
+/* statement: photos (the detail image, post covers) take an arch's rounded top */
+main:has(> [data-hero='statement']) [data-photo] {
+  border-radius:
+    50% 50% var(--radius-media) var(--radius-media) / 34% 34%
+    var(--radius-media) var(--radius-media);
+}
+
+/* mosaic: photos take the mosaic image's quarter-round top-left corner */
+main:has(> [data-hero='mosaic']) [data-photo] {
+  border-top-left-radius: min(13rem, 50%);
+}
+
+/* mosaic: the FAQ's drifting question marks belong to the home page's look */
+main:has(> [data-hero='mosaic']) [data-faq-marks] {
+  display: none;
+}
+
+/* A closing panel in the accent (the arch call to action): the footer it joins
+   takes the same colour */
+main:has(> [data-closing='accent']) + footer {
+  background-color: var(--accent-deep);
+  --focus-halo: var(--accent-deep);
+}
+
+/* The split call to action's accent disc drifts very slowly */
+@media (prefers-reduced-motion: no-preference) {
+  .cta-drift {
+    animation: cta-drift 24s ease-in-out infinite alternate;
+  }
+}
+@keyframes cta-drift {
+  to {
+    translate: -2.5rem 2rem;
+  }
+}
+
+/* The variations hold fewer, larger moments: each gets more room around it */
+main:has(> :is([data-hero='statement'], [data-hero='mosaic'])) {
+  --section-space: clamp(5rem, 9.5vw, 8.5rem);
+}

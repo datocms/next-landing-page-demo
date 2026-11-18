@@ -1,0 +1,225 @@
+/* Motion for the FAQ section: the drifting question marks behind it, the
+   settle-in when it enters the view, the accordion's open and close, and the
+   tilt of the "?" chips. Everything is off under reduced motion. */
+
+.root {
+  --faq-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --faq-settle-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* ---------- Drifting question marks ---------- */
+
+/* The layer behind the content, clipped to the section */
+.marks {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* One mark: placed by inline styles (top/left/right/bottom, --size) */
+.mark {
+  position: absolute;
+  display: block;
+  font-size: var(--size);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.06em;
+  color: var(--tone, var(--ice));
+  rotate: var(--r0, 0deg);
+}
+
+@media (width < 64rem) {
+  .wide {
+    display: none;
+  }
+}
+
+@media (width >= 64rem) {
+  .narrow {
+    display: none;
+  }
+}
+
+/* Each mark bobs and turns on its own rhythm (--dur, --delay), between its two
+   angles (--r0, --r1), swinging a little past the second one. Where the
+   browser can tie an animation to scrolling, the marks also slide against the
+   page as the section passes through the view, each by its own distance */
+@media (prefers-reduced-motion: no-preference) {
+  .mark {
+    rotate: none;
+    animation: faq-drift calc(var(--dur, 20s) * 0.5) ease-in-out
+      var(--delay, 0s) infinite;
+    will-change: transform;
+  }
+
+  @supports (animation-timeline: view()) {
+    .mark {
+      animation:
+        faq-drift calc(var(--dur, 20s) * 0.5) ease-in-out var(--delay, 0s)
+        infinite,
+        faq-parallax linear both;
+      animation-timeline: auto, view();
+      animation-range: normal, cover;
+    }
+  }
+}
+
+@keyframes faq-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(var(--r0, 0deg)) scale(1);
+  }
+  50% {
+    transform: translate3d(
+        calc(var(--dx, 0px) * 2.5),
+        calc(var(--dy, -12px) * 2.5),
+        0
+      )
+      rotate(calc(var(--r1, 0deg) + (var(--r1, 0deg) - var(--r0, 0deg))))
+      scale(1.05);
+  }
+}
+
+@keyframes faq-parallax {
+  from {
+    translate: 0 calc(var(--dy, -12px) * -4);
+  }
+  to {
+    translate: 0 calc(var(--dy, -12px) * 4);
+  }
+}
+
+/* ---------- Settle-in ---------- */
+
+/* Set by SettleIn: `waiting` while the section is below the view, `in` once it
+   has entered. Each item fades and rises 8px, staggered by its --i */
+.settle[data-settle='waiting'] .settleItem {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.settle[data-settle='in'] .settleItem {
+  animation: faq-settle 560ms var(--faq-settle-ease) backwards;
+  animation-delay: calc(min(var(--i, 0), 8) * 50ms);
+}
+
+@keyframes faq-settle {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settle[data-settle] .settleItem {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+
+/* ---------- Accordion ---------- */
+
+/* The answer under a question: its height eases from nothing to its content
+   (a grid row from 0fr to 1fr) while it fades in. A closed answer is hidden
+   from the keyboard and screen readers (visibility), once it has closed */
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows 300ms var(--faq-ease),
+    margin-top 300ms var(--faq-ease),
+    opacity 200ms var(--faq-ease),
+    visibility 0s linear 300ms;
+}
+
+.panel[data-open] {
+  grid-template-rows: 1fr;
+  /* The answer sits close under its question */
+  margin-top: -0.75rem;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    grid-template-rows 320ms var(--faq-ease),
+    margin-top 320ms var(--faq-ease),
+    opacity 260ms var(--faq-ease) 60ms,
+    visibility 0s;
+}
+
+.panelInner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* The answer slides a few pixels into place as it opens */
+.panelBody {
+  transform: translateY(-4px);
+  transition: transform 320ms var(--faq-ease);
+}
+
+.panel[data-open] .panelBody {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .panel[data-open],
+  .panelBody {
+    transition: none;
+  }
+}
+
+/* Without JavaScript the buttons cannot open anything: every answer shows and
+   the plus signs go */
+@media (scripting: none) {
+  .panel {
+    grid-template-rows: 1fr;
+    margin-top: -0.75rem;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .toggleIcon {
+    display: none;
+  }
+}
+
+/* ---------- Columns ---------- */
+
+/* The "?" chips sway a few degrees on their own, each a little out of step
+   (--i is the tile's place in the list) */
+@media (prefers-reduced-motion: no-preference) {
+  .chip {
+    animation: faq-sway 6s ease-in-out calc(var(--i, 0) * -1.1s) infinite;
+  }
+}
+
+@keyframes faq-sway {
+  0%,
+  100% {
+    transform: rotate(-7deg);
+  }
+  50% {
+    transform: rotate(7deg);
+  }
+}
+
+/* The "?" chip tilts a little when its tile is hovered */
+.chip {
+  transition: rotate 420ms var(--faq-ease);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .tile:hover .chip {
+    rotate: -12deg;
+  }
+}

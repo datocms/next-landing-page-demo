@@ -1,29 +1,38 @@
-import { type Client, buildClient } from '@datocms/cma-client-node';
-import { NextResponse } from 'next/server';
-
-const cors = {
-  headers: {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'OPTIONS, POST',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  },
-};
+import { buildClient, type Client } from '@datocms/cma-client-node';
+import { withCORS } from '@/app/api/utils';
 
 /*
-  These endpoints are called right after bootstrapping the Starter project...
-  they can be removed afterwards!
-*/
+ * Called once by DatoCMS right after this starter is deployed (`postDeploy` in
+ * datocms.json), with the new project's API token and the deployment's URL. It
+ * wires the project to this deployment: the Web Previews plugin (preview links
+ * and Visual Editing), the SEO/Readability Analysis plugin and the cache
+ * invalidation webhook, each sending its secret token to the route it calls.
+ * The endpoint can be removed afterwards.
+ */
 
-export async function OPTIONS() {
-  return new Response('OK', cors);
+/**
+ * The DatoCMS API token arrives in the request body, so without this check the
+ * endpoint would happily write our secret tokens into any project a caller
+ * names, and the caller could then read them back from their own project.
+ */
+async function isOurProject(callerClient: Client, ourApiToken: string) {
+  const ourClient = buildClient({ apiToken: ourApiToken });
+
+  const [callerProject, ourProject] = await Promise.all([
+    callerClient.site.find(),
+    ourClient.site.find(),
+  ]);
+
+  return callerProject.id === ourProject.id;
 }
 
+/** Preview links in the record sidebar (/api/draft/preview-links) and Visual Editing */
 async function installWebPreviewsPlugin(client: Client, baseUrl: string) {
   const webPreviewsPlugin = await client.plugins.create({
     package_name: 'datocms-plugin-web-previews',
   });
 
-  await client.plugins.update(webPreviewsPlugin, {
+  await client.plugins.update(webPreviewsPlugin.id, {
     parameters: {
       frontends: [
         {
@@ -41,7 +50,7 @@ async function installWebPreviewsPlugin(client: Client, baseUrl: string) {
             },
           ],
           visualEditing: {
-            // Opened by a browser, where we cannot set headers
+            // Opened by the browser, which can't send headers: the secret goes in ?token=
             enableDraftModeUrl: new URL(
               `/api/draft/enable?token=${process.env.DRAFT_SECRET_TOKEN}`,
               baseUrl,
@@ -55,6 +64,7 @@ async function installWebPreviewsPlugin(client: Client, baseUrl: string) {
   });
 }
 
+/** SEO and readability scores on every `seo_analysis` field (/api/seoAnalysis) */
 async function installSEOAnalysisPlugin(client: Client, baseUrl: string) {
   const seoPlugin = await client.plugins.create({
     package_name: 'datocms-plugin-seo-readability-analysis',
@@ -75,6 +85,7 @@ async function installSEOAnalysisPlugin(client: Client, baseUrl: string) {
   });
 }
 
+/** Clears the site's cached DatoCMS responses whenever content, models or assets change (/api/revalidateCache) */
 async function createCacheInvalidationWebhook(client: Client, baseUrl: string) {
   await client.webhooks.create({
     name: '🔄 Cache Revalidation',
@@ -108,20 +119,8 @@ async function createCacheInvalidationWebhook(client: Client, baseUrl: string) {
   });
 }
 
-/**
- * The DatoCMS API token arrives in the request body, so without this check the
- * endpoint would happily write our secret tokens into any project a caller
- * names, and the caller could then read them back from their own project.
- */
-async function ensureSameProject(client: Client, ourApiToken: string) {
-  const ourClient = buildClient({ apiToken: ourApiToken });
-
-  const [callerProject, ourProject] = await Promise.all([
-    client.site.find(),
-    ourClient.site.find(),
-  ]);
-
-  return callerProject.id === ourProject.id;
+export async function OPTIONS() {
+  return new Response('OK', withCORS());
 }
 
 export async function POST(request: Request) {
@@ -131,10 +130,10 @@ export async function POST(request: Request) {
   const baseUrl = body.frontendUrl as string;
 
   try {
-    if (!(await ensureSameProject(client, process.env.DATOCMS_CMA_TOKEN!))) {
-      return NextResponse.json(
+    if (!(await isOurProject(client, process.env.DATOCMS_CMA_TOKEN!))) {
+      return Response.json(
         { success: false, error: 'Invalid token' },
-        { status: 401, ...cors },
+        withCORS({ status: 401 }),
       );
     }
 
@@ -144,15 +143,15 @@ export async function POST(request: Request) {
       installSEOAnalysisPlugin(client, baseUrl),
     ]);
 
-    return NextResponse.json({ success: true }, cors);
+    return Response.json({ success: true }, withCORS());
   } catch (error) {
     // Never return the error: the DatoCMS client stores the failed request in
     // it, Authorization header and payload included
     console.error(error);
 
-    return NextResponse.json(
+    return Response.json(
       { success: false, error: 'Internal server error' },
-      { status: 500, ...cors },
+      withCORS({ status: 500 }),
     );
   }
 }

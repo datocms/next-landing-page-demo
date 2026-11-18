@@ -1,55 +1,24 @@
-import type { SiteLocale } from '@/graphql/types/graphql';
-import { type ResolvedGlobalPageProps, buildUrl } from '@/utils/globalPageProps';
-import { type SimpleSchemaTypes, buildClient } from '@datocms/cma-client-node';
-import got from 'got';
+import { buildClient } from '@datocms/cma-client-node';
 import { parseHTML } from 'linkedom';
 import { cookies, draftMode } from 'next/headers';
 import type { NextRequest } from 'next/server';
+import { hasBearerToken, withCORS } from '@/app/api/utils';
+import type { SiteLocale } from '@/lib/datocms/graphql';
+import { recordToWebsiteRoute } from '@/lib/datocms/recordInfo';
 
-const websiteBaseUrl = (
-  process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? // Vercel auto-populates this environment variable
-      `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : // Netlify auto-populates this environment variable
-      process.env.URL
-) as string;
+/*
+ * The SEO/Readability Analysis plugin calls this endpoint (configured by
+ * /api/post-install) while an editor works on a record: it finds the record's
+ * page, renders it with the draft content, and returns the page's HTML, title
+ * and description for the plugin to analyze.
+ */
 
-const findSlugAndPermalink = async (
-  item: SimpleSchemaTypes.Item,
-  itemTypeApiKey: string,
-  globalPageProps: ResolvedGlobalPageProps,
-): Promise<[string, string] | [null, null]> => {
-  switch (itemTypeApiKey) {
-    case 'page':
-      if (item.slug === 'home')
-        return [item.slug as string, buildUrl(globalPageProps, '/')]; //special case for default home page
-      return [item.slug as string, buildUrl(globalPageProps, `/${item.slug}`)];
-    case 'post':
-      return [
-        item.slug as string,
-        buildUrl(globalPageProps, `/posts/${item.slug}`),
-      ];
-    default:
-      return [null, null];
-  }
-};
-
-const headers = {
-  'Content-Type': 'text/html',
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET',
-  'Access-Control-Allow-Headers': 'Authorization',
-};
-
-export async function OPTIONS(request: NextRequest) {
-  return new Response('ok', {
-    status: 200,
-    headers,
-  });
+export async function OPTIONS() {
+  return new Response('OK', withCORS());
 }
 
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
 
   const itemId = searchParams.get('itemId');
   const itemTypeId = searchParams.get('itemTypeId');
@@ -57,11 +26,8 @@ export async function GET(req: NextRequest) {
   const locale = searchParams.get('locale');
   const sandboxEnvironmentId = searchParams.get('sandboxEnvironmentId');
 
-  // The token is sent by the plugin as a request header (see /api/post-install)
-  const token = req.headers.get('authorization')?.replace(/^Bearer /, '');
-
-  if (!token || token !== process.env.SEO_SECRET_TOKEN)
-    return new Response('Invalid token', { status: 401, headers });
+  if (!hasBearerToken(request, process.env.SEO_SECRET_TOKEN))
+    return new Response('Invalid token', withCORS({ status: 401 }));
 
   try {
     if (
@@ -71,49 +37,55 @@ export async function GET(req: NextRequest) {
       !locale ||
       !sandboxEnvironmentId
     ) {
-      return new Response('Missing required parameters!', {
-        status: 422,
-        headers,
-      });
+      return new Response(
+        'Missing required parameters!',
+        withCORS({ status: 422 }),
+      );
     }
 
+    // Read the record from the environment the editor is working in
     const client = buildClient({
       apiToken: process.env.DATOCMS_CMA_TOKEN || '',
       environment: sandboxEnvironmentId,
     });
 
     const item = await client.items.find(itemId);
-
-    const [slug, permalink] = await findSlugAndPermalink(item, itemTypeApiKey, {
-      params: { locale: locale as SiteLocale },
-    });
+    const slug = item.slug as string;
+    const permalink = recordToWebsiteRoute(
+      itemTypeApiKey,
+      slug,
+      locale as SiteLocale,
+    );
 
     if (!permalink) {
       return new Response(
-        `Don\'t know which route corresponds to record #${itemId} (model: ${itemTypeApiKey})!`,
-        {
-          status: 422,
-          headers,
-        },
+        `Don't know which route corresponds to record #${itemId} (model: ${itemTypeApiKey})!`,
+        withCORS({ status: 422 }),
       );
     }
 
+    // Fetch the page in Draft Mode, so the analysis sees unpublished changes:
+    // enable it to get its cookie, send that cookie along, then disable it.
+    // The cookie only works on this deployment, so the page comes from it too
     const draft = await draftMode();
     draft.enable();
 
     const cookieStore = await cookies();
-    const { body } = await got(new URL(permalink, websiteBaseUrl).toString(), {
-      headers: {
-        cookie: cookieStore.toString(),
-      },
+    const pageResponse = await fetch(new URL(permalink, request.url), {
+      headers: { cookie: cookieStore.toString() },
     });
 
     draft.disable();
 
-    const { document } = parseHTML(body);
+    if (!pageResponse.ok) {
+      console.error(`${permalink} answered ${pageResponse.status}`);
+      return new Response('Internal server error', withCORS({ status: 500 }));
+    }
+
+    const { document } = parseHTML(await pageResponse.text());
     const contentEl = document.querySelector('body');
     if (!contentEl)
-      return new Response('No content found', { status: 422, headers });
+      return new Response('No content found', withCORS({ status: 422 }));
     const pageContent = contentEl.innerHTML;
     const pageLocale =
       document.querySelector('html')?.getAttribute('lang') || 'en';
@@ -122,22 +94,22 @@ export async function GET(req: NextRequest) {
       .querySelector('meta[name="description"]')
       ?.getAttribute('content');
 
-    return new Response(
-      JSON.stringify({
+    return Response.json(
+      {
         locale: pageLocale,
         slug,
         permalink,
         title: pageTitle,
         description: pageDescription,
         content: pageContent,
-      }),
-      { status: 200, headers },
+      },
+      withCORS(),
     );
   } catch (error) {
     // Never return the error: the DatoCMS client stores the failed request in
     // it, Authorization header and payload included
     console.error(error);
 
-    return new Response('Internal server error', { status: 500, headers });
+    return new Response('Internal server error', withCORS({ status: 500 }));
   }
 }
