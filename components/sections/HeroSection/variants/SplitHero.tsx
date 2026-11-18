@@ -21,7 +21,7 @@ export const UNDER_HEADER =
 /**
  * `split`: a tinted panel with the copy on the left and, on the right, the
  * block's images as two capsules under small pieces of the product. Below
- * 1024px the picture sits under the copy. On load the copy rises in line by
+ * 1024px the picture sits under the copy, and the copy is centred above it. On load the copy rises in line by
  * line while the picture assembles itself (styles/motion.css).
  */
 const SplitHero = ({ fragment, locale }: Props) => {
@@ -43,8 +43,8 @@ const SplitHero = ({ fragment, locale }: Props) => {
       aria-labelledby={headingId}
       className={`panel panel-tint overflow-hidden ${UNDER_HEADER}`}
     >
-      <div className="container-page grid grid-cols-[minmax(0,1fr)] items-center gap-x-10 gap-y-8 lg:min-h-[42.5rem] lg:grid-cols-[minmax(0,1fr)_36.25rem]">
-        <div className="pt-10 sm:pt-14 lg:py-16">
+      <div className="container-page grid grid-cols-[minmax(0,1fr)] items-center gap-x-10 gap-y-8 lg:min-h-[42.5rem] lg:grid-cols-[minmax(0,1fr)_29rem] xl:grid-cols-[minmax(0,1fr)_36.25rem]">
+        <div className="pt-10 max-lg:text-center sm:pt-14 lg:py-16">
           <Announcement
             field={announcement}
             label={announcementLabel}
@@ -53,16 +53,16 @@ const SplitHero = ({ fragment, locale }: Props) => {
           <HeroTitle
             id={headingId}
             title={title}
-            className="arrive mt-6 [--arrive:70ms]"
+            className="arrive mt-6 [--arrive:70ms] max-lg:mx-auto max-lg:max-w-[11em] max-lg:text-balance max-lg:text-[clamp(2.5rem,5.4vw,3rem)]"
           />
           <HeroLead
             text={subtitle}
-            className="arrive mt-6 max-w-[33.75rem] text-fg/80 [--arrive:150ms]"
+            className="arrive mt-6 max-w-[33.75rem] text-fg/80 [--arrive:150ms] max-lg:mx-auto max-lg:max-w-[28rem]"
           />
           <CmsButtons
             buttons={buttons}
             size="lg"
-            className="arrive mt-9 [--arrive:230ms] max-sm:flex-col max-sm:items-stretch max-sm:[&>a]:w-full"
+            className="arrive mt-9 [--arrive:230ms] max-lg:justify-center max-sm:mx-auto max-sm:max-w-[22rem] max-sm:flex-col max-sm:items-stretch max-sm:[&>a]:w-full"
           />
         </div>
         {image?.responsiveImage && (
