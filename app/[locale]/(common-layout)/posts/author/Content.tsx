@@ -7,7 +7,7 @@ import AppLink from '@/components/ui/AppLink';
 import { ArrowRightIcon } from '@/components/ui/icons';
 import Photo from '@/components/ui/Photo';
 import type { ContentComponent } from '@/lib/datocms/realtime/types';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel } from '@/lib/i18n/uiStrings';
 import { areaLabels } from '@/utils/authorAreas';
 import { cn } from '@/utils/cn';
 import { authorUrl } from '@/utils/routes';
@@ -30,7 +30,7 @@ const Content: ContentComponent<PageProps, Query> = ({
   return (
     <>
       <PostsPageHeader
-        title={uiString(locale, 'allAuthors')}
+        title={uiLabel(locale, 'allAuthors')}
         titleId="authors-title"
       />
 
@@ -105,7 +105,7 @@ const Content: ContentComponent<PageProps, Query> = ({
                   )}
                   <div className="mt-auto flex items-center justify-between gap-4 pt-5">
                     <p className="text-ui text-fg-muted tabular-nums">
-                      {uiString(locale, 'postCount', { n: posts })}
+                      {uiLabel(locale, 'postCount', { n: posts })}
                     </p>
                     <span
                       aria-hidden="true"

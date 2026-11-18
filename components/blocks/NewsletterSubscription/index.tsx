@@ -1,7 +1,7 @@
 import { type ComponentPropsWithoutRef, useId } from 'react';
 import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import { hasStructuredText } from '@/utils/structuredText';
 import { NewsletterSubscriptionFragment } from './fragment';
@@ -52,11 +52,11 @@ const NewsletterSubscriptionBlock = ({
       <NewsletterForm
         buttonLabel={buttonLabel}
         labels={{
-          emailAddress: uiString(locale, 'emailAddress'),
+          emailAddress: uiLabel(locale, 'emailAddress'),
           emailPlaceholder: uiString(locale, 'emailPlaceholder'),
-          subscribe: uiString(locale, 'subscribe'),
-          invalidEmail: uiString(locale, 'invalidEmail'),
-          subscribed: uiString(locale, 'subscribed'),
+          subscribe: uiLabel(locale, 'subscribe'),
+          invalidEmail: uiLabel(locale, 'invalidEmail'),
+          subscribed: uiLabel(locale, 'subscribed'),
         }}
       />
     </aside>

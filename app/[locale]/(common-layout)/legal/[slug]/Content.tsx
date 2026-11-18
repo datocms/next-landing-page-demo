@@ -8,7 +8,7 @@ import TableOfContents, {
 } from '@/components/ui/TableOfContents';
 import { fieldEditUrl } from '@/lib/datocms/contentLink';
 import type { ContentComponent } from '@/lib/datocms/realtime/types';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel } from '@/lib/i18n/uiStrings';
 import { bodyHeadingTag } from '@/utils/headingLevel';
 import { headingOutline, repeatsTitle } from '@/utils/headingOutline';
 import { localDate } from '@/utils/localDate';
@@ -50,7 +50,7 @@ const Content: ContentComponent<PageProps, Query> = ({
         </h1>
         {updated && (
           <p className="mt-4 text-small text-fg-muted">
-            {uiString(locale, 'lastUpdated')}{' '}
+            {uiLabel(locale, 'lastUpdated')}{' '}
             <time
               dateTime={updated.iso}
               data-datocms-content-link-url={fieldEditUrl(title)}

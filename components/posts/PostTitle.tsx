@@ -1,4 +1,4 @@
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel } from '@/lib/i18n/uiStrings';
 import { hasText } from './postText';
 
 type Props = {
@@ -17,7 +17,7 @@ const PostTitle = ({ title, locale, className }: Props) =>
   hasText(title) ? (
     <span className={className}>{title}</span>
   ) : (
-    <span className="text-fg-muted">{uiString(locale, 'untitled')}</span>
+    <span className="text-fg-muted">{uiLabel(locale, 'untitled')}</span>
   );
 
 export default PostTitle;

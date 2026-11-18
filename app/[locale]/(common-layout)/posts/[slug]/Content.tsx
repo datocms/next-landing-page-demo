@@ -14,7 +14,7 @@ import TableOfContents, {
   MIN_TOC_HEADINGS,
 } from '@/components/ui/TableOfContents';
 import type { ContentComponent } from '@/lib/datocms/realtime/types';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import { websiteBaseUrl } from '@/lib/websiteBaseUrl';
 import { cn } from '@/utils/cn';
 import { headingOutline } from '@/utils/headingOutline';
@@ -140,14 +140,14 @@ const Content: ContentComponent<PageProps, Query> = ({
 
             <div className="mt-14 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-line pt-6">
               <span className="text-small text-fg-muted">
-                {uiString(locale, 'share')}
+                {uiLabel(locale, 'share')}
               </span>
               <SharePost
                 url={shareUrl}
                 labels={{
-                  share: uiString(locale, 'shareOther'),
-                  copyLink: uiString(locale, 'copyLink'),
-                  copied: uiString(locale, 'copied'),
+                  share: uiLabel(locale, 'shareOther'),
+                  copyLink: uiLabel(locale, 'copyLink'),
+                  copied: uiLabel(locale, 'copied'),
                   shareOn: uiString(locale, 'shareOn'),
                 }}
               />
@@ -195,7 +195,7 @@ const Content: ContentComponent<PageProps, Query> = ({
           <div className="container-page">
             <SectionHeader
               id="more-posts-title"
-              title={uiString(locale, 'morePosts')}
+              title={uiLabel(locale, 'morePosts')}
             />
             <PostGrid posts={morePosts} globalPageProps={globalPageProps} />
           </div>

@@ -10,6 +10,7 @@
  * 2. the registry, a module-level map that UiStringsProvider fills in the browser;
  * 3. the English fallback.
  */
+import { stripStega } from '@datocms/content-link';
 import { cache } from 'react';
 import { en } from './en';
 import type { Dictionary, Entry, UiStringKey } from './types';
@@ -57,17 +58,20 @@ function pickForm(entry: Entry, locale: string, count: number): string {
 }
 
 /**
- * One interface string, resolved for `locale` and filled with `vars`
- * (`{name}` placeholders). Plural keys pick their form from `vars.n`.
+ * One interface string as visible text, resolved for `locale` and filled with
+ * `vars` (`{name}` placeholders). Plural keys pick their form from `vars.n`.
  *
- *   uiString(locale, 'latestPosts')                    // "Ultimi articoli"
- *   uiString(locale, 'postCount', { n: 12 })           // "12 articoli"
- *   uiString(locale, 'pageOf', { page: 1, total: 2 })  // "Pagina 1 di 2"
+ *   uiLabel(locale, 'latestPosts')                    // "Ultimi articoli"
+ *   uiLabel(locale, 'postCount', { n: 12 })           // "12 articoli"
+ *   uiLabel(locale, 'pageOf', { page: 1, total: 2 })  // "Pagina 1 di 2"
  *
- * Pass raw CMS values as vars (an author name keeps its stega), and run
- * stripStega on the result only when it becomes aria text.
+ * In Draft Mode the text keeps its invisible Content Link marker, so clicking
+ * it opens its field in the Interface Text record: use it only where the text
+ * is rendered as page content. Everywhere else (aria text, a placeholder, a
+ * <title>, metadata, a string that is compared, split or shared) use uiString.
+ * Raw CMS values passed as vars keep their markers too.
  */
-export function uiString(
+export function uiLabel(
   locale: string | null | undefined,
   key: UiStringKey,
   vars?: Record<string, string | number>,
@@ -82,4 +86,16 @@ export function uiString(
   return template.replace(/\{(\w+)\}/g, (placeholder, name: string) =>
     name in vars ? String(vars[name]) : placeholder,
   );
+}
+
+/**
+ * The same text as uiLabel without any Content Link marker: for aria text,
+ * placeholders, titles, metadata and any string the code works with.
+ */
+export function uiString(
+  locale: string | null | undefined,
+  key: UiStringKey,
+  vars?: Record<string, string | number>,
+): string {
+  return stripStega(uiLabel(locale, key, vars));
 }

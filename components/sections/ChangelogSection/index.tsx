@@ -5,7 +5,7 @@ import Chip from '@/components/ui/Chip';
 import { ArrowRightIcon } from '@/components/ui/icons';
 import { fieldEditUrl } from '@/lib/datocms/contentLink';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import { localDate } from '@/utils/localDate';
@@ -76,7 +76,7 @@ const ChangelogSection = ({ fragment, globalPageProps }: Props) => {
                       className="pointer-events-none absolute -top-[90px] -right-[90px] max-sm:-top-[140px] max-sm:-right-[140px] size-[190px] rounded-full shadow-[0_0_0_52px_rgb(255_255_255/0.07),0_0_0_108px_rgb(255_255_255/0.045),0_0_0_168px_rgb(255_255_255/0.025)]"
                     />
                     <span className="relative flex flex-wrap items-center gap-x-3 gap-y-2 lg:col-span-2">
-                      <Chip tone="solid">{uiString(locale, 'latest')}</Chip>
+                      <Chip tone="solid">{uiLabel(locale, 'latest')}</Chip>
                       {latest.date && (
                         <time
                           dateTime={latest.date.iso}

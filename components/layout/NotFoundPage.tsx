@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Button from '@/components/ui/Button';
-import { resolveUiLocale, uiString } from '@/lib/i18n/uiStrings';
+import { resolveUiLocale, uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 
 /**
@@ -46,13 +46,13 @@ const NotFoundPage = ({ inLayout = false }: Props) => {
     >
       {/* Hoisted into <head> by React: Next only reads `metadata` from the root not-found */}
       <title>{title}</title>
-      <h1 className="text-h1">{title}</h1>
+      <h1 className="text-h1">{uiLabel(locale, 'notFoundTitle')}</h1>
       <p className="mt-4 max-w-[40ch] text-lead text-fg-muted">
-        {uiString(locale, 'notFoundBody')}
+        {uiLabel(locale, 'notFoundBody')}
       </p>
       <div className="mt-8">
         <Button href={homeHref} size="lg">
-          {uiString(locale, 'backToHome')}
+          {uiLabel(locale, 'backToHome')}
         </Button>
       </div>
     </Root>

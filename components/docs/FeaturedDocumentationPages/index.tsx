@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react';
 import AppLink from '@/components/ui/AppLink';
 import { ArrowRightIcon } from '@/components/ui/icons';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import { docsPageUrl } from '@/utils/routes';
@@ -74,7 +74,7 @@ const FeaturedDocumentationPages = ({
         id="featured-docs-title"
         className="font-semibold text-[clamp(1.5rem,2.2vw,1.875rem)] leading-[1.1] tracking-[-0.04em]"
       >
-        {uiString(globalPageProps.params.locale, 'featuredPages')}
+        {uiLabel(globalPageProps.params.locale, 'featuredPages')}
       </h2>
       <ul className="mt-6 grid gap-3 sm:gap-4 md:grid-cols-6">
         {featuredPages.map((page, index) => {

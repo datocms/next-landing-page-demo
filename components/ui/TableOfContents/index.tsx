@@ -1,4 +1,4 @@
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import type { OutlineHeading } from '@/utils/headingOutline';
 import TocLinks from './TocLinks';
@@ -38,7 +38,7 @@ const TableOfContents = ({
       )}
     >
       <p className={cn('text-small font-medium', variant === 'rail' && 'mb-3')}>
-        {label}
+        {uiLabel(locale, 'onThisPage')}
       </p>
       {/* Only the id and the text cross to the client, not the heading nodes */}
       <TocLinks

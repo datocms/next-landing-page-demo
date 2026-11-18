@@ -5,7 +5,7 @@ import FeaturedDocumentationPages from '@/components/docs/FeaturedDocumentationP
 import AppLink from '@/components/ui/AppLink';
 import { ArrowRightIcon } from '@/components/ui/icons';
 import type { ContentComponent } from '@/lib/datocms/realtime/types';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel } from '@/lib/i18n/uiStrings';
 import { docsPageUrl } from '@/utils/routes';
 import { titleSize } from '@/utils/titleSize';
 import type { PageProps, Query } from './meta';
@@ -45,7 +45,7 @@ const Content: ContentComponent<PageProps, Query> = ({
           className="arrive text-small font-medium text-accent-ink"
           style={arrive(0)}
         >
-          {uiString(locale, 'documentation')}
+          {uiLabel(locale, 'documentation')}
         </p>
         <h1
           className={`arrive mt-3 max-w-[18ch] text-balance ${scale.className}`}

@@ -3,7 +3,7 @@ import PostMosaic from '@/components/posts/PostMosaic';
 import PostsPageHeader from '@/components/posts/PostsPageHeader';
 import TopicLinks from '@/components/posts/TopicLinks';
 import type { ContentComponent } from '@/lib/datocms/realtime/types';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel } from '@/lib/i18n/uiStrings';
 import type { PageProps, Query } from './meta';
 
 /**
@@ -29,9 +29,7 @@ const Content: ContentComponent<PageProps, Query> = ({
       <PostsPageHeader
         title={data.tag.name}
         titleId="tag-title"
-        lead={
-          posts.length === 0 ? uiString(locale, 'noTaggedPosts') : undefined
-        }
+        lead={posts.length === 0 ? uiLabel(locale, 'noTaggedPosts') : undefined}
       >
         <TopicLinks
           topics={topics}

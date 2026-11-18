@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ArrowRightIcon } from '@/components/ui/icons';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import { docsPageUrl } from '@/utils/routes';
@@ -29,8 +29,8 @@ const DocsPager = ({ globalPageProps, className }: Props) => {
   if (index === -1) return null;
 
   const links = [
-    { page: pages[index - 1], label: uiString(locale, 'previousPage') },
-    { page: pages[index + 1], label: uiString(locale, 'nextPage') },
+    { page: pages[index - 1], label: uiLabel(locale, 'previousPage') },
+    { page: pages[index + 1], label: uiLabel(locale, 'nextPage') },
   ];
   if (!links[0].page && !links[1].page) return null;
 

@@ -4,7 +4,7 @@ import PostRows from '@/components/posts/PostRows';
 import { ArrowRightIcon } from '@/components/ui/icons';
 import TextLink from '@/components/ui/TextLink';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import { postsPageUrl } from '@/utils/routes';
@@ -70,7 +70,7 @@ const FeaturedPostsSection = ({ fragment, globalPageProps }: Props) => {
             href={postsPageUrl(globalPageProps, 1)}
             className="group inline-flex items-center gap-1.5 text-body"
           >
-            {uiString(locale, 'allPosts')}
+            {uiLabel(locale, 'allPosts')}
             <ArrowRightIcon className="size-4 transition-transform duration-300 ease-[cubic-bezier(0.2,0.7,0.2,1)] motion-safe:group-hover:translate-x-1" />
           </TextLink>
         </p>

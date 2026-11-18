@@ -16,7 +16,7 @@ import Chip from '@/components/ui/Chip';
 import { ArrowRightIcon } from '@/components/ui/icons';
 import { fieldEditUrl } from '@/lib/datocms/contentLink';
 import type { ContentComponent } from '@/lib/datocms/realtime/types';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import { bodyHeadingTag } from '@/utils/headingLevel';
 import { localDate } from '@/utils/localDate';
@@ -67,12 +67,12 @@ const Content: ContentComponent<PageProps, Query> = ({
       : [
           {
             release: releases[index + 1],
-            label: uiString(locale, 'previousPage'),
+            label: uiLabel(locale, 'previousPage'),
             rel: 'prev',
           },
           {
             release: releases[index - 1],
-            label: uiString(locale, 'nextPage'),
+            label: uiLabel(locale, 'nextPage'),
             rel: 'next',
           },
         ];
@@ -149,9 +149,9 @@ const Content: ContentComponent<PageProps, Query> = ({
               )}
             >
               <ArrowRightIcon className="size-3.5 rotate-180" />
-              {uiString(locale, 'changelog')}
+              {uiLabel(locale, 'changelog')}
             </AppLink>
-            {isLatest && <Chip tone="solid">{uiString(locale, 'latest')}</Chip>}
+            {isLatest && <Chip tone="solid">{uiLabel(locale, 'latest')}</Chip>}
           </div>
           <h1 className="relative mt-14 sm:mt-20">
             <VersionName
@@ -171,7 +171,7 @@ const Content: ContentComponent<PageProps, Query> = ({
                 isLatest ? 'text-surface/70' : 'text-fg-muted',
               )}
             >
-              {`${uiString(locale, 'released')} `}
+              {`${uiLabel(locale, 'released')} `}
               <time
                 dateTime={released.iso}
                 data-datocms-content-link-url={fieldEditUrl(

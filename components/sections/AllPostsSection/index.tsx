@@ -8,7 +8,7 @@ import TopicLinks, {
   topicsOf,
 } from '@/components/posts/TopicLinks';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import type { SectionHeadingLevel } from '@/utils/headingLevel';
 
@@ -72,7 +72,7 @@ const AllPostsSection = ({
     <section aria-labelledby="posts-title">
       {/* The page's own CMS title (raw, so Content Link can target it) */}
       <h1 id="posts-title" className="sr-only">
-        {pageTitle || uiString(locale, 'latestPosts')}
+        {pageTitle || uiLabel(locale, 'latestPosts')}
       </h1>
 
       <PostFeature fragment={newest} globalPageProps={globalPageProps} />

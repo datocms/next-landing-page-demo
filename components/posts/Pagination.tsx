@@ -1,6 +1,6 @@
 import AppLink from '@/components/ui/AppLink';
 import Button from '@/components/ui/Button';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import { postsPageUrl } from '@/utils/routes';
@@ -34,8 +34,8 @@ const Pagination = ({ page, postCount, globalPageProps, className }: Props) => {
   const pageCount = postsPageCount(postCount);
   if (pageCount < 2) return null;
 
-  const previous = uiString(locale, 'previousPage');
-  const next = uiString(locale, 'nextPage');
+  const previous = uiLabel(locale, 'previousPage');
+  const next = uiLabel(locale, 'nextPage');
 
   return (
     <nav

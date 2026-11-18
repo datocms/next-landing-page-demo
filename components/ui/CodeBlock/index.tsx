@@ -6,7 +6,7 @@ import javascript from 'react-syntax-highlighter/dist/esm/languages/hljs/javascr
 import json from 'react-syntax-highlighter/dist/esm/languages/hljs/json';
 import typescript from 'react-syntax-highlighter/dist/esm/languages/hljs/typescript';
 import xml from 'react-syntax-highlighter/dist/esm/languages/hljs/xml';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import CopyButton from './CopyButton';
 
@@ -110,8 +110,8 @@ const CodeBlock = ({
         )}
         <CopyButton
           code={stripStega(trimmedCode)}
-          label={uiString(locale, 'copy')}
-          copiedLabel={uiString(locale, 'copied')}
+          label={uiLabel(locale, 'copy')}
+          copiedLabel={uiLabel(locale, 'copied')}
           accessibleLabel={uiString(locale, 'copyCode')}
           withIcon={docs}
         />

@@ -8,7 +8,7 @@ import PageTransition from '@/components/layout/PageTransition';
 import { CaretIcon } from '@/components/ui/icons';
 import { altWithMarker } from '@/lib/datocms/contentLink';
 import type { SiteLocale } from '@/lib/datocms/graphql';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import { docsHomeUrl, pageUrl } from '@/utils/routes';
 import DocsNav from '../DocsNav';
@@ -83,7 +83,7 @@ const DocsShell = ({
         />
       )}
       <span className="inline-flex min-h-6 items-center rounded-chip bg-subtle px-2.5 text-[0.78125rem] font-semibold text-accent-ink">
-        {uiString(locale, 'docsBadge')}
+        {uiLabel(locale, 'docsBadge')}
       </span>
     </Link>
   );
@@ -104,7 +104,7 @@ const DocsShell = ({
             }}
             className="-ml-3 inline-flex min-h-10 items-center gap-1.5 rounded-full px-3 font-medium text-fg text-small transition-colors duration-150 hover:bg-subtle"
           >
-            {uiString(locale, 'allTopics')}
+            {uiLabel(locale, 'allTopics')}
             <CaretIcon className="size-3.5 text-fg-muted" />
           </button>
         </div>

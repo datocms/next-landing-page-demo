@@ -11,7 +11,7 @@ import MobileLanguageList from '@/components/layout/Header/MobileLanguageList';
 import { CloseIcon } from '@/components/ui/icons';
 import TextLink from '@/components/ui/TextLink';
 import type { SiteLocale } from '@/lib/datocms/graphql';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import DocsNav from '../DocsNav';
 
@@ -136,7 +136,7 @@ const DocsDrawer = ({
                     id={languageHeadingId}
                     className="text-small text-fg-muted"
                   >
-                    {uiString(locale, 'language')}
+                    {uiLabel(locale, 'language')}
                   </p>
                   <MobileLanguageList
                     globalPageProps={globalPageProps}
@@ -151,7 +151,7 @@ const DocsDrawer = ({
                   href={siteHref}
                   className="inline-flex min-h-11 items-center text-body"
                 >
-                  {uiString(locale, 'backToSite')}
+                  {uiLabel(locale, 'backToSite')}
                 </TextLink>
               </div>
             </div>

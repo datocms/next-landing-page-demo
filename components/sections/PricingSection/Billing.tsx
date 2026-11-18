@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react';
 import Segmented from '@/components/ui/Segmented';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 
 export type BillingPeriod = 'monthly' | 'yearly';
@@ -77,8 +77,8 @@ export const BillingToggle = ({
       value={billing?.period ?? 'monthly'}
       onChange={(next) => billing?.setPeriod(next)}
       options={[
-        { value: 'monthly', label: uiString(locale, 'monthly') },
-        { value: 'yearly', label: uiString(locale, 'yearly') },
+        { value: 'monthly', label: uiLabel(locale, 'monthly') },
+        { value: 'yearly', label: uiLabel(locale, 'yearly') },
       ]}
       className={className}
     />

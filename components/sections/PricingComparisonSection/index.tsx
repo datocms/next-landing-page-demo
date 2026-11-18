@@ -9,7 +9,7 @@ import {
   siblingEditUrl,
 } from '@/lib/datocms/contentLink';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import { type ComparisonRow, comparisonGroups } from './comparisonGroups';
 import { PricingComparisonSectionFragment } from './fragment';
@@ -128,7 +128,7 @@ const PricingComparisonSection = ({ fragment, locale }: Props) => {
                       <span className="block sm:inline">
                         {formatPrice(plan.monthlyPrice, locale)}
                       </span>{' '}
-                      {uiString(locale, 'perMonth')}
+                      {uiLabel(locale, 'perMonth')}
                     </span>
                   </th>
                 ))}

@@ -1,7 +1,7 @@
 import { useId } from 'react';
 import Chip from '@/components/ui/Chip';
 import { fieldEditUrl } from '@/lib/datocms/contentLink';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import type { Plan } from '../fragment';
 import { FeatureList, PlanButton, PlanDescription, Price } from '../PlanParts';
 import { formatPrice, planFeatureRows } from '../plans';
@@ -28,7 +28,7 @@ const TabFace = ({ plan, locale }: { plan: Plan; locale: string }) => (
             : undefined
         }
       >
-        {formatPrice(plan.monthlyPrice, locale)} {uiString(locale, 'perMonth')}
+        {formatPrice(plan.monthlyPrice, locale)} {uiLabel(locale, 'perMonth')}
       </span>
       {plan.yearlyPrice != null && (
         <span
@@ -38,7 +38,7 @@ const TabFace = ({ plan, locale }: { plan: Plan; locale: string }) => (
           )}
           className="hidden group-data-[period=yearly]/billing:inline"
         >
-          {formatPrice(plan.yearlyPrice, locale)} {uiString(locale, 'perYear')}
+          {formatPrice(plan.yearlyPrice, locale)} {uiLabel(locale, 'perYear')}
         </span>
       )}
     </span>

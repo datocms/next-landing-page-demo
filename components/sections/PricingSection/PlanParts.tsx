@@ -2,7 +2,7 @@ import DatoStructuredText from '@/components/datocms/DatoStructuredText';
 import Button from '@/components/ui/Button';
 import { CheckIcon, DashIcon } from '@/components/ui/icons';
 import { fieldEditUrl } from '@/lib/datocms/contentLink';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import { hasStructuredText } from '@/utils/structuredText';
 import type { Plan } from './fragment';
@@ -81,7 +81,7 @@ const Figure = ({
       {formatPrice(amount, locale)}
     </span>
     <span className={cn('text-[0.90625rem]', MUTED[tone])}>
-      {uiString(locale, period)}
+      {uiLabel(locale, period)}
     </span>
   </span>
 );
@@ -172,7 +172,7 @@ export const PlanButton = ({
     size={size}
     className={className}
   >
-    {plan.ctaLabel || uiString(locale, 'choosePlan')}
+    {plan.ctaLabel || uiLabel(locale, 'choosePlan')}
   </Button>
 );
 

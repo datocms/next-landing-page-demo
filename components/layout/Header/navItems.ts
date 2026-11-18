@@ -1,5 +1,5 @@
 import type { ResultOf } from '@/lib/datocms/graphql';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel } from '@/lib/i18n/uiStrings';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import { docsHomeUrl, pageUrl } from '@/utils/routes';
 import type { HeaderFragment } from './fragment';
@@ -42,7 +42,7 @@ export function buildNavItems(
         kind: 'group',
         id: item.id,
         title:
-          item.title || uiString(globalPageProps.params.locale, 'otherItems'),
+          item.title || uiLabel(globalPageProps.params.locale, 'otherItems'),
         items: item.items.map((child) => ({
           id: child.id,
           title: child.title,

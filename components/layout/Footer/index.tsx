@@ -10,7 +10,7 @@ import {
   type SiteLocale,
 } from '@/lib/datocms/graphql';
 import { toLanguageTag } from '@/lib/i18n/languageTag';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import { legalPageUrl, pageUrl } from '@/utils/routes';
@@ -125,7 +125,7 @@ const Footer = ({ fragment, languages, globalPageProps }: Props) => {
           {footerLinks.length > 0 && (
             <FooterColumn
               id="footer-legal"
-              title={uiString(locale, 'legal')}
+              title={uiLabel(locale, 'legal')}
               className="col-span-2 lg:col-start-7"
             >
               <ul>
@@ -147,7 +147,7 @@ const Footer = ({ fragment, languages, globalPageProps }: Props) => {
           {socialMediaLinks.length > 0 && (
             <FooterColumn
               id="footer-social"
-              title={uiString(locale, 'social')}
+              title={uiLabel(locale, 'social')}
               className="col-span-2"
             >
               <ul>
@@ -183,7 +183,7 @@ const Footer = ({ fragment, languages, globalPageProps }: Props) => {
           {languages.length > 1 && (
             <FooterColumn
               id="footer-language"
-              title={uiString(locale, 'language')}
+              title={uiLabel(locale, 'language')}
               className="col-span-2"
             >
               <FooterLanguages

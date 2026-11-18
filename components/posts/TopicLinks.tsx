@@ -1,6 +1,6 @@
 import { stripStega } from '@datocms/content-link';
 import AppLink from '@/components/ui/AppLink';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import { postsPageUrl, tagUrl } from '@/utils/routes';
@@ -67,7 +67,7 @@ const TopicLinks = ({
             aria-current={current === 'all' ? 'page' : undefined}
             className={pill(current === 'all')}
           >
-            {uiString(locale, 'allPosts')}
+            {uiLabel(locale, 'allPosts')}
           </AppLink>
         </li>
         {visible.map((topic) => {

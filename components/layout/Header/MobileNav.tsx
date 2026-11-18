@@ -11,7 +11,7 @@ import {
 } from 'react';
 import { CloseIcon } from '@/components/ui/icons';
 import type { SiteLocale } from '@/lib/datocms/graphql';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel, uiString } from '@/lib/i18n/uiStrings';
 import type { ResolvedGlobalPageProps } from '@/utils/globalPageProps';
 import MobileLanguageList from './MobileLanguageList';
 import MobileNavItems from './MobileNavItems';
@@ -169,7 +169,7 @@ const MobileNav = ({
                   id={languageHeadingId}
                   className="mb-1 text-small font-medium text-fg"
                 >
-                  {uiString(locale, 'language')}
+                  {uiLabel(locale, 'language')}
                 </p>
                 <MobileLanguageList
                   globalPageProps={globalPageProps}

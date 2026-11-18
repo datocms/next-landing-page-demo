@@ -1,4 +1,5 @@
 import { stripStega } from '@datocms/content-link';
+import { siblingEditUrl } from '@/lib/datocms/contentLink';
 import { cn } from '@/utils/cn';
 
 /** A version number as it reads after the word before it: 2.0.0, v3, 1.4.2-beta */
@@ -47,7 +48,11 @@ const VersionName = ({
   return (
     <>
       {label && (
-        <span className={cn('block text-small font-medium', labelClassName)}>
+        <span
+          // The marker sits at the end of the name: the label opens the same field
+          data-datocms-content-link-url={siblingEditUrl(number, 'version_name')}
+          className={cn('block text-small font-medium', labelClassName)}
+        >
           {label}
         </span>
       )}{' '}

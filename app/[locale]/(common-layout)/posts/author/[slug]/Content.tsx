@@ -8,7 +8,7 @@ import PostsPageHeader from '@/components/posts/PostsPageHeader';
 import { tagPillClass } from '@/components/posts/PostTags';
 import Button from '@/components/ui/Button';
 import type { ContentComponent } from '@/lib/datocms/realtime/types';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel } from '@/lib/i18n/uiStrings';
 import { areaLabels } from '@/utils/authorAreas';
 import { authorsUrl, authorUrl } from '@/utils/routes';
 import { hasStructuredText } from '@/utils/structuredText';
@@ -75,7 +75,7 @@ const Content: ContentComponent<PageProps, Query> = ({
           size="sm"
           className="mt-8"
         >
-          {uiString(locale, 'allAuthors')}
+          {uiLabel(locale, 'allAuthors')}
         </Button>
       </PostsPageHeader>
 
@@ -86,7 +86,7 @@ const Content: ContentComponent<PageProps, Query> = ({
         >
           <h2 id="author-posts-title" className="mb-10 text-h3 lg:mb-12">
             {/* The raw name goes in, so Content Link can still target it */}
-            {uiString(locale, 'postsBy', { name: author.name })}
+            {uiLabel(locale, 'postsBy', { name: author.name })}
           </h2>
           {/* Every post is the author's own: the bylines show the date only */}
           <PostMosaic

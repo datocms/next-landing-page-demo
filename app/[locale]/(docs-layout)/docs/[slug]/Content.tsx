@@ -13,7 +13,7 @@ import TableOfContents, {
 } from '@/components/ui/TableOfContents';
 import { fieldEditUrl } from '@/lib/datocms/contentLink';
 import type { ContentComponent } from '@/lib/datocms/realtime/types';
-import { uiString } from '@/lib/i18n/uiStrings';
+import { uiLabel } from '@/lib/i18n/uiStrings';
 import { cn } from '@/utils/cn';
 import { bodyHeadingTag } from '@/utils/headingLevel';
 import { headingOutline, repeatsTitle } from '@/utils/headingOutline';
@@ -95,7 +95,7 @@ const Content: ContentComponent<PageProps, Query> = ({
     {
       key: 'home',
       href: docsHomeUrl(globalPageProps),
-      title: uiString(locale, 'docsHome'),
+      title: uiLabel(locale, 'docsHome'),
     },
     ...ancestors.map((page) => ({
       key: page.id,
@@ -201,7 +201,7 @@ const Content: ContentComponent<PageProps, Query> = ({
                 id="subtopics-title"
                 className="font-semibold text-h3 tracking-[-0.02em]"
               >
-                {uiString(locale, 'inThisTopic')}
+                {uiLabel(locale, 'inThisTopic')}
               </h2>
               <ul className="mt-5 grid gap-3 sm:grid-cols-2">
                 {subtopics.map((topic) => (
