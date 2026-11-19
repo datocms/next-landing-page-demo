@@ -21,7 +21,8 @@ export const UNDER_HEADER =
 /**
  * `split`: a tinted panel with the copy on the left and, on the right, the
  * block's images as two capsules under small pieces of the product. Below
- * 1024px the picture sits under the copy, and the copy is centred above it. On load the copy rises in line by
+ * 1024px the picture sits under the copy, and the copy is centred above it.
+ * The copy stacks above the picture, so the picture's rings never cross the buttons. On load the copy rises in line by
  * line while the picture assembles itself (styles/motion.css).
  */
 const SplitHero = ({ fragment, locale }: Props) => {
@@ -44,7 +45,7 @@ const SplitHero = ({ fragment, locale }: Props) => {
       className={`panel panel-tint overflow-hidden ${UNDER_HEADER}`}
     >
       <div className="container-page grid grid-cols-[minmax(0,1fr)] items-center gap-x-10 gap-y-8 lg:min-h-[42.5rem] lg:grid-cols-[minmax(0,1fr)_29rem] xl:grid-cols-[minmax(0,1fr)_36.25rem]">
-        <div className="pt-10 max-lg:text-center sm:pt-14 lg:py-16">
+        <div className="relative z-10 pt-10 max-lg:text-center sm:pt-14 lg:py-16">
           <Announcement
             field={announcement}
             label={announcementLabel}
