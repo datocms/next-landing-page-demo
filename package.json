@@ -16,7 +16,7 @@
   "dependencies": {
     "@datocms/cda-client": "^0.3.2",
     "@datocms/cma-client-node": "^6.1.3",
-    "@datocms/content-link": "^0.3.23",
+    "@datocms/content-link": "^0.3.24",
     "@formatjs/intl-localematcher": "^0.9.0",
     "datocms-structured-text-utils": "^6.0.1",
     "gql.tada": "^1.11.4",
